@@ -2,8 +2,8 @@
   "species": "Human",
   "mesh_count": 5,
   "bones": 65,
-  "triangles": 17780,
-  "vertices": 9138,
+  "triangles": 21563,
+  "vertices": 11435,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -213,6 +213,7 @@
         "Human_Skin",
         "Human_Pajamas",
         "Human_PajamaDots",
+        "Human_PantsShade",
         "Human_SlipperSole",
         "Human_Slipper",
         "Human_ShirtShade"
@@ -1362,6 +1363,7 @@
     "Human_NightcapBand",
     "Human_PajamaDots",
     "Human_Pajamas",
+    "Human_PantsShade",
     "Human_Piping",
     "Human_Shirt",
     "Human_ShirtShade",
@@ -1451,6 +1453,16 @@
       "roughness": 0.8799999952316284
     },
     {
+      "name": "Human_PantsShade",
+      "color": {
+        "r": 0.13725490868091583,
+        "g": 0.250980406999588,
+        "b": 0.4941176474094391,
+        "a": 1.0
+      },
+      "roughness": 0.8799999952316284
+    },
+    {
       "name": "Human_Piping",
       "color": {
         "r": 0.9607843160629272,
@@ -1463,9 +1475,9 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.886274516582489,
-        "g": 0.7882353067398071,
-        "b": 0.6431372761726379,
+        "r": 0.8745098114013672,
+        "g": 0.7568627595901489,
+        "b": 0.5843137502670288,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1473,9 +1485,9 @@
     {
       "name": "Human_ShirtShade",
       "color": {
-        "r": 0.7686274647712708,
-        "g": 0.6627451181411743,
-        "b": 0.5137255191802979,
+        "r": 0.7568627595901489,
+        "g": 0.6352941393852234,
+        "b": 0.46666666865348816,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1514,21 +1526,21 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "7aafc391b523fdcc0a0b919466df45000dde50b45457a69442f8ad6693dbee2c",
-    "LMS_Human_alpha.fbx": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453"
+    "LMS_Human_alpha.blend": "3cb2803b0e734023c3a1913f3bdb25547de2663c30b8a04073d8772277b17725",
+    "LMS_Human_alpha.fbx": "1f1538b963a77d940ffc58ab7910cc613af1f6ae93d2def5e2e2e3c3e50189e4"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r8c\\base15",
+    "baseline_blend_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r9b\\base15",
     "scene_before": {
-      "meshes": "361404de497667ae192f9121d5664e7dfe3e2c7ef54a4069ef97e5ab150f2084",
+      "meshes": "9e1c26f6d09c239344bcf422b8917b8c311eaa2e20b71b89767df72533a8b8a0",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "83702fd4db5fe03da39f2e3fa810c3613845aaec98068e9c8ca754fa256cc84f"
+      "winding": "e4e5c1b12099de4015e8cdbf208752b3ed1f679889607da3b229bde73702e17a"
     },
     "scene_after": {
-      "meshes": "361404de497667ae192f9121d5664e7dfe3e2c7ef54a4069ef97e5ab150f2084",
+      "meshes": "9e1c26f6d09c239344bcf422b8917b8c311eaa2e20b71b89767df72533a8b8a0",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "83702fd4db5fe03da39f2e3fa810c3613845aaec98068e9c8ca754fa256cc84f"
+      "winding": "e4e5c1b12099de4015e8cdbf208752b3ed1f679889607da3b229bde73702e17a"
     },
     "actions_before": {
       "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
@@ -1582,8 +1594,8 @@
       "Human_Turn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "7aafc391b523fdcc0a0b919466df45000dde50b45457a69442f8ad6693dbee2c",
-      "LMS_Human_alpha.fbx": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453"
+      "LMS_Human_alpha.blend": "3cb2803b0e734023c3a1913f3bdb25547de2663c30b8a04073d8772277b17725",
+      "LMS_Human_alpha.fbx": "1f1538b963a77d940ffc58ab7910cc613af1f6ae93d2def5e2e2e3c3e50189e4"
     },
     "author": {
       "clips": [

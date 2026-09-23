@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 1148042351287699800}
   - component: {fileID: 6399267936585410066}
   - component: {fileID: 7854026478028426998}
-  - component: {fileID: 350215555692144783}
+  - component: {fileID: 4572516665118419566}
   m_Layer: 0
   m_Name: LMS_Human
   m_TagString: Untagged
@@ -388,6 +388,10 @@ MonoBehaviour:
     MaterialIndex: 2
     Category: Pajamas
     Shade: 0
+  - Renderer: {fileID: 7948600991889706432}
+    MaterialIndex: 4
+    Category: Pajamas
+    Shade: 0.193
   - Renderer: {fileID: 7340666564473348143}
     MaterialIndex: 0
     Category: Skin
@@ -485,7 +489,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &350215555692144783
+--- !u!114 &4572516665118419566
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -499,7 +503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: human-v030-r7-facial
-  SourceSha256: df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453
+  SourceSha256: 1f1538b963a77d940ffc58ab7910cc613af1f6ae93d2def5e2e2e3c3e50189e4
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:

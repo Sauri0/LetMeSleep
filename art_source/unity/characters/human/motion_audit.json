@@ -10,20 +10,20 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Idle",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 12,
       "max_bone_head_motion_m": 0.00937992357981357,
       "max_mesh_vertex_motion_m": 0.010037552290184165,
       "loop_expected": true,
       "first_last_bone_difference_m": 7.450580596923828e-09,
-      "first_last_mesh_difference_m": 1.884864366154897e-07,
+      "first_last_mesh_difference_m": 2.1490760299348766e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
       "max_edge_stretch_ratio": 2.9727010847378477,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1327,
-          1339
+          2512,
+          2524
         ],
         "phase": 0,
         "rest_length_m": 0.030103359148514846,
@@ -131,7 +131,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_FingerCurl",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 60,
       "max_bone_head_motion_m": 0.06445142608295716,
       "max_mesh_vertex_motion_m": 0.11705762717816597,
@@ -139,36 +139,36 @@
       "first_last_bone_difference_m": 7.2980733963803e-10,
       "first_last_mesh_difference_m": 1.4600096599955427e-07,
       "minimum_mesh_z_m": 0.0,
-      "max_edge_stretch_ratio": 3.6721067035010786,
+      "max_edge_stretch_ratio": 3.6715147347716837,
       "worst_stretched_edge": {
         "mesh": "HandSkin.R",
         "vertices": [
-          1999,
-          2002
+          1968,
+          1971
         ],
         "phase": 0.25,
-        "rest_length_m": 0.01025706984726736,
-        "deformed_length_m": 0.03766505494442925,
+        "rest_length_m": 0.01025849161701182,
+        "deformed_length_m": 0.037664203128390694,
         "world_endpoints_m": [
           [
-            -0.8711562156677246,
-            -0.0011698429007083178,
-            1.2235435247421265
+            -0.8711565732955933,
+            -0.0011703204363584518,
+            1.223543643951416
           ],
           [
-            -0.8533489108085632,
-            -0.03410099446773529,
-            1.2194088697433472
+            -0.8533485531806946,
+            -0.03410014137625694,
+            1.2194092273712158
           ]
         ],
         "weights": [
           {
-            "Index01.R": 0.9155282378196716,
-            "Hand.R": 0.08447174727916718
+            "Index01.R": 0.9155324697494507,
+            "Hand.R": 0.08446753770112991
           },
           {
-            "Thumb03.R": 0.8359560966491699,
-            "Thumb02.R": 0.16404391825199127
+            "Thumb03.R": 0.8359360694885254,
+            "Thumb02.R": 0.16406391561031342
           }
         ]
       },
@@ -253,7 +253,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Blink",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 6,
       "max_bone_head_motion_m": 7.450580596923828e-09,
       "max_mesh_vertex_motion_m": 0.02131211788832701,
@@ -265,8 +265,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1327,
-          1339
+          2512,
+          2524
         ],
         "phase": 0,
         "rest_length_m": 0.030103359148514846,
@@ -374,13 +374,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Walk",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 32,
       "max_bone_head_motion_m": 0.19777798918355866,
       "max_mesh_vertex_motion_m": 0.21466969353565415,
       "loop_expected": true,
       "first_last_bone_difference_m": 5.960464477539063e-08,
-      "first_last_mesh_difference_m": 3.476316674735607e-07,
+      "first_last_mesh_difference_m": 3.21326533747432e-07,
       "minimum_mesh_z_m": 0.00018370147154200822,
       "max_edge_stretch_ratio": 2.506816411505432,
       "worst_stretched_edge": {
@@ -495,13 +495,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Run",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 30,
       "max_bone_head_motion_m": 0.2740177542063532,
       "max_mesh_vertex_motion_m": 0.29742090034206176,
       "loop_expected": true,
       "first_last_bone_difference_m": 1.7943374184954607e-07,
-      "first_last_mesh_difference_m": 3.877166459339168e-07,
+      "first_last_mesh_difference_m": 3.371747880871523e-07,
       "minimum_mesh_z_m": 2.832223271640816e-16,
       "max_edge_stretch_ratio": 2.549960457487846,
       "worst_stretched_edge": {
@@ -616,7 +616,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Crouch",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 22,
       "max_bone_head_motion_m": 0.6864190028972966,
       "max_mesh_vertex_motion_m": 0.7074592938524384,
@@ -628,8 +628,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1327,
-          1339
+          2512,
+          2524
         ],
         "phase": 0.375,
         "rest_length_m": 0.030103359148514846,
@@ -737,10 +737,10 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Jump",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 26,
       "max_bone_head_motion_m": 0.38335484894808797,
-      "max_mesh_vertex_motion_m": 0.39424717467649695,
+      "max_mesh_vertex_motion_m": 0.3942426319841353,
       "loop_expected": false,
       "first_last_bone_difference_m": 1.6118070224511577e-07,
       "first_last_mesh_difference_m": 3.4240261593687705e-07,
@@ -749,8 +749,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1327,
-          1339
+          2512,
+          2524
         ],
         "phase": 0,
         "rest_length_m": 0.030103359148514846,
@@ -858,20 +858,20 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Land",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 18,
       "max_bone_head_motion_m": 0.2452198436718472,
-      "max_mesh_vertex_motion_m": 0.24833448511519784,
+      "max_mesh_vertex_motion_m": 0.24833855037977803,
       "loop_expected": false,
       "first_last_bone_difference_m": 0.2452198436718472,
-      "first_last_mesh_difference_m": 0.24833448511519784,
+      "first_last_mesh_difference_m": 0.24833855037977803,
       "minimum_mesh_z_m": -0.0003370512567926198,
       "max_edge_stretch_ratio": 2.9727012467920275,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1327,
-          1339
+          2512,
+          2524
         ],
         "phase": 0.75,
         "rest_length_m": 0.030103359148514846,
@@ -979,7 +979,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Turn",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 8,
       "max_bone_head_motion_m": 0.11409847446665317,
       "max_mesh_vertex_motion_m": 0.1705399731983913,
@@ -991,8 +991,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1327,
-          1339
+          2512,
+          2524
         ],
         "phase": 0,
         "rest_length_m": 0.030103359148514846,
@@ -1100,13 +1100,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Clap",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 28,
       "max_bone_head_motion_m": 0.8626752556129019,
       "max_mesh_vertex_motion_m": 0.9135719760070055,
       "loop_expected": false,
       "first_last_bone_difference_m": 1.4901161193847656e-07,
-      "first_last_mesh_difference_m": 3.217581343902526e-07,
+      "first_last_mesh_difference_m": 3.2313538256587746e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
       "max_edge_stretch_ratio": 3.138608629249333,
       "worst_stretched_edge": {
@@ -1221,44 +1221,44 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Swat",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 18,
       "max_bone_head_motion_m": 0.3583956395727501,
-      "max_mesh_vertex_motion_m": 0.3673666478435996,
+      "max_mesh_vertex_motion_m": 0.3673666421692634,
       "loop_expected": false,
       "first_last_bone_difference_m": 8.940696716308594e-08,
       "first_last_mesh_difference_m": 2.9351883535969567e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
-      "max_edge_stretch_ratio": 3.672106741167836,
+      "max_edge_stretch_ratio": 3.671519357827024,
       "worst_stretched_edge": {
         "mesh": "HandSkin.R",
         "vertices": [
-          1999,
-          2002
+          1968,
+          1971
         ],
         "phase": 0,
-        "rest_length_m": 0.01025706984726736,
-        "deformed_length_m": 0.037665055330779816,
+        "rest_length_m": 0.01025849161701182,
+        "deformed_length_m": 0.03766425055396515,
         "world_endpoints_m": [
           [
-            -0.5180714130401611,
-            -0.12044953554868698,
-            0.6305214762687683
+            -0.5180716514587402,
+            -0.12045008689165115,
+            0.630521297454834
           ],
           [
-            -0.5044777989387512,
-            -0.14534559845924377,
-            0.6553016304969788
+            -0.5044782161712646,
+            -0.14534461498260498,
+            0.6553018689155579
           ]
         ],
         "weights": [
           {
-            "Index01.R": 0.9155282378196716,
-            "Hand.R": 0.08447174727916718
+            "Index01.R": 0.9155324697494507,
+            "Hand.R": 0.08446753770112991
           },
           {
-            "Thumb03.R": 0.8359560966491699,
-            "Thumb02.R": 0.16404391825199127
+            "Thumb03.R": 0.8359360694885254,
+            "Thumb02.R": 0.16406391561031342
           }
         ]
       },
@@ -1343,34 +1343,34 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Hit",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 16,
       "max_bone_head_motion_m": 0.08647784117201257,
-      "max_mesh_vertex_motion_m": 0.08857371333797144,
+      "max_mesh_vertex_motion_m": 0.08857372188113315,
       "loop_expected": false,
       "first_last_bone_difference_m": 7.450580596923828e-09,
       "first_last_mesh_difference_m": 3.0719530773294423e-08,
       "minimum_mesh_z_m": 4.284083843231201e-08,
-      "max_edge_stretch_ratio": 7.413546347302734,
+      "max_edge_stretch_ratio": 8.160707905085276,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          41,
-          44
+          55,
+          58
         ],
         "phase": 0.5,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.02224079451406586,
+        "deformed_length_m": 0.024482294856408335,
         "world_endpoints_m": [
           [
-            0.0041809603571891785,
-            -0.11298845708370209,
-            1.3750897645950317
+            0.0044515300542116165,
+            -0.1308036893606186,
+            1.3730055093765259
           ],
           [
-            0.0038322024047374725,
-            -0.11809016764163971,
-            1.3967347145080566
+            0.004061877727508545,
+            -0.13608786463737488,
+            1.3969075679779053
           ]
         ],
         "weights": [
@@ -1464,7 +1464,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Fall",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.703394880410604,
       "max_mesh_vertex_motion_m": 1.7852354943771211,
@@ -1472,26 +1472,26 @@
       "first_last_bone_difference_m": 1.703394880410604,
       "first_last_mesh_difference_m": 1.7852354943771211,
       "minimum_mesh_z_m": 0.0015050917863845825,
-      "max_edge_stretch_ratio": 5.632772045829527,
+      "max_edge_stretch_ratio": 6.173265436587344,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          40,
-          43
+          55,
+          58
         ],
         "phase": 1,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.01689843426438528,
+        "deformed_length_m": 0.018519925771540817,
         "world_endpoints_m": [
           [
-            0.0007080100476741791,
-            0.5934072732925415,
-            0.3824852705001831
+            -0.03966308385133743,
+            0.5826473236083984,
+            0.39579880237579346
           ],
           [
-            -0.001770898699760437,
-            0.6084422469139099,
-            0.3897901773452759
+            -0.042372941970825195,
+            0.599226713180542,
+            0.4035941958427429
           ]
         ],
         "weights": [
@@ -1585,7 +1585,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Faint",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7033948802739178,
       "max_mesh_vertex_motion_m": 1.785235360826904,
@@ -1593,26 +1593,26 @@
       "first_last_bone_difference_m": 1.7033948802739178,
       "first_last_mesh_difference_m": 1.785235360826904,
       "minimum_mesh_z_m": 0.0016988962888717651,
-      "max_edge_stretch_ratio": 5.632771996493734,
+      "max_edge_stretch_ratio": 6.17326534655484,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          40,
-          43
+          54,
+          57
         ],
         "phase": 1,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.016898434116376867,
+        "deformed_length_m": 0.018519925501441416,
         "world_endpoints_m": [
           [
-            0.0007080193608999252,
-            0.5934073328971863,
-            0.38248515129089355
+            -0.00011245347559452057,
+            0.5874161720275879,
+            0.3994051218032837
           ],
           [
-            -0.001770898699760437,
-            0.6084422469139099,
-            0.3897901773452759
+            -0.002822309732437134,
+            0.6039955615997314,
+            0.40720051527023315
           ]
         ],
         "weights": [
@@ -1706,7 +1706,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Recover",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7040831564862917,
       "max_mesh_vertex_motion_m": 1.7857417415792323,
@@ -1714,26 +1714,26 @@
       "first_last_bone_difference_m": 1.7033949502572718,
       "first_last_mesh_difference_m": 1.7852356947024282,
       "minimum_mesh_z_m": 0.0016129128634929657,
-      "max_edge_stretch_ratio": 5.632790389744373,
+      "max_edge_stretch_ratio": 6.1732843597538,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          41,
-          44
+          55,
+          58
         ],
         "phase": 0,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.016898489296514517,
+        "deformed_length_m": 0.018519982541437028,
         "world_endpoints_m": [
           [
-            -0.03884262591600418,
-            0.5886386036872864,
-            0.37887871265411377
+            -0.03966308385133743,
+            0.582647442817688,
+            0.39579880237579346
           ],
           [
-            -0.04132154583930969,
-            0.6036736369132996,
-            0.38618361949920654
+            -0.042372941970825195,
+            0.5992269515991211,
+            0.40359407663345337
           ]
         ],
         "weights": [
@@ -1827,20 +1827,20 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Idle",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 4,
       "max_bone_head_motion_m": 0.009379922747305187,
       "max_mesh_vertex_motion_m": 0.010037565456826625,
       "loop_expected": true,
       "first_last_bone_difference_m": 8.429369702178807e-08,
-      "first_last_mesh_difference_m": 2.602375924076584e-07,
+      "first_last_mesh_difference_m": 2.619385098106704e-07,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
       "max_edge_stretch_ratio": 2.972717684441782,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1327
+          2524,
+          2512
         ],
         "phase": 0.125,
         "rest_length_m": 0.030103359148514846,
@@ -1948,44 +1948,44 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_FingerCurl",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 60,
       "max_bone_head_motion_m": 0.06445143563323329,
       "max_mesh_vertex_motion_m": 0.11705708510885807,
       "loop_expected": false,
       "first_last_bone_difference_m": 5.960821498763645e-08,
-      "first_last_mesh_difference_m": 1.739355553676002e-07,
+      "first_last_mesh_difference_m": 1.727446474822101e-07,
       "minimum_mesh_z_m": -1.314887310144286e-08,
-      "max_edge_stretch_ratio": 3.672069559181823,
+      "max_edge_stretch_ratio": 3.671483926808218,
       "worst_stretched_edge": {
         "mesh": "HandSkin.R",
         "vertices": [
-          2002,
-          1999
+          1971,
+          1968
         ],
-        "phase": 0.375,
-        "rest_length_m": 0.01025706984726736,
-        "deformed_length_m": 0.03766467395255222,
+        "phase": 0.5,
+        "rest_length_m": 0.01025849161701182,
+        "deformed_length_m": 0.037663887085155744,
         "world_endpoints_m": [
           [
-            -0.853348970413208,
-            -0.03410068526864052,
-            1.2194085121154785
+            -0.8533485531806946,
+            -0.034099824726581573,
+            1.2194089889526367
           ],
           [
-            -0.8711560368537903,
-            -0.001169851515442133,
-            1.2235432863235474
+            -0.8711564540863037,
+            -0.0011703015770763159,
+            1.223543405532837
           ]
         ],
         "weights": [
           {
-            "Thumb02.R": 0.16404391825199127,
-            "Thumb03.R": 0.8359560966491699
+            "Thumb02.R": 0.16406391561031342,
+            "Thumb03.R": 0.8359360694885254
           },
           {
-            "Hand.R": 0.08447174727916718,
-            "Index01.R": 0.9155282378196716
+            "Hand.R": 0.08446753770112991,
+            "Index01.R": 0.9155324697494507
           }
         ]
       },
@@ -2070,7 +2070,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Blink",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 2,
       "max_bone_head_motion_m": 1.666000468656264e-08,
       "max_mesh_vertex_motion_m": 0.021312236695207726,
@@ -2082,8 +2082,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1327
+          2524,
+          2512
         ],
         "phase": 0,
         "rest_length_m": 0.030103359148514846,
@@ -2191,13 +2191,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Walk",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 20,
       "max_bone_head_motion_m": 0.1977780174377774,
       "max_mesh_vertex_motion_m": 0.21466974776562275,
       "loop_expected": true,
       "first_last_bone_difference_m": 4.917383193969727e-07,
-      "first_last_mesh_difference_m": 6.42653067494864e-07,
+      "first_last_mesh_difference_m": 6.8025065723141e-07,
       "minimum_mesh_z_m": 0.00018367287702858448,
       "max_edge_stretch_ratio": 2.5068276702667793,
       "worst_stretched_edge": {
@@ -2312,7 +2312,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Run",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 20,
       "max_bone_head_motion_m": 0.2740178357719478,
       "max_mesh_vertex_motion_m": 0.2974209287197263,
@@ -2433,7 +2433,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Crouch",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 18,
       "max_bone_head_motion_m": 0.6864190436008265,
       "max_mesh_vertex_motion_m": 0.7074590884889017,
@@ -2445,8 +2445,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1327
+          2524,
+          2512
         ],
         "phase": 0.375,
         "rest_length_m": 0.030103359148514846,
@@ -2554,20 +2554,20 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Jump",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 26,
       "max_bone_head_motion_m": 0.38335489996550126,
-      "max_mesh_vertex_motion_m": 0.3942471982993054,
+      "max_mesh_vertex_motion_m": 0.394242692222988,
       "loop_expected": false,
       "first_last_bone_difference_m": 3.4995925106212375e-07,
-      "first_last_mesh_difference_m": 4.995779578161303e-07,
+      "first_last_mesh_difference_m": 4.962332786722992e-07,
       "minimum_mesh_z_m": -0.0005703190108761191,
       "max_edge_stretch_ratio": 2.9727190943049786,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1327
+          2524,
+          2512
         ],
         "phase": 0.125,
         "rest_length_m": 0.030103359148514846,
@@ -2675,20 +2675,20 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Land",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 18,
       "max_bone_head_motion_m": 0.24522000698208188,
-      "max_mesh_vertex_motion_m": 0.24833474763453484,
+      "max_mesh_vertex_motion_m": 0.2483386778872319,
       "loop_expected": false,
       "first_last_bone_difference_m": 0.24522000698208188,
-      "first_last_mesh_difference_m": 0.24833474763453484,
+      "first_last_mesh_difference_m": 0.2483386778872319,
       "minimum_mesh_z_m": -0.0003371310012880713,
       "max_edge_stretch_ratio": 2.9727188242162956,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1327
+          2524,
+          2512
         ],
         "phase": 0.375,
         "rest_length_m": 0.030103359148514846,
@@ -2796,7 +2796,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Turn",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 4,
       "max_bone_head_motion_m": 0.11409849895400248,
       "max_mesh_vertex_motion_m": 0.1705400278086459,
@@ -2808,8 +2808,8 @@
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1327
+          2524,
+          2512
         ],
         "phase": 0,
         "rest_length_m": 0.030103359148514846,
@@ -2917,13 +2917,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Clap",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 24,
       "max_bone_head_motion_m": 0.8626755233474419,
       "max_mesh_vertex_motion_m": 0.9135717394992414,
       "loop_expected": false,
       "first_last_bone_difference_m": 1.4770200551747538e-07,
-      "first_last_mesh_difference_m": 3.332000937312528e-07,
+      "first_last_mesh_difference_m": 3.5708418388133524e-07,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
       "max_edge_stretch_ratio": 3.138603426975679,
       "worst_stretched_edge": {
@@ -3038,44 +3038,44 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Swat",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 14,
       "max_bone_head_motion_m": 0.3583956901031004,
-      "max_mesh_vertex_motion_m": 0.3673668300759002,
+      "max_mesh_vertex_motion_m": 0.3673667790663136,
       "loop_expected": false,
       "first_last_bone_difference_m": 4.5123708038707733e-07,
       "first_last_mesh_difference_m": 6.01977404258375e-07,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
-      "max_edge_stretch_ratio": 3.6720660608446525,
+      "max_edge_stretch_ratio": 3.6714725244065614,
       "worst_stretched_edge": {
         "mesh": "HandSkin.R",
         "vertices": [
-          2002,
-          1999
+          1971,
+          1968
         ],
         "phase": 0.375,
-        "rest_length_m": 0.01025706984726736,
-        "deformed_length_m": 0.03766463806986351,
+        "rest_length_m": 0.01025849161701182,
+        "deformed_length_m": 0.03766377011371393,
         "world_endpoints_m": [
           [
-            -0.5707421898841858,
-            0.04407408833503723,
-            0.7186806201934814
+            -0.5707423686981201,
+            0.04407515376806259,
+            0.7186809182167053
           ],
           [
-            -0.5844622254371643,
-            0.07271851599216461,
-            0.6984350681304932
+            -0.5844624638557434,
+            0.07271803170442581,
+            0.6984348297119141
           ]
         ],
         "weights": [
           {
-            "Thumb02.R": 0.16404391825199127,
-            "Thumb03.R": 0.8359560966491699
+            "Thumb02.R": 0.16406391561031342,
+            "Thumb03.R": 0.8359360694885254
           },
           {
-            "Hand.R": 0.08447174727916718,
-            "Index01.R": 0.9155282378196716
+            "Hand.R": 0.08446753770112991,
+            "Index01.R": 0.9155324697494507
           }
         ]
       },
@@ -3160,7 +3160,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Hit",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 12,
       "max_bone_head_motion_m": 0.08647789636565069,
       "max_mesh_vertex_motion_m": 0.08857375276794165,
@@ -3168,35 +3168,35 @@
       "first_last_bone_difference_m": 1.666000468656264e-08,
       "first_last_mesh_difference_m": 4.53201124839352e-08,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
-      "max_edge_stretch_ratio": 7.4134302517367905,
+      "max_edge_stretch_ratio": 8.160629084971534,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          41,
-          44
+          57,
+          54
         ],
         "phase": 0.5,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.022240446224933347,
+        "deformed_length_m": 0.02448205839441414,
         "world_endpoints_m": [
           [
-            0.004180958494544029,
-            -0.11298839002847672,
-            1.3750897645950317
+            0.044051188975572586,
+            -0.13557012379169464,
+            1.3976736068725586
           ],
           [
-            0.003832213580608368,
-            -0.11809010058641434,
-            1.396734356880188
+            0.044440824538469315,
+            -0.13028596341609955,
+            1.3737717866897583
           ]
         ],
         "weights": [
           {
-            "Head": 0.30000001192092896,
-            "Jaw": 0.699999988079071
+            "Head": 1.0
           },
           {
-            "Head": 1.0
+            "Head": 0.30000001192092896,
+            "Jaw": 0.699999988079071
           }
         ]
       },
@@ -3281,7 +3281,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Fall",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7033949155389676,
       "max_mesh_vertex_motion_m": 1.785235427602014,
@@ -3289,26 +3289,26 @@
       "first_last_bone_difference_m": 1.7033949155389676,
       "first_last_mesh_difference_m": 1.785235427602014,
       "minimum_mesh_z_m": 0.0015052211238071322,
-      "max_edge_stretch_ratio": 5.632805446062114,
+      "max_edge_stretch_ratio": 6.17329941967181,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          43,
-          40
+          57,
+          54
         ],
         "phase": 1,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.01689853446578349,
+        "deformed_length_m": 0.018520027721506887,
         "world_endpoints_m": [
           [
-            -0.001770898699760437,
-            0.6084422469139099,
-            0.3897900879383087
+            -0.002822309732437134,
+            0.6039956212043762,
+            0.407200425863266
           ],
           [
-            0.0007079783827066422,
-            0.5934072136878967,
-            0.3824850618839264
+            -0.0001124851405620575,
+            0.5874161124229431,
+            0.39940503239631653
           ]
         ],
         "weights": [
@@ -3402,7 +3402,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Faint",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7033950559840718,
       "max_mesh_vertex_motion_m": 1.785235628383799,
@@ -3410,26 +3410,26 @@
       "first_last_bone_difference_m": 1.7033950559840718,
       "first_last_mesh_difference_m": 1.785235628383799,
       "minimum_mesh_z_m": 0.0016990717267617583,
-      "max_edge_stretch_ratio": 5.63273564486709,
+      "max_edge_stretch_ratio": 6.17325599544433,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          43,
-          40
+          57,
+          54
         ],
         "phase": 1,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.016898325060734593,
+        "deformed_length_m": 0.01851989744791378,
         "world_endpoints_m": [
           [
-            -0.0017708837985992432,
-            0.6084423661231995,
-            0.3897900879383087
+            -0.00282229483127594,
+            0.6039957404136658,
+            0.40720048546791077
           ],
           [
-            0.0007080025970935822,
-            0.5934075117111206,
-            0.38248518109321594
+            -0.00011245906352996826,
+            0.5874163508415222,
+            0.3994051516056061
           ]
         ],
         "weights": [
@@ -3523,7 +3523,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Recover",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7040827015732032,
       "max_mesh_vertex_motion_m": 1.7857412080512791,
@@ -3531,26 +3531,26 @@
       "first_last_bone_difference_m": 1.7033949150605658,
       "first_last_mesh_difference_m": 1.7852354948335916,
       "minimum_mesh_z_m": 0.001612868974916637,
-      "max_edge_stretch_ratio": 5.632772655799293,
+      "max_edge_stretch_ratio": 6.173292163906115,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          43,
-          40
+          57,
+          54
         ],
         "phase": 0,
         "rest_length_m": 0.003000020971361124,
-        "deformed_length_m": 0.016898436094307374,
+        "deformed_length_m": 0.018520005954057638,
         "world_endpoints_m": [
           [
-            -0.001770898699760437,
-            0.6084423661231995,
-            0.38978996872901917
+            -0.00282229483127594,
+            0.6039957404136658,
+            0.4072003662586212
           ],
           [
-            0.0007080100476741791,
-            0.5934073328971863,
-            0.38248518109321594
+            -0.00011244788765907288,
+            0.5874162316322327,
+            0.39940503239631653
           ]
         ],
         "weights": [
@@ -4191,19 +4191,19 @@
     {
       "format": "blend",
       "clip": "Human_Hit",
-      "jaw_mesh_downward_motion_in_head_space_m": 0.01843815518909001
+      "jaw_mesh_downward_motion_in_head_space_m": 0.018594415625557303
     },
     {
       "format": "fbx",
       "clip": "Human_Hit",
-      "jaw_mesh_downward_motion_in_head_space_m": 0.018437763696835776
+      "jaw_mesh_downward_motion_in_head_space_m": 0.018594030069098585
     }
   ],
   "jaw_sequences": [
     {
       "format": "blend",
       "clip": "Human_Idle",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -4228,20 +4228,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -4277,14 +4286,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -4319,14 +4328,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04023781046271324,
-              -0.024000031873583794
+              -0.15399999916553497,
+              -0.04020964726805687,
+              -0.026000021025538445
             ],
             [
-              0.15000000596046448,
-              0.08400087803602219,
-              0.15696711838245392
+              0.15399999916553497,
+              0.08400053530931473,
+              0.17496709525585175
             ]
           ]
         },
@@ -4361,14 +4370,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04080786183476448,
-              -0.024000108242034912
+              -0.15399999916553497,
+              -0.04071173071861267,
+              -0.026000073179602623
             ],
             [
-              0.15000000596046448,
-              0.08400317281484604,
-              0.1568867266178131
+              0.15399999916553497,
+              0.08400223404169083,
+              0.17488649487495422
             ]
           ]
         },
@@ -4403,14 +4412,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04137558117508888,
-              -0.024000171571969986
+              -0.15399999916553497,
+              -0.04121173918247223,
+              -0.026000116020441055
             ],
             [
-              0.15000000596046448,
-              0.08400576561689377,
-              0.15680451691150665
+              0.15399999916553497,
+              0.08400411158800125,
+              0.17480382323265076
             ]
           ]
         },
@@ -4445,14 +4454,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04161107540130615,
-              -0.024000199511647224
+              -0.15399999916553497,
+              -0.041419029235839844,
+              -0.02600013092160225
             ],
             [
-              0.15000000596046448,
-              0.0840069055557251,
-              0.15676970779895782
+              0.15399999916553497,
+              0.08400499820709229,
+              0.17476880550384521
             ]
           ]
         },
@@ -4487,14 +4496,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04137537628412247,
-              -0.024000175297260284
+              -0.15399999916553497,
+              -0.041211601346731186,
+              -0.026000117883086205
             ],
             [
-              0.15000000596046448,
-              0.08400581032037735,
-              0.15680453181266785
+              0.15399999916553497,
+              0.08400411903858185,
+              0.17480385303497314
             ]
           ]
         },
@@ -4529,14 +4538,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.040807899087667465,
-              -0.024000108242034912
+              -0.15399999916553497,
+              -0.04071194678544998,
+              -0.026000069454312325
             ],
             [
-              0.15000000596046448,
-              0.08400334417819977,
-              0.1568867564201355
+              0.15399999916553497,
+              0.08400236815214157,
+              0.17488650977611542
             ]
           ]
         },
@@ -4571,14 +4580,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04023781791329384,
-              -0.024000035598874092
+              -0.15399999916553497,
+              -0.040209587663412094,
+              -0.026000026613473892
             ],
             [
-              0.15000000596046448,
-              0.08400092273950577,
-              0.15696711838245392
+              0.15399999916553497,
+              0.08400054275989532,
+              0.17496708035469055
             ]
           ]
         },
@@ -4613,14 +4622,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         }
@@ -4630,7 +4639,7 @@
     {
       "format": "blend",
       "clip": "Human_Hit",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -4655,20 +4664,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -4704,14 +4722,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -4746,14 +4764,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.04360425844788551,
-              -0.024000324308872223
+              -0.15399999916553497,
+              -0.0431717187166214,
+              -0.026000209152698517
             ],
             [
-              0.15000002086162567,
-              0.0840158760547638,
-              0.1564595103263855
+              0.15400001406669617,
+              0.08401136845350266,
+              0.17445486783981323
             ]
           ]
         },
@@ -4788,14 +4806,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.051627784967422485,
-              -0.023999454453587532
+              -0.15400001406669617,
+              -0.050189752131700516,
+              -0.025999531149864197
             ],
             [
-              0.1499999761581421,
-              0.08405201137065887,
-              0.15490208566188812
+              0.15399998426437378,
+              0.08403700590133667,
+              0.1728510558605194
             ]
           ]
         },
@@ -4830,14 +4848,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.05910959094762802,
-              -0.023996274918317795
+              -0.15399998426437378,
+              -0.05667179822921753,
+              -0.02599720098078251
             ],
             [
-              0.1499999761581421,
-              0.08408837765455246,
-              0.15293139219284058
+              0.15399998426437378,
+              0.08406296372413635,
+              0.17078429460525513
             ]
           ]
         },
@@ -4872,14 +4890,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.06214958429336548,
-              -0.023994212970137596
+              -0.15399998426437378,
+              -0.05928511172533035,
+              -0.025995712727308273
             ],
             [
-              0.15000000596046448,
-              0.0841042697429657,
-              0.15195991098880768
+              0.15400002896785736,
+              0.08407432585954666,
+              0.16975632309913635
             ]
           ]
         },
@@ -4914,14 +4932,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.05910947546362877,
-              -0.023996280506253242
+              -0.15400001406669617,
+              -0.05667179822921753,
+              -0.025997206568717957
             ],
             [
-              0.14999999105930328,
-              0.08408849686384201,
-              0.15293139219284058
+              0.15399999916553497,
+              0.0840630829334259,
+              0.17078424990177155
             ]
           ]
         },
@@ -4956,14 +4974,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.051627788692712784,
-              -0.023999452590942383
+              -0.15399999916553497,
+              -0.050189755856990814,
+              -0.025999531149864197
             ],
             [
-              0.15000000596046448,
-              0.08405201137065887,
-              0.15490208566188812
+              0.15399998426437378,
+              0.08403700590133667,
+              0.1728510558605194
             ]
           ]
         },
@@ -4998,14 +5016,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.04360425844788551,
-              -0.02400032803416252
+              -0.15399999916553497,
+              -0.0431717187166214,
+              -0.026000207290053368
             ],
             [
-              0.15000002086162567,
-              0.0840158760547638,
-              0.1564594805240631
+              0.15400001406669617,
+              0.08401136845350266,
+              0.17445485293865204
             ]
           ]
         },
@@ -5040,14 +5058,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         }
@@ -5057,7 +5075,7 @@
     {
       "format": "blend",
       "clip": "Human_Fall",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -5082,20 +5100,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -5131,14 +5158,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -5173,14 +5200,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04028993099927902,
-              -0.024000048637390137
+              -0.15399999916553497,
+              -0.04025544226169586,
+              -0.02600003220140934
             ],
             [
-              0.15000002086162567,
-              0.08400106430053711,
-              0.15695984661579132
+              0.15399999916553497,
+              0.08400066196918488,
+              0.17495982348918915
             ]
           ]
         },
@@ -5215,14 +5242,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04180533438920975,
-              -0.02400023303925991
+              -0.15399999916553497,
+              -0.041590023785829544,
+              -0.026000166311860085
             ],
             [
-              0.15000000596046448,
-              0.08400781452655792,
-              0.1567407101392746
+              0.15399998426437378,
+              0.08400550484657288,
+              0.17473956942558289
             ]
           ]
         },
@@ -5257,14 +5284,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.044754788279533386,
-              -0.024000290781259537
+              -0.15400001406669617,
+              -0.04418165236711502,
+              -0.026000162586569786
             ],
             [
-              0.14999999105930328,
-              0.08402077108621597,
-              0.156267449259758
+              0.15399999916553497,
+              0.08401476591825485,
+              0.17425933480262756
             ]
           ]
         },
@@ -5299,14 +5326,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.04850493744015694,
-              -0.02400018461048603
+              -0.15399998426437378,
+              -0.0474657341837883,
+              -0.02600002847611904
             ],
             [
-              0.15000000596046448,
-              0.08403751254081726,
-              0.1555703729391098
+              0.15399998426437378,
+              0.08402683585882187,
+              0.1735437959432602
             ]
           ]
         },
@@ -5341,14 +5368,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.052141427993774414,
-              -0.02399924397468567
+              -0.15400004386901855,
+              -0.05063669756054878,
+              -0.025999341160058975
             ],
             [
-              0.15000000596046448,
-              0.08405450731515884,
-              0.15478408336639404
+              0.15399998426437378,
+              0.08403878659009933,
+              0.17272822558879852
             ]
           ]
         },
@@ -5383,14 +5410,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000005066394806,
-              -0.05484987795352936,
-              -0.023998476564884186
+              -0.15400005877017975,
+              -0.05298936367034912,
+              -0.025998832657933235
             ],
             [
-              0.1499999463558197,
-              0.0840674638748169,
-              0.15412119030952454
+              0.1539999544620514,
+              0.0840480625629425,
+              0.17203576862812042
             ]
           ]
         },
@@ -5425,14 +5452,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.05619267746806145,
-              -0.023997843265533447
+              -0.15400004386901855,
+              -0.054152604192495346,
+              -0.02599845454096794
             ],
             [
-              0.15000003576278687,
-              0.08407414704561234,
-              0.15376634895801544
+              0.15399998426437378,
+              0.08405273407697678,
+              0.1716635525226593
             ]
           ]
         },
@@ -5467,14 +5494,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.056445859372615814,
-              -0.023997779935598373
+              -0.15400004386901855,
+              -0.05437176674604416,
+              -0.025998305529356003
             ],
             [
-              0.1499999612569809,
-              0.08407528698444366,
-              0.15369734168052673
+              0.15399996936321259,
+              0.08405368030071259,
+              0.1715911477804184
             ]
           ]
         }
@@ -5484,7 +5511,7 @@
     {
       "format": "blend",
       "clip": "Human_Faint",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -5509,20 +5536,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -5558,14 +5594,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -5600,14 +5636,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -5642,14 +5678,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04000330716371536,
-              -0.024000003933906555
+              -0.15399999916553497,
+              -0.04000289738178253,
+              -0.0260000042617321
             ],
             [
-              0.15000000596046448,
-              0.08399999141693115,
-              0.15699949860572815
+              0.15399999916553497,
+              0.08400002866983414,
+              0.17499949038028717
             ]
           ]
         },
@@ -5684,14 +5720,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.040473226457834244,
-              -0.024000072851777077
+              -0.15400001406669617,
+              -0.04041719809174538,
+              -0.026000050827860832
             ],
             [
-              0.15000000596046448,
-              0.08400183171033859,
-              0.15693418681621552
+              0.15399999916553497,
+              0.08400125801563263,
+              0.17493408918380737
             ]
           ]
         },
@@ -5726,14 +5762,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.04471370950341225,
-              -0.024000383913517
+              -0.15400001406669617,
+              -0.04414587467908859,
+              -0.02600027061998844
             ],
             [
-              0.15000002086162567,
-              0.08402056992053986,
-              0.15627431869506836
+              0.15399998426437378,
+              0.08401461690664291,
+              0.17426641285419464
             ]
           ]
         },
@@ -5768,14 +5804,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.05243455246090889,
-              -0.023999234661459923
+              -0.15400001406669617,
+              -0.05089176073670387,
+              -0.025999361649155617
             ],
             [
-              0.1499999761581421,
-              0.08405604958534241,
-              0.1547156274318695
+              0.15399996936321259,
+              0.08403992652893066,
+              0.1726568043231964
             ]
           ]
         },
@@ -5810,14 +5846,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.056081611663103104,
-              -0.023997997865080833
+              -0.15400002896785736,
+              -0.05405635014176369,
+              -0.025998450815677643
             ],
             [
-              0.15000002086162567,
-              0.08407367765903473,
-              0.15379640460014343
+              0.15400002896785736,
+              0.08405254036188126,
+              0.17169497907161713
             ]
           ]
         },
@@ -5852,14 +5888,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.05644389986991882,
-              -0.023997794836759567
+              -0.15400002896785736,
+              -0.05437000095844269,
+              -0.025998268276453018
             ],
             [
-              0.1499999761581421,
-              0.08407540619373322,
-              0.1536979228258133
+              0.15399998426437378,
+              0.08405379205942154,
+              0.17159169912338257
             ]
           ]
         },
@@ -5894,14 +5930,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.05644579231739044,
-              -0.023997779935598373
+              -0.15400002896785736,
+              -0.054371703416109085,
+              -0.025998305529356003
             ],
             [
-              0.1499999761581421,
-              0.08407536149024963,
-              0.15369735658168793
+              0.15399998426437378,
+              0.08405381441116333,
+              0.17159107327461243
             ]
           ]
         }
@@ -5911,7 +5947,7 @@
     {
       "format": "blend",
       "clip": "Human_Recover",
-      "source_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "source_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -5936,20 +5972,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -5985,14 +6030,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.05644576996564865,
-              -0.02399778738617897
+              -0.15400002896785736,
+              -0.0543716736137867,
+              -0.025998298078775406
             ],
             [
-              0.1499999761581421,
-              0.08407527953386307,
-              0.1536974310874939
+              0.15399998426437378,
+              0.08405373245477676,
+              0.17159120738506317
             ]
           ]
         },
@@ -6027,14 +6072,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.056445132941007614,
-              -0.023997748270630836
+              -0.15400001406669617,
+              -0.05437115579843521,
+              -0.02599826268851757
             ],
             [
-              0.15000002086162567,
-              0.08407531678676605,
-              0.1536976844072342
+              0.15399998426437378,
+              0.08405368775129318,
+              0.17159134149551392
             ]
           ]
         },
@@ -6069,14 +6114,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.05630140006542206,
-              -0.023997867479920387
+              -0.15400001406669617,
+              -0.05424663424491882,
+              -0.02599835954606533
             ],
             [
-              0.14999999105930328,
-              0.08407457917928696,
-              0.1537369191646576
+              0.15399998426437378,
+              0.08405312895774841,
+              0.17163249850273132
             ]
           ]
         },
@@ -6111,14 +6156,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.054397933185100555,
-              -0.023998577147722244
+              -0.15400001406669617,
+              -0.052597448229789734,
+              -0.025998873636126518
             ],
             [
-              0.14999999105930328,
-              0.08406544476747513,
-              0.15423661470413208
+              0.15399998426437378,
+              0.08404659479856491,
+              0.17215657234191895
             ]
           ]
         },
@@ -6153,14 +6198,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.04850490018725395,
-              -0.02400013990700245
+              -0.15399999916553497,
+              -0.04746556654572487,
+              -0.025999996811151505
             ],
             [
-              0.15000002086162567,
-              0.08403751254081726,
-              0.1555703729391098
+              0.15399999916553497,
+              0.08402683585882187,
+              0.17354370653629303
             ]
           ]
         },
@@ -6195,14 +6240,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04230714589357376,
-              -0.0240002553910017
+              -0.15399998426437378,
+              -0.042031485587358475,
+              -0.02600017376244068
             ],
             [
-              0.14999999105930328,
-              0.08400991559028625,
-              0.15666460990905762
+              0.15399998426437378,
+              0.08400699496269226,
+              0.1746627390384674
             ]
           ]
         },
@@ -6237,14 +6282,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04016568511724472,
-              -0.024000024423003197
+              -0.15400001406669617,
+              -0.0401461161673069,
+              -0.026000017300248146
             ],
             [
-              0.15000000596046448,
-              0.0840006172657013,
-              0.156977117061615
+              0.15399999916553497,
+              0.08400041610002518,
+              0.17497709393501282
             ]
           ]
         },
@@ -6279,14 +6324,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04000084102153778,
-              -0.024000000208616257
+              -0.15399999916553497,
+              -0.04000072926282883,
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
-              0.08399998396635056,
-              0.156999871134758
+              0.15399999916553497,
+              0.08400002866983414,
+              0.17499986290931702
             ]
           ]
         },
@@ -6321,14 +6366,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.03999984264373779,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         }
@@ -6338,7 +6383,7 @@
     {
       "format": "fbx",
       "clip": "Human_Idle",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -6363,20 +6408,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -6412,14 +6466,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -6454,14 +6508,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04023792967200279,
-              -0.024000033736228943
+              -0.15399999916553497,
+              -0.04020964726805687,
+              -0.026000022888183594
             ],
             [
-              0.15000000596046448,
-              0.08400087803602219,
-              0.15696710348129272
+              0.15399999916553497,
+              0.08400053530931473,
+              0.17496708035469055
             ]
           ]
         },
@@ -6496,14 +6550,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04080773890018463,
-              -0.02400011010468006
+              -0.15399999916553497,
+              -0.04071161150932312,
+              -0.026000071316957474
             ],
             [
-              0.15000000596046448,
-              0.08400329202413559,
-              0.15688680112361908
+              0.15399999916553497,
+              0.08400223404169083,
+              0.1748865693807602
             ]
           ]
         },
@@ -6538,14 +6592,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04137558117508888,
-              -0.024000171571969986
+              -0.15399999916553497,
+              -0.04121173918247223,
+              -0.026000116020441055
             ],
             [
-              0.15000000596046448,
-              0.08400576561689377,
-              0.15680456161499023
+              0.15399999916553497,
+              0.08400411158800125,
+              0.17480388283729553
             ]
           ]
         },
@@ -6580,14 +6634,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.0416109561920166,
-              -0.024000201374292374
+              -0.15399999916553497,
+              -0.04141891002655029,
+              -0.0260001327842474
             ],
             [
-              0.15000000596046448,
-              0.0840069055557251,
-              0.15676972270011902
+              0.15399999916553497,
+              0.08400499820709229,
+              0.17476880550384521
             ]
           ]
         },
@@ -6622,14 +6676,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04137549549341202,
-              -0.024000175297260284
+              -0.15399999916553497,
+              -0.04121172055602074,
+              -0.026000119745731354
             ],
             [
-              0.15000000596046448,
-              0.08400581032037735,
-              0.15680453181266785
+              0.15399999916553497,
+              0.08400411903858185,
+              0.17480388283729553
             ]
           ]
         },
@@ -6664,14 +6718,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.040807779878377914,
-              -0.024000106379389763
+              -0.15399999916553497,
+              -0.04071182757616043,
+              -0.026000073179602623
             ],
             [
-              0.15000000596046448,
-              0.08400334417819977,
-              0.1568867713212967
+              0.15399999916553497,
+              0.08400236815214157,
+              0.1748865246772766
             ]
           ]
         },
@@ -6706,14 +6760,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04023781791329384,
-              -0.02400003746151924
+              -0.15399999916553497,
+              -0.040209587663412094,
+              -0.026000026613473892
             ],
             [
-              0.15000000596046448,
-              0.08400092273950577,
-              0.15696708858013153
+              0.15399999916553497,
+              0.08400054275989532,
+              0.17496705055236816
             ]
           ]
         },
@@ -6748,14 +6802,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         }
@@ -6765,7 +6819,7 @@
     {
       "format": "fbx",
       "clip": "Human_Hit",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -6790,20 +6844,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -6839,14 +6902,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -6881,14 +6944,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.04360413923859596,
-              -0.02400033175945282
+              -0.15399999916553497,
+              -0.04317159950733185,
+              -0.026000207290053368
             ],
             [
-              0.15000002086162567,
-              0.08401596546173096,
-              0.15645946562290192
+              0.15399998426437378,
+              0.08401136845350266,
+              0.17445486783981323
             ]
           ]
         },
@@ -6923,14 +6986,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.051627907902002335,
-              -0.02399945631623268
+              -0.15400001406669617,
+              -0.050189875066280365,
+              -0.025999529287219048
             ],
             [
-              0.15000000596046448,
-              0.08405213803052902,
-              0.15490208566188812
+              0.15399999916553497,
+              0.08403712511062622,
+              0.1728510707616806
             ]
           ]
         },
@@ -6965,14 +7028,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.05910959467291832,
-              -0.023996280506253242
+              -0.15399996936321259,
+              -0.05667179822921753,
+              -0.025997206568717957
             ],
             [
-              0.15000000596046448,
-              0.08408862352371216,
-              0.15293139219284058
+              0.15399999916553497,
+              0.08406320214271545,
+              0.17078427970409393
             ]
           ]
         },
@@ -7007,14 +7070,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.062149226665496826,
-              -0.023994212970137596
+              -0.15399998426437378,
+              -0.05928487330675125,
+              -0.025995712727308273
             ],
             [
-              0.15000000596046448,
-              0.0841042697429657,
-              0.15195992588996887
+              0.15400002896785736,
+              0.08407432585954666,
+              0.16975636780261993
             ]
           ]
         },
@@ -7049,14 +7112,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.05910959094762802,
-              -0.023996278643608093
+              -0.15399998426437378,
+              -0.05667179450392723,
+              -0.025997206568717957
             ],
             [
-              0.1499999761581421,
-              0.08408861607313156,
-              0.15293139219284058
+              0.15400001406669617,
+              0.08406320214271545,
+              0.17078427970409393
             ]
           ]
         },
@@ -7091,14 +7154,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.051627907902002335,
-              -0.023999454453587532
+              -0.15400001406669617,
+              -0.050189875066280365,
+              -0.025999529287219048
             ],
             [
-              0.15000000596046448,
-              0.08405213803052902,
-              0.15490208566188812
+              0.15399999916553497,
+              0.08403712511062622,
+              0.1728510707616806
             ]
           ]
         },
@@ -7133,14 +7196,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.04360413923859596,
-              -0.02400033175945282
+              -0.15399996936321259,
+              -0.04317159950733185,
+              -0.02600020542740822
             ],
             [
-              0.15000002086162567,
-              0.08401596546173096,
-              0.15645946562290192
+              0.15399999916553497,
+              0.08401136845350266,
+              0.17445485293865204
             ]
           ]
         },
@@ -7175,14 +7238,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         }
@@ -7192,7 +7255,7 @@
     {
       "format": "fbx",
       "clip": "Human_Fall",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -7217,20 +7280,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -7266,14 +7338,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -7308,14 +7380,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04028981551527977,
-              -0.02400004304945469
+              -0.15399999916553497,
+              -0.04025544226169586,
+              -0.02600003033876419
             ],
             [
-              0.15000002086162567,
-              0.08400118350982666,
-              0.1569598913192749
+              0.15399999916553497,
+              0.08400078117847443,
+              0.17495985329151154
             ]
           ]
         },
@@ -7350,14 +7422,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.041805338114500046,
-              -0.024000218138098717
+              -0.15400002896785736,
+              -0.04159003123641014,
+              -0.02600015141069889
             ],
             [
-              0.14999999105930328,
-              0.08400782942771912,
-              0.15674076974391937
+              0.15399999916553497,
+              0.08400563150644302,
+              0.17473959922790527
             ]
           ]
         },
@@ -7392,14 +7464,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.04475439712405205,
-              -0.024000296369194984
+              -0.15399999916553497,
+              -0.04418138042092323,
+              -0.026000220328569412
             ],
             [
-              0.14999999105930328,
-              0.08402089029550552,
-              0.15626733005046844
+              0.15399998426437378,
+              0.0840148776769638,
+              0.1742592602968216
             ]
           ]
         },
@@ -7434,14 +7506,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.048505090177059174,
-              -0.024000197649002075
+              -0.15400001406669617,
+              -0.04746567830443382,
+              -0.02600005827844143
             ],
             [
-              0.14999999105930328,
-              0.0840374305844307,
-              0.1555703580379486
+              0.15399999916553497,
+              0.08402669429779053,
+              0.17354372143745422
             ]
           ]
         },
@@ -7476,14 +7548,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.05214153975248337,
-              -0.023999352008104324
+              -0.15399999916553497,
+              -0.050636958330869675,
+              -0.025999417528510094
             ],
             [
-              0.15000002086162567,
-              0.08405464887619019,
-              0.1547841876745224
+              0.15399998426437378,
+              0.08403893560171127,
+              0.1727282702922821
             ]
           ]
         },
@@ -7518,14 +7590,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000005066394806,
-              -0.05484985560178757,
-              -0.02399849332869053
+              -0.15399999916553497,
+              -0.052989356219768524,
+              -0.02599881961941719
             ],
             [
-              0.1499999612569809,
-              0.08406762033700943,
-              0.15412119030952454
+              0.15399996936321259,
+              0.08404822647571564,
+              0.17203572392463684
             ]
           ]
         },
@@ -7560,14 +7632,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.05619275942444801,
-              -0.023997848853468895
+              -0.15400002896785736,
+              -0.05415268614888191,
+              -0.025998475030064583
             ],
             [
-              0.15000000596046448,
-              0.08407410979270935,
-              0.15376637876033783
+              0.15399996936321259,
+              0.08405279368162155,
+              0.1716635376214981
             ]
           ]
         },
@@ -7602,14 +7674,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000005066394806,
-              -0.05644583702087402,
-              -0.023997772485017776
+              -0.15400001406669617,
+              -0.05437174439430237,
+              -0.025998272001743317
             ],
             [
-              0.15000002086162567,
-              0.08407542109489441,
-              0.1536976546049118
+              0.15400002896785736,
+              0.08405384421348572,
+              0.17159125208854675
             ]
           ]
         }
@@ -7619,7 +7691,7 @@
     {
       "format": "fbx",
       "clip": "Human_Faint",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -7644,20 +7716,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -7693,14 +7774,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -7735,14 +7816,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         },
@@ -7777,14 +7858,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04000318795442581,
-              -0.024000005796551704
+              -0.15399999916553497,
+              -0.04000282287597656,
+              -0.02600000612437725
             ],
             [
-              0.15000000596046448,
-              0.08400007337331772,
-              0.15699951350688934
+              0.15399999916553497,
+              0.08400002866983414,
+              0.17499950528144836
             ]
           ]
         },
@@ -7819,14 +7900,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.04047310724854469,
-              -0.024000072851777077
+              -0.15400001406669617,
+              -0.040417078882455826,
+              -0.026000048965215683
             ],
             [
-              0.15000000596046448,
-              0.08400183171033859,
-              0.1569342464208603
+              0.15399999916553497,
+              0.08400125801563263,
+              0.17493413388729095
             ]
           ]
         },
@@ -7861,14 +7942,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04471362382173538,
-              -0.024000383913517
+              -0.15399999916553497,
+              -0.044145792722702026,
+              -0.026000279933214188
             ],
             [
-              0.15000003576278687,
-              0.08402058482170105,
-              0.1562744528055191
+              0.15400001406669617,
+              0.08401462435722351,
+              0.1742665022611618
             ]
           ]
         },
@@ -7903,14 +7984,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.052434660494327545,
-              -0.023999281227588654
+              -0.15400001406669617,
+              -0.0508919321000576,
+              -0.025999408215284348
             ],
             [
-              0.14999999105930328,
-              0.08405596017837524,
-              0.1547156125307083
+              0.15399998426437378,
+              0.0840398520231247,
+              0.1726568639278412
             ]
           ]
         },
@@ -7945,14 +8026,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.05608167126774788,
-              -0.023997943848371506
+              -0.15399996936321259,
+              -0.054056551307439804,
+              -0.025998396798968315
             ],
             [
-              0.15000000596046448,
-              0.08407370746135712,
-              0.15379641950130463
+              0.15400001406669617,
+              0.08405251055955887,
+              0.1716950535774231
             ]
           ]
         },
@@ -7987,14 +8068,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.056443993002176285,
-              -0.023997843265533447
+              -0.15400002896785736,
+              -0.05437010899186134,
+              -0.025998294353485107
             ],
             [
-              0.1499999761581421,
-              0.08407528698444366,
-              0.15369804203510284
+              0.15399996936321259,
+              0.08405366539955139,
+              0.17159168422222137
             ]
           ]
         },
@@ -8029,14 +8110,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.05644572153687477,
-              -0.02399781346321106
+              -0.15399999916553497,
+              -0.05437162518501282,
+              -0.02599833533167839
             ],
             [
-              0.15000000596046448,
-              0.08407535403966904,
-              0.15369753539562225
+              0.15400001406669617,
+              0.08405368775129318,
+              0.171591117978096
             ]
           ]
         }
@@ -8046,7 +8127,7 @@
     {
       "format": "fbx",
       "clip": "Human_Recover",
-      "source_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "source_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -8071,20 +8152,29 @@
           29,
           30,
           31,
-          35,
-          36,
-          37,
+          32,
           38,
           39,
           40,
           41,
-          129,
-          134,
-          135,
-          136,
-          140,
-          141,
-          142
+          42,
+          43,
+          44,
+          45,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          143,
+          148,
+          149,
+          150,
+          154,
+          155,
+          156
         ]
       },
       "selection": "Every vertex with Jaw weight >.001, including mixed Head/Jaw skin and oral lining",
@@ -8120,14 +8210,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000003576278687,
-              -0.05644578859210014,
-              -0.02399781160056591
+              -0.15399998426437378,
+              -0.05437169596552849,
+              -0.02599836140871048
             ],
             [
-              0.15000000596046448,
-              0.08407548815011978,
-              0.1536974161863327
+              0.15400001406669617,
+              0.0840538814663887,
+              0.17159117758274078
             ]
           ]
         },
@@ -8162,14 +8252,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.056445155292749405,
-              -0.023997757583856583
+              -0.15400002896785736,
+              -0.054371077567338943,
+              -0.025998268276453018
             ],
             [
-              0.15000000596046448,
-              0.08407536149024963,
-              0.1536976546049118
+              0.15399998426437378,
+              0.08405368030071259,
+              0.17159131169319153
             ]
           ]
         },
@@ -8204,14 +8294,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.05630118027329445,
-              -0.023997874930500984
+              -0.15400001406669617,
+              -0.05424652248620987,
+              -0.025998329743742943
             ],
             [
-              0.15000000596046448,
-              0.08407469093799591,
-              0.15373696386814117
+              0.15400001406669617,
+              0.08405327051877975,
+              0.1716325432062149
             ]
           ]
         },
@@ -8246,14 +8336,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000005066394806,
-              -0.05439798906445503,
-              -0.023998688906431198
+              -0.15400001406669617,
+              -0.05259748920798302,
+              -0.025998994708061218
             ],
             [
-              0.1499999761581421,
-              0.08406538516283035,
-              0.1542365550994873
+              0.15399996936321259,
+              0.08404658734798431,
+              0.1721564531326294
             ]
           ]
         },
@@ -8288,14 +8378,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.048505038022994995,
-              -0.024000152945518494
+              -0.15400001406669617,
+              -0.04746583104133606,
+              -0.026000041514635086
             ],
             [
-              0.15000000596046448,
-              0.08403760939836502,
-              0.15557029843330383
+              0.15399999916553497,
+              0.08402694016695023,
+              0.17354370653629303
             ]
           ]
         },
@@ -8330,14 +8420,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000002086162567,
-              -0.04230702295899391,
-              -0.024000240489840508
+              -0.15400001406669617,
+              -0.042031481862068176,
+              -0.026000158861279488
             ],
             [
-              0.14999999105930328,
-              0.08401000499725342,
-              0.15666460990905762
+              0.15399998426437378,
+              0.08400711417198181,
+              0.1746627539396286
             ]
           ]
         },
@@ -8372,14 +8462,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14999999105930328,
-              -0.04016580805182457,
-              -0.024000026285648346
+              -0.15399999916553497,
+              -0.04014623537659645,
+              -0.026000019162893295
             ],
             [
-              0.15000002086162567,
-              0.0840006172657013,
-              0.1569771021604538
+              0.15400001406669617,
+              0.08400041610002518,
+              0.174977108836174
             ]
           ]
         },
@@ -8414,14 +8504,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
-              -0.04000072181224823,
-              -0.023999998345971107
+              -0.15399999916553497,
+              -0.04000065103173256,
+              -0.025999998673796654
             ],
             [
-              0.15000000596046448,
-              0.08399998396635056,
-              0.15699990093708038
+              0.15399999916553497,
+              0.08400002866983414,
+              0.1749998927116394
             ]
           ]
         },
@@ -8456,14 +8546,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.15000000596046448,
+              -0.15399999916553497,
               -0.039999961853027344,
-              -0.024000000208616257
+              -0.026000000536441803
             ],
             [
-              0.15000000596046448,
+              0.15399999916553497,
               0.08399999141693115,
-              0.15700000524520874
+              0.17499999701976776
             ]
           ]
         }

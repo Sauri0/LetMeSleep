@@ -32,6 +32,11 @@ and on the hem; trouser legs 12% wider from the knee down with a 40 mm cuff;
 ~58 mm 5-7 sided dots that are skipped rather than shrunk into overlaps; the
 forearm flattens into the palm and closes inside it (no end cap showing as a
 dark crescent at the wrist).
+Round 9 (review r8): the forearm tip takes the palm's flat section over a
+narrowed palm wrist end (no tab above the wrist seam); low-relief densified
+dots with trouser-blue side walls; pajama hips 10 mm narrower per side; a
+Human_PantsShade hem; a crew collar that opens with the thicker neck and
+rises at the back; the seat filler recessed behind the leg tops.
 """
 import math
 from mathutils import Vector
@@ -109,6 +114,15 @@ def arm_z(x):
     return 1.17-.01*(x-.25)/.27 if x<.52 else 1.16-.01*(x-.52)/.23
 
 
+# Bare arm stations (x from the body axis) with the section half-width (bind
+# z) and half-depth (bind y); see clothing(). Round 9: the tip takes the
+# palm's flat section up to x .695, a little larger than the narrowed wrist
+# end of the palm (build_characters.human), and closes inside it.
+ARM_XS=[.275,.330,.400,.470,.520,.570,.620,.665,.695,.712,.728]
+ARM_WIDTHS=[.0520,.0518,.0512,.0503,.0495,.0478,.0462,.0450,.0445,.0395,.0220]
+ARM_DEPTHS=[.0520,.0518,.0512,.0503,.0495,.0470,.0442,.0395,.0285,.0200,.0120]
+
+
 def _hash(*values):
     """Deterministic pseudo random in [0,1) (reproducible source generation)."""
     return math.sin(sum(v*k for v,k in zip(values,(12.9898,78.233,37.719,4.581)))*43758.5453)%1
@@ -156,14 +170,27 @@ def facet(obj, amount, axis, movable, seed):
     return obj
 
 
-def dots(mesh, leg, rings_z, side, material, sides=12):
+# Round 9 (review r8: at 3.5 mm proud with a light side wall the dots read as
+# pebbles glued on and stood out of the leg's silhouette with light/grey
+# rims): a low relief, 2.2 mm at the centre and 1.6 mm at the rim. To keep
+# the leg's facet creases from poking through at that height the dot is
+# densified (every outline edge in DOT_EDGE_SPLITS, two inner rings) and each
+# vertex sits on the outer of the two possible triangulations of the leg quad
+# under it. The side wall takes the trouser material (blue, tinted with the
+# pajama colour), and there is no bottom face (the wall ends inside the leg).
+DOT_LIFT_CENTRE,DOT_LIFT_RIM,DOT_WALL_DEPTH=.0022,.0016,.0015
+DOT_EDGE_SPLITS=3
+
+
+def dots(mesh, leg, rings_z, side, material, sides=12, wall_material=None):
     """Light irregular polka dots (UI-06 screen 5), no texture.
 
-    6-7 sided faceted patches with random rotation and 0.85-1.15 scale, placed
+    5-7 sided faceted patches with random rotation and 0.85-1.15 scale, placed
     on a jittered spiral (no column alignment). Every vertex is projected onto
-    the actual trouser facets and lifted 2.5 mm, with a mid ring so the patch
-    folds over facet creases instead of floating. Each vertex carries the
-    trouser weights of its own position so it deforms with the leg.
+    the actual trouser facets and lifted (round 9: 1.6-2.2 mm), with densified
+    rings so the patch folds over facet creases instead of floating. Each
+    vertex carries the trouser weights of its own position so it deforms with
+    the leg.
     """
     points=[Vector(v.co) for v in leg.data.vertices]
     P=lambda i,j:points[i*sides+j%sides]
@@ -179,6 +206,11 @@ def dots(mesh, leg, rings_z, side, material, sides=12):
         normal=((p01-p00).lerp(p11-p10,t)).cross(high-low).normalized()
         center=ring_centers[i].lerp(ring_centers[i+1],t)
         if normal.dot(point-center)<0:normal=-normal
+        # Round 9: the leg quads are not planar; the exporter/importer may
+        # split either diagonal. Sit on the outer of the two triangulations.
+        a=p00+(p01-p00)*u+(p11-p01)*t if u>=t else p00+(p11-p10)*u+(p10-p00)*t
+        b=p00+(p01-p00)*u+(p10-p00)*t if u+t<=1 else p11+(p10-p11)*(1-u)+(p01-p11)*(1-t)
+        point=point+normal*max((a-point).dot(normal),(b-point).dot(normal))
         return point,normal,(point-center).xy.length
 
     seed=1.7 if side=='L' else 5.3
@@ -205,7 +237,11 @@ def dots(mesh, leg, rings_z, side, material, sides=12):
                 # Hips-weighted leg tops over the seat, which stay above the
                 # menu cushion; the mixed hip/thigh band (z .60-.70) behind
                 # the thigh does not (it rests on the cushion).
-                a0=1.5*math.pi+(k-.5)*.80+(_hash(row,k,seed,1)-.5)*.2
+                # Round 9: the pair turns 0.15 rad toward the outside of the
+                # hip (smaller tube angles on the left leg, larger on the
+                # right), so the crotch-side dot no longer wraps into the V
+                # between the legs where the seat filler shows.
+                a0=1.5*math.pi+(k-.5)*.80+(-.15 if side=='L' else .15)+(_hash(row,k,seed,1)-.5)*.2
                 z=z0+(_hash(row,k,seed,2)-.5)*.008
                 # Round 8: the seat dots keep the round-6 size (~45 mm): a
                 # 58 mm dot reaches down into the mixed hip/thigh band.
@@ -222,35 +258,43 @@ def dots(mesh, leg, rings_z, side, material, sides=12):
                 if distance<radius+other_r+.010:radius=distance-other_r-.010
             if radius<.72*wanted:continue
             placed.append((a0,z,radius,leg_radius))
-    verts=[];faces=[]
+    verts=[];faces=[];walls=[]
     for index,(a0,z0,radius,leg_radius) in enumerate(placed):
         count=5+min(2,int(_hash(index,seed,7,0)*3))  # round 8: 5-7 sides
         spin=_hash(index,seed,8,0)*2*math.pi
-        outline=[]
+        corners=[]
         for q in range(count):
             angle=spin+(q+(_hash(index,q,seed,9)-.5)*.45)*2*math.pi/count
             reach=radius*(.84+.30*_hash(index,q,seed,10))
-            outline.append((reach*math.cos(angle),reach*math.sin(angle)))
-        local=[(0.0,0.0)]+[(x*.5,y*.5) for x,y in outline]+outline
-        base=len(verts)
-        # Round 8: 3.5 mm proud (was 2.5) so the larger dots bridge the leg's
-        # facet creases without the cloth poking through their middle.
-        for lift in (.0035,-.0020):
-            for x,y in local:
-                point,normal,_=surface(a0+x/leg_radius,z0+y)
-                # Back of the thigh (seated on the menu cushion): flatter dot
-                # (1.26 mm proud, as before).
-                scale=.36 if normal.y>.5 and z0>.52 else 1.0
-                verts.append(tuple(point+normal*lift*scale))
-        layer=len(local);mid=1;out=1+count
-        for q in range(count):
-            n=(q+1)%count
-            faces.append((base,base+mid+q,base+mid+n))
-            faces.append((base+mid+q,base+out+q,base+out+n,base+mid+n))
-            faces.append((base+layer,base+layer+mid+n,base+layer+mid+q))
-            faces.append((base+layer+mid+q,base+layer+mid+n,base+layer+out+n,base+layer+out+q))
-            faces.append((base+out+q,base+layer+out+q,base+layer+out+n,base+out+n))
+            corners.append((reach*math.cos(angle),reach*math.sin(angle)))
+        # Round 9: straight outline edges split in DOT_EDGE_SPLITS (the polygon
+        # keeps its 5-7 corners), two inner rings at 1/3 and 2/3.
+        outline=[(ax+(bx-ax)*k/DOT_EDGE_SPLITS,ay+(by-ay)*k/DOT_EDGE_SPLITS)
+                 for (ax,ay),(bx,by) in zip(corners,corners[1:]+corners[:1]) for k in range(DOT_EDGE_SPLITS)]
+        n_out=len(outline)
+        rings=[[(x*f,y*f) for x,y in outline] for f in (1/3,2/3,1.0)]
+        # Back of the thigh (seated on the menu cushion): flatter dot (~1.3 mm
+        # proud at the centre, as before).
+        _,centre_normal,_=surface(a0,z0)
+        scale=(.36*.0035/DOT_LIFT_CENTRE) if centre_normal.y>.5 and z0>.52 else 1.0
+        def put(x,y,lift):
+            point,normal,_=surface(a0+x/leg_radius,z0+y)
+            verts.append(tuple(point+normal*lift*scale));return len(verts)-1
+        centre=put(0.0,0.0,DOT_LIFT_CENTRE)
+        lifts=(DOT_LIFT_CENTRE,DOT_LIFT_CENTRE+(DOT_LIFT_RIM-DOT_LIFT_CENTRE)*.5,DOT_LIFT_RIM)
+        ids=[[put(x,y,lift) for x,y in ring] for ring,lift in zip(rings,lifts)]
+        bottom=[put(x,y,-DOT_WALL_DEPTH) for x,y in rings[-1]]
+        for q in range(n_out):
+            n=(q+1)%n_out
+            faces.append((centre,ids[0][q],ids[0][n]))
+            for inner,outer in ((ids[0],ids[1]),(ids[1],ids[2])):
+                faces.append((inner[q],outer[q],outer[n],inner[n]))
+            faces.append((ids[2][q],bottom[q],bottom[n],ids[2][n]))
+            walls.append(len(faces)-1)
     obj=mesh('PajamaDots.'+side,verts,faces,material)
+    if wall_material is not None:
+        obj.data.materials.append(wall_material)
+        for index in walls:obj.data.polygons[index].material_index=1
     assign(obj,[leg_weights(v.co,side) for v in obj.data.vertices])
     return obj
 
@@ -292,10 +336,14 @@ def clothing(mesh, tube, side, sign, m):
     # showed as a dark crescent at the wrist. The last stations now flatten
     # into the palm and close to a small tip inside it, so only the plain
     # intersection of two lit surfaces remains.
-    xs=[.275,.330,.400,.470,.520,.570,.620,.665,.695,.712,.728]
-    arm=tube('Arm.'+side,[(sign*x,0,arm_z(x)) for x in xs],
-             [.0520,.0518,.0512,.0503,.0495,.0478,.0458,.0432,.0395,.0340,.0220],
-             [.0520,.0518,.0512,.0503,.0495,.0470,.0442,.0400,.0300,.0205,.0120],m['skin'],sides=8)
+    # Round 9 (review r8: a flat tab of the palm stood above the zigzag seam on
+    # the thumb side, and thin seam lines showed in profile): the palm (.0425
+    # wide, ~.025 deep at its wrist end) was wider than the round forearm tip,
+    # so its flat edges emerged ~20 mm before its faces did. The forearm tip now
+    # takes the palm's flat section up to x .695 over a narrowed palm wrist end
+    # and then closes inside it: the palm emerges all round within x .70-.712,
+    # a single ring-like seam (no tab, no sliver).
+    arm=tube('Arm.'+side,[(sign*x,0,arm_z(x)) for x in ARM_XS],ARM_WIDTHS,ARM_DEPTHS,m['skin'],sides=8)
     assign(arm,[arm_weights(v.co,side) for v in arm.data.vertices])
     # Dotted pajama trousers (UI-06 screen 5): straight legs 15% wider than
     # round 2 (depth unchanged so the seated thigh keeps clear of the cushion),
@@ -306,19 +354,24 @@ def clothing(mesh, tube, side, sign, m):
     # crotch panel.
     # Round 5: softer patella and a gradual convergence from the knee up, so
     # the thigh has no horizontal shading band.
+    # Round 9 (art director r6 / review r8): the pajama hips lose 10 mm per
+    # side (the leg tops keep meeting at the centre: centre and half-width
+    # each -5 mm from z .60 up), keeping the gap to the hanging hands.
     rings=[(.100,0,.122),(.200,0,.122),(.32,0,.122),(.375,0,.121),(.410,-.002,.120),(.440,-.004,.119),
-           (.470,-.002,.117),(.505,0,.114),(.60,0,.106),(.70,0,.096),(.78,0,.091)]
+           (.470,-.002,.117),(.505,0,.114),(.60,0,.101),(.70,0,.091),(.78,0,.086)]
     # Round 8 (art director r6, UI-06 screen 5): 12% wider from the knee down
     # (width only: the seated thigh depth over the menu cushion is unchanged).
     leg=tube('PajamaLeg.'+side,[(sign*x,y,z) for z,y,x in rings],
-        [.0896,.0896,.0896,.0896,.0907,.0918,.0918,.0875,.081,.084,.087],
+        [.0896,.0896,.0896,.0896,.0907,.0918,.0918,.0875,.076,.079,.082],
         [.076,.076,.077,.078,.080,.084,.082,.080,.078,.075,.074],m['pajamas'],sides=12)
     assign(leg,[leg_weights(v.co,side) for v in leg.data.vertices])
-    dots(mesh,leg,[z for z,y,x in rings],side,m['dots'])
+    dots(mesh,leg,[z for z,y,x in rings],side,m['dots'],wall_material=m['pajamas'])
     # Rolled cuff: 9 mm proud of the leg, bottom edge at 70 mm. Round 8: a
     # 40 mm hem (was 65) on the 12% wider leg.
+    # Round 9 (art director r6, UI-06 screen 5): the hem is the darker
+    # Human_PantsShade #23407E (tinted with the pajama colour in Unity).
     cuff=tube('TrouserCuff.'+side,[(sign*.122,0,z) for z in [.070,.075,.105,.110]],
-              [.094,.100,.100,.095],[.080,.085,.085,.081],m['pajamas'],'LowerLeg.'+side,12)
+              [.094,.100,.100,.095],[.080,.085,.085,.081],m.get('pantsshade',m['pajamas']),'LowerLeg.'+side,12)
     return cuff
 
 
@@ -327,8 +380,11 @@ def hip_block(mesh, m):
     now meet at the centre), flush with their backs, so the crotch no longer
     shows a dark recessed panel. It follows Hips like the round-3 seat."""
     count=16
+    # Round 9: its back (y .074-.076) stood 1-2 mm behind the leg tops' backs
+    # (.074-.075) and hid the inner seat dots near the crotch; it is recessed
+    # 4 mm behind them now (back at y .070).
     sections=[(.672,.030,.040,.010),(.688,.052,.050,.012),(.702,.110,.058,.012),
-              (.716,.150,.062,.012),(.745,.160,.064,.012),(.775,.160,.064,.012)]
+              (.716,.150,.058,.012),(.745,.160,.058,.012),(.775,.160,.058,.012)]
     block=loft_rings(mesh,'TrouserSeat',[boxy(a,b,count,z,3.0,yc) for z,a,b,yc in sections],m['pajamas'])
     assign(block,[{'Hips':1.0} for _ in block.data.vertices])
     return block
@@ -354,7 +410,7 @@ def torso(mesh, tube, m):
     # planes under the arms and the hem band: the faceted folds of PER-04.
     sections=[(.792,.180,.093),(.905,.182,.100),(1.035,.192,.112),(1.150,.200,.115),
               (1.188,.200,.112),(1.205,.197,.108),(1.2167,.188,.104),(1.2234,.170,.100),
-              (1.2326,.140,.095),(1.243,.106,.089)]
+              (1.2326,.140,.099),(1.243,.108,.097)]
     count=12
     rings=[boxy(.176,.088,count,.786)]+[boxy(.186,.098,count,.756)]
     rings+=[boxy(a,b,count,z,3.2 if z<1.20 else 2.6) for z,a,b in sections]
@@ -375,13 +431,20 @@ def torso(mesh, tube, m):
     # Elastic pajama waistband under the hem: flat front almost flush with the
     # hem so it is not a dark shadowed belt (<=5% darker than the trousers).
     count=16
-    waist=loft_rings(mesh,'Waistband',[boxy(.170,.074,count,.748,3.0,.004),boxy(.178,.082,count,.751,3.0,.003),
-                                        boxy(.178,.084,count,.782,3.0,.003)],m['pajamas'])
+    # Round 9: 10 mm narrower per side with the pajama hips.
+    waist=loft_rings(mesh,'Waistband',[boxy(.160,.074,count,.748,3.0,.004),boxy(.168,.082,count,.751,3.0,.003),
+                                        boxy(.168,.084,count,.782,3.0,.003)],m['pajamas'])
     assign(waist,[{'Hips':1.0} for _ in waist.data.vertices])
     count=14
-    ellipse=lambda rx,ry,z:[(rx*math.cos(2*math.pi*j/count),.010+ry*math.sin(2*math.pi*j/count),z) for j in range(count)]
+    ellipse=lambda rx,ry,z,yc=.010:[(rx*math.cos(2*math.pi*j/count),yc+ry*math.sin(2*math.pi*j/count),z) for j in range(count)]
     # Round 5: wider crew collar around the thicker neck.
-    collar=[ellipse(.097,.086,1.231),ellipse(.094,.083,1.250),ellipse(.083,.075,1.250),ellipse(.085,.076,1.231)]
+    # Round 9: the neck is ~20% thicker and 5 mm further back; the collar
+    # opens with it (still inside the shirt's neck ring, x .106).
+    collar=[ellipse(.106,.096,1.231,.014),ellipse(.104,.094,1.252,.014),ellipse(.095,.085,1.252,.014),ellipse(.097,.087,1.231,.014)]
+    # The crew neck rises toward the back (+14 mm at the nape), which also
+    # shortens the neck seen from the side and behind.
+    for loop in collar[1:3]:
+        loop[:]=[(x,y,z+.014*max(0.0,(y-.014)/.094)) for x,y,z in loop]
     obj=mesh('ShirtCollar',[p for loop in collar for p in loop],
              [(r*count+j,r*count+(j+1)%count,((r+1)%4)*count+(j+1)%count,((r+1)%4)*count+j)
               for r in range(4) for j in range(count)],m['shirt'])

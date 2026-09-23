@@ -10617,7 +10617,7 @@
       "max_foot_error_m": 4.261999115632046e-07,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d"
+      "source_sha256": "b661799b0c5046b58a6c2834323fd956726ff82942f7b012386e170be1481b38"
     },
     {
       "format": "blend",
@@ -15953,7 +15953,7 @@
       "max_foot_error_m": 6.322027276634104e-08,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d"
+      "source_sha256": "b661799b0c5046b58a6c2834323fd956726ff82942f7b012386e170be1481b38"
     },
     {
       "format": "blend",
@@ -17857,7 +17857,7 @@
       "max_foot_error_m": 6.322027276634104e-08,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d"
+      "source_sha256": "b661799b0c5046b58a6c2834323fd956726ff82942f7b012386e170be1481b38"
     },
     {
       "format": "blend",
@@ -20289,7 +20289,7 @@
       "max_foot_error_m": 6.322027276634104e-08,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d"
+      "source_sha256": "b661799b0c5046b58a6c2834323fd956726ff82942f7b012386e170be1481b38"
     },
     {
       "format": "fbx",
@@ -30905,7 +30905,7 @@
       "max_foot_error_m": 5.969069167437188e-07,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466"
+      "source_sha256": "3759c994963158edb24d3e4a2e488fa097daf7117da4191ffc6165a888409906"
     },
     {
       "format": "fbx",
@@ -36241,7 +36241,7 @@
       "max_foot_error_m": 1.3532835522199042e-07,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466"
+      "source_sha256": "3759c994963158edb24d3e4a2e488fa097daf7117da4191ffc6165a888409906"
     },
     {
       "format": "fbx",
@@ -38145,7 +38145,7 @@
       "max_foot_error_m": 1.3532835522199042e-07,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466"
+      "source_sha256": "3759c994963158edb24d3e4a2e488fa097daf7117da4191ffc6165a888409906"
     },
     {
       "format": "fbx",
@@ -40577,7 +40577,7 @@
       "max_foot_error_m": 1.3532835522199042e-07,
       "minimum_pelvis_cloth_height_m": 0.5890000462532043,
       "maximum_seat_interior_vertices": 0,
-      "source_sha256": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466"
+      "source_sha256": "3759c994963158edb24d3e4a2e488fa097daf7117da4191ffc6165a888409906"
     }
   ],
   "source_fbx": [
@@ -40621,13 +40621,13 @@
       "format": "blend",
       "from": "MenuSwat",
       "to": "MenuReturn",
-      "max_mesh_boundary_difference_m": 3.538829710196828e-07
+      "max_mesh_boundary_difference_m": 3.4240261593687705e-07
     },
     {
       "format": "blend",
       "from": "MenuReturn",
       "to": "MenuSeatedIdle",
-      "max_mesh_boundary_difference_m": 5.238770196213408e-07
+      "max_mesh_boundary_difference_m": 5.405651672845201e-07
     },
     {
       "format": "fbx",
@@ -40651,35 +40651,35 @@
       "format": "fbx",
       "from": "MenuSwat",
       "to": "MenuReturn",
-      "max_mesh_boundary_difference_m": 6.880400407680986e-07
+      "max_mesh_boundary_difference_m": 6.447228089804631e-07
     },
     {
       "format": "fbx",
       "from": "MenuReturn",
       "to": "MenuSeatedIdle",
-      "max_mesh_boundary_difference_m": 3.998401124775034e-07
+      "max_mesh_boundary_difference_m": 3.816559456248789e-07
     }
   ],
   "layouts": {
     "blend": {
       "meshes": {
-        "HumanBody": 2950,
-        "HandSkin.L": 2386,
-        "HandSkin.R": 2385,
-        "HumanHead": 1208,
+        "HumanBody": 5312,
+        "HandSkin.L": 2346,
+        "HandSkin.R": 2346,
+        "HumanHead": 1222,
         "HumanNightcap": 209
       },
-      "triangles": 17780
+      "triangles": 21563
     },
     "fbx": {
       "meshes": {
-        "HumanBody": 2950,
-        "HumanHead": 1208,
-        "HandSkin.L": 2386,
-        "HandSkin.R": 2385,
+        "HumanHead": 1222,
+        "HumanBody": 5312,
+        "HandSkin.L": 2346,
+        "HandSkin.R": 2346,
         "HumanNightcap": 209
       },
-      "triangles": 17780
+      "triangles": 21563
     }
   },
   "tool_geometry_included": false,

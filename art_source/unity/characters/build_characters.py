@@ -278,12 +278,18 @@ def human():
     # a warm beige T-shirt #E2C9A4 (it read cold white) with Human_ShirtShade
     # #C4A983 on the side planes under the arms and on the hem; paler #DCD8CE
     # dots. The eye whites keep a high albedo (#F0F0F4, shade #E6E8EE).
+    # Round 9 (review r8): the T-shirt clipped to a yellowish white in the
+    # customization preview and read cold grey in daylight maps; a slightly
+    # warmer, more saturated base #DFC195 (shade #C1A277) keeps the beige.
+    # Round 9 (art director r6 / review r8): the 40 mm trouser hem in
+    # Human_PantsShade #23407E (Unity tints it with the pajama channel, at the
+    # same relative shade).
     m={'skin':palette('Human_Skin','#C98B5A',.82),'pajamas':palette('Human_Pajamas','#2D4F9A',.88),
        'trim':palette('Human_Piping','#F5F2EC',.90),'sole':palette('Human_SlipperSole','#1E2440',.92),
        'white':palette('Character_EyeWhite','#F0F0F4',.55),'dark':palette('Character_Expression','#16110F',.92),
        'eyeshade':palette('Human_EyeWhiteShade','#E6E8EE',.60),
-       'shirt':palette('Human_Shirt','#E2C9A4',.92),'shirtshade':palette('Human_ShirtShade','#C4A983',.92),
-       'dots':palette('Human_PajamaDots','#DCD8CE',.88),
+       'shirt':palette('Human_Shirt','#DFC195',.92),'shirtshade':palette('Human_ShirtShade','#C1A277',.92),
+       'dots':palette('Human_PajamaDots','#DCD8CE',.88),'pantsshade':palette('Human_PantsShade','#23407E',.88),
        'cap':palette('Human_Nightcap','#B02A27',.95),'band':palette('Human_NightcapBand','#8E2220',.95),
        'hair':palette('Human_Hair','#3A2619',.85),'slipper':palette('Human_Slipper','#25306A',.90)}
     # Blender look-dev only: a faint self-light keeps the pompom white under
@@ -332,9 +338,13 @@ def human():
         # Round 6: +10% longer beyond the wrist (palm and fingers), same width.
         HAND=1.25;HAND_LENGTH=1.10;wrist=.75
         grow=lambda x:wrist+HAND*(x-wrist)*(HAND_LENGTH if x>wrist else 1)
+        # Round 9 (review r8, wrist seam): the palm's wrist end narrows (.035 x
+        # .021 at its cap, was .0425 x .026) so it starts inside the forearm tip
+        # (author_human_joints.ARM_*) and emerges within x .70-.712 all round:
+        # no flat tab of the palm above the seam on the thumb side.
         parts=[tube('Palm.'+side,[(s*grow(x),0,1.15) for x in [.687,.710,.735,.755,.780,.812,.842]],
-                    [HAND*v for v in (.034,.034,.034,.041,.056,.063,.060)],
-                    [1.04*v for v in (.025,.024,.021,.021,.026,.028,.025)],skin,'Hand.'+side,12)]
+                    [HAND*v for v in (.028,.031,.034,.041,.056,.063,.060)],
+                    [1.04*v for v in (.020,.022,.021,.021,.026,.028,.025)],skin,'Hand.'+side,12)]
         paths=[]
         inward=Vector((0,-1,0))
         for digit,zoff,length,spread in [('Index',.038,.104,.05),('Middle',.010,.116,.012),('Ring',-.019,.106,-.03),

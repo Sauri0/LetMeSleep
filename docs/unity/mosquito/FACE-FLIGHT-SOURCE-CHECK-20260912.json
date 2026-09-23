@@ -2,7 +2,7 @@
   "schema": "lms-mosquito-face-flight-source-v1",
   "passed": true,
   "errors": [],
-  "scope": "pure thick-lid topology at five closures, front/side-ray coverage of white/pupil samples with rear housing, open pupil exposure, cap/collar never outside every covering shell at nine closures (r7), flight channels/seams",
+  "scope": "pure thick-lid topology at five closures, front/side-ray coverage of white/pupil samples with rear housing, open pupil exposure, cap/collar never outside every covering shell at nine closures (r7), rasterised side/above/below/3-4/front rim views at 1024 px with shading normals after the rim bend (r9), flight channels/seams",
   "facial_contract": {
     "revision": "mosquito-facial-controls-v1",
     "bind_is_open": true,
@@ -40,7 +40,7 @@
       "yz": 0.048,
       "lower_inset": 0.0005
     },
-    "lid_geometry_revision": "mosquito-sketch-r8-jittered-shells",
+    "lid_geometry_revision": "mosquito-sketch-r9-smooth-rim",
     "lid_rest_edges_degrees_about_x_from_front": {
       "upper_front_center_to_pole": [
         66.0,
@@ -187,122 +187,122 @@
   "lid_topology": [
     {
       "name": "Lid/1/True/0",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/1/False/0",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.25",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.25",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.5",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.5",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.75",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.75",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/1/True/1",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/1/False/1",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.25",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.25",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.5",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.5",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.75",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.75",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     },
     {
       "name": "Lid/-1/True/1",
-      "vertices": 116,
-      "faces": 212,
+      "vertices": 148,
+      "faces": 272,
       "errors": []
     },
     {
       "name": "Lid/-1/False/1",
-      "vertices": 88,
-      "faces": 156,
+      "vertices": 112,
+      "faces": 200,
       "errors": []
     }
   ],
@@ -320,9 +320,70 @@
       0.875,
       1
     ],
-    "max_excess_over_outermost_cover_m": -9.405682128278692e-05,
+    "max_excess_over_outermost_cover_m": -0.0004214193398707905,
     "failures": [],
     "failure_count": 0
+  },
+  "rim_views": {
+    "pixels": 1024,
+    "field_m": 0.12,
+    "views": [
+      {
+        "view": "side",
+        "yaw_degrees": 90,
+        "pitch_degrees": 0,
+        "eye_pixels": 426727,
+        "rim_pixels": 261489,
+        "back_face_pixels": 0,
+        "rim_pixels_not_outward": 0,
+        "rim_pixels_bent": 1311,
+        "rim_pixels_unlit_by_preview_fill_without_bend": 0
+      },
+      {
+        "view": "side_high",
+        "yaw_degrees": 90,
+        "pitch_degrees": 25,
+        "eye_pixels": 604887,
+        "rim_pixels": 404793,
+        "back_face_pixels": 0,
+        "rim_pixels_not_outward": 0,
+        "rim_pixels_bent": 733,
+        "rim_pixels_unlit_by_preview_fill_without_bend": 0
+      },
+      {
+        "view": "side_low",
+        "yaw_degrees": 90,
+        "pitch_degrees": -20,
+        "eye_pixels": 527396,
+        "rim_pixels": 259861,
+        "back_face_pixels": 0,
+        "rim_pixels_not_outward": 0,
+        "rim_pixels_bent": 17891,
+        "rim_pixels_unlit_by_preview_fill_without_bend": 712
+      },
+      {
+        "view": "threequarter",
+        "yaw_degrees": 50,
+        "pitch_degrees": 12,
+        "eye_pixels": 705774,
+        "rim_pixels": 283383,
+        "back_face_pixels": 0,
+        "rim_pixels_not_outward": 0,
+        "rim_pixels_bent": 83784,
+        "rim_pixels_unlit_by_preview_fill_without_bend": 1597
+      },
+      {
+        "view": "front_high",
+        "yaw_degrees": 0,
+        "pitch_degrees": 30,
+        "eye_pixels": 622489,
+        "rim_pixels": 218932,
+        "back_face_pixels": 0,
+        "rim_pixels_not_outward": 0,
+        "rim_pixels_bent": 32826,
+        "rim_pixels_unlit_by_preview_fill_without_bend": 1568
+      }
+    ]
   },
   "flight_ranges": {
     "Fly": {

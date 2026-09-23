@@ -1,8 +1,8 @@
 {
     "builder": "v030-characters-9-review-eyes",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "bfe5eaf4afa87d4457aca41971fcc1643c3b7fc14226d129096166d22b7d6bae",
-    "builderDigest": "81878aa483c3e27ddb4ae66d7d9007097db6dbb889d4467927296422e275973a",
+    "sourceDigest": "365090ddb0fb581a2c52e8510a4cae610204346163bf7bf880fc9a6cbb5a8431",
+    "builderDigest": "fff07ef6ea02da1b0baad2395da2042b91d622a8da81c4bc3236cb27d47643b2",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -46,6 +46,10 @@
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Pajamas.mat",
             "guid": "89c74522fdbb2ad4581335d5b48ad6b1"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_PantsShade.mat",
+            "guid": "8e7e9939a0252ea4d848ffa7122ae81a"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Piping.mat",
@@ -167,7 +171,7 @@
     "validations": [
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
-            "triangles": 17780,
+            "triangles": 21563,
             "renderers": 5,
             "bones": 65,
             "clips": 17,
@@ -411,7 +415,7 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
-            "triangles": 17780,
+            "triangles": 21563,
             "renderers": 5,
             "bones": 65,
             "clips": 17,
@@ -655,7 +659,7 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab",
-            "triangles": 5698,
+            "triangles": 6146,
             "renderers": 3,
             "bones": 39,
             "clips": 15,

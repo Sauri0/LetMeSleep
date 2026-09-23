@@ -743,7 +743,10 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
     dark = palette_material(material, 'Mosquito_Legs', 'legs', .86, specular=.25)
     joint = palette_material(material, 'Mosquito_LegJoint', 'joint', .80, specular=.30)
     eye = palette_material(material, 'Mosquito_EyeWhite', 'eye', .60)
-    pupil = palette_material(material, 'Mosquito_Expression', 'pupil', .40)
+    # Round 9 (review r8): the glossy pupil (Unity smoothness .60) picked up
+    # the preview's reflections and read greyish brown; now matte like the
+    # human's (smoothness .08), so it stays black.
+    pupil = palette_material(material, 'Mosquito_Expression', 'pupil', .92)
     # Preserve the exact name used by Unity's membrane shader branch. Blender
     # look-dev renders it blended with back faces culled (one layer, like
     # Unity's alpha material) instead of dithered hashing (grainy membrane).

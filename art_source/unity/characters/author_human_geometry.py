@@ -55,6 +55,11 @@ facet normals bent toward forward-up (no emission in Unity any more, so the
 lower half is lit instead of glowing at night); a 38 mm folded cuff on the
 nightcap and a pompom 60 mm further back at z 1.50; the nape hair line 40 mm
 higher.
+Round 9 (review r8): a convex profile - the nose-mouth line 18 mm further
+forward, a chin receding 16 mm under it and rounded by a bevel ring, a jaw
+line rising to the jaw angle under the ear, the turn of the face sides spread
+over three columns with a cheekbone plane (no straight eye-to-chin crease in
+3/4) - a 22 mm nose, and a ~20% thicker neck centred further back.
 Geometry and skin weights only; stable rig/socket coordinates are supplied by
 the caller (eyes stay centred on Socket.Eye z=1.53 for Unity).
 """
@@ -105,18 +110,35 @@ COLS=14
 # jaw line rises from the chin to the nape (profile V instead of a wedge).
 CHIN_Z=1.300
 MOUTH_Z=1.400
+# Round 9 (review r8, "the profile still reads as a box or a wedge"): the face
+# came down almost vertically to a square chin corner, the jaw ran back level
+# to the neck and the nose hardly stood out; in 3/4 the ~35 deg turn of the
+# outer fifth of the face was one straight crease from the eye to the jaw
+# corner (a mask). Now the nose-mouth line stands 18 mm further forward
+# (mouth front y -.175), the chin recedes 16 mm under it and a bevel ring
+# ('chinb') rounds the chin corner; the jaw line rises from the chin to the
+# jaw angle under the ear (~30 deg in profile) and the underside wraps down
+# behind it onto the thicker neck; the turn of the face sides is spread over
+# c2..c4 (no break over ~30 deg) and the temple corner c3 of the eye ring is
+# eased the same way. The cheek ring's c3 stands out as a cheekbone (a lit
+# plane under the eye) while the mouth ring turns earlier, so in 3/4 the
+# light/shade boundary zigzags instead of running straight from the eye to
+# the chin. Behind the jaw angle the underside only dips ~15 mm to the nape
+# (a deeper dip showed as a notch under the ear when the head tilts back).
 # (name, Jaw weight at the front, 8 half points (x, y, z) c0..c7). The mouth
 # ring's c0/c1 are replaced by the lip pairs (the slit between them).
 HEAD_RINGS=[
-    ('chin', 1.00,[(0,-.140,1.300),(.022,-.139,1.300),(.065,-.130,1.302),(.094,-.090,1.310),
-                   (.110,-.028,1.322),(.100,.030,1.340),(.066,.068,1.354),(0,.084,1.362)]),
-    ('jaw',  .80,[(0,-.152,1.347),(.022,-.151,1.347),(.074,-.141,1.350),(.108,-.108,1.354),
-                  (.130,-.048,1.362),(.130,.036,1.376),(.088,.094,1.392),(0,.113,1.398)]),
-    ('mouth',.30,[(0,-.157,1.400),(.020,-.156,1.400),(.078,-.146,1.410),(.121,-.127,1.413),
-                  (.147,-.074,1.418),(.150,.024,1.424),(.102,.112,1.430),(0,.132,1.433)]),
-    ('cheek',0.0,[(0,-.158,1.455),(.024,-.157,1.455),(.084,-.147,1.455),(.140,-.118,1.456),
-                  (.174,-.052,1.458),(.176,.052,1.460),(.120,.132,1.462),(0,.150,1.463)]),
-    ('eye',  0.0,[(0,-.140,1.530),(.030,-.131,1.530),(.090,-.124,1.530),(.160,-.098,1.530),
+    ('chin', 1.00,[(0,-.124,1.300),(.022,-.123,1.300),(.058,-.112,1.307),(.088,-.080,1.328),
+                   (.110,-.030,1.360),(.112,.030,1.372),(.078,.082,1.358),(0,.098,1.353)]),
+    ('chinb',1.00,[(0,-.146,1.323),(.022,-.145,1.323),(.066,-.132,1.330),(.102,-.098,1.348),
+                   (.125,-.040,1.376),(.126,.034,1.388),(.088,.094,1.374),(0,.112,1.370)]),
+    ('jaw',  .80,[(0,-.160,1.355),(.022,-.159,1.355),(.075,-.147,1.362),(.111,-.109,1.374),
+                  (.138,-.052,1.392),(.139,.036,1.400),(.096,.104,1.393),(0,.125,1.392)]),
+    ('mouth',.30,[(0,-.175,1.400),(.020,-.174,1.400),(.078,-.159,1.408),(.120,-.122,1.413),
+                  (.152,-.070,1.418),(.154,.026,1.424),(.104,.114,1.430),(0,.134,1.433)]),
+    ('cheek',0.0,[(0,-.176,1.455),(.024,-.170,1.455),(.086,-.152,1.455),(.153,-.132,1.456),
+                  (.176,-.056,1.458),(.178,.050,1.460),(.122,.132,1.462),(0,.150,1.463)]),
+    ('eye',  0.0,[(0,-.140,1.530),(.030,-.131,1.530),(.090,-.126,1.530),(.158,-.092,1.530),
                   (.187,-.030,1.530),(.182,.082,1.530),(.120,.152,1.530),(0,.166,1.530)]),
     ('brow', 0.0,[(0,-.136,1.600),(.036,-.1355,1.600),(.090,-.132,1.600),(.152,-.104,1.600),
                   (.185,-.026,1.600),(.180,.090,1.600),(.118,.162,1.600),(0,.176,1.600)]),
@@ -228,7 +250,7 @@ def front_y(tris, x, z):
 # Quads split into triangles for PER-04 facets: (lower ring name, first +X
 # column of the quad). Round 8: the V jaw, the cheeks and the temples.
 TRIANGULATED={(ring,column) for ring,columns in [
-    ('jaw',range(2,5)),('mouth',range(2,6)),('cheek',range(3,6)),('eye',range(3,6)),('brow',range(3,6))]
+    ('chinb',range(2,5)),('jaw',range(2,5)),('mouth',range(2,6)),('cheek',range(3,6)),('eye',range(3,6)),('brow',range(3,6))]
     for column in columns}
 
 
@@ -295,8 +317,9 @@ def skull(mesh, skin, dark):
 # head), so Unity's back-face culling removed it and an open mouth showed
 # the scene behind the head. Its walls and back cap must face the cup axis.
 # Round 8: the convex face puts the lips at y ~-.151; the cup is 36 mm deep.
-MOUTH_CAVITY_BACK_Y=-.115
-MOUTH_CAVITY_BOUNDS=((-.03,.03),(-.17,-.10),(1.37,1.43))
+# Round 9: the lips move 18 mm forward (y ~-.175) and the cup keeps its depth.
+MOUTH_CAVITY_BACK_Y=-.133
+MOUTH_CAVITY_BOUNDS=((-.03,.03),(-.19,-.12),(1.37,1.43))
 
 
 def orient_mouth_cavity(obj):
@@ -508,10 +531,12 @@ def nose(mesh, tris, skin):
     face up/outward and stay lit; only the underside reads as a shadow."""
     f=lambda x,z:front_y(tris,x,z)
     on=lambda x,z,out:(x,f(x,z)-out,z)
+    # Round 9 (review r8: the nose hardly stood out in profile): the tip
+    # stands 22 mm proud (was 14) and the wedge is ~15% wider.
     points=[on(-.006,1.478,-.003),on(.006,1.478,-.003),on(0,1.476,.002),
-            on(-.009,1.4385,.014),on(.009,1.4385,.014),
-            on(-.021,1.4400,-.003),on(.021,1.4400,-.003),
-            on(-.010,1.4345,-.003),on(.010,1.4345,-.003)]
+            on(-.010,1.4365,.022),on(.010,1.4365,.022),
+            on(-.024,1.4400,-.003),on(.024,1.4400,-.003),
+            on(-.011,1.4320,-.003),on(.011,1.4320,-.003)]
     faces=[(1,2,0),(2,3,4),(0,5,3),(0,3,2),(1,2,4),(1,4,6),
            (3,5,7),(3,7,8),(3,8,4),(4,8,6),(0,1,6,8,7,5)]
     mesh('HeadNose',points,faces,skin,'Head')
@@ -700,8 +725,12 @@ def head_and_cap(c, mesh, tube, ellipsoid, m):
     # Round 5 neck: +15% wider where it shows over the collar (trapezius
     # flare). Round 6: the lower chin leaves ~50 mm of neck in front; its top
     # tapers to ~90% of the 150 mm chin so the jaw overhangs it.
-    tube('Neck',[(0,.012,1.200),(0,.010,1.270),(0,.008,1.335),(0,.010,1.420)],
-         [.084,.074,.061,.056],[.068,.063,.056,.056],m['skin'],'Neck',10)
+    # Round 9 (review r8: a long thin neck under the wide head): ~20% thicker
+    # and centred ~10 mm further back, so it meets the jaw angle and the nape
+    # that now wraps down onto it (the collar opens to match, see
+    # author_human_joints.torso).
+    tube('Neck',[(0,.014,1.200),(0,.016,1.265),(0,.022,1.330),(0,.026,1.420)],
+         [.092,.089,.085,.074],[.078,.078,.078,.070],m['skin'],'Neck',10)
     nightcap(mesh,tris,m)
 
 

@@ -20,7 +20,8 @@ horizontally; its top sits <top_px> rows below the top edge, or lower if the wid
                toward the head, brows lifted, a wide open smile (render-only lip-corner edit, the jaw
                dropped), chest and head tipped back a little; shot and lit from the mirrored
                front-right so the pompom hangs hidden behind the head, the head turned 4 deg and the
-               eyes a further 12 deg toward the viewer (round 8, review r2).
+               eyes a further 12 deg toward the viewer (round 8, review r2). Round 9 (review r8):
+               the smile is twice as wide with crescent corners, render-only upper teeth and tongue.
 """
 import math
 import sys
@@ -155,32 +156,112 @@ def cheer():
         # 4 deg, both eyes turn a further 12 deg toward the camera and 8 deg down (runtime limit 22).
         turn_about('Eye.' + side, (1, 0, 0), 8)
         turn_about('Eye.' + side, (0, 0, 1), MIRROR * 12)
-    # Review r2: the small round 'o' read as fright. A wide open smile (a 'D' on its side): the lip
-    # corners move 12 mm out and 6 mm up and follow the jaw only 30%, so the upper lip curves up and
-    # the dropped lower lip makes the bottom. Render-only edit of the unsaved scene.
+    # Review r2: the small round 'o' read as fright. Review r8: the round-8 smile (corners 12 mm out,
+    # 6 mm up) was still a small black 'D' that read as a surprised 'oh!', not the open smiles of
+    # the RESULTS sketch. Now the mouth is 2.4 times as wide (corners at +/-48 mm, set back onto the
+    # convex face), the corners rise 13 mm into a crescent and stay on the head, the upper lip
+    # lifts 2 mm, the jaw drops .26 rad (the lower lip ~30 mm) and render-only upper teeth and a
+    # tongue fill the dark cavity. Render-only edit of the unsaved scene.
+    from author_human_geometry import HEAD_RINGS, MOUTH_HALF, MOUTH_Z
     head = scene.objects['HumanHead']
     jaw_group = head.vertex_groups['Jaw'].index
     head_group = head.vertex_groups['Head'].index
     basis = head.data.shape_keys.key_blocks['Basis'].data if head.data.shape_keys else None
+    mouth = next(half for name, _, half in HEAD_RINGS if name == 'mouth')
+    lip_y, corner_y = mouth[0][1], mouth[1][1]
+    lips = {}
     for vertex in head.data.vertices:
         x, y, z = vertex.co
-        if .018 < abs(x) < .022 and -.165 < y < -.145 and 1.394 < z < 1.401:
-            lower = z < 1.398
-            vertex.co = (x * 1.6, y, z + .006)
-            if basis is not None:
-                # With shape keys the evaluated mesh starts from the Basis key (the blink keys do
-                # not move the lips, and they stay at weight 0 here).
-                basis[vertex.index].co = vertex.co
-            if lower:
+        if abs(y - (lip_y + corner_y) / 2) > .004 or abs(z - MOUTH_Z) > .0045 or abs(x) > MOUTH_HALF + .002:
+            continue
+        corner = abs(x) > .01
+        # Lip heights (LIP_Z): upper centre +2.5 mm / corner -0.7 mm, lower centre -1.5 / corner -3.7.
+        upper = z > MOUTH_Z - .0022 if corner else z > MOUTH_Z + .0005
+        # The lip vertices of the skin and the cavity's front copies share these positions.
+        key = ('u' if upper else 'l') + ('c' if not corner else ('p' if x > 0 else 'n'))
+        lips.setdefault(key, vertex.index)
+        if corner:
+            vertex.co = (math.copysign(SMILE_CORNER[0], x), SMILE_CORNER[1], MOUTH_Z + (SMILE_CORNER[2] if upper else SMILE_CORNER[2] - .002))
+            if not upper:
+                # The lower corners stay with the head (the raised crescent ends).
                 for group in vertex.groups:
                     if group.group == jaw_group:
-                        group.weight = .30
+                        group.weight = .10
                     elif group.group == head_group:
-                        group.weight = .70
+                        group.weight = .90
+        elif upper:
+            vertex.co = (x, y, z + .002)
+        if basis is not None:
+            # With shape keys the evaluated mesh starts from the Basis key (the blink keys do
+            # not move the lips, and they stay at weight 0 here).
+            basis[vertex.index].co = vertex.co
+    assert set(lips) == {'uc', 'up', 'un', 'lc', 'lp', 'ln'}, sorted(lips)
     head.data.update()
     jaw = rig.pose.bones['Jaw']
     jaw.rotation_mode = 'XYZ'
-    jaw.rotation_euler = (-.30, 0, 0)      # an open cheering smile (Hit opens it by .18 rad)
+    jaw.rotation_euler = (-SMILE_JAW, 0, 0)
+    bpy.context.view_layer.update()
+    smile_teeth_and_tongue(head, lips)
+
+
+# Round 9 smile: lip corners (x, y, z above MOUTH_Z) in the bind frame, and the jaw drop (rad).
+SMILE_CORNER = (.048, -.166, .013)
+SMILE_JAW = .26
+
+
+def smile_teeth_and_tongue(head, lips):
+    """Render-only upper teeth (a white band just behind the upper lip) and a pink tongue on the
+    dropped lower lip, placed from the evaluated lip positions in the posed head frame."""
+    graph = bpy.context.evaluated_depsgraph_get()
+    evaluated = head.evaluated_get(graph)
+    mesh = evaluated.to_mesh()
+    at = {k: head.matrix_world @ mesh.vertices[i].co for k, i in lips.items()}
+    evaluated.to_mesh_clear()
+    bone = rig.pose.bones['Head']
+    frame = (rig.matrix_world @ bone.matrix @ rig.data.bones['Head'].matrix_local.inverted()).to_3x3().normalized()
+    back, up = (frame @ Vector((0, 1, 0))).normalized(), (frame @ Vector((0, 0, 1))).normalized()
+    teeth_material = bpy.data.materials['Character_EyeWhite']
+    tongue_material = bpy.data.materials.new('PortraitTongue')
+    tongue_material.use_nodes = True
+    node = next(n for n in tongue_material.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
+    node.inputs['Base Color'].default_value = (.60, .13, .17, 1)
+    node.inputs['Roughness'].default_value = .6
+
+    def along(t):
+        # Upper lip polyline n-corner -> centre -> p-corner, t in [-1, 1].
+        a, b = (at['un'], at['uc']) if t < 0 else (at['uc'], at['up'])
+        return a.lerp(b, t + 1 if t < 0 else t)
+    samples = [i / 5 - 1 for i in range(11)]
+    verts, faces = [], []
+    for t in samples:
+        top = along(t * .92) + back * .004 - up * .0005
+        height = .009 * (1 - .55 * abs(t))
+        for offset in (0.0, .002):
+            verts += [top + back * offset, top - up * height + back * (offset + .001)]
+    for k in range(len(samples) - 1):
+        a, b = 4 * k, 4 * (k + 1)
+        faces += [(a, b, b + 1, a + 1), (a + 2, a + 3, b + 3, b + 2), (a, a + 2, b + 2, b), (a + 1, b + 1, b + 3, a + 3)]
+    teeth = bpy.data.meshes.new('PortraitTeeth')
+    teeth.from_pydata([tuple(v) for v in verts], [], faces)
+    teeth.materials.append(teeth_material)
+    scene.collection.objects.link(bpy.data.objects.new('PortraitTeeth', teeth))
+    centre = at['lc'] + back * .010 + up * .007
+    lateral = (at['up'] - at['un']).normalized()
+    tongue = bpy.data.meshes.new('PortraitTongue')
+    rings, segments, verts, faces = 5, 10, [], []
+    for i in range(rings + 1):
+        polar = math.pi * i / rings
+        for j in range(segments):
+            a = 2 * math.pi * j / segments
+            verts.append(tuple(centre + lateral * (.019 * math.sin(polar) * math.cos(a))
+                               + back * (.012 * math.sin(polar) * math.sin(a)) + up * (.006 * math.cos(polar))))
+    for i in range(rings):
+        for j in range(segments):
+            faces.append((i * segments + j, i * segments + (j + 1) % segments,
+                          (i + 1) * segments + (j + 1) % segments, (i + 1) * segments + j))
+    tongue.from_pydata(verts, [], faces)
+    tongue.materials.append(tongue_material)
+    scene.collection.objects.link(bpy.data.objects.new('PortraitTongue', tongue))
     bpy.context.view_layer.update()
 
 

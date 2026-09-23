@@ -302,28 +302,63 @@ namespace LetMeSleep.Content.Characters.Editor
             || name.StartsWith("Mosquito_WingEdge", StringComparison.Ordinal);
 
         // Customization channels. The nightcap, its band and pompom, shirt, dots and slippers keep
-        // their own palette materials, so only the skin, the pajama trousers and the mosquito shell tint.
+        // their own palette materials, so only the skin, the pajama trousers (and, v0.3.0 round 9, their
+        // darker Human_PantsShade hem) and the mosquito shell tint.
         private const string MosquitoReferenceMaterial = "Mosquito_Shell";
+        private const string PajamaReferenceMaterial = "Human_Pajamas";
+        private const string PajamaShadeMaterial = "Human_PantsShade";
         private static string ColorCategory(string material)
         {
             if (material == "Human_Skin") return "Skin";
-            if (material == "Human_Pajamas") return "Pajamas";
+            if (material == PajamaReferenceMaterial || material == PajamaShadeMaterial) return "Pajamas";
             if (material == "Mosquito_Abdomen" || material.StartsWith("Mosquito_Shell", StringComparison.Ordinal)) return "Mosquito";
             return null;
         }
 
+        /// <summary>The channel's reference material a shaded facet is measured against (null: none).</summary>
+        private static string ColorShadeReference(string material)
+        {
+            if (material.StartsWith("Mosquito_", StringComparison.Ordinal)) return MosquitoReferenceMaterial;
+            if (material == PajamaShadeMaterial) return PajamaReferenceMaterial;
+            return null;
+        }
+
         /// <summary>Darkening of an authored shade facet relative to its channel's reference colour, so a
-        /// recoloured shell keeps the sketch's lit/shade contrast (Mosquito_ShellShade/Dark/Deep, Abdomen).</summary>
+        /// recoloured shell keeps the sketch's lit/shade contrast (Mosquito_ShellShade/Dark/Deep, Abdomen) and a
+        /// recoloured pajama keeps its darker hem (Human_PantsShade).</summary>
         private static float ColorShade(SourceAudit audit, string material)
         {
-            if (!material.StartsWith("Mosquito_", StringComparison.Ordinal) || material == MosquitoReferenceMaterial) return 0;
-            var reference = audit.material_palette.SingleOrDefault(m => m.name == MosquitoReferenceMaterial);
+            string referenceName = ColorShadeReference(material);
+            if (referenceName == null || material == referenceName) return 0;
+            var reference = audit.material_palette.SingleOrDefault(m => m.name == referenceName);
             var shade = audit.material_palette.SingleOrDefault(m => m.name == material);
-            Require(reference != null && shade != null, "Mosquito customization palette missing " + material);
+            Require(reference != null && shade != null, "Customization palette missing " + material);
+            return ShadeBetween(reference.color, shade.color);
+        }
+
+        private static float ShadeBetween(Color reference, Color shade)
+        {
             float Luma(Color c) => .2126f * c.r + .7152f * c.g + .0722f * c.b;
-            float ratio = Luma(shade.color) / Mathf.Max(1e-4f, Luma(reference.color));
+            float ratio = Luma(shade) / Mathf.Max(1e-4f, Luma(reference));
             // Rounded so the prefab bytes stay stable across identical rebuilds.
             return Mathf.Round(Mathf.Clamp(1 - ratio, 0, .9f) * 1000) / 1000;
+        }
+
+        /// <summary>Customization binding of a shared palette material (Materials/&lt;name&gt;.mat) for builders that
+        /// work without the audit (LivingMenuContentBuilder): same channels and shades as the game prefabs.</summary>
+        public static bool TryColorBinding(Material material, out string category, out float shade)
+        {
+            category = material == null ? null : ColorCategory(material.name);
+            shade = 0;
+            if (category == null) return false;
+            string referenceName = ColorShadeReference(material.name);
+            if (referenceName != null && referenceName != material.name)
+            {
+                var reference = AssetDatabase.LoadAssetAtPath<Material>(OutputRoot + "/Materials/" + referenceName + ".mat");
+                Require(reference != null, "Customization palette missing " + referenceName);
+                shade = ShadeBetween(reference.GetColor("_BaseColor"), material.GetColor("_BaseColor"));
+            }
+            return true;
         }
 
         private static void SetKeyword(Material material, string keyword, bool enabled)

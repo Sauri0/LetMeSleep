@@ -2,8 +2,8 @@
   "species": "Mosquito",
   "mesh_count": 3,
   "bones": 39,
-  "triangles": 5698,
-  "vertices": 3017,
+  "triangles": 6146,
+  "vertices": 3241,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -225,7 +225,7 @@
         "yz": 0.048,
         "lower_inset": 0.0005
       },
-      "lid_geometry_revision": "mosquito-sketch-r8-jittered-shells",
+      "lid_geometry_revision": "mosquito-sketch-r9-smooth-rim",
       "lid_rest_edges_degrees_about_x_from_front": {
         "upper_front_center_to_pole": [
           66.0,
@@ -507,12 +507,19 @@
   ],
   "blend_shapes": {},
   "eye_interior_normals": {
-    "faces": 784,
+    "faces": 1376,
+    "rim_edge_faces": 328,
     "radii_m": [
       0.03,
       0.0495
     ],
-    "facing_threshold": -0.25
+    "facing_threshold": -0.25,
+    "rim_radii_m": [
+      0.02,
+      0.05
+    ],
+    "rim_facing_threshold": 0.5,
+    "rim_tagged_faces": 2436
   },
   "bone_names": [
     "Root",
@@ -1136,7 +1143,7 @@
         "b": 0.0941176488995552,
         "a": 1.0
       },
-      "roughness": 0.4000000059604645
+      "roughness": 0.9200000166893005
     },
     {
       "name": "Mosquito_EyeWhite",

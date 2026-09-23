@@ -118,9 +118,9 @@
   "tool_grip_validated": false,
   "seat_skin_contact_validated": false,
   "visual_approval": false,
-  "base_blend_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
-  "base_fbx_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
-  "base_audit_sha256": "6d45df81da7efd906fc8f59b1c580ba3186d7b649a2befc15703083802609c9a",
+  "base_blend_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
+  "base_fbx_sha256": "aa12efe498e2ed015d145a1caf59584223849f3490f3ae871f49a38dcf5eefd8",
+  "base_audit_sha256": "45cd302a90a1d6ef32aacb2659eedaca9fd108c0734a003140ec5441aaf35035",
   "bind_bones": [
     {
       "name": "Root",
@@ -1185,6 +1185,16 @@
       "roughness": 0.8799999952316284
     },
     {
+      "name": "Human_PantsShade",
+      "color": {
+        "r": 0.13725490868091583,
+        "g": 0.250980406999588,
+        "b": 0.4941176474094391,
+        "a": 1.0
+      },
+      "roughness": 0.8799999952316284
+    },
+    {
       "name": "Human_Piping",
       "color": {
         "r": 0.9607843160629272,
@@ -1197,9 +1207,9 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.886274516582489,
-        "g": 0.7882353067398071,
-        "b": 0.6431372761726379,
+        "r": 0.8745098114013672,
+        "g": 0.7568627595901489,
+        "b": 0.5843137502670288,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1207,9 +1217,9 @@
     {
       "name": "Human_ShirtShade",
       "color": {
-        "r": 0.7686274647712708,
-        "g": 0.6627451181411743,
-        "b": 0.5137255191802979,
+        "r": 0.7568627595901489,
+        "g": 0.6352941393852234,
+        "b": 0.46666666865348816,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1253,6 +1263,7 @@
         "Human_Skin",
         "Human_Pajamas",
         "Human_PajamaDots",
+        "Human_PantsShade",
         "Human_SlipperSole",
         "Human_Slipper",
         "Human_ShirtShade"
@@ -1289,8 +1300,8 @@
       ]
     }
   ],
-  "triangles": 17780,
-  "vertices": 9138,
+  "triangles": 21563,
+  "vertices": 11435,
   "blend_shapes": {
     "HumanHead": [
       "Blink25.L",
@@ -1405,7 +1416,7 @@
   "combat_clips_modified": false,
   "geometry_source_note": "Coherent generated crown-fixed base; geometry unchanged by menu authoring",
   "files_sha256": {
-    "LMS_HumanMenu.blend": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d",
-    "LMS_HumanMenu.fbx": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466"
+    "LMS_HumanMenu.blend": "b661799b0c5046b58a6c2834323fd956726ff82942f7b012386e170be1481b38",
+    "LMS_HumanMenu.fbx": "3759c994963158edb24d3e4a2e488fa097daf7117da4191ffc6165a888409906"
   }
 }

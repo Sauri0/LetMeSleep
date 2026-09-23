@@ -8,7 +8,7 @@
   "skin_or_fbx_verified": false,
   "art_accepted": false,
   "source_sha256": {
-    "author_mosquito_geometry.py": "8a578aff55ff1f7e19f8a324e9daed3c7444fe865d50e40d12e6fc268faec730",
+    "author_mosquito_geometry.py": "2a3cf7a6080fdbe26fb171d5eb5c06d70f0e9445d6acbe5271cb8f7d6f705eb1",
     "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
     "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
     "check_mosquito_source.py": "816f694aa417892a5c3e1218305823153e2cfef5cd0abda09506b4da61f6c0c0",
@@ -16,10 +16,10 @@
     "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
     "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
     "render_mosquito_witness.py": "54989abdc1d45267243092aa640e4c63546bd79b987d653ec5e6f2b2fd042889",
-    "author_mosquito_face.py": "b328c03bca6c8cb120897d75779e90c464f8825516e7cfef19d431e892e82547",
-    "check_mosquito_face.py": "21634fcd8ec5aecddea4a6702f19a13d7b207e0cbbc4d8bff4643a9f862e7b8c"
+    "author_mosquito_face.py": "86e43f08c555fb07b3abe8ac60e6cc4aa71b5d1e8257cdd72b013c5d72bb7179",
+    "check_mosquito_face.py": "4ed347763cc860ba8c3f8e2e5db9a59315c59735f49032d85042fbdabbbcf7cc"
   },
-  "comparison_asset_sha256": "1ac808e947584a26778bfb757d95150eb201ea2f8ccfb2071b24fdad15b712ee",
+  "comparison_asset_sha256": "6b76dd354555f0d3205960858dd1bc383fef4bdcffd558c33c536611daf6839e",
   "custom_meshes": [
     {
       "name": "Thorax",
