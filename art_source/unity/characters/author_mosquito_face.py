@@ -72,6 +72,21 @@ around the pivot), fixed by the 90 deg shutter blink having to contain the
 white's front plus the pupil; a shallower back makes the rotating shutters
 dip through the housing/rim face or leaves the rim crevice open.
 
+Review r7 (Unity showed dark dotted lines around both eyes): not z-fighting
+but the rim crevices. On the rest-edge surface the collar stopped at 97% and
+the cap at 96.5% of the innermost housing, leaving a 1-1.5 mm slot into the
+unlit cup, and the shutter and housing front-edge walls faced forward-down
+into their own shadow; at game scale these sub-pixel dark strips aliased into
+dots. Now the inner layer of every shutter and housing ends 2 deg further
+toward the front (a 45 deg chamfer that faces forward-up and is lit), the
+collar lies 0.6 deg behind the rest-edge surface and reaches 98.5% of its
+housing's inner layer (the part past the faceted inner layer is inside the
+housing shell, hidden behind the chamfer), and the cap rises to 99% of the
+upper housing's inner layer at the rim (settling back to 96.5% behind it).
+From the front the housing chamfer overlaps the collar/cap edge, so no slot
+is left open; blink rotations are unchanged and the cap/collar never stand
+outside every covering shell at any closure (check_mosquito_face.py rim gate).
+
 Lid pivots, bone names, axes and the 90 deg runtime closure are unchanged; every
 rest edge keeps upper - lower <= 170 deg so the rotated shutters plus the fixed
 housing still hide the white and the pupil when closed (check_mosquito_face.py),
@@ -82,7 +97,7 @@ and the lid vertex centroids still let Unity's FacialContentBuilder derive
 import math
 
 FACE_REVISION = 'mosquito-facial-controls-v1'
-LID_GEOMETRY_REVISION = 'mosquito-sketch-r6-ball-white-cap'
+LID_GEOMETRY_REVISION = 'mosquito-sketch-r7-closed-rim'
 # Eye white, source metres (x lateral, y depth along the look axis, z up).
 # r6: depth .035 -> .030 (front view unchanged) so the white can sit further
 # ahead of the pivot inside the same closed-shutter radius.
@@ -123,6 +138,9 @@ HOUSING_RECESS = .0008
 UPPER_FRONT_CENTER, UPPER_FRONT_POLE, UPPER_BACK = 66.0, 70.0, 198.0
 LOWER_FRONT_CENTER, LOWER_FRONT_POLE, LOWER_BACK = -104.0, -100.0, -208.0
 LID_EDGE_RAMP_POWER = 1.0
+# r7: the inner layer of each shell ends this much further toward the front
+# than the outer layer, so the front-edge wall is a chamfer facing forward-up.
+LID_EDGE_CHAMFER_DEGREES = 2.0
 LID_LATITUDE_STEPS, UPPER_ARC_STEPS, LOWER_ARC_STEPS = 8, 7, 5
 # r6 rim face (EyeCollar, Head): fills the crevice between the white and the
 # shutters' rim so the cup's dark inside never shows, lying in the shutters'
@@ -130,11 +148,14 @@ LID_LATITUDE_STEPS, UPPER_ARC_STEPS, LOWER_ARC_STEPS = 8, 7, 5
 # below): edge-on in profile, a thin red ring around the white from the front.
 # psi is the front-view angle about the pivot (0 = lateral, 90 = top). Two
 # closed strips (sphere topology each): lateral/lower and medial/lower; the
-# top is the eyelid cap's. Inner edge 0.3 mm off the white, outer edge at 97%
-# of the innermost housing layer, so no shutter ever touches it.
+# top is the eyelid cap's. Inner edge 0.3 mm off the white, outer edge at 98.5%
+# (r6: 97%) of its housing's inner layer, so no shutter ever touches it.
 COLLAR_ARCS_DEGREES = {'EyeCollar': (-78.0, 64.0), 'EyeCollarInner': (116.0, 258.0)}
 COLLAR_SEGMENTS = 16
-COLLAR_INNER_CLEARANCE, COLLAR_OUTER_FILL = .0003, .97
+COLLAR_INNER_CLEARANCE, COLLAR_OUTER_FILL = .0003, .985
+# r7: the collar sits this far behind the rest-edge surface (inside the
+# housing where it overlaps it, behind the housing's front chamfer).
+COLLAR_BEHIND_DEGREES = .6
 COLLAR_THICKNESS = .0012
 # r6 fixed eyelid cap (EyeCap, Head): a wedge over the top of the white. Its
 # front edge (angle about the pivot axis) is 38 deg on the eye's centre
@@ -143,12 +164,17 @@ COLLAR_THICKNESS = .0012
 # keeps ~67% of the ball white. From that edge it hugs the white, then rises
 # to just under the upper shutter's rim and runs on under it: one lid resting
 # on the ball instead of a ring floating above it. It stays inside the
-# innermost housing layer (96.5%), so blinks never touch it.
+# upper housing's inner layer (r7: 99%, was 96.5% of the lower housing), so
+# blinks never touch it.
 CAP_FRONT_DEGREES, CAP_FRONT_SIDE_DEGREES, CAP_FRONT_RAMP_POWER = 38.0, 68.0, 1.5
 CAP_BACK_DEGREES, CAP_MIN_RISE_DEGREES = 112.0, 6.0
 CAP_RISE_STEPS, CAP_BACK_STEPS = 3, 4
 CAP_X_EXTENT, CAP_ROWS = .030, 9
-CAP_INNER_CLEARANCE, CAP_EDGE_THICKNESS, CAP_OUTER_FILL = .0004, .0012, .965
+CAP_INNER_CLEARANCE, CAP_EDGE_THICKNESS, CAP_OUTER_FILL = .0004, .0012, .99
+# r7: only the rim needs the 99% fill; past it the cap settles back to the r6
+# 96.5% within CAP_RIM_TAPER_DEGREES, so its back end (uncovered by the closed
+# shutter) stays inside the faceted housing.
+CAP_BACK_FILL, CAP_RIM_TAPER_DEGREES = .965, 20.0
 GAZE_YAW_LIMIT_DEGREES = 12
 GAZE_PITCH_LIMIT_DEGREES = 10
 FACE_BONES = tuple(role + '.' + side for side in ('L', 'R')
@@ -303,11 +329,12 @@ def lid_mesh(sign, upper, closure=0, recess=0):
     vertices = []
     for inset in (0, LID_THICKNESS):
         rx, radius = (r - inset for r in lid_radii(upper, recess))
+        chamfer = LID_EDGE_CHAMFER_DEGREES if inset else 0.0
         layer = [(-rx, 0, 0)]
         for row in range(1, latitude_steps):
             latitude = -math.pi * .5 + math.pi * row / latitude_steps
             x, ring = rx * math.sin(latitude), math.cos(latitude)
-            front = lid_front_degrees(upper, latitude)
+            front = lid_front_degrees(upper, latitude) - polarity * chamfer
             for col in range(arc_steps + 1):
                 phi = math.radians(front + (back - front) * col / arc_steps)
                 layer.append((x, -radius * ring * math.cos(phi), radius * ring * math.sin(phi)))
@@ -375,22 +402,23 @@ def _bisect(test, lo, hi, steps=40):
     return lo
 
 
-def _rim_point(psi, t):
+def _rim_point(psi, t, behind=0.0):
     """Pivot-relative point at front-view angle psi, distance t from the pivot
     axis, on the shutters' rest-edge surface (upper edge above the axis, lower
-    edge below it), plus whether it belongs to the upper half."""
+    edge below it) pushed `behind` degrees away from the front, plus whether
+    it belongs to the upper half."""
     c, s = math.cos(psi), math.sin(psi)
     x, h = t * c, t * s
     upper = h >= 0
     rx = lid_radii(upper, HOUSING_RECESS)[0] - LID_THICKNESS
     latitude = math.asin(max(-1.0, min(1.0, x / rx)))
-    edge = math.radians(lid_front_degrees(upper, latitude))
+    edge = math.radians(lid_front_degrees(upper, latitude) + (behind if upper else -behind))
     radius = h / math.sin(edge)
     return (x, -radius * math.cos(edge), h), upper, radius
 
 
 def _inside_housing(psi, t, fill):
-    point, upper, radius = _rim_point(psi, t)
+    point, upper, radius = _rim_point(psi, t, COLLAR_BEHIND_DEGREES)
     hx, hyz = (r - LID_THICKNESS for r in lid_radii(upper, HOUSING_RECESS))
     return (point[0] / hx) ** 2 + (radius / hyz) ** 2 < fill * fill
 
@@ -399,7 +427,8 @@ def collar_mesh(sign, part='EyeCollar'):
     """Fixed red rim face in the shutters' rest-edge surface (r6).
 
     Each section spans, at front-view angle psi, from 0.3 mm off the white to
-    97% of the innermost housing layer; it is 1.2 mm thick toward the back.
+    98.5% of its housing's inner layer, 0.6 deg behind the rest-edge surface
+    (r7); it is 1.2 mm thick toward the back.
     Seen from the side it is edge-on (no second rim), seen from the front it
     is the red ring of the cup around the white. Closed strip with end caps
     (sphere topology), outward winding. part selects the arc
@@ -411,11 +440,11 @@ def collar_mesh(sign, part='EyeCollar'):
     for i in range(COLLAR_SEGMENTS + 1):
         psi = math.radians(first + (last - first) * i / COLLAR_SEGMENTS)
         outer = _bisect(lambda t: _inside_housing(psi, t, COLLAR_OUTER_FILL), 0.0, .07)
-        inner = _bisect(lambda t: inside_white(_rim_point(psi, t)[0], COLLAR_INNER_CLEARANCE), 0.0, outer)
+        inner = _bisect(lambda t: inside_white(_rim_point(psi, t, COLLAR_BEHIND_DEGREES)[0], COLLAR_INNER_CLEARANCE), 0.0, outer)
         inner = min(inner, outer - .0008)
         section = []
         for t, back in ((inner, 0.0), (outer, 0.0), (outer, COLLAR_THICKNESS), (inner, COLLAR_THICKNESS)):
-            x, y, z = _rim_point(psi, t)[0]
+            x, y, z = _rim_point(psi, t, COLLAR_BEHIND_DEGREES)[0]
             section.append((pivot[0] + sign * x, pivot[1] + y + back, pivot[2] + z))
         rings.append(section)
     return _strip_mesh(rings)
@@ -431,17 +460,19 @@ def cap_mesh(sign):
 
     Rows across the eye (pivot-relative x), columns by angle about the pivot
     axis. The inner layer follows the white 0.4 mm off it; the outer layer
-    starts 1.2 mm above that at the lid's front edge and rises to 96.5% of the
-    innermost housing layer at the upper shutter's rim, then runs on under the
-    shutter. Closed (two layers and four walls), sphere topology.
+    starts 1.2 mm above that at the lid's front edge and rises to 99% of the
+    upper housing's inner layer at the upper shutter's rim (r6: 96.5% of the
+    lower housing, which left a dark slot), then runs on under the shutter.
+    Closed (two layers and four walls), sphere topology.
     """
     pivot = eye_center(sign)
-    hx, hyz = (r - LID_THICKNESS for r in lid_radii(False, HOUSING_RECESS))
+    hx, hyz = (r - LID_THICKNESS for r in lid_radii(True, HOUSING_RECESS))
     shutter_x = lid_radii(True)[0]
     inner_layer, outer_layer = [], []
     for k in range(CAP_ROWS):
         x = -CAP_X_EXTENT + 2 * CAP_X_EXTENT * k / (CAP_ROWS - 1)
-        ceiling = CAP_OUTER_FILL * hyz * math.sqrt(max(0.0, 1 - (x / hx) ** 2))
+        section = hyz * math.sqrt(max(0.0, 1 - (x / hx) ** 2))
+        ceiling = CAP_OUTER_FILL * section
         front = CAP_FRONT_DEGREES + (CAP_FRONT_SIDE_DEGREES - CAP_FRONT_DEGREES) * (abs(x) / CAP_X_EXTENT) ** CAP_FRONT_RAMP_POWER
         rim = lid_front_degrees(True, math.asin(min(1.0, abs(x) / shutter_x)))
         top = max(rim, front + CAP_MIN_RISE_DEGREES)
@@ -455,8 +486,10 @@ def cap_mesh(sign):
                 return (x, t * direction[1], t * direction[2])
             t_in = _bisect(lambda t: inside_white(at(t), CAP_INNER_CLEARANCE), 0.0, .07)
             rise = _smooth((degrees - front) / (top - front))
-            t_out = max(t_in + CAP_EDGE_THICKNESS * (1 - rise), t_in + (ceiling - t_in) * rise)
-            t_out = min(max(t_out, t_in + .0006), max(ceiling, t_in + .0006))
+            settle = _smooth((degrees - top) / CAP_RIM_TAPER_DEGREES)
+            limit = ceiling + (CAP_BACK_FILL * section - ceiling) * settle
+            t_out = max(t_in + CAP_EDGE_THICKNESS * (1 - rise), t_in + (limit - t_in) * rise)
+            t_out = min(max(t_out, t_in + .0006), max(limit, t_in + .0006))
             for layer, t in ((inner_layer, t_in), (outer_layer, t_out)):
                 px, py, pz = at(t)
                 layer.append((pivot[0] + sign * px, pivot[1] + py, pivot[2] + pz))
@@ -502,7 +535,7 @@ def facial_contract():
                   'lower_angle_source_x_degrees': [0, -90],
                   'scale': [1, 1, 1], 'material': 'Mosquito_Shell'},
         'eye_housing': 'fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure',
-        'eye_collar': 'fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) in the shutters rest-edge surface, from the white to 97% of the innermost shell; never touched by the shutters',
+        'eye_collar': 'fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) 0.6 deg behind the shutters rest-edge surface, from the white to 98.5% of the housing inner shell, behind the housing front chamfer; never touched by the shutters',
         'eye_cap': 'fixed eyelid wedge weighted to Head (EyeCap.L/R) from the top of the white (~12% of its front-view height) up under the upper shutter rim; inside the innermost shell',
         'rest_pose': 'upper shutter rests at ~66 deg over the eyelid cap, lower at ~-104 deg behind the bottom of the white; blink closure 0..1 starts from that bind pose',
         'runtime_writer': 'one shared facial driver after Animator/Playable evaluation; menu supplies target only',

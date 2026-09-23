@@ -190,12 +190,12 @@
       ],
       "bounds_max": [
         0.9720883369445801,
-        0.16190285980701447,
+        0.18427348136901855,
         1.7640000581741333
       ],
       "dimensions": [
         1.9442545771598816,
-        0.40290285646915436,
+        0.42527347803115845,
         1.7640000581741333
       ],
       "sockets": [
@@ -360,6 +360,11 @@
             "flipped": 60
           }
         }
+      },
+      "mouth_cavity_winding": {
+        "faces": 7,
+        "flipped": 7,
+        "vertices": 12
       },
       "bone_names": [
         "Root",
@@ -1717,7 +1722,7 @@
             "yz": 0.048,
             "lower_inset": 0.0005
           },
-          "lid_geometry_revision": "mosquito-sketch-r6-ball-white-cap",
+          "lid_geometry_revision": "mosquito-sketch-r7-closed-rim",
           "lid_rest_edges_degrees_about_x_from_front": {
             "upper_front_center_to_pole": [
               66.0,
@@ -1786,7 +1791,7 @@
             "material": "Mosquito_Shell"
           },
           "eye_housing": "fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure",
-          "eye_collar": "fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) in the shutters rest-edge surface, from the white to 97% of the innermost shell; never touched by the shutters",
+          "eye_collar": "fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) 0.6 deg behind the shutters rest-edge surface, from the white to 98.5% of the housing inner shell, behind the housing front chamfer; never touched by the shutters",
           "eye_cap": "fixed eyelid wedge weighted to Head (EyeCap.L/R) from the top of the white (~12% of its front-view height) up under the upper shutter rim; inside the innermost shell",
           "rest_pose": "upper shutter rests at ~66 deg over the eyelid cap, lower at ~-104 deg behind the bottom of the white; blink closure 0..1 starts from that bind pose",
           "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
@@ -2884,8 +2889,8 @@
       "bytes": 8925
     },
     "author_human_geometry.py": {
-      "sha256": "b6ed40253edfb22df455456965ff2d124783d73acc1b0a57d258f7fffaa6573d",
-      "bytes": 35587
+      "sha256": "af958c70b1167c499f81ae3d4b41df974220eb2b7faa7ee0eb7aff603b52c36f",
+      "bytes": 38085
     },
     "author_human_joints.py": {
       "sha256": "d02a8c4d547e7913a47e2e32f3a2366a8e349881a8c91dc1c3bd5ee5a5a38767",
@@ -2900,8 +2905,8 @@
       "bytes": 3215
     },
     "author_mosquito_face.py": {
-      "sha256": "842788f252f6626a923173a73f180f11456715d9fe787aeaa5613f0aa0fcc852",
-      "bytes": 29688
+      "sha256": "5a58c6614b5ff4133c319a6502686a25b1bb3e43a80160558a603d0becd7297c",
+      "bytes": 31972
     },
     "author_mosquito_geometry.py": {
       "sha256": "4d0a6d0a3da53fb04c41a1abc2ef35c9c8bd2611784cdbfbf6eaa02debc045a6",
@@ -2916,8 +2921,8 @@
       "bytes": 15688
     },
     "build_characters.py": {
-      "sha256": "d82cc5c2e5833dbf07c706ce479e684f704280c1ba6f0d804e26d1d6aa9716ff",
-      "bytes": 26122
+      "sha256": "38cd431d0fedb1bc358961c60ea1f7d24db97bb7fe79c5a8a3b9988756cdcf0c",
+      "bytes": 26343
     },
     "build_mosquito_candidate.py": {
       "sha256": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
@@ -2932,8 +2937,8 @@
       "bytes": 1783
     },
     "check_mosquito_face.py": {
-      "sha256": "c46f17afd1818897fc2af88328dec454bce87336d94b2eb91530e19069f43d10",
-      "bytes": 6028
+      "sha256": "21634fcd8ec5aecddea4a6702f19a13d7b207e0cbbc4d8bff4643a9f862e7b8c",
+      "bytes": 9137
     },
     "check_mosquito_source.py": {
       "sha256": "816f694aa417892a5c3e1218305823153e2cfef5cd0abda09506b4da61f6c0c0",
@@ -2987,6 +2992,10 @@
       "sha256": "54989abdc1d45267243092aa640e4c63546bd79b987d653ec5e6f2b2fd042889",
       "bytes": 9253
     },
+    "render_portrait.py": {
+      "sha256": "7f6935c731ed25040fcc1f1c77c5fee736f1c342534953da8b4966a20a8725b0",
+      "bytes": 10638
+    },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
       "bytes": 3233
@@ -3032,28 +3041,28 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
-      "bytes": 1419002
+      "sha256": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
+      "bytes": 1419063
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b",
-      "bytes": 10118012
+      "sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
+      "bytes": 10117996
     },
     "menu/LMS_HumanMenu.blend": {
-      "sha256": "a69bf286b0fe488092777be6961feeef89f7f27f103a0c7dd71865e3f5e15f88",
-      "bytes": 1308487
+      "sha256": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
+      "bytes": 1308523
     },
     "menu/LMS_HumanMenu.fbx": {
-      "sha256": "3c56ce47e54d54f60a60971e309ea7ba2c20ec1d77d84523b270a366030a5b77",
-      "bytes": 4207484
+      "sha256": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca",
+      "bytes": 4207468
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
-      "sha256": "ab95eead91bdcf60687e94ea5b07726d9e036836330dc9029a2ad6f13de24a77",
-      "bytes": 840306
+      "sha256": "f4359e7d70b73481c34623f49415652b04a3fee5c80a7ab2488c2f080593f9d1",
+      "bytes": 840296
     },
     "mosquito/LMS_Mosquito_alpha.fbx": {
-      "sha256": "ada09399c15f89bea2f54e2a4f8e60e7bcc1f1afe48949589e7ac210cbe48f83",
-      "bytes": 4491980
+      "sha256": "e6b7fb0f141209d82a37486371a48326e4e74b99b880bf869f77e421aeb8e0c6",
+      "bytes": 4492108
     },
     "diagnostics/gameplay-e9d15e7/gait_feasibility.py": {
       "sha256": "16c56ca800da9b2ab1fd3456e4c79b4b9cb23d7d9460b4c198ee4181bfb838a1",
@@ -3262,6 +3271,158 @@
     "candidates/human-blink-winding1/source-snapshot/repair_human_lid_winding.py": {
       "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
       "bytes": 6097
+    },
+    ".validation/v030-human-r7/base15/LMS_Human_alpha.blend": {
+      "sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
+      "bytes": 1224656
+    },
+    ".validation/v030-human-r7/base15/LMS_Human_alpha.fbx": {
+      "sha256": "7c34bf6315ac4463f46773fde96942023ef7f8d9ccbd30b2a5dd9fb88cc4c8ba",
+      "bytes": 8713916
+    },
+    ".validation/v030-human-r7/gait/LMS_Human_alpha.blend": {
+      "sha256": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
+      "bytes": 1419063
+    },
+    ".validation/v030-human-r7/gait/LMS_Human_alpha.fbx": {
+      "sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
+      "bytes": 10117996
+    },
+    ".validation/v030-human-r7/menu/LMS_HumanMenu.blend": {
+      "sha256": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
+      "bytes": 1308523
+    },
+    ".validation/v030-human-r7/menu/LMS_HumanMenu.fbx": {
+      "sha256": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca",
+      "bytes": 4207468
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+      "bytes": 16584
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/author_human_facial.py": {
+      "sha256": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
+      "bytes": 8925
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/author_human_locomotion.py": {
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "bytes": 3798
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/author_motion.py": {
+      "sha256": "8960411741191166f1cede92e5518e0180a3629a917519f3a58fb5db541e6e56",
+      "bytes": 15688
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/build_characters.py": {
+      "sha256": "38cd431d0fedb1bc358961c60ea1f7d24db97bb7fe79c5a8a3b9988756cdcf0c",
+      "bytes": 26343
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/export_human_locomotion.py": {
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "bytes": 6996
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "bytes": 4202
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-human-r7/gait/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
+    },
+    ".validation/v030-human-r6/base15/LMS_Human_alpha.blend": {
+      "sha256": "81307d90cb02d39c549512f22a45c303842cfdb38284b40edba97810be00e582",
+      "bytes": 1224646
+    },
+    ".validation/v030-human-r6/base15/LMS_Human_alpha.fbx": {
+      "sha256": "1bb5956865adf199d05bb918a9f7e15a1693fd704f7f178d895d7445126c94ac",
+      "bytes": 8713932
+    },
+    ".validation/v030-human-r6/gait/LMS_Human_alpha.blend": {
+      "sha256": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
+      "bytes": 1419002
+    },
+    ".validation/v030-human-r6/gait/LMS_Human_alpha.fbx": {
+      "sha256": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b",
+      "bytes": 10118012
+    },
+    ".validation/v030-human-r6/menu/LMS_HumanMenu.blend": {
+      "sha256": "a69bf286b0fe488092777be6961feeef89f7f27f103a0c7dd71865e3f5e15f88",
+      "bytes": 1308487
+    },
+    ".validation/v030-human-r6/menu/LMS_HumanMenu.fbx": {
+      "sha256": "3c56ce47e54d54f60a60971e309ea7ba2c20ec1d77d84523b270a366030a5b77",
+      "bytes": 4207484
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+      "bytes": 16584
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/author_human_facial.py": {
+      "sha256": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
+      "bytes": 8925
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/author_human_locomotion.py": {
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "bytes": 3798
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/author_motion.py": {
+      "sha256": "8960411741191166f1cede92e5518e0180a3629a917519f3a58fb5db541e6e56",
+      "bytes": 15688
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/build_characters.py": {
+      "sha256": "33b80015d80a47f9639c9c705a5b80200fd9a6b3a2a788484de4993e3273e124",
+      "bytes": 25999
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/export_human_locomotion.py": {
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "bytes": 6996
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "bytes": 4202
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-human-r6/gait/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
     },
     ".validation/v030-human-r5/base15/LMS_Human_alpha.blend": {
       "sha256": "1f0bb24b2ff7db6db63e7642c580ee33339f3dcf29d32ed261cc085361a32276",
@@ -3642,14 +3803,11 @@
     ".validation/v030-human-r1/gait/source-snapshot/verify_human_menu.py": {
       "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
       "bytes": 9365
-    },
-    "render_portrait.py": {
-      "sha256": "7c34bea4a030a7178e82df79fae5c3e441ae35fdfe1eda6a1b0c68a9a6f2c84f",
-      "bytes": 5621
     }
   },
   "generated_species": [
-    "Human"
+    "Human",
+    "Mosquito"
   ],
   "review_status": "New selected-species source; motion, renders and Unity import pending"
 }

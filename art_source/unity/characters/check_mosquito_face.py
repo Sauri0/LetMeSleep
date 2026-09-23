@@ -3,8 +3,8 @@ import json
 import math
 from pathlib import Path
 
-from author_mosquito_face import (HOUSING_RECESS, eye_center, eye_mesh, pupil_mesh,
-                                 facial_contract, lid_mesh, rotate_x)
+from author_mosquito_face import (COLLAR_ARCS_DEGREES, HOUSING_RECESS, cap_mesh, collar_mesh, eye_center,
+                                 eye_mesh, pupil_mesh, facial_contract, lid_mesh, rotate_x)
 from author_mosquito_motion import flight_channels, flight_contract
 from check_mosquito_source import inspect_mesh
 
@@ -25,6 +25,60 @@ def front_intersection(vertices, faces, x, z):
             if min(u, v, 1 - u - v) >= -1e-8:
                 hits.append(u * a[1] + v * b[1] + (1 - u - v) * c[1])
     return min(hits) if hits else math.inf
+
+
+def ray_hits(origin, direction, vertices, faces):
+    """Sorted distances of every triangle hit along a ray (Moller-Trumbore)."""
+    hits = []
+    for face in faces:
+        for i in range(1, len(face) - 1):
+            a, b, c = (vertices[j] for j in (face[0], face[i], face[i + 1]))
+            e1 = [b[k] - a[k] for k in range(3)]
+            e2 = [c[k] - a[k] for k in range(3)]
+            h = [direction[1] * e2[2] - direction[2] * e2[1], direction[2] * e2[0] - direction[0] * e2[2],
+                 direction[0] * e2[1] - direction[1] * e2[0]]
+            det = sum(e1[k] * h[k] for k in range(3))
+            if abs(det) < 1e-15:
+                continue
+            f = 1 / det
+            s = [origin[k] - a[k] for k in range(3)]
+            u = f * sum(s[k] * h[k] for k in range(3))
+            if u < -1e-9 or u > 1 + 1e-9:
+                continue
+            q = [s[1] * e1[2] - s[2] * e1[1], s[2] * e1[0] - s[0] * e1[2], s[0] * e1[1] - s[1] * e1[0]]
+            v = f * sum(direction[k] * q[k] for k in range(3))
+            if v < -1e-9 or u + v > 1 + 1e-9:
+                continue
+            t = f * sum(e2[k] * q[k] for k in range(3))
+            if t > 1e-9:
+                hits.append(t)
+    return sorted(hits)
+
+
+def rim_poke_through(sign=1, closures=(0, .125, .25, .375, .5, .625, .75, .875, 1)):
+    """r7 rim gate: the fixed cap and collar vertices never stand outside every
+    shell (rotating shutters, fixed housings) that covers them, at any closure.
+    A vertex beyond the outermost covering layer would show through the lid."""
+    center = eye_center(sign)
+    fixed = [v for v, _ in [cap_mesh(sign)] + [collar_mesh(sign, part) for part in COLLAR_ARCS_DEGREES]]
+    points = [tuple(a - b for a, b in zip(p, center)) for group in fixed for p in group]
+    housings = [lid_mesh(sign, upper, recess=HOUSING_RECESS) for upper in (True, False)]
+    worst, failures = -1.0, []
+    for closure in closures:
+        shells = [lid_mesh(sign, upper, closure) for upper in (True, False)] + housings
+        shells = [([tuple(a - b for a, b in zip(p, center)) for p in v], f) for v, f in shells]
+        for point in points:
+            length = math.sqrt(sum(c * c for c in point))
+            direction = tuple(c / length for c in point)
+            outer = [hits[-1] for hits in (ray_hits((0, 0, 0), direction, v, f) for v, f in shells) if hits]
+            if not outer:
+                continue
+            excess = length - max(outer)
+            worst = max(worst, excess)
+            if excess > 0:
+                failures.append({'closure': closure, 'point_source_m': point, 'excess_m': excess})
+    return {'side_sign': sign, 'points': len(points), 'closures': list(closures),
+            'max_excess_over_outermost_cover_m': worst, 'failures': failures[:10], 'failure_count': len(failures)}
 
 
 def main():
@@ -72,6 +126,9 @@ def main():
                                for x, y, z in pupils)
                 if occluded:
                     errors.append(f'{sign}: open lids occlude pupil points')
+    rim = rim_poke_through()
+    if rim['failure_count']:
+        errors.append('cap/collar pokes through the lids or housing')
     channels = {}
     for hover in (False, True):
         values = [flight_channels(i / 120, hover) for i in range(121)]
@@ -85,14 +142,14 @@ def main():
     if any(abs(flight_channels(0)[k] - flight_channels(0, True)[k]) > 1e-10 for k in flight_channels(0)):
         errors.append('Fly/Hover common endpoint mismatch')
     report = {'schema': 'lms-mosquito-face-flight-source-v1', 'passed': not errors, 'errors': errors,
-              'scope': 'pure thick-lid topology at five closures, front/side-ray coverage of white/pupil samples with rear housing, open pupil exposure, flight channels/seams',
+              'scope': 'pure thick-lid topology at five closures, front/side-ray coverage of white/pupil samples with rear housing, open pupil exposure, cap/collar never outside every covering shell at nine closures (r7), flight channels/seams',
               'facial_contract': facial_contract(), 'flight_contract': flight_contract(),
-              'closed_front_coverage': coverage, 'lid_topology': topology, 'flight_ranges': channels,
+              'closed_front_coverage': coverage, 'lid_topology': topology, 'rim_poke_through': rim, 'flight_ranges': channels,
               'blender_executed': False, 'runtime_verified': False, 'art_accepted': False,
               'limitations': 'orthographic front/side rays only; no skin evaluation, oblique closure, head intersections, imported axes or normal-speed perception'}
     output = ROOT.parents[2] / 'docs/unity/mosquito/FACE-FLIGHT-SOURCE-CHECK-20260912.json'
     output.write_text(json.dumps(report, indent=2), encoding='utf8', newline='\n')
-    print(json.dumps({'passed': not errors, 'errors': errors, 'coverage': coverage, 'flight_ranges': channels}, indent=2))
+    print(json.dumps({'passed': not errors, 'errors': errors, 'coverage': coverage, 'rim': rim, 'flight_ranges': channels}, indent=2))
     assert not errors, 'Facial/flight source checks failed'
 
 

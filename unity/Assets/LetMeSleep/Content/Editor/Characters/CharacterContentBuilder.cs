@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "v030-characters-8-sketch-palette";
+        private const string BuilderVersion = "v030-characters-9-review-eyes";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -276,6 +276,22 @@ namespace LetMeSleep.Content.Characters.Editor
             SetKeyword(material, "_ENVIRONMENTREFLECTIONS_OFF", wing);
             SetKeyword(material, "_RECEIVE_SHADOWS_OFF", wing);
             material.SetShaderPassEnabled("ShadowCaster", !wing);
+            // Human eye whites: the sketch eyes are clean white spheres, but their lower half faces the ground
+            // and only receives ambient light, so URP renders it dark grey (the Blender look-dev used the same
+            // faint self-light). A weak emission of their own colour keeps them white in shade; at night the
+            // eyes stay visible on the dark figure.
+            bool eyeWhite = IsEyeWhiteMaterial(source.name);
+            // Material colours are stored in sRGB and linearised for rendering: scale in linear space.
+            var emission = eyeWhite ? (new Color(color.r, color.g, color.b).linear * EyeWhiteEmission).gamma : Color.black;
+            emission.a = 1;
+            material.SetColor("_EmissionColor", emission);
+            // URP rebuilds _EMISSION from the AnyEmissive GI flags when the material is imported (see
+            // AlfaHouseDressing.PersistAuthoredEmission): the keyword alone would be discarded.
+            material.globalIlluminationFlags = eyeWhite ? MaterialGlobalIlluminationFlags.BakedEmissive : MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+            if (eyeWhite) UnityEditor.MaterialEditor.FixupEmissiveFlag(material);
+            SetKeyword(material, "_EMISSION", eyeWhite);
+            Require(!eyeWhite || (material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.AnyEmissive) != 0,
+                "Eye white lost its emissive GI flags: " + source.name);
             // Detail strips sort after the membrane they lie on, independent of renderer distance.
             // URP re-derives renderQueue from _Surface + _QueueOffset when it validates a material.
             int queueOffset = wing && !membrane ? 1 : 0;
@@ -284,6 +300,14 @@ namespace LetMeSleep.Content.Characters.Editor
             EditorUtility.SetDirty(material);
             return material;
         }
+
+        /// <summary>Fraction of an eye white's own (linear) colour it emits (see UpsertMaterial).</summary>
+        private const float EyeWhiteEmission = .25f;
+
+        /// <summary>Human eye whites, including the lower-globe shade. The mosquito's stay unlit: glowing
+        /// eyes would give away a mosquito hiding in the dark.</summary>
+        private static bool IsEyeWhiteMaterial(string name) => name == "Character_EyeWhite"
+            || name == "Human_EyeWhiteShade";
 
         /// <summary>Every translucent wing surface: membrane, veins and leading edge (WingEdge*).</summary>
         private static bool IsWingMaterial(string name) => name == "Mosquito_Wing"

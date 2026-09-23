@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4885229714814820998}
   - component: {fileID: 3732719119732265235}
   - component: {fileID: 2608018652447596919}
-  - component: {fileID: 5028360946516168443}
+  - component: {fileID: 2446898114367275958}
   m_Layer: 0
   m_Name: LMS_Mosquito
   m_TagString: Untagged
@@ -275,7 +275,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.055
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5028360946516168443
+--- !u!114 &2446898114367275958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -288,8 +288,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
-  RigRevision: mosquito-v030-r6-facial
-  SourceSha256: ada09399c15f89bea2f54e2a4f8e60e7bcc1f1afe48949589e7ac210cbe48f83
+  RigRevision: mosquito-v030-r7-facial
+  SourceSha256: e6b7fb0f141209d82a37486371a48326e4e74b99b880bf869f77e421aeb8e0c6
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:

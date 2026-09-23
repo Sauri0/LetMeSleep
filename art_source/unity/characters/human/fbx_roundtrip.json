@@ -1,11 +1,11 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b",
-    "source_audit_sha256": "a82c0a4f75304cb4854dbf03581b6d5e7b2a8d39310b6cca7b9211771f857e36",
+    "fbx_sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
+    "source_audit_sha256": "a06a1214accdaa65b32a42e372a352172543a14dbf499c67d032043e203609be",
     "dimensions": [
       1.9442545771598816,
-      0.40290310978889465,
+      0.42527371644973755,
       1.7640000685782482
     ],
     "triangles": 17864,

@@ -187,12 +187,12 @@
   ],
   "bounds_max": [
     0.9720883369445801,
-    0.16190285980701447,
+    0.18427348136901855,
     1.7640000581741333
   ],
   "dimensions": [
     1.9442545771598816,
-    0.40290285646915436,
+    0.42527347803115845,
     1.7640000581741333
   ],
   "sockets": [
@@ -357,6 +357,11 @@
         "flipped": 60
       }
     }
+  },
+  "mouth_cavity_winding": {
+    "faces": 7,
+    "flipped": 7,
+    "vertices": 12
   },
   "bone_names": [
     "Root",
@@ -1487,21 +1492,21 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
-    "LMS_Human_alpha.fbx": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b"
+    "LMS_Human_alpha.blend": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
+    "LMS_Human_alpha.fbx": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "81307d90cb02d39c549512f22a45c303842cfdb38284b40edba97810be00e582",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r6\\base15",
+    "baseline_blend_sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\base15",
     "scene_before": {
-      "meshes": "92574685ed52a4d0cfd78ca4d5e100ccbcdd0d77c03a8d35e07ac18e8cf2b7ad",
+      "meshes": "34357247904c88230a7c49392da1193d2107936e479022c0b81e42cfb39f6076",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "d00560a96237c4b5642ff7788dd20c0632545cffd91432fc02edd570b7a9234b"
+      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
     },
     "scene_after": {
-      "meshes": "92574685ed52a4d0cfd78ca4d5e100ccbcdd0d77c03a8d35e07ac18e8cf2b7ad",
+      "meshes": "34357247904c88230a7c49392da1193d2107936e479022c0b81e42cfb39f6076",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "d00560a96237c4b5642ff7788dd20c0632545cffd91432fc02edd570b7a9234b"
+      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
     },
     "actions_before": {
       "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
@@ -1555,8 +1560,8 @@
       "Human_Turn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
-      "LMS_Human_alpha.fbx": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b"
+      "LMS_Human_alpha.blend": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
+      "LMS_Human_alpha.fbx": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2"
     },
     "author": {
       "clips": [

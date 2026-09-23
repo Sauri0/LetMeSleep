@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 1148042351287699800}
   - component: {fileID: 6399267936585410066}
   - component: {fileID: 7854026478028426998}
-  - component: {fileID: 8783239793111177125}
+  - component: {fileID: 7075504908015518676}
   m_Layer: 0
   m_Name: LMS_Human
   m_TagString: Untagged
@@ -485,7 +485,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &8783239793111177125
+--- !u!114 &7075504908015518676
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -498,8 +498,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
-  RigRevision: human-v030-r6-facial
-  SourceSha256: 26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b
+  RigRevision: human-v030-r7-facial
+  SourceSha256: 4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:

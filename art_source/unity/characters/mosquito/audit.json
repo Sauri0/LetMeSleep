@@ -225,7 +225,7 @@
         "yz": 0.048,
         "lower_inset": 0.0005
       },
-      "lid_geometry_revision": "mosquito-sketch-r6-ball-white-cap",
+      "lid_geometry_revision": "mosquito-sketch-r7-closed-rim",
       "lid_rest_edges_degrees_about_x_from_front": {
         "upper_front_center_to_pole": [
           66.0,
@@ -294,7 +294,7 @@
         "material": "Mosquito_Shell"
       },
       "eye_housing": "fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure",
-      "eye_collar": "fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) in the shutters rest-edge surface, from the white to 97% of the innermost shell; never touched by the shutters",
+      "eye_collar": "fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) 0.6 deg behind the shutters rest-edge surface, from the white to 98.5% of the housing inner shell, behind the housing front chamfer; never touched by the shutters",
       "eye_cap": "fixed eyelid wedge weighted to Head (EyeCap.L/R) from the top of the white (~12% of its front-view height) up under the upper shutter rim; inside the innermost shell",
       "rest_pose": "upper shutter rests at ~66 deg over the eyelid cap, lower at ~-104 deg behind the bottom of the white; blink closure 0..1 starts from that bind pose",
       "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",

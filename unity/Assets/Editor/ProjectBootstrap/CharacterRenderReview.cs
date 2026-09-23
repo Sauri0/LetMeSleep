@@ -23,12 +23,19 @@ namespace LetMeSleep.Editor
             Directory.CreateDirectory(output);
             var original = SceneManager.GetActiveScene();
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+            // The scene that was open stays loaded: its lights used to add to the review key and clip the
+            // palette (shirt and skin at 255). Switch them off for the capture and restore them afterwards.
+            var foreign = UnityEngine.Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                .Where(l => l.enabled && l.gameObject.scene != scene).ToArray();
             try
             {
+                foreach (var other in foreign) other.enabled = false;
                 SceneManager.SetActiveScene(scene);
                 RenderSettings.ambientMode = AmbientMode.Flat; RenderSettings.ambientLight = new Color(.35f, .38f, .46f);
+                DynamicGI.UpdateEnvironment();
+                // Warm key kept under clipping so the renders can be compared with the palette.
                 var light = new GameObject("ReviewKey").AddComponent<Light>(); light.type = LightType.Directional;
-                light.intensity = 2.2f; light.color = new Color(1, .9f, .78f); light.shadows = LightShadows.Soft;
+                light.intensity = 1.3f; light.color = new Color(1, .9f, .78f); light.shadows = LightShadows.Soft;
                 light.transform.rotation = Quaternion.Euler(35, 150, 0);
                 var floor = GameObject.CreatePrimitive(PrimitiveType.Cube); floor.transform.position = new Vector3(0, -.07f, 0); floor.transform.localScale = new Vector3(8, .1f, 8);
                 var material = new Material(Shader.Find("Universal Render Pipeline/Lit")); material.color = new Color(.18f, .22f, .29f); floor.GetComponent<Renderer>().sharedMaterial = material;
@@ -77,7 +84,11 @@ namespace LetMeSleep.Editor
                 }
                 UnityEngine.Object.DestroyImmediate(material);
             }
-            finally { SceneManager.SetActiveScene(original); EditorSceneManager.CloseScene(scene, true); }
+            finally
+            {
+                foreach (var other in foreign) if (other) other.enabled = true;
+                SceneManager.SetActiveScene(original); EditorSceneManager.CloseScene(scene, true);
+            }
             Debug.Log("LMS_CHARACTER_RENDER_REVIEW_COMPLETE");
         }
         private static void ValidateSkinnedPose(GameObject actor, string species, string pose)

@@ -1130,7 +1130,7 @@ namespace LetMeSleep.UI
             AlfaUiFactory.Fill(content, 20f, 20f, 20f, 192f);
             factory.SectionHeader(content, "Header", "PERSONALIZAR", AlfaUiIconKind.Customize, AlfaUiTheme.Lamp400);
             var roleRow = factory.Horizontal(content, "RoleTabs", 10f, TextAnchor.MiddleCenter);
-            customizationHumanButton = factory.FeatureButton(roleRow, "CustomizationHumanButton", "HUMANO", "PIJAMA Y GORRO",
+            customizationHumanButton = factory.FeatureButton(roleRow, "CustomizationHumanButton", "HUMANO", "PIEL Y PIJAMA",
                 () => SetCustomizationRole(AlfaRole.Human), AlfaUiIconKind.Human, true, false, 76f);
             customizationMosquitoButton = factory.FeatureButton(roleRow, "CustomizationMosquitoButton", "MOSQUITO", "COLOR DEL CUERPO",
                 () => SetCustomizationRole(AlfaRole.Mosquito), AlfaUiIconKind.Mosquito, false, false, 76f);
@@ -1142,7 +1142,7 @@ namespace LetMeSleep.UI
             humanPaletteRoot = CreatePaletteLayout(humanCustomizationFields.transform, "SkinPalette");
             factory.Text(humanCustomizationFields.transform, "PajamaLabel", "COLOR DE PIJAMA", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             pajamaPaletteRoot = CreatePaletteLayout(humanCustomizationFields.transform, "PajamaPalette");
-            factory.Text(humanCustomizationFields.transform, "DefaultClothes", "Predeterminado: pijama, pantuflas y gorro de noche.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            factory.Text(humanCustomizationFields.transform, "DefaultClothes", "Predeterminado: pijama azul y pantuflas; el gorro de noche siempre es rojo.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
             mosquitoCustomizationFields = factory.Vertical(content, "MosquitoFields", 10f).gameObject;
             factory.Text(mosquitoCustomizationFields.transform, "MosquitoColorLabel", "COLOR", AlfaUiTheme.LabelSize, AlfaUiTheme.Lamp400);
             mosquitoPaletteRoot = CreatePaletteLayout(mosquitoCustomizationFields.transform, "MosquitoPalette");

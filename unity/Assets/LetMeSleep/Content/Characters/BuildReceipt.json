@@ -1,8 +1,8 @@
 {
-    "builder": "v030-characters-8-sketch-palette",
+    "builder": "v030-characters-9-review-eyes",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "5a9621c5312d26c9f6ac6e107f5f902653e494203a55587e318f981ad773d5d3",
-    "builderDigest": "5f32f7a79f04e4b358221bcd3db90d45a823849481c0ca399c8eb51f7e0ff05b",
+    "sourceDigest": "7823f733a399b6fd1361dbc3de651698f298fd61e77992307a411e7e1c10f707",
+    "builderDigest": "fb72a646c5b62a1d090b3fd63e9d10e7d01c11e487a2f013bef109c0d14fbc52",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],

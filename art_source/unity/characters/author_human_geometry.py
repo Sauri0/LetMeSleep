@@ -41,6 +41,10 @@ with the inner end 3.5 mm lower; the side fringe facets are replaced by
 30 x 50 mm sideburn blocks in front of the ears; the cap band sits 12 mm
 lower, just over the brows. Closed puffy slippers: 20 mm #1E2440 sole,
 ~+50% instep, ~+11% width, a swollen round toe and a closed heel.
+Round 7 (review): a shorter nightcap tail puts the pompom behind the ear at
+ear-lobe height (no longer under the jaw or on the shoulder), and the mouth
+cavity is wound toward its axis after the global normal pass so Unity's
+back-face culling keeps it (an open mouth no longer shows the background).
 Geometry and skin weights only; stable rig/socket coordinates are supplied by
 the caller (eyes stay centred on Socket.Eye z=1.53 for Unity).
 """
@@ -301,6 +305,39 @@ def skull(mesh, skin, dark):
     return triangles(verts,faces)
 
 
+# Round 7 (review): the cavity is an open cup behind the slit. The export's
+# global normals_make_consistent(inside=False) turned it outward (into the
+# head), so Unity's back-face culling removed it and an open mouth showed
+# the scene behind the head. Its walls and back cap must face the cup axis.
+MOUTH_CAVITY_BOUNDS=((-.03,.03),(-.15,-.10),(1.37,1.43))
+
+
+def orient_mouth_cavity(obj):
+    """Run AFTER global normal consistency on HumanHead: every MouthCavity
+    face (Character_Expression faces inside MOUTH_CAVITY_BOUNDS, joined into
+    HumanHead) is wound to face the cup's axis. Winding only; vertex order,
+    shape keys, weights and materials are unchanged."""
+    if obj.name!='HumanHead':return None
+    dark=[i for i,m in enumerate(obj.data.materials) if m and m.name=='Character_Expression']
+    inside=lambda co:all(lo<=v<=hi for v,(lo,hi) in zip(co,MOUTH_CAVITY_BOUNDS))
+    faces=[p for p in obj.data.polygons if p.material_index in dark
+           and all(inside(obj.data.vertices[i].co) for i in p.vertices)]
+    assert len(faces)==7,(len(faces),'MouthCavity topology changed (6 walls + back cap expected)')
+    ids={i for p in faces for i in p.vertices}
+    points=[obj.data.vertices[i].co for i in ids]
+    centre=sum(points,Vector())/len(points)
+    flipped=0
+    for polygon in faces:
+        # Centroid-to-axis direction: a face whose normal points away from
+        # the cup centre is facing into the head and would be culled.
+        if polygon.normal.dot(polygon.center-centre)>0:
+            polygon.flip();flipped+=1
+    obj.data.update()
+    for polygon in faces:
+        assert polygon.normal.dot(polygon.center-centre)<0,('MouthCavity face still faces outward',polygon.index)
+    return {'faces':len(faces),'flipped':flipped,'vertices':len(ids)}
+
+
 # ---------------------------------------------------------------- eyes
 EYE_SEGMENTS=16
 # Round 5: ring latitudes (degrees from the top). The bottom cap starts at
@@ -553,10 +590,16 @@ CROWN_APEX_Z=1.764
 # falls down the LEFT side of the head, outside the ear, to a pompom at jaw
 # height beside the face. Round 5: 7 sections (large soft facets). Round 6:
 # ~35 mm closer to the narrower head, still ~20 mm clear of the ear rim.
-CAP_TAIL=[((0.020,.022,1.672),.078),((0.100,.038,1.686),.072),((0.166,.058,1.654),.063),
-          ((0.211,.074,1.594),.053),((0.232,.086,1.506),.041),((0.226,.094,1.420),.027),
-          ((0.213,.096,1.372),.015)]
-POMPOM_CENTER=(.207,.097,1.338)
+# Round 7 (review): the round-6 pompom hung below the jaw (bottom z 1.276,
+# chin 1.300), so front-right views showed it under the jaw as a grey
+# "beard" and a head tilted back (MenuLook) laid it on the shoulder. The
+# tail is ~110 mm shorter and ends further back and out: the pompom sits
+# behind the ear at ear-lobe height, its bottom (z ~1.393) above the side
+# jaw ring (1.39) and ~40 mm outside the ear rim.
+CAP_TAIL=[((0.020,.024,1.672),.078),((0.100,.042,1.688),.072),((0.170,.066,1.660),.062),
+          ((0.220,.092,1.604),.050),((0.244,.112,1.542),.036),((0.250,.122,1.500),.022),
+          ((0.250,.126,1.482),.013)]
+POMPOM_CENTER=(.250,.128,1.455)
 POMPOM_RADIUS=.0624
 
 

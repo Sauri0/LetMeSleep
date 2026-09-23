@@ -118,9 +118,9 @@
   "tool_grip_validated": false,
   "seat_skin_contact_validated": false,
   "visual_approval": false,
-  "base_blend_sha256": "81307d90cb02d39c549512f22a45c303842cfdb38284b40edba97810be00e582",
-  "base_fbx_sha256": "1bb5956865adf199d05bb918a9f7e15a1693fd704f7f178d895d7445126c94ac",
-  "base_audit_sha256": "c9680b69625c510f3360e824d6f2087e171e8c149cf975314b71df0bdd591fbf",
+  "base_blend_sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
+  "base_fbx_sha256": "7c34bf6315ac4463f46773fde96942023ef7f8d9ccbd30b2a5dd9fb88cc4c8ba",
+  "base_audit_sha256": "0bfd627377f858bb109c8b1d2d482b3326e1fae8787d0b1bd9d380d9d5a297dd",
   "bind_bones": [
     {
       "name": "Root",
@@ -1394,7 +1394,7 @@
   "combat_clips_modified": false,
   "geometry_source_note": "Coherent generated crown-fixed base; geometry unchanged by menu authoring",
   "files_sha256": {
-    "LMS_HumanMenu.blend": "a69bf286b0fe488092777be6961feeef89f7f27f103a0c7dd71865e3f5e15f88",
-    "LMS_HumanMenu.fbx": "3c56ce47e54d54f60a60971e309ea7ba2c20ec1d77d84523b270a366030a5b77"
+    "LMS_HumanMenu.blend": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
+    "LMS_HumanMenu.fbx": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca"
   }
 }
