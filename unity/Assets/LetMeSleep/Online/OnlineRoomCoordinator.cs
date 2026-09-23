@@ -14,6 +14,7 @@ namespace LetMeSleep.Online
         private readonly EosLobbySession lobby;
         private readonly EosPeerTransport transport;
         private readonly MessageFraming frames = new MessageFraming();
+        private readonly RoomMessageLimiter limits = new RoomMessageLimiter();
         private readonly string playerName;
         private RoomSession hostRoom;
         private double clock, lastHello = -10, awaitingSince = -1;
@@ -84,7 +85,7 @@ namespace LetMeSleep.Online
             if (lobby.State != LobbyState.Connected)
             {
                 bool hadView = Current != null;
-                Current = null; hostRoom = null; Error = ""; frames.Clear(); lastHello = -10; awaitingSince = -1;
+                Current = null; hostRoom = null; Error = ""; frames.Clear(); limits.Clear(); lastHello = -10; awaitingSince = -1;
                 if (hadView) RoomChanged?.Invoke(null);
                 return;
             }
@@ -93,7 +94,7 @@ namespace LetMeSleep.Online
             if (hostRoom != null)
             {
                 foreach (var member in hostRoom.Snapshot().Members)
-                    if (!lobby.Contains(member.Id)) { hostRoom.Disconnect(member.Id, clock); frames.Forget(member.Id); }
+                    if (!lobby.Contains(member.Id)) { hostRoom.Disconnect(member.Id, clock); frames.Forget(member.Id); limits.Forget(member.Id); }
                 Publish();
             }
         }
@@ -120,9 +121,12 @@ namespace LetMeSleep.Online
                 return;
             }
             if (kind == Rejected && peer == lobby.OwnerId && payload.Length == 1 && payload[0] <= (byte)RoomError.NotReady) { Error = ((RoomError)payload[0]).ToString(); return; }
-            if (hostRoom == null) return;
+            if (hostRoom == null || (kind != Hello && kind != Ready)) return;
+            // Bounded per member: each accepted message may cost a reliable view to every member.
+            if (!limits.TryAccept(peer, clock)) return;
             try
             {
+                long before = hostRoom.Snapshot().Revision;
                 using var stream = new MemoryStream(payload, false); using var reader = new BinaryReader(stream, Encoding.UTF8);
                 RoomError result;
                 bool reconnected = false;
@@ -146,7 +150,9 @@ namespace LetMeSleep.Online
                 }
                 else return;
                 if (result != RoomError.None) Send(peer, Rejected, new[] { (byte)result });
-                Publish();
+                // Broadcast only real changes; a duplicate Hello or stale Ready gets the current view back alone.
+                if (hostRoom.Snapshot().Revision != before) Publish();
+                else if (lobby.State == LobbyState.Connected && Current != null && Current.Members.Any(m => m.Id == peer)) Send(peer, View, RoomWireCodec.Encode(Current));
                 if (reconnected) MemberReconnected?.Invoke(peer);
             }
             catch (IOException) { }
