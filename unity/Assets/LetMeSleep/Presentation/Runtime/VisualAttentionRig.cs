@@ -111,7 +111,7 @@ namespace LetMeSleep.Presentation
         private float moodBlendSeconds=.12f,dizzyPhase;
         private MoodBone leftBrow,rightBrow,jaw,leftPupil,rightPupil,leftEyeball,rightEyeball;
         private float leftBrowSign,rightBrowSign;
-        private int eyeUpAxis=-1;
+        private int eyeUpAxis=-1,eyeLookAxis=-1;
         public bool SupportsEyeScale=>leftEyeball!=null && rightEyeball!=null;
         public FacialMood Mood=>mood;
         public FacialMoodShape MoodShape=>moodCurrent;
@@ -159,7 +159,7 @@ namespace LetMeSleep.Presentation
         private void ConfigureMood(Bindings value)
         {
             mood=FacialMood.Neutral; moodTarget=moodCurrent=FacialMoodShape.Neutral; dizzyPhase=0;
-            leftBrow=rightBrow=jaw=leftPupil=rightPupil=leftEyeball=rightEyeball=null; eyeUpAxis=-1;
+            leftBrow=rightBrow=jaw=leftPupil=rightPupil=leftEyeball=rightEyeball=null; eyeUpAxis=eyeLookAxis=-1;
             var head=value.Head;
             Vector3 headForward=head.TransformDirection(value.HeadForward).normalized;
             Vector3 down=-head.TransformDirection(value.HeadUp).normalized;
@@ -177,11 +177,13 @@ namespace LetMeSleep.Presentation
             // Mosquito pupils are separate discs on their own bones: scale them across the look axis.
             if(leftLids.Length>0 && value.LeftEye && value.RightEye && LookAxisIndex(value.EyeForward)>=0)
             { leftPupil=new MoodBone{bone=value.LeftEye,scaleOnly=true}; rightPupil=new MoodBone{bone=value.RightEye,scaleOnly=true}; }
-            // Human eyeballs (pupil decals on the globe): wide-eyed size and a vertical squint across EyeUp.
-            else if(leftLids.Length==0 && value.LeftEye && value.RightEye && LookAxisIndex(value.EyeUp)>=0)
+            // Human pupils are decals on the Eye bones in front of static head-weighted globes: size them across the
+            // look axis only (a depth change would sink them into the white) and flatten them vertically to squint.
+            else if(leftLids.Length==0 && value.LeftEye && value.RightEye && LookAxisIndex(value.EyeUp)>=0 &&
+                LookAxisIndex(value.EyeForward)>=0 && LookAxisIndex(value.EyeUp)!=LookAxisIndex(value.EyeForward))
             {
                 leftEyeball=new MoodBone{bone=value.LeftEye,scaleOnly=true}; rightEyeball=new MoodBone{bone=value.RightEye,scaleOnly=true};
-                eyeUpAxis=LookAxisIndex(value.EyeUp);
+                eyeUpAxis=LookAxisIndex(value.EyeUp); eyeLookAxis=LookAxisIndex(value.EyeForward);
             }
         }
         private static void SetupLids(LidState[] lids,Transform eye,Transform otherEye,Vector3 headForward,Vector3 down)
@@ -241,10 +243,11 @@ namespace LetMeSleep.Presentation
                 var scale=Vector3.one*Mathf.Clamp(shape.Pupil,.5f,1.5f); scale[axis]=1;
                 ScalePupil(leftPupil,scale); ScalePupil(rightPupil,scale);
             }
-            if(leftEyeball!=null && rightEyeball!=null && eyeUpAxis>=0 && (Mathf.Abs(shape.EyeSize-1)>.001f || shape.Squint>.001f))
+            if(leftEyeball!=null && rightEyeball!=null && eyeUpAxis>=0 && eyeLookAxis>=0 && (Mathf.Abs(shape.Pupil-1)>.001f || shape.Squint>.001f))
             {
-                var scale=Vector3.one*Mathf.Clamp(shape.EyeSize,.8f,1.25f);
+                var scale=Vector3.one*Mathf.Clamp(shape.Pupil,.5f,1.5f);
                 scale[eyeUpAxis]*=1-.5f*Mathf.Clamp01(shape.Squint);
+                scale[eyeLookAxis]=1;
                 ScalePupil(leftEyeball,scale); ScalePupil(rightEyeball,scale);
             }
         }

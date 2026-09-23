@@ -359,7 +359,9 @@ namespace LetMeSleep.Tests.PlayMode
             Settle(humanRig);
             var eye = Find(human.transform, "Eye.L");
             Assert.That(humanRig.SupportsEyeScale, Is.True);
-            Assert.That(eye.lossyScale.magnitude, Is.GreaterThan(1.1f * Vector3.one.magnitude * EyeScaleOf(human)), "Surprised widens the eyes.");
+            var decal = eye.localScale;
+            Assert.That(Mathf.Max(decal.x, Mathf.Max(decal.y, decal.z)), Is.EqualTo(1f).Within(1e-3f), "Pupil decals never move in depth.");
+            Assert.That(Mathf.Min(decal.x, Mathf.Min(decal.y, decal.z)), Is.LessThan(.6f), "Surprised shrinks the pupils in the wide white eyes.");
             // Local: the surprised head also tips back, which cancels the open jaw in world space.
             Assert.That(Quaternion.Angle(jaw.localRotation, jawNeutral), Is.GreaterThan(8f), "Surprised drops the jaw.");
             humanRig.PrepareForAnimation();
@@ -718,12 +720,6 @@ namespace LetMeSleep.Tests.PlayMode
 
         private static FacialMood Mood(GameplayMoodPolicy policy, PlayerRole role, LifeState state, double now, bool near = false) =>
             policy.Evaluate(Frame(role, state, near), now).Mood;
-
-        private static float EyeScaleOf(GameObject human)
-        {
-            var parent = Find(human.transform, "Eye.L").parent;
-            return parent ? parent.lossyScale.magnitude / Vector3.one.magnitude : 1f;
-        }
 
         private static void Settle(VisualAttentionRig rig)
         {
