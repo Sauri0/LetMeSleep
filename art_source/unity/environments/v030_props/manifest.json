@@ -1,0 +1,4910 @@
+{
+  "schema": "lms.props.v030/1",
+  "project": "Let me sleep",
+  "generator": "art_source/unity/environments/v030_props/build_props.py",
+  "sources": {
+    "build_props.py": "19d94cd4872e34f72595a0af7c86466bbf0a5281b25929196efa8e1eb46afc78",
+    "props_catalog.py": "59b1d91c16e4fd6c77e4ac9617257f8e297ca09173247428471840e25f04bec7",
+    "props_lib.py": "3bd055d0f6a465a7a7d002f0707939626ba307778a2108ac7b72cc3576de12f5"
+  },
+  "blender": "5.2.1 LTS",
+  "units": "metres (1 Blender unit = 1 m)",
+  "axes_source": "Blender Z up, front of each prop toward -Y",
+  "axes_unity": "Mismo convenio que los personajes (build_characters.py, FBX -Z forward / Y up): posición Unity local = (-x, z, -y) de Blender; el frente (-Y en Blender) mira a +Z en Unity. Los anchors traen ambas versiones; verificar una vez contra el FBX importado.",
+  "pivot": "base centre: XY bounding-box centre, lowest vertex at Z = 0",
+  "reference_human_height_m": 1.72,
+  "triangle_budget": [
+    50,
+    1500
+  ],
+  "fbx_export": {
+    "object_types": [
+      "MESH"
+    ],
+    "global_scale": 1.0,
+    "apply_unit_scale": true,
+    "apply_scale_options": "FBX_SCALE_UNITS",
+    "axis_forward": "-Z",
+    "axis_up": "Y",
+    "use_mesh_modifiers": true,
+    "mesh_smooth_type": "FACE",
+    "use_tspace": false,
+    "use_triangles": false,
+    "add_leaf_bones": false,
+    "bake_anim": false,
+    "path_mode": "AUTO",
+    "embed_textures": false,
+    "use_custom_props": false
+  },
+  "unity_import_recommendation": {
+    "globalScale": 1.0,
+    "useFileScale": true,
+    "bakeAxisConversion": true,
+    "addCollider": false,
+    "importCameras": false,
+    "importLights": false,
+    "importBlendShapes": false,
+    "importAnimation": false,
+    "animationType": "None",
+    "materialImportMode": "None",
+    "materials_note": "Crear URP/Lit de color plano por slot desde este manifiesto (color_srgb como _BaseColor; los *_Emissive con _EmissionColor = color_srgb * emission_strength y keyword _EMISSION).",
+    "decor_note": "Solo decorativos: sin Collider/Rigidbody bajo MapRoot (ver docs/v030/MAPA-SISTEMAS.md, maps)."
+  },
+  "rules": [
+    "Let me sleep (nunca Bite & Build)",
+    "sin armas",
+    "sin texto en carteles",
+    "low-poly facetado, color plano",
+    "sin colliders",
+    "un FBX por prop"
+  ],
+  "color_note": "color_srgb es la autoridad de paleta; base_color_linear es el valor que usa Blender.",
+  "props": [
+    {
+      "name": "HandLantern",
+      "asset": "Prop_HandLantern",
+      "fbx": "Prop_HandLantern.fbx",
+      "fbx_sha256": "6052793a77fab35923d844ff4b61ab2f103f8cb9336be03197f3c0392204b53d",
+      "display_name_es": "Farol de mano",
+      "category": "item",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.184,
+        "y": 0.184,
+        "z": 0.3917
+      },
+      "unity_size_m": {
+        "x": 0.184,
+        "y": 0.3917,
+        "z": 0.184
+      },
+      "triangles": 464,
+      "vertices": 264,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_HandLantern_Frame",
+          "part": "Frame",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.55,
+          "metallic": 0.35
+        },
+        {
+          "slot": 1,
+          "name": "Prop_HandLantern_Cap",
+          "part": "Cap",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.35
+        },
+        {
+          "slot": 2,
+          "name": "Prop_HandLantern_Glass_Emissive",
+          "part": "Glass",
+          "color_srgb": "#FFB347",
+          "base_color_linear": [
+            1.0,
+            0.4508,
+            0.063
+          ],
+          "emissive": true,
+          "emission_strength": 2.5,
+          "roughness": 0.3,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_HandLantern_Flame_Emissive",
+          "part": "Flame",
+          "color_srgb": "#FFE7A3",
+          "base_color_linear": [
+            1.0,
+            0.7991,
+            0.3663
+          ],
+          "emissive": true,
+          "emission_strength": 4.0,
+          "roughness": 0.3,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Farol cuadrado con vidrio ámbar emisivo y llama visible en cada cara. Luz sugerida: Point #FFB347 en el anchor \"light\", sin sombras.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "light": {
+          "blender_m": [
+            0.0,
+            0.0,
+            0.14
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.14,
+            -0.0
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Centro del vidrio: Point #FFB347, rango 4-6 m, sin sombras."
+        },
+        "handle": {
+          "blender_m": [
+            0.0,
+            0.0,
+            0.392
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.392,
+            -0.0
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Tope del aro (para colgar o sostener)."
+        }
+      }
+    },
+    {
+      "name": "Crate",
+      "asset": "Prop_Crate",
+      "fbx": "Prop_Crate.fbx",
+      "fbx_sha256": "602102069f8d8bdf811c6f338b21251bce05440f8812f9da0732bc3bb1382b85",
+      "display_name_es": "Cajón de madera",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.7,
+        "y": 0.7,
+        "z": 0.7
+      },
+      "unity_size_m": {
+        "x": 0.7,
+        "y": 0.7,
+        "z": 0.7
+      },
+      "triangles": 768,
+      "vertices": 448,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Crate_Frame",
+          "part": "Frame",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Crate_Plank",
+          "part": "Plank",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Crate_Core",
+          "part": "Core",
+          "color_srgb": "#4A2E17",
+          "base_color_linear": [
+            0.0685,
+            0.0273,
+            0.0086
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Chest",
+      "asset": "Prop_Chest",
+      "fbx": "Prop_Chest.fbx",
+      "fbx_sha256": "bdb16aabc8f9521561dfda5f093ad9ae64c5c3d00f08e36d3f8d37a5516a7ee0",
+      "display_name_es": "Cofre",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.949,
+        "y": 0.586,
+        "z": 0.6
+      },
+      "unity_size_m": {
+        "x": 0.949,
+        "y": 0.6,
+        "z": 0.586
+      },
+      "triangles": 488,
+      "vertices": 298,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Chest_Wood",
+          "part": "Wood",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Chest_Lid",
+          "part": "Lid",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Chest_Core",
+          "part": "Core",
+          "color_srgb": "#4A2E17",
+          "base_color_linear": [
+            0.0685,
+            0.0273,
+            0.0086
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Chest_Iron",
+          "part": "Iron",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.5
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Chest_Lock",
+          "part": "Lock",
+          "color_srgb": "#D9A441",
+          "base_color_linear": [
+            0.6939,
+            0.3712,
+            0.0529
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.45,
+          "metallic": 0.6
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Barrel",
+      "asset": "Prop_Barrel",
+      "fbx": "Prop_Barrel.fbx",
+      "fbx_sha256": "e2adc1afae0dcca02808cf1b5e62ba2340253544088a3ea1ce05160860258d9e",
+      "display_name_es": "Barril",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.6727,
+        "y": 0.69,
+        "z": 0.95
+      },
+      "unity_size_m": {
+        "x": 0.6727,
+        "y": 0.95,
+        "z": 0.69
+      },
+      "triangles": 416,
+      "vertices": 266,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Barrel_Stave",
+          "part": "Stave",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Barrel_StaveLight",
+          "part": "StaveLight",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Barrel_Lid",
+          "part": "Lid",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Barrel_Hoop",
+          "part": "Hoop",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.45
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "RugRedStriped",
+      "asset": "Prop_RugRedStriped",
+      "fbx": "Prop_RugRedStriped.fbx",
+      "fbx_sha256": "068df76d309aa64319f5e8b6b5eefef0e81d32b52608033bff735444ea33f419",
+      "display_name_es": "Alfombra roja con franjas",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 2.0,
+        "y": 1.3,
+        "z": 0.015
+      },
+      "unity_size_m": {
+        "x": 2.0,
+        "y": 0.015,
+        "z": 1.3
+      },
+      "triangles": 140,
+      "vertices": 272,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_RugRedStriped_Field",
+          "part": "Field",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_RugRedStriped_Border",
+          "part": "Border",
+          "color_srgb": "#9E2422",
+          "base_color_linear": [
+            0.3419,
+            0.0176,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_RugRedStriped_Stripe",
+          "part": "Stripe",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {
+        "elev": 55
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "RugBlue",
+      "asset": "Prop_RugBlue",
+      "fbx": "Prop_RugBlue.fbx",
+      "fbx_sha256": "037ade749d3dbcec7b60bc9db4909fc790a3d996e8d0b523934d9d8e212501ec",
+      "display_name_es": "Alfombra azul",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.8,
+        "y": 1.2,
+        "z": 0.012
+      },
+      "unity_size_m": {
+        "x": 1.8,
+        "y": 0.012,
+        "z": 1.2
+      },
+      "triangles": 76,
+      "vertices": 144,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_RugBlue_Field",
+          "part": "Field",
+          "color_srgb": "#2D4F9A",
+          "base_color_linear": [
+            0.0262,
+            0.0782,
+            0.3231
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_RugBlue_Stripe",
+          "part": "Stripe",
+          "color_srgb": "#4F78C4",
+          "base_color_linear": [
+            0.0782,
+            0.1878,
+            0.552
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_RugBlue_Border",
+          "part": "Border",
+          "color_srgb": "#1E3570",
+          "base_color_linear": [
+            0.013,
+            0.0356,
+            0.162
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {
+        "elev": 55
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "PottedPlant",
+      "asset": "Prop_PottedPlant",
+      "fbx": "Prop_PottedPlant.fbx",
+      "fbx_sha256": "ec370ee45a3321a9c565a2b441a0d3c0fd1bdef5f791ac92884c3da82bc238b7",
+      "display_name_es": "Maceta con planta",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.6731,
+        "y": 0.5268,
+        "z": 0.5893
+      },
+      "unity_size_m": {
+        "x": 0.6731,
+        "y": 0.5893,
+        "z": 0.5268
+      },
+      "triangles": 484,
+      "vertices": 388,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_PottedPlant_Pot",
+          "part": "Pot",
+          "color_srgb": "#C4683A",
+          "base_color_linear": [
+            0.552,
+            0.1384,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_PottedPlant_PotRim",
+          "part": "PotRim",
+          "color_srgb": "#A5532C",
+          "base_color_linear": [
+            0.3763,
+            0.0865,
+            0.0252
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_PottedPlant_Soil",
+          "part": "Soil",
+          "color_srgb": "#4A3222",
+          "base_color_linear": [
+            0.0685,
+            0.0319,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 1.0,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_PottedPlant_Leaf",
+          "part": "Leaf",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_PottedPlant_LeafLight",
+          "part": "LeafLight",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_PottedPlant_LeafDark",
+          "part": "LeafDark",
+          "color_srgb": "#2C6B2F",
+          "base_color_linear": [
+            0.0252,
+            0.147,
+            0.0284
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "HangingPlant",
+      "asset": "Prop_HangingPlant",
+      "fbx": "Prop_HangingPlant.fbx",
+      "fbx_sha256": "cf3d2f0122a12abcca118abf8d587606fc574dee83e7407f269bf94b4825e044",
+      "display_name_es": "Planta colgante",
+      "category": "interior",
+      "mount": "ceiling",
+      "dimensions_m": {
+        "x": 0.5151,
+        "y": 0.5187,
+        "z": 1.0252
+      },
+      "unity_size_m": {
+        "x": 0.5151,
+        "y": 1.0252,
+        "z": 0.5187
+      },
+      "triangles": 1212,
+      "vertices": 972,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_HangingPlant_Pot",
+          "part": "Pot",
+          "color_srgb": "#E8DCC5",
+          "base_color_linear": [
+            0.807,
+            0.7157,
+            0.5583
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_HangingPlant_PotBand",
+          "part": "PotBand",
+          "color_srgb": "#C4683A",
+          "base_color_linear": [
+            0.552,
+            0.1384,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_HangingPlant_Soil",
+          "part": "Soil",
+          "color_srgb": "#4A3222",
+          "base_color_linear": [
+            0.0685,
+            0.0319,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 1.0,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_HangingPlant_Rope",
+          "part": "Rope",
+          "color_srgb": "#C9A66B",
+          "base_color_linear": [
+            0.5841,
+            0.3813,
+            0.147
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_HangingPlant_Leaf",
+          "part": "Leaf",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_HangingPlant_LeafLight",
+          "part": "LeafLight",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_HangingPlant_Vine",
+          "part": "Vine",
+          "color_srgb": "#2C6B2F",
+          "base_color_linear": [
+            0.0252,
+            0.147,
+            0.0284
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Cuelga del aro superior (~0,98 m sobre el pivote); el pivote es la punta más baja de las guías.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "PaintingLandscape",
+      "asset": "Prop_PaintingLandscape",
+      "fbx": "Prop_PaintingLandscape.fbx",
+      "fbx_sha256": "fb5b5f59c0381749ebd3d902ce7cf83719bdcb89173c1df2ef2684bd9fa7566e",
+      "display_name_es": "Cuadro con paisaje",
+      "category": "interior",
+      "mount": "wall",
+      "dimensions_m": {
+        "x": 0.76,
+        "y": 0.05,
+        "z": 0.56
+      },
+      "unity_size_m": {
+        "x": 0.76,
+        "y": 0.56,
+        "z": 0.05
+      },
+      "triangles": 372,
+      "vertices": 220,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_PaintingLandscape_Frame",
+          "part": "Frame",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_PaintingLandscape_Sky",
+          "part": "Sky",
+          "color_srgb": "#8CCBF2",
+          "base_color_linear": [
+            0.2623,
+            0.5972,
+            0.8879
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_PaintingLandscape_Sun",
+          "part": "Sun",
+          "color_srgb": "#FFD86B",
+          "base_color_linear": [
+            1.0,
+            0.6867,
+            0.147
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_PaintingLandscape_Mountain",
+          "part": "Mountain",
+          "color_srgb": "#7C8CA8",
+          "base_color_linear": [
+            0.2016,
+            0.2623,
+            0.3916
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_PaintingLandscape_Snow",
+          "part": "Snow",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_PaintingLandscape_Hill",
+          "part": "Hill",
+          "color_srgb": "#4E9A3E",
+          "base_color_linear": [
+            0.0762,
+            0.3231,
+            0.0482
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_PaintingLandscape_Lake",
+          "part": "Lake",
+          "color_srgb": "#3D7CC9",
+          "base_color_linear": [
+            0.0467,
+            0.2016,
+            0.5841
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 7,
+          "name": "Prop_PaintingLandscape_Pine",
+          "part": "Pine",
+          "color_srgb": "#2C6B2F",
+          "base_color_linear": [
+            0.0252,
+            0.147,
+            0.0284
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Colgar en pared: el dorso queda en +Y (0,025 m detrás del pivote); el frente mira a -Y.",
+      "preview": {
+        "elev": 8,
+        "yaw": 18
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Bookshelf",
+      "asset": "Prop_Bookshelf",
+      "fbx": "Prop_Bookshelf.fbx",
+      "fbx_sha256": "9ea4c8e847959b5274ddd47eb6840ac6895a982d38ee6c4b2f0f3b836bc55b2f",
+      "display_name_es": "Estante con libros",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.02,
+        "y": 0.36,
+        "z": 1.8
+      },
+      "unity_size_m": {
+        "x": 1.02,
+        "y": 1.8,
+        "z": 0.36
+      },
+      "triangles": 932,
+      "vertices": 634,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Bookshelf_Wood",
+          "part": "Wood",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Bookshelf_WoodLight",
+          "part": "WoodLight",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Bookshelf_Back",
+          "part": "Back",
+          "color_srgb": "#4A2E17",
+          "base_color_linear": [
+            0.0685,
+            0.0273,
+            0.0086
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Bookshelf_BookRed",
+          "part": "BookRed",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Bookshelf_BookBlue",
+          "part": "BookBlue",
+          "color_srgb": "#4F78C4",
+          "base_color_linear": [
+            0.0782,
+            0.1878,
+            0.552
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Bookshelf_BookGreen",
+          "part": "BookGreen",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_Bookshelf_BookYellow",
+          "part": "BookYellow",
+          "color_srgb": "#FFC93C",
+          "base_color_linear": [
+            1.0,
+            0.5841,
+            0.0452
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 7,
+          "name": "Prop_Bookshelf_BookCream",
+          "part": "BookCream",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 8,
+          "name": "Prop_Bookshelf_BookTeal",
+          "part": "BookTeal",
+          "color_srgb": "#2E8C8C",
+          "base_color_linear": [
+            0.0273,
+            0.2623,
+            0.2623
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 9,
+          "name": "Prop_Bookshelf_Pot",
+          "part": "Pot",
+          "color_srgb": "#C4683A",
+          "base_color_linear": [
+            0.552,
+            0.1384,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 10,
+          "name": "Prop_Bookshelf_Leaf",
+          "part": "Leaf",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "HangingPans",
+      "asset": "Prop_HangingPans",
+      "fbx": "Prop_HangingPans.fbx",
+      "fbx_sha256": "cc427dbbcf0716bf13416e1ad5e83973068950f539d1e0ed735172bb04b4df0f",
+      "display_name_es": "Sartenes colgadas",
+      "category": "kitchen",
+      "mount": "wall",
+      "dimensions_m": {
+        "x": 0.9,
+        "y": 0.089,
+        "z": 0.54
+      },
+      "unity_size_m": {
+        "x": 0.9,
+        "y": 0.54,
+        "z": 0.089
+      },
+      "triangles": 512,
+      "vertices": 348,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_HangingPans_Board",
+          "part": "Board",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_HangingPans_Hook",
+          "part": "Hook",
+          "color_srgb": "#5E636E",
+          "base_color_linear": [
+            0.1119,
+            0.1248,
+            0.1559
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.45,
+          "metallic": 0.6
+        },
+        {
+          "slot": 2,
+          "name": "Prop_HangingPans_Iron",
+          "part": "Iron",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.55,
+          "metallic": 0.4
+        },
+        {
+          "slot": 3,
+          "name": "Prop_HangingPans_Rim",
+          "part": "Rim",
+          "color_srgb": "#A3A9B3",
+          "base_color_linear": [
+            0.3663,
+            0.3968,
+            0.4508
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.45,
+          "metallic": 0.5
+        },
+        {
+          "slot": 4,
+          "name": "Prop_HangingPans_Inside",
+          "part": "Inside",
+          "color_srgb": "#5E636E",
+          "base_color_linear": [
+            0.1119,
+            0.1248,
+            0.1559
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.3
+        },
+        {
+          "slot": 5,
+          "name": "Prop_HangingPans_Handle",
+          "part": "Handle",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_HangingPans_Copper",
+          "part": "Copper",
+          "color_srgb": "#C8733A",
+          "base_color_linear": [
+            0.5776,
+            0.1714,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.45,
+          "metallic": 0.5
+        }
+      ],
+      "notes": "Barral con ganchos y 3 sartenes; el dorso del barral queda en +Y contra la pared.",
+      "preview": {
+        "elev": 10,
+        "yaw": 20
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Mug",
+      "asset": "Prop_Mug",
+      "fbx": "Prop_Mug.fbx",
+      "fbx_sha256": "01d7c0c2bbf0fe2a72fff74f8c38ca88a16557db85479ffb53c028a16dc6c2fe",
+      "display_name_es": "Taza",
+      "category": "item",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.118,
+        "y": 0.0831,
+        "z": 0.095
+      },
+      "unity_size_m": {
+        "x": 0.118,
+        "y": 0.095,
+        "z": 0.0831
+      },
+      "triangles": 172,
+      "vertices": 114,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Mug_Enamel",
+          "part": "Enamel",
+          "color_srgb": "#4F78C4",
+          "base_color_linear": [
+            0.0782,
+            0.1878,
+            0.552
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.35,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Mug_Rim",
+          "part": "Rim",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.35,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Mug_Inside",
+          "part": "Inside",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.4,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Toolbox",
+      "asset": "Prop_Toolbox",
+      "fbx": "Prop_Toolbox.fbx",
+      "fbx_sha256": "cd87761207381c5878c81f4ab69a43f6a3e1b6f5a027efa4a5c6d625fe909756",
+      "display_name_es": "Caja de herramientas roja",
+      "category": "item",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.505,
+        "y": 0.2545,
+        "z": 0.341
+      },
+      "unity_size_m": {
+        "x": 0.505,
+        "y": 0.341,
+        "z": 0.2545
+      },
+      "triangles": 300,
+      "vertices": 168,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Toolbox_Body",
+          "part": "Body",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Toolbox_Lid",
+          "part": "Lid",
+          "color_srgb": "#E0463C",
+          "base_color_linear": [
+            0.7454,
+            0.0612,
+            0.0452
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Toolbox_Seam",
+          "part": "Seam",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Toolbox_Handle",
+          "part": "Handle",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.3
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Toolbox_Latch",
+          "part": "Latch",
+          "color_srgb": "#A3A9B3",
+          "base_color_linear": [
+            0.3663,
+            0.3968,
+            0.4508
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.35,
+          "metallic": 0.7
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Medkit",
+      "asset": "Prop_Medkit",
+      "fbx": "Prop_Medkit.fbx",
+      "fbx_sha256": "425470e093c00415bfcc6de829280e309afd62617d4b2b0c6aa9b5916b09c4e0",
+      "display_name_es": "Botiquín",
+      "category": "item",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.425,
+        "y": 0.162,
+        "z": 0.36
+      },
+      "unity_size_m": {
+        "x": 0.425,
+        "y": 0.36,
+        "z": 0.162
+      },
+      "triangles": 212,
+      "vertices": 120,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Medkit_Case",
+          "part": "Case",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Medkit_Band",
+          "part": "Band",
+          "color_srgb": "#9E2422",
+          "base_color_linear": [
+            0.3419,
+            0.0176,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Medkit_Cross",
+          "part": "Cross",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Medkit_Handle",
+          "part": "Handle",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.3
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "RolledMap",
+      "asset": "Prop_RolledMap",
+      "fbx": "Prop_RolledMap.fbx",
+      "fbx_sha256": "03098f6aabec77d1d3f355168bf906afb43ed8bf580f75cac0abcaa8cb0ec136",
+      "display_name_es": "Mapa enrollado",
+      "category": "item",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.42,
+        "y": 0.1761,
+        "z": 0.0913
+      },
+      "unity_size_m": {
+        "x": 0.42,
+        "y": 0.0913,
+        "z": 0.1761
+      },
+      "triangles": 300,
+      "vertices": 198,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_RolledMap_Paper",
+          "part": "Paper",
+          "color_srgb": "#E6CE98",
+          "base_color_linear": [
+            0.7913,
+            0.6172,
+            0.314
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_RolledMap_PaperDark",
+          "part": "PaperDark",
+          "color_srgb": "#C9AD72",
+          "base_color_linear": [
+            0.5841,
+            0.4179,
+            0.1683
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_RolledMap_Hole",
+          "part": "Hole",
+          "color_srgb": "#7A5A30",
+          "base_color_linear": [
+            0.1946,
+            0.1022,
+            0.0296
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_RolledMap_Tie",
+          "part": "Tie",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_RolledMap_Ink",
+          "part": "Ink",
+          "color_srgb": "#3D7CC9",
+          "base_color_linear": [
+            0.0467,
+            0.2016,
+            0.5841
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_RolledMap_Land",
+          "part": "Land",
+          "color_srgb": "#4E9A3E",
+          "base_color_linear": [
+            0.0762,
+            0.3231,
+            0.0482
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {
+        "elev": 40
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "SoccerBall",
+      "asset": "Prop_SoccerBall",
+      "fbx": "Prop_SoccerBall.fbx",
+      "fbx_sha256": "4c49cf65ed3f60f73a6a436c7dded4fa7180f3118bed00f366a8f44e2ad5546f",
+      "display_name_es": "Pelota de fútbol",
+      "category": "item",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.2155,
+        "y": 0.2155,
+        "z": 0.2155
+      },
+      "unity_size_m": {
+        "x": 0.2155,
+        "y": 0.2155,
+        "z": 0.2155
+      },
+      "triangles": 180,
+      "vertices": 92,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_SoccerBall_White",
+          "part": "White",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_SoccerBall_Black",
+          "part": "Black",
+          "color_srgb": "#1E1E24",
+          "base_color_linear": [
+            0.013,
+            0.013,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Bed",
+      "asset": "Prop_Bed",
+      "fbx": "Prop_Bed.fbx",
+      "fbx_sha256": "b75f53839a8a8d8aea84d0b8b725c26a63ff9bb168e7598b88c8cd1ea24c0a38",
+      "display_name_es": "Cama con acolchado rojo",
+      "category": "bedroom",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.23,
+        "y": 2.17,
+        "z": 1.12
+      },
+      "unity_size_m": {
+        "x": 1.23,
+        "y": 1.12,
+        "z": 2.17
+      },
+      "triangles": 844,
+      "vertices": 475,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Bed_Wood",
+          "part": "Wood",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Bed_WoodLight",
+          "part": "WoodLight",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Bed_Mattress",
+          "part": "Mattress",
+          "color_srgb": "#E9E1D0",
+          "base_color_linear": [
+            0.8148,
+            0.7529,
+            0.6308
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Bed_Sheet",
+          "part": "Sheet",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Bed_Quilt",
+          "part": "Quilt",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Bed_QuiltDark",
+          "part": "QuiltDark",
+          "color_srgb": "#9E2422",
+          "base_color_linear": [
+            0.3419,
+            0.0176,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_Bed_Pillow",
+          "part": "Pillow",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Cama de madera de plaza y media (PRP-02 / ENV-03 / UI-06): cabecera en +Y, pie hacia -Y. Colchón a 0,55 m; el acolchado cubre desde el pie hasta el doblez de sábana. Anchor \"sleeper_head\": centro de la almohada para la cabeza del humano dormido.",
+      "preview": {
+        "yaw": -38,
+        "elev": 28
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "sleeper_head": {
+          "blender_m": [
+            0.0,
+            0.69,
+            0.73
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.73,
+            -0.69
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Superficie de la almohada donde apoya la nuca el humano dormido; el cuerpo sigue hacia -Y bajo el acolchado (z 0,56-0,62)."
+        }
+      }
+    },
+    {
+      "name": "Nightstand",
+      "asset": "Prop_Nightstand",
+      "fbx": "Prop_Nightstand.fbx",
+      "fbx_sha256": "8fe18c2f2604a7e58192da424b2c2759ac73df402e61f85abe7c128971b15037",
+      "display_name_es": "Mesa de luz",
+      "category": "bedroom",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.54,
+        "y": 0.44,
+        "z": 0.59
+      },
+      "unity_size_m": {
+        "x": 0.54,
+        "y": 0.59,
+        "z": 0.44
+      },
+      "triangles": 340,
+      "vertices": 200,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Nightstand_Wood",
+          "part": "Wood",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Nightstand_WoodLight",
+          "part": "WoodLight",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Nightstand_Drawer",
+          "part": "Drawer",
+          "color_srgb": "#C8955A",
+          "base_color_linear": [
+            0.5776,
+            0.3005,
+            0.1022
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Nightstand_Inside",
+          "part": "Inside",
+          "color_srgb": "#4A2E17",
+          "base_color_linear": [
+            0.0685,
+            0.0273,
+            0.0086
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Nightstand_Handle",
+          "part": "Handle",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.3
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Nightstand_BookRed",
+          "part": "BookRed",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_Nightstand_BookBlue",
+          "part": "BookBlue",
+          "color_srgb": "#4F78C4",
+          "base_color_linear": [
+            0.0782,
+            0.1878,
+            0.552
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Mesa de luz con cajón y estante abierto (PRP-02 / ENV-01). Tapa a 0,59 m: anchors \"lamp\" y \"clock\" para apoyar la lámpara y el despertador.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "lamp": {
+          "blender_m": [
+            0.1,
+            0.06,
+            0.59
+          ],
+          "unity_local_m": [
+            -0.1,
+            0.59,
+            -0.06
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Base de TableLamp."
+        },
+        "clock": {
+          "blender_m": [
+            -0.12,
+            -0.09,
+            0.59
+          ],
+          "unity_local_m": [
+            0.12,
+            0.59,
+            0.09
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Base de AlarmClock (girarlo ~15° hacia la cámara)."
+        }
+      }
+    },
+    {
+      "name": "TableLamp",
+      "asset": "Prop_TableLamp",
+      "fbx": "Prop_TableLamp.fbx",
+      "fbx_sha256": "69e4d3ae25e1a5db649eee78bd0978778dc365ea14258b8d99c0aea2f11082b5",
+      "display_name_es": "Lámpara de mesa",
+      "category": "bedroom",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.3272,
+        "y": 0.344,
+        "z": 0.528
+      },
+      "unity_size_m": {
+        "x": 0.3272,
+        "y": 0.528,
+        "z": 0.344
+      },
+      "triangles": 290,
+      "vertices": 185,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_TableLamp_Ceramic",
+          "part": "Ceramic",
+          "color_srgb": "#4B5A63",
+          "base_color_linear": [
+            0.0704,
+            0.1022,
+            0.1248
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.4,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_TableLamp_Brass",
+          "part": "Brass",
+          "color_srgb": "#D9A441",
+          "base_color_linear": [
+            0.6939,
+            0.3712,
+            0.0529
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.4,
+          "metallic": 0.6
+        },
+        {
+          "slot": 2,
+          "name": "Prop_TableLamp_Shade_Emissive",
+          "part": "Shade",
+          "color_srgb": "#FFE0A3",
+          "base_color_linear": [
+            1.0,
+            0.7454,
+            0.3663
+          ],
+          "emissive": true,
+          "emission_strength": 1.6,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_TableLamp_Glow_Emissive",
+          "part": "Glow",
+          "color_srgb": "#FFB347",
+          "base_color_linear": [
+            1.0,
+            0.4508,
+            0.063
+          ],
+          "emissive": true,
+          "emission_strength": 3.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Velador con base de cerámica y pantalla emisiva cálida (UI-06). Luz sugerida: Point #FFB347 en el anchor \"light\" (dentro de la pantalla), rango 3-4 m; halo con bloom.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "light": {
+          "blender_m": [
+            0.0,
+            0.0,
+            0.355
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.355,
+            -0.0
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Point #FFB347 dentro de la pantalla."
+        }
+      }
+    },
+    {
+      "name": "AlarmClock",
+      "asset": "Prop_AlarmClock",
+      "fbx": "Prop_AlarmClock.fbx",
+      "fbx_sha256": "83f43436fabe6cf3219a8fe75a0018d1b6b7179d47ff9d64132f323cebad29a0",
+      "display_name_es": "Reloj despertador digital",
+      "category": "bedroom",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.2,
+        "y": 0.1,
+        "z": 0.118
+      },
+      "unity_size_m": {
+        "x": 0.2,
+        "y": 0.118,
+        "z": 0.1
+      },
+      "triangles": 200,
+      "vertices": 120,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_AlarmClock_Body",
+          "part": "Body",
+          "color_srgb": "#2A2D35",
+          "base_color_linear": [
+            0.0232,
+            0.0262,
+            0.0356
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.45,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_AlarmClock_Bezel",
+          "part": "Bezel",
+          "color_srgb": "#17191E",
+          "base_color_linear": [
+            0.0086,
+            0.0097,
+            0.013
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.4,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_AlarmClock_Screen_Emissive",
+          "part": "Screen",
+          "color_srgb": "#4A0E0E",
+          "base_color_linear": [
+            0.0685,
+            0.0044,
+            0.0044
+          ],
+          "emissive": true,
+          "emission_strength": 1.0,
+          "roughness": 0.2,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_AlarmClock_Button",
+          "part": "Button",
+          "color_srgb": "#A3A9B3",
+          "base_color_linear": [
+            0.3663,
+            0.3968,
+            0.4508
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.4,
+          "metallic": 0.3
+        },
+        {
+          "slot": 4,
+          "name": "Prop_AlarmClock_Feet",
+          "part": "Feet",
+          "color_srgb": "#1E1E24",
+          "base_color_linear": [
+            0.013,
+            0.013,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Despertador de cuña (frente inclinado ~15°) con pantalla emisiva roja oscura SIN números: Unity escribe \"03:27\" (TMP rojo #FF3B30, alto ~0,04 m) 1 mm por delante del anchor \"screen\", con su normal.",
+      "preview": {
+        "yaw": 24,
+        "elev": 24
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "screen": {
+          "blender_m": [
+            0.0,
+            -0.0389,
+            0.059
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.059,
+            0.0389
+          ],
+          "normal_blender": [
+            0.0,
+            -0.9671,
+            0.2545
+          ],
+          "normal_unity": [
+            -0.0,
+            0.2545,
+            0.9671
+          ],
+          "size_m": [
+            0.15,
+            0.056
+          ],
+          "note": "Centro de la cara de la pantalla (inclinada ~15° hacia atrás); texto \"03:27\" centrado, sin tocar el bisel."
+        }
+      }
+    },
+    {
+      "name": "Window",
+      "asset": "Prop_Window",
+      "fbx": "Prop_Window.fbx",
+      "fbx_sha256": "a9279e5df764897599f0551f89ebcc356dbe9930a64c4a139f6eeb2b40c80d3c",
+      "display_name_es": "Ventana con parteluces",
+      "category": "bedroom",
+      "mount": "wall",
+      "dimensions_m": {
+        "x": 1.02,
+        "y": 0.2,
+        "z": 1.25
+      },
+      "unity_size_m": {
+        "x": 1.02,
+        "y": 1.25,
+        "z": 0.2
+      },
+      "triangles": 404,
+      "vertices": 252,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Window_Frame",
+          "part": "Frame",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Window_Trim",
+          "part": "Trim",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Window_Sash",
+          "part": "Sash",
+          "color_srgb": "#C8955A",
+          "base_color_linear": [
+            0.5776,
+            0.3005,
+            0.1022
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Window_Sky_Emissive",
+          "part": "Sky",
+          "color_srgb": "#1A2A6A",
+          "base_color_linear": [
+            0.0103,
+            0.0232,
+            0.1441
+          ],
+          "emissive": true,
+          "emission_strength": 1.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Window_Moon_Emissive",
+          "part": "Moon",
+          "color_srgb": "#FFF2C4",
+          "base_color_linear": [
+            1.0,
+            0.8879,
+            0.552
+          ],
+          "emissive": true,
+          "emission_strength": 2.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Window_HillFar_Emissive",
+          "part": "HillFar",
+          "color_srgb": "#2A4A7C",
+          "base_color_linear": [
+            0.0232,
+            0.0685,
+            0.2016
+          ],
+          "emissive": true,
+          "emission_strength": 1.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_Window_HillNear_Emissive",
+          "part": "HillNear",
+          "color_srgb": "#1E4A45",
+          "base_color_linear": [
+            0.013,
+            0.0685,
+            0.0595
+          ],
+          "emissive": true,
+          "emission_strength": 1.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 7,
+          "name": "Prop_Window_Glint_Emissive",
+          "part": "Glint",
+          "color_srgb": "#6F8FD0",
+          "base_color_linear": [
+            0.159,
+            0.2747,
+            0.6308
+          ],
+          "emissive": true,
+          "emission_strength": 1.0,
+          "roughness": 0.2,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Ventana de pared (PRP-02 / UI-06) con vista nocturna detrás de los parteluces: cielo #1A2A6A, colinas y luna. Los paños de vista son emisivos (Emission 1) para conservar su color con la sala a oscuras; se pueden reemplazar por un fondo real. Dorso en +Y contra la pared; base = alféizar.",
+      "preview": {
+        "elev": 6,
+        "yaw": 18
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "view": {
+          "blender_m": [
+            0.0,
+            0.076,
+            0.625
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.625,
+            -0.076
+          ],
+          "normal_blender": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "normal_unity": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "size_m": [
+            0.7,
+            0.97
+          ],
+          "note": "Paño de vista (cielo). Para un fondo real, ocultar Sky/Moon/Hill*/Glint y poner el fondo detrás."
+        }
+      }
+    },
+    {
+      "name": "DockLampPost",
+      "asset": "Prop_DockLampPost",
+      "fbx": "Prop_DockLampPost.fbx",
+      "fbx_sha256": "2235a18b1b6b0b2e169e731b8814cbc127b66fc482af3ea7acf7613c18cde884",
+      "display_name_es": "Farol de poste de muelle",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.322,
+        "y": 1.171,
+        "z": 2.4
+      },
+      "unity_size_m": {
+        "x": 0.322,
+        "y": 2.4,
+        "z": 1.171
+      },
+      "triangles": 778,
+      "vertices": 445,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_DockLampPost_Wood",
+          "part": "Wood",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_DockLampPost_WoodDark",
+          "part": "WoodDark",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_DockLampPost_Rope",
+          "part": "Rope",
+          "color_srgb": "#C9A66B",
+          "base_color_linear": [
+            0.5841,
+            0.3813,
+            0.147
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_DockLampPost_Frame",
+          "part": "Frame",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.55,
+          "metallic": 0.35
+        },
+        {
+          "slot": 4,
+          "name": "Prop_DockLampPost_Cap",
+          "part": "Cap",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.35
+        },
+        {
+          "slot": 5,
+          "name": "Prop_DockLampPost_Glass_Emissive",
+          "part": "Glass",
+          "color_srgb": "#FFB347",
+          "base_color_linear": [
+            1.0,
+            0.4508,
+            0.063
+          ],
+          "emissive": true,
+          "emission_strength": 2.5,
+          "roughness": 0.3,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_DockLampPost_Flame_Emissive",
+          "part": "Flame",
+          "color_srgb": "#FFE7A3",
+          "base_color_linear": [
+            1.0,
+            0.7991,
+            0.3663
+          ],
+          "emissive": true,
+          "emission_strength": 4.0,
+          "roughness": 0.3,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Poste de muelle con brazo y farol colgante; vidrio emisivo. Luz sugerida: Point ámbar en el farol.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "light": {
+          "blender_m": [
+            0.0,
+            -0.4245,
+            1.484
+          ],
+          "unity_local_m": [
+            -0.0,
+            1.484,
+            0.4245
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Centro del vidrio: Point #FFB347, rango 5-7 m, sin sombras."
+        }
+      }
+    },
+    {
+      "name": "FenceSegment",
+      "asset": "Prop_FenceSegment",
+      "fbx": "Prop_FenceSegment.fbx",
+      "fbx_sha256": "ef7f25f9fe72092f9a42017d1aaae533decd9aa6bba74aa8af6275622436fc09",
+      "display_name_es": "Segmento de cerca",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 2.17,
+        "y": 0.244,
+        "z": 1.07
+      },
+      "unity_size_m": {
+        "x": 2.17,
+        "y": 1.07,
+        "z": 0.244
+      },
+      "triangles": 284,
+      "vertices": 170,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_FenceSegment_Post",
+          "part": "Post",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_FenceSegment_Rail",
+          "part": "Rail",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_FenceSegment_PostCap",
+          "part": "PostCap",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_FenceSegment_Nail",
+          "part": "Nail",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Tramo de 2 m: postes centrados en x=±1 m; encadenar tramos cada 2,0 m sobre X.",
+      "preview": {
+        "elev": 18
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "tile_pitch_m": 2.0
+    },
+    {
+      "name": "Signpost",
+      "asset": "Prop_Signpost",
+      "fbx": "Prop_Signpost.fbx",
+      "fbx_sha256": "e675570fbf9f1ef6091aafdc9bf2da3be1199fa6990afcd96bc8acdd31294ae3",
+      "display_name_es": "Cartel con flechas",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.0976,
+        "y": 0.216,
+        "z": 1.87
+      },
+      "unity_size_m": {
+        "x": 1.0976,
+        "y": 1.87,
+        "z": 0.216
+      },
+      "triangles": 170,
+      "vertices": 109,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Signpost_Post",
+          "part": "Post",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Signpost_Board",
+          "part": "Board",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Signpost_Groove",
+          "part": "Groove",
+          "color_srgb": "#4A2E17",
+          "base_color_linear": [
+            0.0685,
+            0.0273,
+            0.0086
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Signpost_Nail",
+          "part": "Nail",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Tablas en flecha SIN texto; si hace falta texto va como UI o decal.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Mailbox",
+      "asset": "Prop_Mailbox",
+      "fbx": "Prop_Mailbox.fbx",
+      "fbx_sha256": "9a041b7bf09b03fd466f9e70d046ade48b4efae476888eee37e59e007117ce92",
+      "display_name_es": "Buzón rojo",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.3363,
+        "y": 0.56,
+        "z": 1.365
+      },
+      "unity_size_m": {
+        "x": 0.3363,
+        "y": 1.365,
+        "z": 0.56
+      },
+      "triangles": 320,
+      "vertices": 212,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Mailbox_Body",
+          "part": "Body",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Mailbox_Door",
+          "part": "Door",
+          "color_srgb": "#9E2422",
+          "base_color_linear": [
+            0.3419,
+            0.0176,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Mailbox_Flag",
+          "part": "Flag",
+          "color_srgb": "#E0463C",
+          "base_color_linear": [
+            0.7454,
+            0.0612,
+            0.0452
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Mailbox_Metal",
+          "part": "Metal",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.4
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Mailbox_Post",
+          "part": "Post",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Mailbox_Plate",
+          "part": "Plate",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_Mailbox_Inside",
+          "part": "Inside",
+          "color_srgb": "#3A1512",
+          "base_color_linear": [
+            0.0423,
+            0.0075,
+            0.006
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "PicnicTable",
+      "asset": "Prop_PicnicTable",
+      "fbx": "Prop_PicnicTable.fbx",
+      "fbx_sha256": "a11cb0a89643949493449d0a2c3f3272cd1e40bd63e66ff045ce9de84f0babb9",
+      "display_name_es": "Mesa de picnic",
+      "category": "camp",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.8007,
+        "y": 1.52,
+        "z": 0.772
+      },
+      "unity_size_m": {
+        "x": 1.8007,
+        "y": 0.772,
+        "z": 1.52
+      },
+      "triangles": 748,
+      "vertices": 408,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_PicnicTable_Top",
+          "part": "Top",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_PicnicTable_Leg",
+          "part": "Leg",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_PicnicTable_Beam",
+          "part": "Beam",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "FoldingChair",
+      "asset": "Prop_FoldingChair",
+      "fbx": "Prop_FoldingChair.fbx",
+      "fbx_sha256": "1287861393244286cd7a0c337cf8e6e0dafd7790fc3229bbb2a3955aec9a5620",
+      "display_name_es": "Silla plegable",
+      "category": "camp",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.56,
+        "y": 0.5329,
+        "z": 0.9321
+      },
+      "unity_size_m": {
+        "x": 0.56,
+        "y": 0.9321,
+        "z": 0.5329
+      },
+      "triangles": 360,
+      "vertices": 234,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_FoldingChair_Fabric",
+          "part": "Fabric",
+          "color_srgb": "#2F6FC0",
+          "base_color_linear": [
+            0.0284,
+            0.159,
+            0.5271
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_FoldingChair_FabricDark",
+          "part": "FabricDark",
+          "color_srgb": "#1F4E91",
+          "base_color_linear": [
+            0.0137,
+            0.0762,
+            0.2831
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.85,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_FoldingChair_Frame",
+          "part": "Frame",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.4
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Rowboat",
+      "asset": "Prop_Rowboat",
+      "fbx": "Prop_Rowboat.fbx",
+      "fbx_sha256": "180860bdb0d97d3d647ff6058c7d3cc832710d05b9079f49b1a099458eb1ef21",
+      "display_name_es": "Bote de remos",
+      "category": "water",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 3.1274,
+        "y": 1.25,
+        "z": 0.6909
+      },
+      "unity_size_m": {
+        "x": 3.1274,
+        "y": 0.6909,
+        "z": 1.25
+      },
+      "triangles": 552,
+      "vertices": 298,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Rowboat_Hull",
+          "part": "Hull",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Rowboat_HullInside",
+          "part": "HullInside",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Rowboat_Trim",
+          "part": "Trim",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Rowboat_Seat",
+          "part": "Seat",
+          "color_srgb": "#C8955A",
+          "base_color_linear": [
+            0.5776,
+            0.3005,
+            0.1022
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Rowboat_Oar",
+          "part": "Oar",
+          "color_srgb": "#DDB06C",
+          "base_color_linear": [
+            0.7231,
+            0.4342,
+            0.15
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Rowboat_Metal",
+          "part": "Metal",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.5
+        }
+      ],
+      "notes": "Casco hueco con dos remos; el pivote queda bajo la quilla.",
+      "preview": {
+        "elev": 32
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "LogBench",
+      "asset": "Prop_LogBench",
+      "fbx": "Prop_LogBench.fbx",
+      "fbx_sha256": "1fe3e268ee0bc9cad751695d96fee6939c2a25a5329dffbab96b86f2f049c6bb",
+      "display_name_es": "Tronco-banco",
+      "category": "camp",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.8,
+        "y": 0.515,
+        "z": 0.44
+      },
+      "unity_size_m": {
+        "x": 1.8,
+        "y": 0.44,
+        "z": 0.515
+      },
+      "triangles": 280,
+      "vertices": 170,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_LogBench_Bark",
+          "part": "Bark",
+          "color_srgb": "#6B4226",
+          "base_color_linear": [
+            0.147,
+            0.0545,
+            0.0194
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_LogBench_BarkDark",
+          "part": "BarkDark",
+          "color_srgb": "#553318",
+          "base_color_linear": [
+            0.0908,
+            0.0331,
+            0.0091
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_LogBench_Seat",
+          "part": "Seat",
+          "color_srgb": "#C8955A",
+          "base_color_linear": [
+            0.5776,
+            0.3005,
+            0.1022
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_LogBench_EndGrain",
+          "part": "EndGrain",
+          "color_srgb": "#DDB06C",
+          "base_color_linear": [
+            0.7231,
+            0.4342,
+            0.15
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_LogBench_Ring",
+          "part": "Ring",
+          "color_srgb": "#B7844A",
+          "base_color_linear": [
+            0.4735,
+            0.2307,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_LogBench_Chock",
+          "part": "Chock",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Firewood",
+      "asset": "Prop_Firewood",
+      "fbx": "Prop_Firewood.fbx",
+      "fbx_sha256": "dc613a659d020707207c7f5ce8af92831a3b8e3e2a0ffc3aeb26eb37741723ee",
+      "display_name_es": "Leña apilada",
+      "category": "camp",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.7077,
+        "y": 0.626,
+        "z": 0.5551
+      },
+      "unity_size_m": {
+        "x": 0.7077,
+        "y": 0.5551,
+        "z": 0.626
+      },
+      "triangles": 672,
+      "vertices": 432,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Firewood_Bark",
+          "part": "Bark",
+          "color_srgb": "#6B4226",
+          "base_color_linear": [
+            0.147,
+            0.0545,
+            0.0194
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Firewood_BarkDark",
+          "part": "BarkDark",
+          "color_srgb": "#553318",
+          "base_color_linear": [
+            0.0908,
+            0.0331,
+            0.0091
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Firewood_EndGrain",
+          "part": "EndGrain",
+          "color_srgb": "#DDB06C",
+          "base_color_linear": [
+            0.7231,
+            0.4342,
+            0.15
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Firewood_Ring",
+          "part": "Ring",
+          "color_srgb": "#B7844A",
+          "base_color_linear": [
+            0.4735,
+            0.2307,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Campfire",
+      "asset": "Prop_Campfire",
+      "fbx": "Prop_Campfire.fbx",
+      "fbx_sha256": "6c1081428b7fbdf3529f44a79131456ff3bfe7e0924ffa4628efa7154bba8234",
+      "display_name_es": "Fogón con piedras",
+      "category": "camp",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.2512,
+        "y": 1.2685,
+        "z": 0.86
+      },
+      "unity_size_m": {
+        "x": 1.2512,
+        "y": 0.86,
+        "z": 1.2685
+      },
+      "triangles": 856,
+      "vertices": 492,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Campfire_Stone",
+          "part": "Stone",
+          "color_srgb": "#8C919B",
+          "base_color_linear": [
+            0.2623,
+            0.2831,
+            0.3278
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Campfire_StoneDark",
+          "part": "StoneDark",
+          "color_srgb": "#6C717B",
+          "base_color_linear": [
+            0.15,
+            0.1651,
+            0.1981
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Campfire_StoneTop",
+          "part": "StoneTop",
+          "color_srgb": "#AEB3BB",
+          "base_color_linear": [
+            0.4233,
+            0.4508,
+            0.4969
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Campfire_Ash",
+          "part": "Ash",
+          "color_srgb": "#2E2724",
+          "base_color_linear": [
+            0.0273,
+            0.0203,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 1.0,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Campfire_Bark",
+          "part": "Bark",
+          "color_srgb": "#6B4226",
+          "base_color_linear": [
+            0.147,
+            0.0545,
+            0.0194
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_Campfire_EndGrain",
+          "part": "EndGrain",
+          "color_srgb": "#DDB06C",
+          "base_color_linear": [
+            0.7231,
+            0.4342,
+            0.15
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_Campfire_Char",
+          "part": "Char",
+          "color_srgb": "#2A201C",
+          "base_color_linear": [
+            0.0232,
+            0.0144,
+            0.0116
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 1.0,
+          "metallic": 0.0
+        },
+        {
+          "slot": 7,
+          "name": "Prop_Campfire_Flame_Emissive",
+          "part": "Flame",
+          "color_srgb": "#FF7A1A",
+          "base_color_linear": [
+            1.0,
+            0.1946,
+            0.0103
+          ],
+          "emissive": true,
+          "emission_strength": 3.0,
+          "roughness": 1.0,
+          "metallic": 0.0
+        },
+        {
+          "slot": 8,
+          "name": "Prop_Campfire_FlameCore_Emissive",
+          "part": "FlameCore",
+          "color_srgb": "#FFD24A",
+          "base_color_linear": [
+            1.0,
+            0.6445,
+            0.0685
+          ],
+          "emissive": true,
+          "emission_strength": 3.5,
+          "roughness": 1.0,
+          "metallic": 0.0
+        },
+        {
+          "slot": 9,
+          "name": "Prop_Campfire_Ember_Emissive",
+          "part": "Ember",
+          "color_srgb": "#FF5A1F",
+          "base_color_linear": [
+            1.0,
+            0.1022,
+            0.0137
+          ],
+          "emissive": true,
+          "emission_strength": 2.0,
+          "roughness": 1.0,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Llamas low-poly emisivas (Flame/FlameCore) y brasas; luz sugerida Point naranja con parpadeo, sin sombras.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "light": {
+          "blender_m": [
+            0.002,
+            0.0052,
+            0.35
+          ],
+          "unity_local_m": [
+            -0.002,
+            0.35,
+            -0.0052
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Point #FF8A2A con parpadeo, rango 6-8 m, sin sombras."
+        }
+      }
+    },
+    {
+      "name": "Bush",
+      "asset": "Prop_Bush",
+      "fbx": "Prop_Bush.fbx",
+      "fbx_sha256": "81ac69a179ff27c65a38431b18ef874302a0f9d8f3db7400928f38b8d0fd917a",
+      "display_name_es": "Arbusto",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.4099,
+        "y": 1.2343,
+        "z": 1.0074
+      },
+      "unity_size_m": {
+        "x": 1.4099,
+        "y": 1.0074,
+        "z": 1.2343
+      },
+      "triangles": 560,
+      "vertices": 294,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Bush_Leaf",
+          "part": "Leaf",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Bush_LeafDark",
+          "part": "LeafDark",
+          "color_srgb": "#2C6B2F",
+          "base_color_linear": [
+            0.0252,
+            0.147,
+            0.0284
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Bush_LeafLight",
+          "part": "LeafLight",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Fern",
+      "asset": "Prop_Fern",
+      "fbx": "Prop_Fern.fbx",
+      "fbx_sha256": "adc49faf4087d10c5044e7675aa68578b3d818b1ea8834ec376e9af77514066b",
+      "display_name_es": "Helecho",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.868,
+        "y": 0.8601,
+        "z": 0.2375
+      },
+      "unity_size_m": {
+        "x": 0.868,
+        "y": 0.2375,
+        "z": 0.8601
+      },
+      "triangles": 744,
+      "vertices": 606,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Fern_Frond",
+          "part": "Frond",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Fern_FrondLight",
+          "part": "FrondLight",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Fern_Young",
+          "part": "Young",
+          "color_srgb": "#86C24F",
+          "base_color_linear": [
+            0.2384,
+            0.5395,
+            0.0782
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "FlowersWhite",
+      "asset": "Prop_FlowersWhite",
+      "fbx": "Prop_FlowersWhite.fbx",
+      "fbx_sha256": "ba0ef56fbb819a03071c261678fadcda50f3127c338eda31bab89dc426245a04",
+      "display_name_es": "Flores blancas",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.3079,
+        "y": 0.3016,
+        "z": 0.3147
+      },
+      "unity_size_m": {
+        "x": 0.3079,
+        "y": 0.3147,
+        "z": 0.3016
+      },
+      "triangles": 736,
+      "vertices": 602,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_FlowersWhite_Blade",
+          "part": "Blade",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_FlowersWhite_Stem",
+          "part": "Stem",
+          "color_srgb": "#2C6B2F",
+          "base_color_linear": [
+            0.0252,
+            0.147,
+            0.0284
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_FlowersWhite_Petal",
+          "part": "Petal",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.7,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_FlowersWhite_Center",
+          "part": "Center",
+          "color_srgb": "#FFC93C",
+          "base_color_linear": [
+            1.0,
+            0.5841,
+            0.0452
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.7,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "FlowersYellow",
+      "asset": "Prop_FlowersYellow",
+      "fbx": "Prop_FlowersYellow.fbx",
+      "fbx_sha256": "395a83db6c50441cd6a42039f1d85f743b307b9191ef0a9fa004b0d9f0d3cfe4",
+      "display_name_es": "Flores amarillas",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.3388,
+        "y": 0.3012,
+        "z": 0.3612
+      },
+      "unity_size_m": {
+        "x": 0.3388,
+        "y": 0.3612,
+        "z": 0.3012
+      },
+      "triangles": 676,
+      "vertices": 554,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_FlowersYellow_Blade",
+          "part": "Blade",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_FlowersYellow_Stem",
+          "part": "Stem",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_FlowersYellow_Petal",
+          "part": "Petal",
+          "color_srgb": "#FFC93C",
+          "base_color_linear": [
+            1.0,
+            0.5841,
+            0.0452
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.7,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_FlowersYellow_Center",
+          "part": "Center",
+          "color_srgb": "#8A4B1E",
+          "base_color_linear": [
+            0.2542,
+            0.0704,
+            0.013
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Mushrooms",
+      "asset": "Prop_Mushrooms",
+      "fbx": "Prop_Mushrooms.fbx",
+      "fbx_sha256": "5c8b9cb1bf4dc0281afb9e1b8c911306ff144bbf122a50e96ffa9b161525c401",
+      "display_name_es": "Hongos",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.3427,
+        "y": 0.2119,
+        "z": 0.2149
+      },
+      "unity_size_m": {
+        "x": 0.3427,
+        "y": 0.2149,
+        "z": 0.2119
+      },
+      "triangles": 708,
+      "vertices": 455,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Mushrooms_Stem",
+          "part": "Stem",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Mushrooms_Cap",
+          "part": "Cap",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Mushrooms_Spot",
+          "part": "Spot",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Mushrooms_Gill",
+          "part": "Gill",
+          "color_srgb": "#D8C6A4",
+          "base_color_linear": [
+            0.6867,
+            0.5647,
+            0.3712
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Mushrooms_Grass",
+          "part": "Grass",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Reeds",
+      "asset": "Prop_Reeds",
+      "fbx": "Prop_Reeds.fbx",
+      "fbx_sha256": "cfe456f5609fdb89a9f3efc8b418980babe28fd7ee48bc5a12232edea9074b1f",
+      "display_name_es": "Totoras",
+      "category": "water",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.2991,
+        "y": 1.2879,
+        "z": 1.4229
+      },
+      "unity_size_m": {
+        "x": 1.2991,
+        "y": 1.4229,
+        "z": 1.2879
+      },
+      "triangles": 1150,
+      "vertices": 833,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Reeds_Stem",
+          "part": "Stem",
+          "color_srgb": "#4E7A34",
+          "base_color_linear": [
+            0.0762,
+            0.1946,
+            0.0343
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Reeds_Head",
+          "part": "Head",
+          "color_srgb": "#6B3F22",
+          "base_color_linear": [
+            0.147,
+            0.0497,
+            0.016
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Reeds_Blade",
+          "part": "Blade",
+          "color_srgb": "#5E8F3A",
+          "base_color_linear": [
+            0.1119,
+            0.2747,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Reeds_BladeDark",
+          "part": "BladeDark",
+          "color_srgb": "#2C6B2F",
+          "base_color_linear": [
+            0.0252,
+            0.147,
+            0.0284
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Totoras/juncos de orilla; apoyar en el borde del agua.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "LilyPads",
+      "asset": "Prop_LilyPads",
+      "fbx": "Prop_LilyPads.fbx",
+      "fbx_sha256": "5fb0e60cd450466b13535dc2b698bb7e2348b1c91abfbefeb3d79314eca3c5e2",
+      "display_name_es": "Nenúfares",
+      "category": "water",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.9185,
+        "y": 0.8061,
+        "z": 0.0672
+      },
+      "unity_size_m": {
+        "x": 0.9185,
+        "y": 0.0672,
+        "z": 0.8061
+      },
+      "triangles": 364,
+      "vertices": 230,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_LilyPads_Pad",
+          "part": "Pad",
+          "color_srgb": "#4E9A3E",
+          "base_color_linear": [
+            0.0762,
+            0.3231,
+            0.0482
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_LilyPads_PadLight",
+          "part": "PadLight",
+          "color_srgb": "#5DB04A",
+          "base_color_linear": [
+            0.1095,
+            0.4342,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.6,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_LilyPads_Petal",
+          "part": "Petal",
+          "color_srgb": "#F4F4F0",
+          "base_color_linear": [
+            0.9047,
+            0.9047,
+            0.8714
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.7,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_LilyPads_PetalPink",
+          "part": "PetalPink",
+          "color_srgb": "#F2C4D6",
+          "base_color_linear": [
+            0.8879,
+            0.552,
+            0.6724
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.7,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_LilyPads_Center",
+          "part": "Center",
+          "color_srgb": "#FFC93C",
+          "base_color_linear": [
+            1.0,
+            0.5841,
+            0.0452
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.7,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Hojas flotantes con flor; la cara inferior de las hojas es el nivel del agua (pivote).",
+      "preview": {
+        "elev": 50
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "RockCluster",
+      "asset": "Prop_RockCluster",
+      "fbx": "Prop_RockCluster.fbx",
+      "fbx_sha256": "1549fc43e3dce93c9cef527ae426eaf06776defddfd0406c6c9c25b704e26033",
+      "display_name_es": "Conjunto de rocas",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.8438,
+        "y": 1.3199,
+        "z": 0.6228
+      },
+      "unity_size_m": {
+        "x": 1.8438,
+        "y": 0.6228,
+        "z": 1.3199
+      },
+      "triangles": 202,
+      "vertices": 111,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_RockCluster_Rock",
+          "part": "Rock",
+          "color_srgb": "#8C919B",
+          "base_color_linear": [
+            0.2623,
+            0.2831,
+            0.3278
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_RockCluster_RockDark",
+          "part": "RockDark",
+          "color_srgb": "#6C717B",
+          "base_color_linear": [
+            0.15,
+            0.1651,
+            0.1981
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_RockCluster_RockTop",
+          "part": "RockTop",
+          "color_srgb": "#AEB3BB",
+          "base_color_linear": [
+            0.4233,
+            0.4508,
+            0.4969
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "TreeStump",
+      "asset": "Prop_TreeStump",
+      "fbx": "Prop_TreeStump.fbx",
+      "fbx_sha256": "a4a91789a43e51ad65841d47febcd5df9a4ff24188962447af91d80065a2006c",
+      "display_name_es": "Tocón",
+      "category": "nature",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.9574,
+        "y": 0.996,
+        "z": 0.5
+      },
+      "unity_size_m": {
+        "x": 0.9574,
+        "y": 0.5,
+        "z": 0.996
+      },
+      "triangles": 324,
+      "vertices": 234,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_TreeStump_Bark",
+          "part": "Bark",
+          "color_srgb": "#6B4226",
+          "base_color_linear": [
+            0.147,
+            0.0545,
+            0.0194
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_TreeStump_BarkDark",
+          "part": "BarkDark",
+          "color_srgb": "#553318",
+          "base_color_linear": [
+            0.0908,
+            0.0331,
+            0.0091
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_TreeStump_Wood",
+          "part": "Wood",
+          "color_srgb": "#DDB06C",
+          "base_color_linear": [
+            0.7231,
+            0.4342,
+            0.15
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_TreeStump_Ring",
+          "part": "Ring",
+          "color_srgb": "#B7844A",
+          "base_color_linear": [
+            0.4735,
+            0.2307,
+            0.0685
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_TreeStump_Grass",
+          "part": "Grass",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    }
+  ],
+  "totals": {
+    "props": 40,
+    "triangles": 19590,
+    "materials": 202,
+    "emissive_props": [
+      "HandLantern",
+      "TableLamp",
+      "AlarmClock",
+      "Window",
+      "DockLampPost",
+      "Campfire"
+    ]
+  },
+  "passed": true
+}
