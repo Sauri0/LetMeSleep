@@ -37,6 +37,8 @@ namespace LetMeSleep.Bootstrap
             public bool IgnoreLocalLights;
             public Material SwapFrom;
             public Material SwapTo;
+            // v0.3.0 r3: extra URP rendering layers (e.g. lantern-pool receivers).
+            public int AddLightLayers;
         }
 
         [Serializable] public sealed class Entry
@@ -142,13 +144,7 @@ namespace LetMeSleep.Bootstrap
                     throw new InvalidOperationException("Invalid local light shadow tier or flicker: " + entry.MapId);
                 try { HiggsfieldMapLighting.ValidateVisual(light, source.Kit); }
                 catch (ArgumentException error) { throw new InvalidOperationException(entry.MapId + " " + binding.AnchorPath + ": " + error.Message); }
-                locals[i] = new HiggsfieldMapLighting.LocalSource { Anchor = anchor, Type = light.Type,
-                    Color = light.Color, UnityIntensity = light.UnityIntensity, Range = light.Range,
-                    SpotAngle = light.SpotAngle, InnerSpotAngle = light.InnerSpotAngle, Shadows = light.Shadows,
-                    ShadowResolutionTier = light.ShadowResolutionTier, Flicker = light.Flicker,
-                    LocalOffset = light.LocalOffset, HaloSize = light.HaloSize, HaloOffset = light.HaloOffset,
-                    HaloColor = light.HaloColor, HaloIntensity = light.HaloIntensity,
-                    FlameHeight = light.FlameHeight, FlameOffset = light.FlameOffset };
+                locals[i] = light.CloneFor(anchor); // Every serialized value, bound to the instance anchor.
             }
             var suppressed = new Light[entry.SuppressLightPaths.Length];
             var lights = new HashSet<Light>();
@@ -175,7 +171,7 @@ namespace LetMeSleep.Bootstrap
                 if (found.Length != 1) throw new InvalidOperationException("Renderer override path must resolve one Renderer: " + binding.Path);
                 overrides[i] = new HiggsfieldMapLighting.RendererOverride { Target = found[0], Hide = binding.Hide,
                     CastShadowsOff = binding.CastShadowsOff, IgnoreLocalLights = binding.IgnoreLocalLights,
-                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo };
+                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo, AddLightLayers = binding.AddLightLayers };
             }
             resolved.RendererOverrides = overrides;
             resolved.MaterialSwaps = (HiggsfieldMapLighting.MaterialSwap[])(source.MaterialSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Clone();

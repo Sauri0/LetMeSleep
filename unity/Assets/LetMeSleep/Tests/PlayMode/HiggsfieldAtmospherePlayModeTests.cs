@@ -18,6 +18,8 @@ namespace LetMeSleep.Tests.PlayMode
     /// v0.3.0 atmosphere contract (HiggsfieldAtmosphereCorrection): every installed map binds fog, its own
     /// complete VolumeProfile, a GradientSky whose horizon equals the fog color, a shadow budget that fits the
     /// URP additional-light atlas and GPU water fog; Unbind restores the scene. Role cameras render post.
+    /// Round 3 adds lighthouse beams, water glints, lantern-pool rendering layers, character fill/split rim and the
+    /// per-renderer indoor ambient probe, all restored on Unbind.
     /// Visual quality is judged from captures (Validation/V030/Maps), not here.
     /// </summary>
     public sealed class HiggsfieldAtmospherePlayModeTests
@@ -118,12 +120,44 @@ namespace LetMeSleep.Tests.PlayMode
                     Assert.That(map.GetComponentsInChildren<Renderer>(true).Any(r => r.sharedMaterials.Contains(swap.From)), Is.False, entry.MapId + " swapped " + swap.From.name);
                 Assert.That(Shader.GetGlobalFloat("_LMS_InteriorCount"), Is.EqualTo(lighting.InteriorVolumes.Length), entry.MapId + " interiors");
                 var rim = rig.GetComponentInChildren<HiggsfieldRimLight>();
-                Assert.That(rim != null, Is.EqualTo(lighting.CharacterRimIntensity > 0), entry.MapId + " rim light");
+                Assert.That(rim != null, Is.EqualTo(lighting.CharacterRimIntensity > 0 || lighting.CharacterFillIntensity > 0),
+                    entry.MapId + " rim/fill light");
+                if (rim)
+                {
+                    Assert.That(rim.Fill != null, Is.EqualTo(lighting.CharacterFillIntensity > 0), entry.MapId + " character fill");
+                    Assert.That(rim.SecondRim != null, Is.EqualTo(lighting.CharacterRimSpread > 0), entry.MapId + " split rim");
+                }
+
+                // Round 3: explicit sky fill replaces stray scene directional lights (Forward+ ignores culling masks).
+                var binding = rig.GetComponent<HiggsfieldMapLighting>();
+                Assert.That(binding.SkyFill != null, Is.EqualTo(lighting.SkyFillIntensity > 0), entry.MapId + " sky fill");
+                Assert.That(Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l => l.enabled && l.type == LightType.Directional &&
+                    l != binding.SkyFill && !l.GetComponentInParent<HiggsfieldRimLight>()), Is.EqualTo(1), entry.MapId + " only the moon/sun");
+
+                // Round 3: lighthouse beams, water glints, lantern-pool layers and the indoor ambient probe.
+                var beams = map.GetComponentsInChildren<Transform>(true).Where(x => x.name == HiggsfieldAtmosphereVisuals.BeamName).ToArray();
+                var glints = map.GetComponentsInChildren<Transform>(true).Where(x => x.name == HiggsfieldAtmosphereVisuals.GlintName).ToArray();
+                Assert.That(beams.Length, Is.EqualTo(entry.LocalLights.Count(l => l.Settings.BeamLength > 0)), entry.MapId + " beams");
+                Assert.That(glints.Length, Is.EqualTo(entry.LocalLights.Count(l => l.Settings.ReflectionLength > 0)), entry.MapId + " glints");
+                var pools = map.GetComponentsInChildren<Transform>(true).Where(x => x.name == HiggsfieldAtmosphereVisuals.PoolName).ToArray();
+                Assert.That(pools.Length, Is.EqualTo(entry.LocalLights.Count(l => l.Settings.PoolRadius > 0)), entry.MapId + " ground pools");
+                foreach (var visual in beams.Concat(glints).Concat(pools))
+                    Assert.That(visual.GetComponentsInChildren<Collider>(true), Is.Empty, entry.MapId + " beams/glints are not geometry");
+                foreach (var item in overrides.Where(o => o.Binding.AddLightLayers != 0))
+                    Assert.That(item.Renderer.renderingLayerMask & (uint)item.Binding.AddLightLayers, Is.EqualTo((uint)item.Binding.AddLightLayers),
+                        item.Binding.Path + " extra light layers");
+                int probes = map.GetComponentsInChildren<Renderer>(true).Count(r => r.lightProbeUsage == UnityEngine.Rendering.LightProbeUsage.CustomProvided);
+                if (lighting.InteriorAmbientIntensity > 0) Assert.That(probes, Is.GreaterThan(0), entry.MapId + " indoor ambient probes");
+                else Assert.That(probes, Is.Zero, entry.MapId + " no indoor ambient");
 
                 rig.UnbindHiggsfield();
                 yield return null;
                 Assert.That(map.GetComponentsInChildren<Transform>(true).Count(x => x.name == HiggsfieldAtmosphereVisuals.HaloName ||
-                    x.name == HiggsfieldAtmosphereVisuals.FlameName), Is.Zero, entry.MapId + " visuals removed");
+                    x.name == HiggsfieldAtmosphereVisuals.FlameName || x.name == HiggsfieldAtmosphereVisuals.BeamName ||
+                    x.name == HiggsfieldAtmosphereVisuals.GlintName || x.name == HiggsfieldAtmosphereVisuals.PoolName), Is.Zero,
+                    entry.MapId + " visuals removed");
+                Assert.That(map.GetComponentsInChildren<Renderer>(true).Count(r => r.lightProbeUsage == UnityEngine.Rendering.LightProbeUsage.CustomProvided ||
+                    r.HasPropertyBlock()), Is.Zero, entry.MapId + " probes and property blocks restored");
                 var pristine = entry.Prefab.transform;
                 foreach (var item in overrides)
                 {

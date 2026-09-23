@@ -34,6 +34,10 @@ namespace LetMeSleep.Editor
     /// per-light offsets/halos/flames, visual-only renderer overrides (hide, no shadows, material swap) resolved
     /// by relative path, map-wide material swaps, interior volumes for night windows, a character rim light,
     /// and sky moon crescent/halo and clouds.
+    /// Round 3 (maps-r3): absolute swatch colors (baseColor), light rendering layers (lantern pools that never touch
+    /// pines or rails) and extra renderer layers, halo depth tolerance, lighthouse beams, water reflection streaks,
+    /// per-renderer indoor ambient, camera-side character fill and split rim, cumulus clouds and distant ridges,
+    /// material override tags (transparent lantern glass) and the beam/glint kit materials.
     /// </summary>
     public static class HiggsfieldAtmosphereCorrection
     {
@@ -62,7 +66,14 @@ namespace LetMeSleep.Editor
             public KitConfig kit;
             public RigConfig rig;
             public TextureAssignment[] textureAssignments = Array.Empty<TextureAssignment>();
+            public SsaoConfig ssao;
         }
+        /// <summary>
+        /// v0.3.0 r3: SSAO renderer-feature quality on the PC renderer (the yacht cabin showed blue-noise grain along the
+        /// ceiling edges). Enum values as serialized: method 0 BlueNoise / 1 InterleavedGradient, samples 0 High (12) /
+        /// 1 Medium (8) / 2 Low (4), blur 0 High (bilateral) / 1 Medium / 2 Low.
+        /// </summary>
+        public sealed class SsaoConfig { public string renderer; public int method, samples, blur; }
         /// <summary>Texture slot on a generated presentation material (e.g. a soft round dot for impact particles).</summary>
         public sealed class TextureAssignment { public string material, property, texture, note; }
         public const string GeneratedRoot = "Assets/LetMeSleep/Presentation/Generated/";
@@ -76,8 +87,9 @@ namespace LetMeSleep.Editor
             public Dictionary<string, float[]> vectors = new Dictionary<string, float[]>();
             public Dictionary<string, float> floats = new Dictionary<string, float>();
             public string[] keywords = Array.Empty<string>();
+            public Dictionary<string, string> tags = new Dictionary<string, string>();
         }
-        public sealed class KitConfig { public string path, halo, flameOuter, flameMiddle, flameCore, bulb, wire, menuWindow; }
+        public sealed class KitConfig { public string path, halo, flameOuter, flameMiddle, flameCore, bulb, wire, menuWindow, beam, glint, pool; }
         public sealed class RigConfig { public string prefabPath; }
         // Menu/lobby ("sala") practicals of the private lobby: raise emission above the bloom threshold.
         public sealed class EmissionEdit { public string path; public float[] emission; }
@@ -114,7 +126,14 @@ namespace LetMeSleep.Editor
             public MaterialSwapRule[] materialSwaps = Array.Empty<MaterialSwapRule>();
             public VolumeRule[] interiorVolumes = Array.Empty<VolumeRule>();
             public RimConfig characterRim;
+            public FillConfig characterFill;
+            public InteriorAmbientConfig interiorAmbient;
+            public bool exteriorLightsSkipInteriors;
+            public SkyFillConfig skyFill;
         }
+        public sealed class SkyFillConfig { public float[] color, eulerDegrees; public float intensity; public int[] lightLayers; }
+        public sealed class FillConfig { public float[] color; public float intensity; }
+        public sealed class InteriorAmbientConfig { public float[] color; public float intensity, keep = 0.3f, minSize = 0.5f; }
         /// <summary>Glob ('*' = any run of characters except '/') over renderer paths relative to the map root.</summary>
         public sealed class RendererRule
         {
@@ -122,12 +141,16 @@ namespace LetMeSleep.Editor
             public bool hide, castShadowsOff, ignoreLocalLights;
             public string swapFrom; // "Color_NNN" of this map.
             public string swapTo;   // Material asset path.
+            public int[] addLightLayers; // URP rendering layer indices added to the renderer (e.g. 4 = lantern pool).
             public int? expect;
         }
         public sealed class MaterialSwapRule { public string from, to, note; }
         public sealed class VolumeRule { public float[] center, size; public string note; }
-        public sealed class RimConfig { public float[] color; public float intensity; }
-        public sealed class HaloRule { public float size; public float[] color, offset; public float alpha = 0.35f, intensity = 1f; }
+        public sealed class RimConfig { public float[] color; public float intensity, spread; }
+        public sealed class HaloRule { public float size; public float[] color, offset; public float alpha = 0.35f, intensity = 1f, depthTolerance; }
+        public sealed class BeamRule { public float length, radius, speed, tilt, alpha = 0.15f; public int count = 2; public float[] color, offset; }
+        public sealed class ReflectionRule { public float length, width, waterY, alpha = 0.5f; public float[] color; }
+        public sealed class PoolRule { public float radius, alpha = 0.55f; public float[] color; }
         public sealed class FlameRule { public float height; public float[] offset; }
         public sealed class SkyConfig
         {
@@ -137,8 +160,14 @@ namespace LetMeSleep.Editor
             public float moonPhase, haloAlpha, haloRadius = 3f;
             public float[] halo;
             public CloudConfig clouds;
+            public float[] ridge; // sRGB; optional distant cliffs/ridges on the horizon.
+            public float ridgeAlpha, ridgeHeight = 3f;
         }
-        public sealed class CloudConfig { public float coverage, scale = 0.6f, speed = 0.01f, opacity = 0.95f; public float[] color, shade; }
+        public sealed class CloudConfig
+        {
+            public float coverage, scale = 0.6f, speed = 0.01f, opacity = 0.95f; public float[] color, shade;
+            public string style = "noise"; public float width = 18f, baseMin = 5f, baseMax = 16f;
+        }
         public sealed class SunConfig { public float[] color; public float intensity; public float[] eulerDegrees; }
         public sealed class AmbientConfig { public float[] sky, equator, ground; public float intensity = 1f, reflection = 1f; }
         public sealed class FogConfig { public bool enabled; public string mode; public float start, end, density; }
@@ -153,12 +182,17 @@ namespace LetMeSleep.Editor
             public float[] offset;
             public HaloRule halo;
             public FlameRule flame;
+            public int[] lightLayers; // URP rendering layer indices this light affects (default: layer 0 only).
+            public BeamRule beam;
+            public ReflectionRule reflection;
+            public PoolRule pool;
         }
         public sealed class MaterialEdit
         {
             public int index;
             public string name; // Must equal the recipe sourceName: guards against index drift.
             public float saturation = 1f, value = 1f, hueShift;
+            public string baseColor; // Optional absolute sRGB "#RRGGBB" (replaces the HSV edit of the recipe color).
             public float[] emission; // Linear HDR, written with SetVector like the importer.
         }
 
@@ -313,6 +347,25 @@ namespace LetMeSleep.Editor
                     }).ToArray();
                     lighting.CharacterRimColor = mapConfig.characterRim?.color != null ? Rgb(mapConfig.characterRim.color) : new Color(1f, 0.416f, 0.416f);
                     lighting.CharacterRimIntensity = mapConfig.characterRim != null ? Range(mapConfig.characterRim.intensity, 0, HiggsfieldRimLight.MaximumIntensity) : 0f;
+                    lighting.CharacterRimSpread = mapConfig.characterRim != null ? Range(mapConfig.characterRim.spread, 0, 1) : 0f;
+                    lighting.CharacterFillColor = mapConfig.characterFill?.color != null ? Rgb(mapConfig.characterFill.color) : new Color(1f, 0.94f, 0.86f);
+                    lighting.CharacterFillIntensity = mapConfig.characterFill != null ? Range(mapConfig.characterFill.intensity, 0, HiggsfieldRimLight.MaximumIntensity) : 0f;
+                    var indoor = mapConfig.interiorAmbient;
+                    Need(indoor == null || (mapConfig.interiorVolumes ?? Array.Empty<VolumeRule>()).Length > 0, "Interior ambient needs interior volumes: " + mapConfig.mapId);
+                    lighting.InteriorAmbientColor = indoor?.color != null ? Rgb(indoor.color) : new Color(0.55f, 0.36f, 0.2f);
+                    lighting.InteriorAmbientIntensity = indoor != null ? Range(indoor.intensity, 0, 4) : 0f;
+                    lighting.InteriorAmbientKeep = indoor != null ? Range(indoor.keep, 0, 1) : 0.3f;
+                    lighting.InteriorAmbientMinSize = indoor != null ? Range(indoor.minSize, 0, 10) : 0.5f;
+                    Need(!mapConfig.exteriorLightsSkipInteriors || (mapConfig.interiorVolumes ?? Array.Empty<VolumeRule>()).Length > 0,
+                        "exteriorLightsSkipInteriors needs interior volumes: " + mapConfig.mapId);
+                    lighting.ExteriorLightsSkipInteriors = mapConfig.exteriorLightsSkipInteriors;
+                    var skyFill = mapConfig.skyFill;
+                    lighting.SkyFillColor = skyFill?.color != null ? Rgb(skyFill.color) : Color.white;
+                    lighting.SkyFillIntensity = skyFill != null ? Range(skyFill.intensity, 0, 3) : 0f;
+                    Need(skyFill?.eulerDegrees == null || (skyFill.eulerDegrees.Length == 3 && skyFill.eulerDegrees.All(Finite)), "Sky fill euler x,y,z required.");
+                    lighting.SkyFillRotation = skyFill?.eulerDegrees != null
+                        ? Quaternion.Euler(skyFill.eulerDegrees[0], skyFill.eulerDegrees[1], skyFill.eulerDegrees[2]) : Quaternion.Euler(30f, 150f, 0f);
+                    lighting.SkyFillLightLayers = skyFill?.lightLayers != null ? RenderingLayerBits(skyFill.lightLayers) : 0;
                     entry.RendererOverrides = ResolveRendererRules(entry, mapConfig.mapId, mapConfig.renderers ?? Array.Empty<RendererRule>(), authored);
                     entry.CameraFarPlane = mapConfig.cameraFarPlane;
                     float effectiveFar = mapConfig.cameraFarPlane > 0 ? mapConfig.cameraFarPlane : PresetFarPlane;
@@ -332,10 +385,21 @@ namespace LetMeSleep.Editor
                         ["halos"] = entry.LocalLights.Count(l => l.Settings.HaloSize > 0),
                         ["flames"] = entry.LocalLights.Count(l => l.Settings.FlameHeight > 0),
                         ["rendererOverrides"] = new JArray(entry.RendererOverrides.Select(o => o.Path + (o.Hide ? " hide" : "") +
-                            (o.CastShadowsOff ? " noShadows" : "") + (o.IgnoreLocalLights ? " moonOnly" : "") + (o.SwapFrom ? " " + o.SwapFrom.name + "->" + o.SwapTo.name : ""))),
+                            (o.CastShadowsOff ? " noShadows" : "") + (o.IgnoreLocalLights ? " moonOnly" : "") +
+                            (o.AddLightLayers != 0 ? " +layers" + o.AddLightLayers : "") + (o.SwapFrom ? " " + o.SwapFrom.name + "->" + o.SwapTo.name : ""))),
                         ["materialSwaps"] = new JArray(lighting.MaterialSwaps.Select(s => s.From.name + "->" + s.To.name)),
                         ["interiorVolumes"] = new JArray(lighting.InteriorVolumes.Select(b => VectorText(b.center) + " / " + VectorText(b.size))),
-                        ["characterRim"] = ColorText(lighting.CharacterRimColor) + " x" + F(lighting.CharacterRimIntensity)
+                        ["characterRim"] = ColorText(lighting.CharacterRimColor) + " x" + F(lighting.CharacterRimIntensity) + " spread " + F(lighting.CharacterRimSpread),
+                        ["characterFill"] = ColorText(lighting.CharacterFillColor) + " x" + F(lighting.CharacterFillIntensity),
+                        ["interiorAmbient"] = ColorText(lighting.InteriorAmbientColor) + " x" + F(lighting.InteriorAmbientIntensity) +
+                            " keep " + F(lighting.InteriorAmbientKeep) + " min " + F(lighting.InteriorAmbientMinSize),
+                        ["skyFill"] = ColorText(lighting.SkyFillColor) + " x" + F(lighting.SkyFillIntensity) + " euler " +
+                            VectorText(lighting.SkyFillRotation.eulerAngles) + " layers " + lighting.SkyFillLightLayers,
+                        ["beams"] = entry.LocalLights.Count(l => l.Settings.BeamLength > 0),
+                        ["reflections"] = entry.LocalLights.Count(l => l.Settings.ReflectionLength > 0),
+                        ["pools"] = entry.LocalLights.Count(l => l.Settings.PoolRadius > 0),
+                        ["layeredLights"] = new JArray(entry.LocalLights.Where(l => l.Settings.LightLayers != 0)
+                            .Select(l => l.AnchorPath + " layers " + l.Settings.LightLayers))
                     });
                 }
                 receipt["maps"] = mapReport;
@@ -369,12 +433,15 @@ namespace LetMeSleep.Editor
                 receipt["menuCamera"] = ApplyMenuCamera(config.menuCamera, catalog);
                 // 5) Lighting rig prefab: lobby halos, night window and garlands come from the kit.
                 receipt["rig"] = ApplyRig(config.rig, kit);
+                // 6) SSAO quality (optional).
+                if (config.ssao != null) receipt["ssao"] = ApplySsao(config.ssao);
 
                 AssetDatabase.SaveAssets();
                 receipt["catalogAfter"] = Summaries(catalog);
                 receipt["catalogSha256After"] = HashFile(Disk(CatalogPath));
                 receipt["files"] = FileHashes(profiles.Keys.Concat(config.maps.Select(m => MaterialsRoot + m.mapId + "-GradientSky.mat"))
                     .Concat(authored.Keys).Concat(new[] { config.kit.path, RigPrefabPath })
+                    .Concat(config.maps.SelectMany(m => Enumerable.Range(0, SwatchCount(m.mapId)).Select(i => MapsRoot + m.mapId + "/Materials/Color_" + i.ToString("000") + ".mat")))
                     .Concat(new[] { CatalogPath, ScenePath, "ProjectSettings/GraphicsSettings.asset" }));
                 receipt["success"] = true;
                 Debug.Log("[HiggsfieldAtmosphereCorrection] Applied " + configPath + " -> " + receiptPath);
@@ -515,14 +582,23 @@ namespace LetMeSleep.Editor
             material.SetFloat("_HaloRadius", Range(c.haloRadius, 1, 6));
             var clouds = c.clouds;
             material.SetFloat("_CloudCoverage", clouds != null ? Range(clouds.coverage, 0, 1) : 0f);
+            material.SetFloat("_CloudStyle", clouds != null && clouds.style == "cumulus" ? 1f : 0f);
             if (clouds != null)
             {
+                Need(clouds.style == "noise" || clouds.style == "cumulus", "Cloud style must be noise or cumulus.");
+                material.SetFloat("_CloudWidth", Range(clouds.width, 4, 60));
+                material.SetFloat("_CloudBaseMin", Range(clouds.baseMin, 0, 40));
+                material.SetFloat("_CloudBaseMax", Range(clouds.baseMax, clouds.baseMin, 60));
                 material.SetFloat("_CloudScale", Range(clouds.scale, 0.05f, 4));
                 material.SetFloat("_CloudSpeed", Range(clouds.speed, 0, 0.2f));
                 material.SetFloat("_CloudOpacity", Range(clouds.opacity, 0, 1));
                 material.SetColor("_CloudColor", clouds.color != null ? Rgb(clouds.color) : Color.white);
                 material.SetColor("_CloudShade", clouds.shade != null ? Rgb(clouds.shade) : new Color(0.78f, 0.85f, 0.95f));
             }
+            Color ridge = c.ridge != null ? Rgb(c.ridge) : new Color(0.5f, 0.6f, 0.7f);
+            ridge.a = Range(c.ridgeAlpha, 0, 1);
+            material.SetColor("_RidgeColor", ridge);
+            material.SetFloat("_RidgeHeight", Range(c.ridgeHeight, 0, 15));
             if (c.celestialDirection != null)
             {
                 Need(c.celestialDirection.Length == 3 && c.celestialDirection.All(Finite), "celestialDirection x,y,z required.");
@@ -546,6 +622,10 @@ namespace LetMeSleep.Editor
                 var s = binding.Settings;
                 s.LocalOffset = Vector3.zero; s.HaloSize = 0; s.HaloOffset = Vector3.zero; s.HaloIntensity = 1f;
                 s.HaloColor = new Color(1f, 0.702f, 0.278f, 0.35f); s.FlameHeight = 0; s.FlameOffset = Vector3.zero;
+                s.LightLayers = 0; s.HaloDepthTolerance = 0; s.BeamLength = 0; s.BeamRadius = 0; s.BeamSpeed = 0; s.BeamTilt = 0;
+                s.BeamCount = 2; s.BeamOffset = Vector3.zero; s.BeamColor = new Color(1f, 0.824f, 0.478f, 0.15f);
+                s.ReflectionLength = 0; s.ReflectionWidth = 0; s.ReflectionWaterY = 0; s.ReflectionColor = new Color(1f, 0.702f, 0.278f, 0.5f);
+                s.PoolRadius = 0; s.PoolColor = new Color(0.45f, 0.31f, 0.18f, 0.55f);
             }
             foreach (var rule in rules)
             {
@@ -572,12 +652,43 @@ namespace LetMeSleep.Editor
                     if (rule.offset != null) s.LocalOffset = Vec3(rule.offset, 3f);
                     if (rule.halo != null)
                     {
-                        s.HaloSize = Range(rule.halo.size, 0, 6);
+                        s.HaloSize = Range(rule.halo.size, 0, 12);
                         Color color = rule.halo.color != null ? Rgb(rule.halo.color) : new Color(1f, 0.702f, 0.278f);
                         color.a = Range(rule.halo.alpha, 0, 1);
                         s.HaloColor = color;
                         s.HaloIntensity = Range(rule.halo.intensity, 0, 16);
                         s.HaloOffset = rule.halo.offset != null ? Vec3(rule.halo.offset, 3f) : Vector3.zero;
+                        s.HaloDepthTolerance = Range(rule.halo.depthTolerance, 0, 8);
+                    }
+                    if (rule.lightLayers != null) s.LightLayers = RenderingLayerBits(rule.lightLayers);
+                    if (rule.beam != null)
+                    {
+                        s.BeamLength = Range(rule.beam.length, 0, 80);
+                        s.BeamRadius = Range(rule.beam.radius, 0, 20);
+                        s.BeamSpeed = Range(rule.beam.speed, -360, 360);
+                        s.BeamTilt = Range(rule.beam.tilt, -45, 45);
+                        s.BeamCount = (int)Range(rule.beam.count, 1, 4);
+                        s.BeamOffset = rule.beam.offset != null ? Vec3(rule.beam.offset, 3f) : Vector3.zero;
+                        Color beam = rule.beam.color != null ? Rgb(rule.beam.color) : new Color(1f, 0.824f, 0.478f);
+                        beam.a = Range(rule.beam.alpha, 0, 1);
+                        s.BeamColor = beam;
+                    }
+                    if (rule.reflection != null)
+                    {
+                        s.ReflectionLength = Range(rule.reflection.length, 0, 30);
+                        s.ReflectionWidth = Range(rule.reflection.width, 0, 5);
+                        Need(Finite(rule.reflection.waterY), "Reflection waterY must be finite.");
+                        s.ReflectionWaterY = rule.reflection.waterY;
+                        Color glint = rule.reflection.color != null ? Rgb(rule.reflection.color) : new Color(1f, 0.702f, 0.278f);
+                        glint.a = Range(rule.reflection.alpha, 0, 1);
+                        s.ReflectionColor = glint;
+                    }
+                    if (rule.pool != null)
+                    {
+                        s.PoolRadius = Range(rule.pool.radius, 0, 8);
+                        Color pool = rule.pool.color != null ? Rgb(rule.pool.color) : new Color(0.45f, 0.31f, 0.18f);
+                        pool.a = Range(rule.pool.alpha, 0, 1);
+                        s.PoolColor = pool;
                     }
                     if (rule.flame != null)
                     {
@@ -625,7 +736,8 @@ namespace LetMeSleep.Editor
                 Material from = rule.swapFrom != null ? MapMaterial(mapId, rule.swapFrom) : null;
                 Material to = rule.swapTo != null ? Authored(authored, rule.swapTo) : null;
                 Need((from == null) == (to == null), "Renderer swap needs swapFrom and swapTo: " + rule.match);
-                Need(rule.hide || rule.castShadowsOff || rule.ignoreLocalLights || from, "Renderer rule does nothing: " + rule.match);
+                int addLayers = rule.addLightLayers != null ? RenderingLayerBits(rule.addLightLayers) : 0;
+                Need(rule.hide || rule.castShadowsOff || rule.ignoreLocalLights || from || addLayers != 0, "Renderer rule does nothing: " + rule.match);
                 foreach (var item in matched)
                 {
                     Need(renderers.Count(r => r.Path == item.Path) == 1, "Ambiguous renderer path: " + item.Path);
@@ -635,6 +747,7 @@ namespace LetMeSleep.Editor
                     binding.Hide |= rule.hide;
                     binding.CastShadowsOff |= rule.castShadowsOff;
                     binding.IgnoreLocalLights |= rule.ignoreLocalLights;
+                    binding.AddLightLayers |= addLayers;
                     if (from)
                     {
                         Need(!binding.SwapFrom, "Two swaps on one renderer: " + item.Path);
@@ -680,6 +793,8 @@ namespace LetMeSleep.Editor
                 material = new Material(shader) { name = Path.GetFileNameWithoutExtension(c.path) };
                 AssetDatabase.CreateAsset(material, c.path);
             }
+            else if (AuthoredMatches(material, shader, c))
+                return material; // Already applied: no re-serialization churn (e.g. the menu window of another front).
             material.shader = shader;
             foreach (var keyword in material.shaderKeywords.ToArray()) material.DisableKeyword(keyword);
             foreach (var pair in c.colors ?? new Dictionary<string, float[]>())
@@ -700,12 +815,42 @@ namespace LetMeSleep.Editor
                 material.SetFloat(pair.Key, pair.Value);
             }
             foreach (var keyword in c.keywords ?? Array.Empty<string>()) material.EnableKeyword(keyword);
+            foreach (var pair in c.tags ?? new Dictionary<string, string>())
+            {
+                Need(pair.Key == "RenderType" && (pair.Value == "Opaque" || pair.Value == "Transparent"), "Only RenderType Opaque/Transparent tags: " + c.path);
+                material.SetOverrideTag(pair.Key, pair.Value);
+            }
             if (material.IsKeywordEnabled("_EMISSION"))
                 material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.BakedEmissive;
             material.renderQueue = c.renderQueue;
             EditorUtility.SetDirty(material);
             AssetDatabase.SaveAssetIfDirty(material);
             return material;
+        }
+
+        static bool AuthoredMatches(Material material, Shader shader, AuthoredMaterial c)
+        {
+            if (material.shader != shader) return false;
+            foreach (var pair in c.colors ?? new Dictionary<string, float[]>())
+            {
+                if (!material.HasProperty(pair.Key) || pair.Value == null) return false;
+                Color want = new Color(pair.Value[0], pair.Value[1], pair.Value[2], pair.Value.Length == 4 ? pair.Value[3] : 1f);
+                Color have = material.GetColor(pair.Key);
+                if (!Approximately(want, have) || Mathf.Abs(want.a - have.a) > 1e-4f) return false;
+            }
+            foreach (var pair in c.vectors ?? new Dictionary<string, float[]>())
+            {
+                if (!material.HasProperty(pair.Key) || pair.Value == null) return false;
+                var want = new Vector4(pair.Value[0], pair.Value[1], pair.Value[2], pair.Value.Length == 4 ? pair.Value[3] : 1f);
+                if (!Approximately(want, material.GetVector(pair.Key))) return false;
+            }
+            foreach (var pair in c.floats ?? new Dictionary<string, float>())
+                if (!material.HasProperty(pair.Key) || Mathf.Abs(material.GetFloat(pair.Key) - pair.Value) > 1e-5f) return false;
+            var keywords = (c.keywords ?? Array.Empty<string>()).OrderBy(k => k, StringComparer.Ordinal);
+            if (!material.shaderKeywords.OrderBy(k => k, StringComparer.Ordinal).SequenceEqual(keywords)) return false;
+            foreach (var pair in c.tags ?? new Dictionary<string, string>())
+                if (material.GetTag(pair.Key, false) != pair.Value) return false;
+            return material.renderQueue == (c.renderQueue < 0 ? shader.renderQueue : c.renderQueue);
         }
 
         static HiggsfieldAtmosphereKit BuildKit(KitConfig c, Dictionary<string, Material> authored)
@@ -726,6 +871,9 @@ namespace LetMeSleep.Editor
             kit.BulbMaterial = Authored(authored, c.bulb);
             kit.WireMaterial = Authored(authored, c.wire);
             kit.MenuWindowMaterial = Authored(authored, c.menuWindow);
+            kit.BeamMaterial = c.beam != null ? Authored(authored, c.beam) : null;
+            kit.GlintMaterial = c.glint != null ? Authored(authored, c.glint) : null;
+            kit.PoolMaterial = c.pool != null ? Authored(authored, c.pool) : null;
             Need(kit.IsComplete, "Kit incomplete.");
             EditorUtility.SetDirty(kit);
             AssetDatabase.SaveAssetIfDirty(kit);
@@ -785,11 +933,19 @@ namespace LetMeSleep.Editor
                 if (edit != null)
                 {
                     Need(edit.name == (string)swatch["sourceName"], "Material edit name/index mismatch: " + mapId + " " + i + " " + edit.name);
-                    Color.RGBToHSV(baseline, out float h, out float s, out float v);
-                    h = Mathf.Repeat(h + Range(edit.hueShift, -60, 60) / 360f, 1f);
-                    s = Mathf.Clamp01(s * Range(edit.saturation, 0.5f, 2.5f));
-                    v = Mathf.Clamp01(v * Range(edit.value, 0.5f, 1.5f));
-                    after = Color.HSVToRGB(h, s, v);
+                    if (edit.baseColor != null)
+                    {
+                        Need(edit.saturation == 1f && edit.value == 1f && edit.hueShift == 0f, "baseColor replaces the HSV edit: " + mapId + " " + edit.name);
+                        after = Hex(edit.baseColor);
+                    }
+                    else
+                    {
+                        Color.RGBToHSV(baseline, out float h, out float s, out float v);
+                        h = Mathf.Repeat(h + Range(edit.hueShift, -60, 60) / 360f, 1f);
+                        s = Mathf.Clamp01(s * Range(edit.saturation, 0.5f, 2.5f));
+                        v = Mathf.Clamp01(v * Range(edit.value, 0.5f, 1.5f));
+                        after = Color.HSVToRGB(h, s, v);
+                    }
                 }
                 after.a = before.a; // Opacity (YATE_Glass BLEND) is not a palette decision.
                 bool emissionChanges = edit?.emission != null && !Approximately(emissionBefore,
@@ -869,6 +1025,31 @@ namespace LetMeSleep.Editor
             ["m_FogKeepExp"] = s.FindProperty("m_FogKeepExp").boolValue,
             ["m_FogKeepExp2"] = s.FindProperty("m_FogKeepExp2").boolValue
         };
+
+        // ---------- SSAO ----------
+        static JObject ApplySsao(SsaoConfig c)
+        {
+            Need(c.renderer == "Assets/Settings/PC_Renderer.asset", "SSAO edits only target the PC renderer.");
+            Need(c.method >= 0 && c.method <= 1 && c.samples >= 0 && c.samples <= 2 && c.blur >= 0 && c.blur <= 2, "SSAO enum values out of range.");
+            var feature = AssetDatabase.LoadAllAssetsAtPath(c.renderer).OfType<ScriptableRendererFeature>()
+                .SingleOrDefault(f => f && f.GetType().Name == "ScreenSpaceAmbientOcclusion");
+            Need(feature, "ScreenSpaceAmbientOcclusion feature missing on " + c.renderer);
+            var serialized = new SerializedObject(feature);
+            var method = serialized.FindProperty("m_Settings.AOMethod");
+            var samples = serialized.FindProperty("m_Settings.Samples");
+            var blur = serialized.FindProperty("m_Settings.BlurQuality");
+            Need(method != null && samples != null && blur != null, "SSAO settings layout changed.");
+            var report = new JObject { ["before"] = "method " + method.intValue + " samples " + samples.intValue + " blur " + blur.intValue };
+            if (method.intValue != c.method || samples.intValue != c.samples || blur.intValue != c.blur)
+            {
+                method.intValue = c.method; samples.intValue = c.samples; blur.intValue = c.blur;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(feature);
+                AssetDatabase.SaveAssetIfDirty(feature);
+            }
+            report["after"] = "method " + c.method + " samples " + c.samples + " blur " + c.blur;
+            return report;
+        }
 
         // ---------- Menu camera ----------
         static JObject ApplyMenuCamera(CameraConfig c, HiggsfieldMapCatalog catalog)
@@ -975,6 +1156,29 @@ namespace LetMeSleep.Editor
         static string Hash(byte[] bytes) { using (var sha = SHA256.Create()) return BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", "").ToLowerInvariant(); }
         static string HashFile(string path) => Hash(File.ReadAllBytes(path));
         static bool Finite(float f) => !float.IsNaN(f) && !float.IsInfinity(f);
+        static int RenderingLayerBits(int[] layers)
+        {
+            int mask = 0;
+            foreach (int layer in layers)
+            {
+                Need(layer >= 0 && layer < 8 && ((1 << layer) & HiggsfieldMapLighting.AllowedLightLayers) != 0,
+                    "Rendering layer " + layer + " is not allowed (0 default, 2 open air, 3 exterior, 4 lantern pool, 5 character fill, 7 rim).");
+                mask |= 1 << layer;
+            }
+            Need(mask != 0, "At least one rendering layer is required.");
+            return mask;
+        }
+        static Color Hex(string hex)
+        {
+            Need(hex != null && Regex.IsMatch(hex, "^#[0-9A-Fa-f]{6}$"), "Color must be #RRGGBB: " + hex);
+            int value = Convert.ToInt32(hex.Substring(1), 16);
+            return new Color(((value >> 16) & 255) / 255f, ((value >> 8) & 255) / 255f, (value & 255) / 255f, 1f);
+        }
+        static int SwatchCount(string mapId)
+        {
+            var recipe = JObject.Parse(File.ReadAllText(Disk(MapsRoot + mapId + "/Data/import-recipe.json")));
+            return ((JArray)recipe["materials"]).Count;
+        }
         static float NonNegative(float f) { Need(Finite(f) && f >= 0, "Finite non-negative value required."); return f; }
         static float Range(float f, float min, float max) { Need(Finite(f) && f >= min && f <= max, "Value " + f + " outside " + min + ".." + max); return f; }
         static Color Rgb(float[] v) { Need(v != null && v.Length == 3 && v.All(x => Finite(x) && x >= 0 && x <= 1), "RGB [0,1] required."); return new Color(v[0], v[1], v[2], 1); }

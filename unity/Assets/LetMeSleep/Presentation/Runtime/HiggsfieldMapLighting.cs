@@ -49,6 +49,33 @@ namespace LetMeSleep.Presentation
             // v0.3.0: three-layer stylized flame (outer height in metres, 0 = none), base at FlameOffset.
             public float FlameHeight;
             public Vector3 FlameOffset;
+            // v0.3.0 r3: URP rendering layers lit by this light (bit mask, 0 = URP default "layer 0" only). A lantern
+            // can light only the ground pool and characters, never the pines or rails around it.
+            public int LightLayers;
+            // v0.3.0 r3: depth tolerance of the halo occlusion test in metres (0 = automatic). Lamps inside glass
+            // lanterns behind mullions/railings need a larger value so the bars in front never cut the glow.
+            public float HaloDepthTolerance;
+            // v0.3.0 r3: rotating light shafts (lighthouse). Length in metres, 0 = none; alpha of BeamColor = opacity.
+            public float BeamLength, BeamRadius, BeamSpeed, BeamTilt;
+            public int BeamCount = 2;
+            public Vector3 BeamOffset;
+            public Color BeamColor = new Color(1f, 0.824f, 0.478f, 0.15f);
+            // v0.3.0 r3: warm vertical reflection streak on the water below the lamp (length 0 = none). WaterY is
+            // the water surface height in map space; alpha of ReflectionColor = opacity.
+            public float ReflectionLength, ReflectionWidth, ReflectionWaterY;
+            public Color ReflectionColor = new Color(1f, 0.702f, 0.278f, 0.5f);
+            // v0.3.0 r3: warm pool decal on the ground below the light (radius in metres, 0 = none). Alpha of PoolColor
+            // is the opacity at the center; the ground is found with a downward ray from 0.6 m below the light.
+            public float PoolRadius;
+            public Color PoolColor = new Color(0.45f, 0.31f, 0.18f, 0.55f);
+
+            /// <summary>Copy of every serialized value bound to an instance anchor (catalog assets never keep one).</summary>
+            public LocalSource CloneFor(Transform anchor)
+            {
+                var copy = (LocalSource)MemberwiseClone();
+                copy.Anchor = anchor;
+                return copy;
+            }
         }
 
         /// <summary>Map-wide material replacement on the bound instance (e.g. windows to the night-window shader).</summary>
@@ -68,10 +95,29 @@ namespace LetMeSleep.Presentation
             public bool IgnoreLocalLights;
             public Material SwapFrom;
             public Material SwapTo;
+            // v0.3.0 r3: extra URP rendering layers (bit mask) for this renderer, e.g. the ground that receives a
+            // lantern pool (LanternPoolRenderingLayer) while pines and rails do not.
+            public int AddLightLayers;
         }
 
         /// <summary>URP rendering layer that only the moon/sun lights; map-local lights keep the default layer.</summary>
         public const int MoonOnlyRenderingLayer = 6;
+        /// <summary>Receivers of lantern pools (ground, rocks, paths) for lights restricted with LightLayers.</summary>
+        public const int LanternPoolRenderingLayer = 4;
+        /// <summary>
+        /// Everything that is not fully inside an interior volume (ExteriorLightsSkipInteriors): exterior lamps restricted to
+        /// this layer never light rooms through the (shadowless) walls.
+        /// </summary>
+        public const int ExteriorRenderingLayer = 3;
+        /// <summary>
+        /// Renderers that do not touch any interior volume (ExteriorLightsSkipInteriors): a shadowless directional sky fill
+        /// restricted to this layer cannot reach the inner faces of exterior walls and roofs (which only get
+        /// ExteriorRenderingLayer, lit by point lamps whose falloff and N.L keep them outside).
+        /// </summary>
+        public const int OpenAirRenderingLayer = 2;
+        /// <summary>Rendering layers a config may use: 0 default, 4 lantern pool, 5 character fill, 7 mosquito rim.</summary>
+        public const int AllowedLightLayers = (1 << 0) | (1 << OpenAirRenderingLayer) | (1 << ExteriorRenderingLayer) | (1 << LanternPoolRenderingLayer) |
+            (1 << HiggsfieldRimLight.FillRenderingLayer) | (1 << HiggsfieldRimLight.RenderingLayer);
 
         [Serializable] public sealed class Configuration
         {
@@ -102,9 +148,37 @@ namespace LetMeSleep.Presentation
             // Warm red kicker on characters tagged with the rim rendering layer (night legibility), 0 = off.
             public Color CharacterRimColor = new Color(1f, 0.416f, 0.416f);
             public float CharacterRimIntensity;
+            // v0.3.0 r3: 0 = one top-back kicker, 1 = two side-back kickers that outline both silhouette edges.
+            public float CharacterRimSpread;
+            // v0.3.0 r3: camera-side fill on every character (fill rendering layer) so bodies, shirts and eyes read at night.
+            public Color CharacterFillColor = new Color(1f, 0.94f, 0.86f);
+            public float CharacterFillIntensity;
+            // v0.3.0 r3: warm indoor bounce for renderers inside InteriorVolumes (per-renderer ambient probe). Inner
+            // faces of exterior walls/roofs get it only on the side facing the room; 0 = off.
+            public Color InteriorAmbientColor = new Color(0.55f, 0.36f, 0.2f);
+            public float InteriorAmbientIntensity;
+            // Fraction of the night ambient kept indoors, and the smallest renderer (metres) that gets a probe.
+            public float InteriorAmbientKeep = 0.3f;
+            public float InteriorAmbientMinSize = 0.5f;
+            // v0.3.0 r3: tag every renderer that is not fully inside an interior volume with ExteriorRenderingLayer, so
+            // porch/wall lamps restricted to that layer stop burning partitions and furniture through the walls.
+            public bool ExteriorLightsSkipInteriors;
+            // v0.3.0 r3: explicit shadowless sky fill owned by the map binding. Until r3 every map was also lit by the UI
+            // customization key (a 1.5 directional light meant for the preview layer; Forward+ ignores light culling
+            // masks), which burned interiors. Bind now suppresses stray directional lights and this fill replaces the
+            // key's contribution on purpose, optionally restricted to rendering layers (e.g. exterior + characters).
+            public Color SkyFillColor = Color.white;
+            public float SkyFillIntensity;
+            public Quaternion SkyFillRotation = Quaternion.Euler(30f, 150f, 0f);
+            public int SkyFillLightLayers;
         }
 
         public const int MaximumInteriorVolumes = 8;
+        private static readonly int PaneMinId = Shader.PropertyToID("_PaneMin");
+        private static readonly int PaneMaxId = Shader.PropertyToID("_PaneMax");
+        private readonly Dictionary<Renderer, MaterialPropertyBlock> originalBlocks = new Dictionary<Renderer, MaterialPropertyBlock>();
+        private readonly Dictionary<Renderer, LightProbeUsage> originalProbeUsage = new Dictionary<Renderer, LightProbeUsage>();
+        public int InteriorAmbientRendererCount => originalProbeUsage.Count;
         private static readonly int InteriorMinId = Shader.PropertyToID("_LMS_InteriorMin");
         private static readonly int InteriorMaxId = Shader.PropertyToID("_LMS_InteriorMax");
         private static readonly int InteriorCountId = Shader.PropertyToID("_LMS_InteriorCount");
@@ -144,8 +218,11 @@ namespace LetMeSleep.Presentation
         private uint oldSunLayers;
         private bool sunLayersChanged;
         private HiggsfieldRimLight rimLight;
+        private Light skyFill;
+        public Light SkyFill => skyFill;
         public int AtmosphereVisualCount => visuals.Count;
-        public int OverriddenRendererCount => originalMaterials.Count + originalEnabled.Count + originalShadows.Count + originalLayers.Count;
+        public int OverriddenRendererCount => originalMaterials.Count + originalEnabled.Count + originalShadows.Count + originalLayers.Count +
+            originalBlocks.Count;
         public HiggsfieldRimLight RimLight => rimLight;
 
         public static void Validate(Transform root, Light sun, Configuration config)
@@ -184,14 +261,34 @@ namespace LetMeSleep.Presentation
             if (!FiniteVector(source.LocalOffset) || source.LocalOffset.magnitude > 3f || !FiniteVector(source.HaloOffset) ||
                 source.HaloOffset.magnitude > 3f || !FiniteVector(source.FlameOffset) || source.FlameOffset.magnitude > 3f)
                 throw new ArgumentException("Local light, halo and flame offsets must be finite and within 3 m of the anchor.");
-            if (!Finite(source.HaloSize) || source.HaloSize < 0 || source.HaloSize > 6 || !Finite(source.HaloIntensity) ||
+            if (!Finite(source.HaloSize) || source.HaloSize < 0 || source.HaloSize > 12 || !Finite(source.HaloIntensity) ||
                 source.HaloIntensity < 0 || source.HaloIntensity > 16 || !Finite(source.FlameHeight) || source.FlameHeight < 0 ||
                 source.FlameHeight > 4)
-                throw new ArgumentException("Halo size 0..6 m, halo intensity 0..16 and flame height 0..4 m required.");
+                throw new ArgumentException("Halo size 0..12 m, halo intensity 0..16 and flame height 0..4 m required.");
             CheckColor(source.HaloColor);
             if (source.HaloColor.a > 1) throw new ArgumentException("Halo opacity must be 0..1.");
             if ((source.HaloSize > 0 || source.FlameHeight > 0) && (!kit || !kit.IsComplete))
                 throw new ArgumentException("Halos and flames need a complete HiggsfieldAtmosphereKit.");
+            if ((source.LightLayers & ~AllowedLightLayers) != 0 || !Finite(source.HaloDepthTolerance) || source.HaloDepthTolerance < 0 ||
+                source.HaloDepthTolerance > 8)
+                throw new ArgumentException("Light layers must use the allowed rendering layers; halo depth tolerance 0..8 m.");
+            if (!Finite(source.BeamLength) || source.BeamLength < 0 || source.BeamLength > 80 || !Finite(source.BeamRadius) ||
+                source.BeamRadius < 0 || source.BeamRadius > 20 || !Finite(source.BeamSpeed) || Mathf.Abs(source.BeamSpeed) > 360 ||
+                !Finite(source.BeamTilt) || Mathf.Abs(source.BeamTilt) > 45 || source.BeamCount < 1 || source.BeamCount > 4 ||
+                !FiniteVector(source.BeamOffset) || source.BeamOffset.magnitude > 3f)
+                throw new ArgumentException("Beam: length 0..80 m, radius 0..20 m, speed |deg/s| <= 360, tilt |deg| <= 45, 1..4 shafts.");
+            CheckColor(source.BeamColor); CheckColor(source.ReflectionColor);
+            if (source.BeamColor.a > 1 || source.ReflectionColor.a > 1) throw new ArgumentException("Beam/reflection opacity must be 0..1.");
+            if (!Finite(source.ReflectionLength) || source.ReflectionLength < 0 || source.ReflectionLength > 30 ||
+                !Finite(source.ReflectionWidth) || source.ReflectionWidth < 0 || source.ReflectionWidth > 5 || !Finite(source.ReflectionWaterY))
+                throw new ArgumentException("Reflection length 0..30 m and width 0..5 m required.");
+            if ((source.BeamLength > 0 && (!kit || !kit.BeamMaterial)) || (source.ReflectionLength > 0 && (!kit || !kit.GlintMaterial)))
+                throw new ArgumentException("Beams and water reflections need the kit's beam/glint materials.");
+            CheckColor(source.PoolColor);
+            if (!Finite(source.PoolRadius) || source.PoolRadius < 0 || source.PoolRadius > 8 || source.PoolColor.a > 1)
+                throw new ArgumentException("Pool radius 0..8 m and opacity 0..1 required.");
+            if (source.PoolRadius > 0 && (!kit || !kit.PoolMaterial))
+                throw new ArgumentException("Ground pools need the kit's pool material.");
         }
 
         public static void ValidateAtmosphere(Transform root, Configuration config)
@@ -216,12 +313,26 @@ namespace LetMeSleep.Presentation
                     throw new ArgumentException("Renderer material swap needs both From and a different To.");
                 if (item.SwapFrom && Array.IndexOf(item.Target.sharedMaterials, item.SwapFrom) < 0)
                     throw new ArgumentException("Renderer override swap source is not on the renderer: " + item.Target.name);
-                if (!item.Hide && !item.CastShadowsOff && !item.IgnoreLocalLights && !item.SwapFrom)
+                if ((item.AddLightLayers & ~AllowedLightLayers) != 0)
+                    throw new ArgumentException("Renderer override adds a rendering layer that is not allowed: " + item.Target.name);
+                if (!item.Hide && !item.CastShadowsOff && !item.IgnoreLocalLights && !item.SwapFrom && item.AddLightLayers == 0)
                     throw new ArgumentException("Renderer override does nothing: " + item.Target.name);
             }
-            CheckColor(config.CharacterRimColor);
-            if (!Finite(config.CharacterRimIntensity) || config.CharacterRimIntensity < 0 || config.CharacterRimIntensity > HiggsfieldRimLight.MaximumIntensity)
-                throw new ArgumentException("Character rim intensity 0..3 required.");
+            CheckColor(config.CharacterRimColor); CheckColor(config.CharacterFillColor); CheckColor(config.InteriorAmbientColor);
+            if (!Finite(config.CharacterRimIntensity) || config.CharacterRimIntensity < 0 || config.CharacterRimIntensity > HiggsfieldRimLight.MaximumIntensity ||
+                !Finite(config.CharacterFillIntensity) || config.CharacterFillIntensity < 0 || config.CharacterFillIntensity > HiggsfieldRimLight.MaximumIntensity ||
+                !Finite(config.CharacterRimSpread) || config.CharacterRimSpread < 0 || config.CharacterRimSpread > 1)
+                throw new ArgumentException("Character rim/fill intensity 0..3 and rim spread 0..1 required.");
+            CheckColor(config.SkyFillColor);
+            Quaternion fill = config.SkyFillRotation;
+            if (!Finite(config.SkyFillIntensity) || config.SkyFillIntensity < 0 || config.SkyFillIntensity > 3 ||
+                (config.SkyFillLightLayers & ~AllowedLightLayers) != 0 || !Finite(fill.x) || !Finite(fill.y) || !Finite(fill.z) ||
+                !Finite(fill.w) || Mathf.Abs(Quaternion.Dot(fill, fill) - 1) > .01f)
+                throw new ArgumentException("Sky fill intensity 0..3, allowed layers and a normalized rotation required.");
+            if (!Finite(config.InteriorAmbientIntensity) || config.InteriorAmbientIntensity < 0 || config.InteriorAmbientIntensity > 4 ||
+                !Finite(config.InteriorAmbientKeep) || config.InteriorAmbientKeep < 0 || config.InteriorAmbientKeep > 1 ||
+                !Finite(config.InteriorAmbientMinSize) || config.InteriorAmbientMinSize < 0 || config.InteriorAmbientMinSize > 10)
+                throw new ArgumentException("Interior ambient intensity 0..4, keep 0..1 and minimum size 0..10 m required.");
         }
 
         /// <param name="lowTierTemplate">Optional disabled Light whose URP data uses the Low shadow tier (tier is editor-only data).</param>
@@ -250,6 +361,11 @@ namespace LetMeSleep.Presentation
                 // Imported directional sources in this map must not become a second sun.
                 foreach (var light in root.GetComponentsInChildren<Light>(true))
                     if (light.type == LightType.Directional) Suppress(light);
+                // Forward+ ignores light culling masks: any other enabled directional light in the scene (e.g. the UI
+                // customization key meant for the preview layer) would light the whole map. Only the moon/sun and this
+                // binding's own sky fill and character lights may light a map.
+                foreach (var light in FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+                    if (light.type == LightType.Directional && light != sun && light.enabled) Suppress(light);
                 sun.type = LightType.Directional; sun.color = config.SunColor; sun.intensity = config.SunUnityIntensity;
                 sun.shadows = config.SunShadows; sun.cullingMask = config.CullingMask;
                 sun.transform.rotation = config.SunWorldRotation; sun.enabled = true;
@@ -297,6 +413,7 @@ namespace LetMeSleep.Presentation
                     light.type = source.Type; light.color = source.Color; light.intensity = source.UnityIntensity;
                     light.range = source.Range; light.spotAngle = source.SpotAngle; light.innerSpotAngle = source.InnerSpotAngle;
                     light.shadows = source.Shadows; light.cullingMask = config.CullingMask; light.bounceIntensity = 0;
+                    if (source.LightLayers != 0) light.GetUniversalAdditionalLightData().renderingLayers = (uint)source.LightLayers;
                     go.transform.position = source.Anchor.position + root.rotation * source.LocalOffset;
                     light.enabled = true;
                     go.SetActive(true);
@@ -304,20 +421,55 @@ namespace LetMeSleep.Presentation
                         go.AddComponent<HiggsfieldLightFlicker>().Configure(source.Flicker, StableSeed(source.Anchor.name));
                     if (source.HaloSize > 0)
                         visuals.Add(HiggsfieldAtmosphereVisuals.CreateHalo(source.Anchor, root.rotation * source.HaloOffset, source.HaloSize,
-                            source.HaloColor, source.HaloIntensity, config.Kit.HaloMaterial));
+                            source.HaloColor, source.HaloIntensity, config.Kit.HaloMaterial, source.HaloDepthTolerance));
+                    if (source.BeamLength > 0)
+                        visuals.Add(HiggsfieldAtmosphereVisuals.CreateBeam(source.Anchor, root.rotation * source.BeamOffset, source.BeamLength,
+                            source.BeamRadius, source.BeamCount, source.BeamTilt, source.BeamSpeed, source.BeamColor, config.Kit.BeamMaterial,
+                            StableSeed(source.Anchor.name)));
+                    if (source.PoolRadius > 0)
+                    {
+                        Vector3 from = source.Anchor.position + root.rotation * source.LocalOffset + Vector3.down * 0.6f;
+                        if (Physics.Raycast(from, Vector3.down, out RaycastHit ground, 8f, ~0, QueryTriggerInteraction.Ignore))
+                            visuals.Add(HiggsfieldAtmosphereVisuals.CreatePool(source.Anchor, ground.point, source.PoolRadius,
+                                source.PoolColor, config.Kit.PoolMaterial));
+                    }
+                    if (source.ReflectionLength > 0)
+                    {
+                        Vector3 anchorLocal = root.InverseTransformPoint(source.Anchor.position + root.rotation * source.LocalOffset);
+                        Vector3 surface = root.TransformPoint(new Vector3(anchorLocal.x, source.ReflectionWaterY, anchorLocal.z));
+                        visuals.Add(HiggsfieldAtmosphereVisuals.CreateGlint(source.Anchor, surface, source.ReflectionLength,
+                            source.ReflectionWidth, source.ReflectionColor, config.Kit.GlintMaterial, StableSeed(source.Anchor.name)));
+                    }
                     if (source.FlameHeight > 0)
                         visuals.Add(HiggsfieldAtmosphereVisuals.CreateFlame(source.Anchor, root.rotation * source.FlameOffset, source.FlameHeight,
                             config.Kit, StableSeed(source.Anchor.name)));
                 }
                 ApplyRendererAtmosphere(root, config, sun);
-                if (config.CharacterRimIntensity > 0)
+                if (config.SkyFillIntensity > 0)
+                {
+                    var fillObject = new GameObject("Higgsfield_SkyFill");
+                    fillObject.transform.SetParent(transform, false);
+                    fillObject.transform.rotation = config.SkyFillRotation;
+                    skyFill = fillObject.AddComponent<Light>();
+                    skyFill.type = LightType.Directional;
+                    skyFill.color = config.SkyFillColor;
+                    skyFill.intensity = config.SkyFillIntensity;
+                    skyFill.shadows = LightShadows.None;
+                    skyFill.bounceIntensity = 0f;
+                    skyFill.cullingMask = config.CullingMask;
+                    if (config.SkyFillLightLayers != 0) skyFill.GetUniversalAdditionalLightData().renderingLayers = (uint)config.SkyFillLightLayers;
+                }
+                if (config.CharacterRimIntensity > 0 || config.CharacterFillIntensity > 0)
                 {
                     var rimObject = new GameObject("Higgsfield_CharacterRim");
                     rimObject.transform.SetParent(transform, false);
                     rimObject.AddComponent<Light>();
                     rimLight = rimObject.AddComponent<HiggsfieldRimLight>();
-                    rimLight.Configure(config.CharacterRimColor, config.CharacterRimIntensity);
+                    rimLight.Configure(config.CharacterRimColor, config.CharacterRimIntensity, config.CharacterRimSpread,
+                        config.CharacterFillColor, config.CharacterFillIntensity);
                 }
+                if (config.InteriorAmbientIntensity > 0 && config.InteriorVolumes.Length > 0) ApplyInteriorAmbient(root, config);
+                if (config.ExteriorLightsSkipInteriors && config.InteriorVolumes.Length > 0) TagExteriorRenderers(root, config);
                 DynamicGI.UpdateEnvironment();
             }
             catch { Unbind(); throw; }
@@ -365,6 +517,26 @@ namespace LetMeSleep.Presentation
                     if (!originalLayers.ContainsKey(renderer)) originalLayers.Add(renderer, renderer.renderingLayerMask);
                     renderer.renderingLayerMask = (renderer.renderingLayerMask & ~1u) | (1u << MoonOnlyRenderingLayer);
                 }
+                if (item.AddLightLayers != 0)
+                {
+                    if (!originalLayers.ContainsKey(renderer)) originalLayers.Add(renderer, renderer.renderingLayerMask);
+                    renderer.renderingLayerMask |= (uint)item.AddLightLayers;
+                }
+            }
+            // Night-window panes need their own world box (the imported meshes have no UVs) for the gradient, the
+            // curtains and the fake room behind the glass.
+            foreach (var renderer in new List<Renderer>(originalMaterials.Keys))
+            {
+                if (!renderer) continue;
+                bool pane = false;
+                foreach (var material in renderer.sharedMaterials)
+                    if (material && material.HasProperty(PaneMinId)) { pane = true; break; }
+                if (!pane) continue;
+                var block = BlockFor(renderer);
+                Bounds b = renderer.bounds;
+                block.SetVector(PaneMinId, b.min);
+                block.SetVector(PaneMaxId, b.max);
+                renderer.SetPropertyBlock(block);
             }
             if (originalLayers.Count > 0 && sun)
             {
@@ -374,6 +546,164 @@ namespace LetMeSleep.Presentation
                 sunLayersChanged = true;
             }
             SetInteriorVolumes(root, config.InteriorVolumes);
+        }
+
+        /// <summary>Current block of a renderer, remembering the original once so Unbind restores it exactly.</summary>
+        private MaterialPropertyBlock BlockFor(Renderer renderer)
+        {
+            var block = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(block);
+            if (!originalBlocks.ContainsKey(renderer))
+            {
+                var original = new MaterialPropertyBlock();
+                renderer.GetPropertyBlock(original);
+                originalBlocks.Add(renderer, original);
+            }
+            return block;
+        }
+
+        /// <summary>
+        /// Indoor bounce (v0.3.0 r3): renderers inside an interior volume get a custom ambient probe mixing the map
+        /// night ambient with a warm indoor color, so walls far from the practicals read cream/wood instead of the
+        /// blue-violet night ambient. Renderers that cross the volume boundary (exterior walls, roofs) only get the warm
+        /// part on the side facing the room: the outer face keeps the night ambient. Visual only; restored on Unbind.
+        /// </summary>
+        private void ApplyInteriorAmbient(Transform root, Configuration config)
+        {
+            var volumes = WorldVolumes(root, config);
+            const float margin = 0.35f;
+            Color warm = config.InteriorAmbientColor * config.InteriorAmbientIntensity;
+            float keep = config.InteriorAmbientKeep;
+            float ambient = config.AmbientIntensity;
+            Color Night(Vector3 d) => (d.y >= 0 ? Color.Lerp(config.AmbientEquator, config.AmbientSky, d.y)
+                : Color.Lerp(config.AmbientEquator, config.AmbientGround, -d.y)) * ambient;
+            var directions = SphereDirections;
+            // Unity's SH directional lobes integrate to ~1.88 over the Fibonacci set: normalize so a uniform radiance of
+            // 1 evaluates to 1, like RenderSettings ambient.
+            float weight = 4f / directions.Length / SphereGain;
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+            {
+                if (!(renderer is MeshRenderer) || renderer.lightProbeUsage == LightProbeUsage.Off) continue;
+                Bounds b = renderer.bounds;
+                if (Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z)) < config.InteriorAmbientMinSize) continue;
+                int hit = -1;
+                for (int i = 0; i < volumes.Length && hit < 0; i++)
+                {
+                    Bounds grown = volumes[i]; grown.Expand(2f * margin);
+                    Vector3 slack = grown.size - b.size;
+                    if (grown.Contains(b.center) && slack.x >= 0 && slack.y >= 0 && slack.z >= 0) hit = i;
+                }
+                if (hit < 0) continue;
+                Bounds v = volumes[hit];
+                // Axes where the renderer pokes out of the room: its room side points back toward the room center.
+                Vector3 inward = Vector3.zero;
+                if (b.min.x < v.min.x - 0.02f || b.max.x > v.max.x + 0.02f) inward.x = v.center.x - b.center.x;
+                if (b.min.y < v.min.y - 0.02f || b.max.y > v.max.y + 0.02f) inward.y = v.center.y - b.center.y;
+                if (b.min.z < v.min.z - 0.02f || b.max.z > v.max.z + 0.02f) inward.z = v.center.z - b.center.z;
+                bool boundary = inward.sqrMagnitude > 1e-4f;
+                if (boundary) inward.Normalize();
+                var sh = new SphericalHarmonicsL2();
+                foreach (var d in directions)
+                {
+                    // Radiance arriving from direction d: warm from the room, night ambient from outside.
+                    Color night = Night(d);
+                    Color radiance = boundary && Vector3.Dot(d, inward) <= 0 ? night : night * keep + warm;
+                    sh.AddDirectionalLight(d, radiance, weight);
+                }
+                var block = BlockFor(renderer);
+                block.CopySHCoefficientArraysFrom(new[] { sh });
+                renderer.SetPropertyBlock(block);
+                if (!originalProbeUsage.ContainsKey(renderer)) originalProbeUsage.Add(renderer, renderer.lightProbeUsage);
+                renderer.lightProbeUsage = LightProbeUsage.CustomProvided;
+            }
+        }
+
+        /// <summary>Adds ExteriorRenderingLayer to every lit renderer that is not fully inside an interior volume.</summary>
+        private void TagExteriorRenderers(Transform root, Configuration config)
+        {
+            var volumes = new List<Bounds>(WorldVolumes(root, config));
+            // Stacked floors of one building count as one shell (the slab between them is interior too).
+            int count = volumes.Count;
+            for (int i = 0; i < count; i++)
+                for (int j = i + 1; j < count; j++)
+                {
+                    Bounds a = volumes[i], c = volumes[j];
+                    bool overlapXZ = a.min.x < c.max.x && c.min.x < a.max.x && a.min.z < c.max.z && c.min.z < a.max.z;
+                    float gap = Mathf.Max(a.min.y - c.max.y, c.min.y - a.max.y);
+                    if (!overlapXZ || gap > 0.4f) continue;
+                    Bounds union = a; union.Encapsulate(c);
+                    volumes.Add(union);
+                }
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+            {
+                if ((renderer.renderingLayerMask & 1u) == 0) continue; // Moon-only renderers stay unlit by local lamps.
+                Bounds b = renderer.bounds;
+                bool inside = false, touches = false;
+                foreach (var v in volumes)
+                {
+                    Bounds grown = v; grown.Expand(0.1f);
+                    if (grown.Contains(b.min) && grown.Contains(b.max)) { inside = true; break; }
+                    // The shell itself (walls, window frames, sills, eaves within 0.7 m): big terrain and roofs stay open air.
+                    Bounds shell = v; shell.Expand(1.4f);
+                    if (shell.Contains(b.min) && shell.Contains(b.max)) touches = true;
+                }
+                if (inside) continue;
+                if (!originalLayers.ContainsKey(renderer)) originalLayers.Add(renderer, renderer.renderingLayerMask);
+                renderer.renderingLayerMask |= 1u << ExteriorRenderingLayer;
+                if (!touches) renderer.renderingLayerMask |= 1u << OpenAirRenderingLayer;
+            }
+        }
+
+        private static Bounds[] WorldVolumes(Transform root, Configuration config)
+        {
+            var volumes = new Bounds[Mathf.Min(config.InteriorVolumes.Length, MaximumInteriorVolumes)];
+            for (int i = 0; i < volumes.Length; i++)
+            {
+                Bounds local = config.InteriorVolumes[i];
+                var box = new Bounds(root.TransformPoint(local.center), Vector3.zero);
+                foreach (var corner in Corners(local)) box.Encapsulate(root.TransformPoint(corner));
+                volumes[i] = box;
+            }
+            return volumes;
+        }
+
+        private static float sphereGain;
+        private static float SphereGain
+        {
+            get
+            {
+                if (sphereGain > 0f) return sphereGain;
+                var uniform = new SphericalHarmonicsL2();
+                foreach (var d in SphereDirections) uniform.AddDirectionalLight(d, Color.white, 4f / SphereDirections.Length);
+                var result = new Color[1];
+                uniform.Evaluate(new[] { Vector3.up }, result);
+                return sphereGain = Mathf.Max(0.1f, result[0].r);
+            }
+        }
+
+        private static Vector3[] sphereDirections;
+        private static Vector3[] SphereDirections
+        {
+            get
+            {
+                if (sphereDirections != null) return sphereDirections;
+                const int count = 96; // Fibonacci sphere: even coverage, deterministic.
+                var result = new Vector3[count];
+                float golden = Mathf.PI * (3f - Mathf.Sqrt(5f));
+                for (int i = 0; i < count; i++)
+                {
+                    float y = 1f - (i + 0.5f) * 2f / count;
+                    float r = Mathf.Sqrt(1f - y * y);
+                    result[i] = new Vector3(Mathf.Cos(golden * i) * r, y, Mathf.Sin(golden * i) * r);
+                }
+                return sphereDirections = result;
+            }
+        }
+
+        private static IEnumerable<Vector3> Corners(Bounds b)
+        {
+            for (int i = 0; i < 8; i++)
+                yield return new Vector3((i & 1) == 0 ? b.min.x : b.max.x, (i & 2) == 0 ? b.min.y : b.max.y, (i & 4) == 0 ? b.min.z : b.max.z);
         }
 
         /// <summary>Publishes map interiors (world AABBs) for LetMeSleep/Higgsfield/NightWindow; empty clears them.</summary>
@@ -423,6 +753,10 @@ namespace LetMeSleep.Presentation
             originalShadows.Clear();
             foreach (var item in originalLayers) if (item.Key) item.Key.renderingLayerMask = item.Value;
             originalLayers.Clear();
+            foreach (var item in originalBlocks) if (item.Key) item.Key.SetPropertyBlock(item.Value.isEmpty ? null : item.Value);
+            originalBlocks.Clear();
+            foreach (var item in originalProbeUsage) if (item.Key) item.Key.lightProbeUsage = item.Value;
+            originalProbeUsage.Clear();
             if (sunLayersChanged && primary) primary.GetUniversalAdditionalLightData().renderingLayers = oldSunLayers;
             sunLayersChanged = false;
             SetInteriorVolumes(null, null);
@@ -432,6 +766,12 @@ namespace LetMeSleep.Presentation
                 if (Application.isPlaying) Destroy(rimLight.gameObject); else DestroyImmediate(rimLight.gameObject);
             }
             rimLight = null;
+            if (skyFill)
+            {
+                skyFill.gameObject.SetActive(false);
+                if (Application.isPlaying) Destroy(skyFill.gameObject); else DestroyImmediate(skyFill.gameObject);
+            }
+            skyFill = null;
             foreach (var item in waterFog)
             {
                 if (!item.Key || !item.Key.IsBound) continue;

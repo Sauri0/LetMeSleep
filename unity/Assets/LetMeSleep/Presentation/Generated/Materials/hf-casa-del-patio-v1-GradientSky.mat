@@ -25,26 +25,32 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _CloudBaseMax: 16
+    - _CloudBaseMin: 5
     - _CloudCoverage: 0
     - _CloudOpacity: 0.95
     - _CloudScale: 0.6
     - _CloudSpeed: 0.01
+    - _CloudStyle: 0
+    - _CloudWidth: 18
     - _DiscSize: 1.6
     - _GlowTightness: 90
     - _GroundBlend: 0.5
     - _HaloRadius: 3
     - _HorizonExponent: 0.7
     - _MoonPhase: 0.5
+    - _RidgeHeight: 3
     - _StarDensity: 0.28
     m_Colors:
     - _CelestialDirection: {r: -0.3478328, g: 0.496904, b: 0.7950464, a: 1}
     - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
     - _CloudShade: {r: 0.78, g: 0.85, b: 0.95, a: 1}
-    - _DiscColor: {r: 1.25, g: 1.19, b: 1.03, a: 1}
+    - _DiscColor: {r: 1.88, g: 1.52, b: 0.93, a: 1}
     - _GlowColor: {r: 0, g: 0, b: 0, a: 1}
     - _GroundColor: {r: 0.07, g: 0.09, b: 0.16, a: 1}
     - _HaloColor: {r: 0.62, g: 0.7, b: 0.95, a: 0.22}
     - _HorizonColor: {r: 0.13, g: 0.19, b: 0.38, a: 1}
+    - _RidgeColor: {r: 0.5, g: 0.6, b: 0.7, a: 0}
     - _StarColor: {r: 1.2, g: 1.2, b: 1.3, a: 1}
     - _ZenithColor: {r: 0.055, g: 0.09, b: 0.24, a: 1}
   m_BuildTextureStacks: []
