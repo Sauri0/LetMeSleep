@@ -19,9 +19,11 @@ namespace LetMeSleep.Tests.PlayMode
 {
     public sealed class TrainingBootstrapPlayModeTests
     {
-        // The production scene (the only one in Build Settings), loaded by path so the test never depends on
-        // Build Settings order. It still offers the alfa house map exercised below.
+        // The production scene (the only one in Build Settings, see WindowsAlfaBuild.BuildScene), loaded by path so
+        // the test never depends on Build Settings order. Players train on its Higgsfield catalog maps; the scene
+        // also keeps the legacy alfa house (the default map of PrepareGame), exercised with its known pickups.
         private const string BootScene = "Assets/Scenes/LetMeSleepHiggsfield.unity";
+        private const int AlfaHousePickups = 7;
         private AlfaApplication application;
 
         [UnitySetUp]
@@ -58,28 +60,50 @@ namespace LetMeSleep.Tests.PlayMode
         [UnityTest]
         public IEnumerator HumanTrainingBuildsAndCleansACompleteRuntime()
         {
-            return ExerciseTraining(AlfaRole.Human, PlayerRole.Human);
+            return ExerciseTraining(AlfaRole.Human, PlayerRole.Human, RoomRules.AlfaMap, AlfaHousePickups);
         }
 
         [UnityTest]
         public IEnumerator MosquitoTrainingBuildsAndCleansACompleteRuntime()
         {
-            return ExerciseTraining(AlfaRole.Mosquito, PlayerRole.Mosquito);
+            return ExerciseTraining(AlfaRole.Mosquito, PlayerRole.Mosquito, RoomRules.AlfaMap, AlfaHousePickups);
         }
 
-        private IEnumerator ExerciseTraining(AlfaRole selectedRole, PlayerRole expectedLocalRole)
+        [UnityTest]
+        public IEnumerator HumanTrainingOnTheFirstCatalogMapBuildsAndCleansACompleteRuntime()
         {
-            application.StartTraining(selectedRole, AlfaUiController.BloodModeId, RoomRules.AlfaMap);
+            return ExerciseTraining(AlfaRole.Human, PlayerRole.Human, FirstCatalogMap(), null);
+        }
+
+        [UnityTest]
+        public IEnumerator MosquitoTrainingOnTheFirstCatalogMapBuildsAndCleansACompleteRuntime()
+        {
+            return ExerciseTraining(AlfaRole.Mosquito, PlayerRole.Mosquito, FirstCatalogMap(), null);
+        }
+
+        // The map list the training and room screens offer to players (AlfaApplication.Start).
+        private string FirstCatalogMap()
+        {
+            Assert.That(application.HiggsfieldMaps, Is.Not.Null, "The build scene must reference the Higgsfield map catalog.");
+            Assert.That(application.HiggsfieldMaps.Entries, Is.Not.Empty);
+            string mapId = application.HiggsfieldMaps.Entries[0].MapId;
+            Assert.That(mapId, Is.Not.EqualTo(RoomRules.AlfaMap));
+            return mapId;
+        }
+
+        private IEnumerator ExerciseTraining(AlfaRole selectedRole, PlayerRole expectedLocalRole, string mapId, int? expectedPickups)
+        {
+            application.StartTraining(selectedRole, GameModes.Blood, mapId);
             yield return null;
             yield return null;
 
             GameplayRuntime runtime = Object.FindFirstObjectByType<GameplayRuntime>();
-            AssertTrainingRuntime(runtime, expectedLocalRole);
+            AssertTrainingRuntime(runtime, expectedLocalRole, mapId, expectedPickups);
 
             for (int frame = 0; frame < 5; frame++)
                 yield return null;
 
-            AssertTrainingRuntime(runtime, expectedLocalRole);
+            AssertTrainingRuntime(runtime, expectedLocalRole, mapId, expectedPickups);
 
             application.CancelTraining();
             yield return null;
@@ -90,13 +114,13 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(Object.FindObjectsByType<GameplayActorProxy>(FindObjectsInactive.Exclude, FindObjectsSortMode.None), Is.Empty,
                 "CancelTraining must remove every active gameplay actor.");
             Assert.That(Object.FindObjectsByType<GameplayToolPickup>(FindObjectsInactive.Exclude, FindObjectsSortMode.None), Is.Empty,
-                "CancelTraining must remove the house pickup geometry.");
+                "CancelTraining must remove the map pickup geometry.");
             Assert.That(application.MenuCamera.enabled, Is.True,
                 "CancelTraining must restore the menu camera.");
             AssertSingleEnabledCamera(application.MenuCamera, "after leaving training");
         }
 
-        private void AssertTrainingRuntime(GameplayRuntime runtime, PlayerRole expectedLocalRole)
+        private void AssertTrainingRuntime(GameplayRuntime runtime, PlayerRole expectedLocalRole, string mapId, int? expectedPickups)
         {
             Assert.That(runtime, Is.Not.Null, "StartTraining must create GameplayRuntime.");
             Assert.That(runtime.gameObject.activeInHierarchy, Is.True);
@@ -107,7 +131,8 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(runtime.World.MapRoot.gameObject.activeInHierarchy, Is.True);
             Assert.That(runtime.LatestSnapshot, Is.Not.Null, "Training must begin a round immediately.");
             Assert.That(runtime.LatestSnapshot.SimulationPhase, Is.EqualTo(SimulationPhase.Running));
-            Assert.That(runtime.LatestSnapshot.MapId, Is.EqualTo(RoomRules.AlfaMap));
+            Assert.That(runtime.LatestSnapshot.MapId, Is.EqualTo(mapId));
+            Assert.That(runtime.LatestSnapshot.ModeId, Is.EqualTo(GameModes.Blood));
 
             GameplayActorProxy[] actors = runtime.World.Actors.Values.OrderBy(actor => actor.ActorId).ToArray();
             Assert.That(actors, Has.Length.EqualTo(3), "Training must create one local actor and two bots.");
@@ -127,9 +152,11 @@ namespace LetMeSleep.Tests.PlayMode
 
             GameplayToolPickup[] pickups = Object.FindObjectsByType<GameplayToolPickup>(
                 FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            Assert.That(pickups, Has.Length.EqualTo(7), "The alfa house must expose seven physical flyswatter pickups.");
-            Assert.That(runtime.World.GetToolDefinitions().Count, Is.EqualTo(7));
-            Assert.That(runtime.LatestSnapshot.ToolPickups.Count, Is.EqualTo(7));
+            int toolCount = runtime.World.GetToolDefinitions().Count;
+            if (expectedPickups.HasValue)
+                Assert.That(toolCount, Is.EqualTo(expectedPickups.Value), $"{mapId} must expose its known physical pickups.");
+            Assert.That(pickups, Has.Length.EqualTo(toolCount), "Every tool definition must have one physical pickup.");
+            Assert.That(runtime.LatestSnapshot.ToolPickups.Count, Is.EqualTo(toolCount));
             CollectionAssert.AreEquivalent(
                 pickups.Select(pickup => pickup.PickupId),
                 runtime.LatestSnapshot.ToolPickups.Select(pickup => pickup.PickupId));
