@@ -37,7 +37,7 @@ namespace LetMeSleep.Online
             }
 
             int predictor = pcm[0];
-            int index = ChooseInitialIndex(pcm);
+            int index = BestInitialIndex(pcm);
             var output = new byte[VoiceProtocol.MaximumCodecBytes];
             output[0] = Version;
             output[1] = (byte)VoiceProtocol.FrameSamples;
@@ -78,6 +78,30 @@ namespace LetMeSleep.Online
                 samples[sample] = predictor / 32768f;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Encoder-only improvement (the decoder reads the index from the header, so the wire format is unchanged):
+        /// try the step indices around the heuristic and keep the one with the lowest reconstruction error.
+        /// </summary>
+        private static int BestInitialIndex(short[] pcm)
+        {
+            int guess = ChooseInitialIndex(pcm);
+            int best = guess;
+            long bestError = long.MaxValue;
+            for (int candidate = Math.Max(0, guess - 8); candidate <= Math.Min(88, guess + 8); candidate++)
+            {
+                int predictor = pcm[0], index = candidate;
+                long error = 0;
+                for (int sample = 1; sample < pcm.Length && error < bestError; sample++)
+                {
+                    EncodeNibble(pcm[sample], ref predictor, ref index);
+                    long difference = pcm[sample] - predictor;
+                    error += difference * difference;
+                }
+                if (error < bestError) { bestError = error; best = candidate; }
+            }
+            return best;
         }
 
         private static int ChooseInitialIndex(short[] pcm)

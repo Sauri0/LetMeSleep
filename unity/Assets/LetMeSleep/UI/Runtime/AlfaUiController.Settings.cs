@@ -121,7 +121,7 @@ namespace LetMeSleep.UI
             SliderRow(audio, "Volumen efectos", "EffectsVolumeSlider", draft => draft.EffectsVolume, (draft, value) => draft.EffectsVolume = value);
             SliderRow(audio, "Volumen del chat de voz", "VoiceVolumeSlider", draft => draft.VoiceVolume, (draft, value) => draft.VoiceVolume = value);
             var micRow = SettingsRow(audio, "Micrófono", "VoiceDeviceRow");
-            voiceDeviceDropdown = factory.Dropdown(micRow, "VoiceDeviceDropdown", new[] { "ELEGÍ UN MICRÓFONO" }, index =>
+            voiceDeviceDropdown = factory.Dropdown(micRow, "VoiceDeviceDropdown", new[] { "PREDETERMINADO DEL SISTEMA" }, index =>
             {
                 string device = index > 0 && settingsState != null && index - 1 < settingsState.VoiceDevices.Count ? settingsState.VoiceDevices[index - 1] : string.Empty;
                 ChangeSetting(draft => draft.VoiceDevice = device);
@@ -442,7 +442,7 @@ namespace LetMeSleep.UI
             {
                 voiceDeviceOptionsKey = devicesKey;
                 voiceDeviceDropdown.ClearOptions();
-                voiceDeviceDropdown.AddOptions(new[] { "ELEGÍ UN MICRÓFONO" }.Concat(state.VoiceDevices).ToList());
+                voiceDeviceDropdown.AddOptions(new[] { "PREDETERMINADO DEL SISTEMA" }.Concat(state.VoiceDevices).ToList());
             }
             if (!pttRebinding) settingsStatus.text = state.IsApplying ? "Aplicando ajustes…" : state.Message;
             RefreshSettingsControls();

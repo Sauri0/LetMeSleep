@@ -2,7 +2,11 @@
   "name": "LetMeSleep.Tests.VoicePlayMode",
   "rootNamespace": "LetMeSleep.Tests.VoicePlayMode",
   "references": [
-    "LetMeSleep.Audio"
+    "LetMeSleep.Audio",
+    "LetMeSleep.Online",
+    "LetMeSleep.Core",
+    "LetMeSleep.Gameplay",
+    "LetMeSleep.Bootstrap"
   ],
   "includePlatforms": [],
   "autoReferenced": false,

@@ -37,6 +37,8 @@ namespace LetMeSleep.Online
         private readonly Dictionary<uint, float> actorVolumes = new Dictionary<uint, float>();
 
         public event Action<VoiceDecodedFrame> FrameDecoded;
+        /// <summary>A peer's current stream finished (End consumed after its last frame): the playout drains and fades.</summary>
+        public event Action<uint> StreamClosed;
         public event Action LocalTransmissionStopped;
         public bool IsTransmitting => transmitting;
         public bool LocalMuted => localMuted;
@@ -106,16 +108,18 @@ namespace LetMeSleep.Online
             foreach (Receiver receiver in receiversByMember.Values)
             {
                 if (mutedMembers.Contains(receiver.Route.MemberId)) { receiver.Jitter.ClearTemporary(); continue; }
+                bool wasActive = receiver.Jitter.IsActive;
                 for (int emitted = 0; emitted < 3 && receiver.Jitter.TryDequeue(now, out byte[] payload, out bool concealed); emitted++)
                 {
                     if (!codec.TryDecode(new ArraySegment<byte>(payload), out float[] samples)) { receiver.Jitter.ClearTemporary(); break; }
+                    // Concealed frames keep the level: the playout synthesizes and fades them itself.
                     float volume = masterVolume * (actorVolumes.TryGetValue(receiver.Route.ActorId, out float actorVolume) ? actorVolume : 1f);
-                    if (concealed) volume *= 0.85f;
                     float square = 0;
                     for (int i = 0; i < samples.Length; i++) square += samples[i] * samples[i];
                     float level = (float)Math.Sqrt(square / samples.Length) * volume;
                     FrameDecoded?.Invoke(new VoiceDecodedFrame(receiver.Route.ActorId, receiver.Route.IsMosquito, samples, volume, level, concealed));
                 }
+                if (wasActive && !receiver.Jitter.IsActive) StreamClosed?.Invoke(receiver.Route.ActorId);
             }
         }
 
@@ -237,7 +241,7 @@ namespace LetMeSleep.Online
         {
             if (disposed) return;
             ClearRound(); disposed = true; transport.PacketReceived -= OnPacketReceived; transport.Dispose();
-            mutedMembers.Clear(); FrameDecoded = null; LocalTransmissionStopped = null;
+            mutedMembers.Clear(); FrameDecoded = null; LocalTransmissionStopped = null; StreamClosed = null;
         }
     }
 }

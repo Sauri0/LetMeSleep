@@ -16,6 +16,8 @@ namespace LetMeSleep.Tests.VoiceEditMode
             var frames = new List<float[]>();
             var framer = new VoiceSampleFramer(sourceRate); framer.FrameReady += frames.Add;
             framer.Push(input, 0, input.Length);
+            // The anti-alias filter holds its half width; the release tail (silence) pushes it out.
+            framer.Push(new float[framer.LatencyInputSamples + 8], 0, framer.LatencyInputSamples + 8);
             Assert.That(frames.Count, Is.EqualTo(5));
             Assert.That(frames.TrueForAll(frame => frame.Length == 240), Is.True);
             Assert.That(frames.Count * 240.0 / VoiceSampleFramer.TargetRate, Is.EqualTo(0.10).Within(0.000001));

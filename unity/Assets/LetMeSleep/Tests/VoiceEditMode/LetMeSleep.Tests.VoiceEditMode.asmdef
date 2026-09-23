@@ -3,7 +3,9 @@
   "rootNamespace": "LetMeSleep.Tests.VoiceEditMode",
   "references": [
     "LetMeSleep.Audio",
-    "LetMeSleep.Online"
+    "LetMeSleep.Online",
+    "LetMeSleep.Core",
+    "LetMeSleep.Gameplay"
   ],
   "includePlatforms": [
     "Editor"
