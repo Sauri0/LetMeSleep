@@ -11,7 +11,7 @@ namespace LetMeSleep.UI
         public static string Instructions(string modeId, bool mosquito)
         {
             if (modeId == GameModes.Survival) return mosquito ? "Una vida. Evitá los golpes y sobreviví hasta que termine el tiempo." : "Eliminá a todos los mosquitos antes de que termine el tiempo.";
-            if (modeId == GameModes.Tasks) return mosquito ? "Tenés tres vidas. Interrumpí a los humanos; mantené R cerca de un aliado caído para ayudarlo." : "Cumplí tus tareas privadas. Mantené R junto al objeto; el equipo gana si alcanza la meta al terminar el tiempo.";
+            if (modeId == GameModes.Tasks) return mosquito ? "Tenés tres vidas. Interrumpí a los humanos; mantené R cerca de un aliado caído para ayudarlo." : "Cumplí tus tareas privadas. Mantené E junto al objeto; el equipo gana si alcanza la meta al terminar el tiempo.";
             return mosquito ? "Picá por contacto y reuní la sangre compartida antes del tiempo." : "Defendé tu descanso hasta que termine el tiempo. Mirá al mosquito y golpeá con clic.";
         }
         public static string Score(string modeId, float blood, float bloodGoal, int completed, int goal, int alive)

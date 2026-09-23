@@ -655,5 +655,25 @@ namespace LetMeSleep.UI
             var normalized = Normalize(value);
             return normalized.Length <= 5 ? normalized : normalized.Substring(0, 5) + "-" + normalized.Substring(5);
         }
+
+        /// <summary>
+        /// Formats a code that is being edited and maps the caret to the same logical place: after the same
+        /// number of code characters, past the separator once the first group is complete. Typing or pasting
+        /// "ABCDE-FGHIJ" one character at a time therefore yields "ABCDE-FGHIJ", never "ABCDE-GHIJF".
+        /// </summary>
+        public static string FormatForEditing(string raw, int caret, out int formattedCaret)
+        {
+            raw = raw ?? string.Empty;
+            caret = Math.Max(0, Math.Min(caret, raw.Length));
+            var codeCharactersBeforeCaret = 0;
+            for (var i = 0; i < caret; i++)
+                if (IsCodeCharacter(raw[i])) codeCharactersBeforeCaret++;
+            var formatted = FormatForDisplay(raw);
+            formattedCaret = codeCharactersBeforeCaret + (codeCharactersBeforeCaret > 5 ? 1 : 0);
+            formattedCaret = Math.Min(formattedCaret, formatted.Length);
+            return formatted;
+        }
+
+        private static bool IsCodeCharacter(char c) => c != '-' && !char.IsWhiteSpace(c);
     }
 }
