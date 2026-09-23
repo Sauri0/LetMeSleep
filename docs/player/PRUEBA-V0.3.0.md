@@ -108,9 +108,9 @@ para confirmarlo.
 - No hay launcher ni actualización automática: se instala desde el ZIP.
 - El ejecutable no está firmado (de ahí el aviso de SmartScreen).
 - No se garantizan 60 FPS en todas las PCs.
-- Los personajes nuevos usan las mismas animaciones que en la 0.2.0, y los
-  mapas conservan sus objetos de decoración de antes: lo nuevo es la
-  ambientación.
+- Todavía hay parpadeos de texturas y algunos objetos mal ubicados en ciertos
+  mapas, y los efectos de sonido y la música no tienen su pulido final: eso
+  llega en la 0.3.1.
 - Es una versión de prueba: puede haber detalles de arte, colisiones o cámara
   sin terminar.
 

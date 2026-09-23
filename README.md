@@ -46,18 +46,37 @@ solo está **ENTRENAMIENTO**, con bots, en los cinco mapas y los tres modos
 
 ## Estado
 
-La 0.3.0 acerca el juego a los bocetos de arte: interfaz nueva, personajes
-rediseñados, personalización rediseñada, mapas con nueva ambientación y
-correcciones online. Las animaciones son las de la 0.2.0 sobre los personajes
-nuevos y los mapas conservan su decoración anterior. Es para Windows x64
-(Unity 6000.3.24f1); el ZIP trae `BUILD.json` con el commit de origen y el
-SHA-256 de cada archivo.
+La 0.3.0 acerca el juego a los bocetos de arte:
+
+- **Interfaz nueva** según los bocetos: menú, jugar online, sala, entrenamiento,
+  personalización, HUD de humano y mosquito, pausa, resultados, ajustes y
+  pantallas de conexión.
+- **Personajes rediseñados**: humano en pijama con gorro de dormir rojo y ojos
+  enormes; mosquito rojo con ojos gigantes, alas translúcidas y patas largas.
+- **Personalización por piezas**: gorros, pelo, lentes, remera o buzo,
+  pantalón, calzado y mochila para el humano; alas, probóscide, marcas y
+  accesorios para el mosquito; colores y miniaturas.
+- **Animaciones nuevas**: salto y aterrizaje cómicos, manotazo con matamoscas,
+  brazos que se balancean, caminata agachada, aleteo según la velocidad,
+  inclinación en vuelo, expresiones, bostezo y celebración.
+- **Mapas y escenas**: nueva ambientación de día y de noche, decoración, menú en
+  el dormitorio con el humano dormido y sala de espera cálida.
+- **Chat de voz de proximidad**: se escucha según la distancia y la dirección,
+  se amortigua detrás de paredes y suena con eco en interiores.
+- **Online**: se corrigió que la conexión entre jugadores no se iniciaba, el fin
+  de ronda cuando se va un equipo y la sala que quedaba trabada.
+
+Es para Windows x64 (Unity 6000.3.24f1); el ZIP trae `BUILD.json` con el commit
+de origen y el SHA-256 de cada archivo.
 
 Lo que todavía **no** está verificado, y por eso es una versión de prueba:
 
-- el online entre redes distintas con dos personas reales;
-- la voz con varias personas reales;
+- el online y la voz entre redes distintas con personas reales;
 - 60 FPS en todas las PCs.
+
+Pendiente para la 0.3.1: pulido de efectos de sonido, ambientes y música con
+audio espacial completo; corrección de parpadeos de texturas y objetos mal
+ubicados en los mapas; vegetación con viento y vida ambiental.
 
 ## Enlaces
 
