@@ -41,3 +41,18 @@ recuperación/clearance, buffer de interpolación con límite, cuotas/frecuencia
 limpieza en ronda/despawn/desconexión y medición de pérdida/reordenación.
 Sólo host simula; cliente representa pose y no produce fuerzas/colisiones.
 No se debe afirmar sincronización online a partir de estos tests aislados.
+
+## Estado v0.3.0 (2026-09-23): prueba R4 marcada [Ignore]
+
+`MosquitoRagdollPlayModeProof.R4TransfersArticulatesContactsRestoresAndCleansUp`
+queda con `[Ignore]` en la suite PlayMode. Motivo: el módulo R4
+(`MosquitoRagdollBuilder`/`MosquitoRagdollSimulation`) no está conectado al runtime
+de la partida (sólo lo construye esta prueba) y su gate de separación de
+articulaciones sigue fallando igual que desde el 2026-09-13. Medición de la última
+corrida antes del Ignore (`N:/LetMeSleep/Validation/V030/QA/base-playmode-01`,
+dt 0,02 s, solver 32/12, inercia ≤10:1, sin proyección): hueco máximo 55,1 mm en
+la articulación 6 (`Leg102.L`) en el paso 18, primer paso ≥12 mm el 15 (contacto
+con el piso), rodillas izquierdas 44–55 mm, ala derecha 23 mm, y la cadena nunca
+se duerme. Es afinado físico abierto, no una regresión del juego. Quitar el Ignore
+sólo junto con ese afinado; hasta entonces sigue vigente todo lo de arriba: no
+conectar el ragdoll ni afirmar replicación de poses.

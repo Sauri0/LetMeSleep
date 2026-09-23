@@ -147,7 +147,7 @@ namespace LetMeSleep.Online
                 { Current = view; Error = ""; RoomChanged?.Invoke(view); }
                 return;
             }
-            if (kind == Rejected && peer == lobby.OwnerId && payload.Length == 1 && payload[0] <= (byte)RoomError.NotReady) { Error = ((RoomError)payload[0]).ToString(); return; }
+            if (kind == Rejected && peer == lobby.OwnerId && payload.Length == 1 && payload[0] <= (byte)RoomError.NotReady) { Reject((RoomError)payload[0]); return; }
             if (hostRoom == null || (kind != Hello && kind != Ready)) return;
             // Bounded per member: each accepted message may cost a reliable view to every member.
             if (!limits.TryAccept(peer, clock)) return;
@@ -185,6 +185,19 @@ namespace LetMeSleep.Online
             catch (IOException) { }
             catch (InvalidDataException) { }
             catch (DecoderFallbackException) { }
+        }
+        // A joined guest the host no longer knows (its reconnect reservation expired while the link was down, so a
+        // periodic Hello or a Ready raced the expiry) is not an error for the player: the next Hello joins the room
+        // again, or earns a real answer such as Full. Ask again soon instead of waiting for the slow resync, but
+        // never faster than once per second whatever the host sends.
+        private void Reject(RoomError error)
+        {
+            if (Current != null && error == RoomError.UnknownMember)
+            {
+                lastHello = Math.Min(lastHello, clock - ViewRefreshSeconds + 1);
+                return;
+            }
+            Error = error.ToString();
         }
         private void Publish()
         {
