@@ -98,6 +98,67 @@ def finish_shapes(c, obj):
                 shape.data[vertex.index].co=targets[key];found.add(key)
         assert len(found)==len(targets),(name,len(found),len(targets),'Eyelid target mapping changed during join')
         shape.slider_min=0;shape.slider_max=1;shape.value=0
+    mouth_shapes(obj)
+
+
+# v0.3.0 animation round 3 (expressions readable at a glance, PER-01/PER-07): three mouth morphs on the
+# existing lip slit, driven by the runtime facial writer (VisualAttentionRig) next to the Jaw bone.
+# They move only the six lip vertices and the matching front/back vertices of the dark mouth cup; the
+# base geometry, weights and every other vertex stay untouched, so they follow any face revision that
+# keeps a slit of <= ~45 mm at MOUTH_Z.
+#   Smile  - a wide open grin (84 mm): corners 22 mm out and ~11 mm up, the lower lip 11 mm down.
+#   MouthO - a round shout/yawn: corners 4 mm in and parted 11 mm, the centre parted 14 mm (the Jaw adds
+#            the drop).
+#   Frown  - an angry pinch: corners 3 mm out and ~6 mm down, the centre pressed together.
+MOUTH_SHAPES=('Smile','MouthO','Frown')
+MOUTH_SHAPE_DELTAS={
+    # (corner dx outward, corner dz upper, corner dz lower, centre dz upper, centre dz lower)
+    'Smile':(.022,.0105,.0125,.0025,-.0110),
+    'MouthO':(-.004,.0055,-.0055,.0072,-.0068),
+    'Frown':(.003,-.0065,-.0045,.0006,.0015),
+}
+
+
+def mouth_shapes(obj, mouth_z=None, half_width=.0235):
+    """Add the MOUTH_SHAPES morphs to HumanHead (after the blink samples). Lip vertices are found by
+    position: the front-most vertices within half_width of the centre line and 6 mm of the mouth line;
+    the cup's back vertices (same heights, 80% width, 20-40 mm deeper) follow their front vertex."""
+    if obj.name!='HumanHead':return None
+    if mouth_z is None:
+        from author_human_geometry import MOUTH_Z as mouth_z
+    near=[v for v in obj.data.vertices if abs(v.co.x)<=half_width and abs(v.co.z-mouth_z)<=.006 and v.co.y<-.08]
+    assert near,'No lip vertices near the mouth line'
+    front_y=min(v.co.y for v in near)
+    front=[v for v in near if v.co.y<front_y+.008]
+    back=[v for v in near if v.co.y>=front_y+.008]
+    corners=[v for v in front if abs(v.co.x)>.01]
+    centres=[v for v in front if abs(v.co.x)<=.01]
+    assert len({(round(v.co.x,4),round(v.co.z,4)) for v in corners})==4,('Mouth corners changed',len(corners))
+    assert len({(round(v.co.x,4),round(v.co.z,4)) for v in centres})==2,('Mouth centre changed',len(centres))
+    def midline(x):
+        # Half way between the upper and lower lip at this width (corner rows are lower than the centre).
+        rows=[v for v in front if abs(abs(v.co.x)-abs(x))<.002]
+        return (max(v.co.z for v in rows)+min(v.co.z for v in rows))/2
+    mid_corner=midline(max(abs(v.co.x) for v in corners));mid_centre=midline(0)
+    def delta(co,name):
+        dx,up_c,low_c,up_m,low_m=MOUTH_SHAPE_DELTAS[name]
+        corner=abs(co.x)>.01
+        upper=co.z>(mid_corner if corner else mid_centre)
+        if corner:return (dx*(1 if co.x>0 else -1),0,up_c if upper else low_c)
+        return (0,0,up_m if upper else low_m)
+    for name in MOUTH_SHAPES:
+        shape=obj.shape_key_add(name=name,from_mix=False)
+        moved=0
+        for v in front:
+            d=delta(v.co,name)
+            shape.data[v.index].co=(v.co.x+d[0],v.co.y+d[1],v.co.z+d[2]);moved+=1
+        for v in back:
+            # The cup's back ring is the front outline at 80% width: move with its front vertex.
+            source=min(front,key=lambda f:(f.co.x*.8-v.co.x)**2+(f.co.z-v.co.z)**2)
+            d=delta(source.co,name)
+            shape.data[v.index].co=(v.co.x+.8*d[0],v.co.y,v.co.z+d[2]);moved+=1
+        shape.slider_min=0;shape.slider_max=1;shape.value=0
+    return {'front':len(front),'back':len(back)}
 
 
 def _outward_measure(points, center):

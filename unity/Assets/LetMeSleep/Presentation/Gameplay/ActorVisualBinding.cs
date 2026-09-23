@@ -4,6 +4,7 @@ using LetMeSleep.Core;
 using LetMeSleep.Gameplay.Unity;
 using UnityEngine;
 using GameplayModel = LetMeSleep.Gameplay;
+using Ids = LetMeSleep.Presentation.Gameplay.CharacterMotionIds;
 
 namespace LetMeSleep.Presentation.Gameplay
 {
@@ -40,7 +41,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public int LastBiteSampleFrame { get; private set; } = -1;
         private sealed class ArmChain
         {
-            public Transform Upper, Lower, Hand;
+            public Transform Shoulder, Upper, Lower, Hand, Palm;
             public bool IsValid => Upper && Lower && Hand && Lower.IsChildOf(Upper) && Hand.IsChildOf(Lower);
         }
         private ArmChain leftArm, rightArm;
@@ -51,6 +52,63 @@ namespace LetMeSleep.Presentation.Gameplay
         private bool usingLocomotion, locomotionDiscontinuity;
         private bool localGaitInterpolation;
         private int landedFrame = -1;
+        // v0.3.0 animation pass: presentation-only expressive layers.
+        // The whole Human_Swat clip spans this many authority strike seconds (normalized clip time t = 1.9 x
+        // authority seconds): cocked at t .23, impact at t .47 when the sweep ends at .25 s.
+        private const float SwatAuthoritySeconds = 1f / 1.9f;
+        private float StrikeClipTimeScale => HasMotion(Ids.HumanSwat) ? MotionDuration(Ids.HumanSwat) / SwatAuthoritySeconds : 1.9f;
+        private const float MosquitoTumbleSeconds = .5f;  // Mosquito_Fall's tumble (author_mosquito_motion FALL_TUMBLE_SECONDS)
+        // v0.3.0 round 3: 140 deg still read as a straight-arm push in third person; the swat keeps the elbow at
+        // or below 120 deg (constant, so the limit never pops between phases) and the clavicle, a forward lean
+        // and the torso twist make up the reach. The first-person local human (no torso help) keeps 140 deg.
+        public const float StrikeElbowInnerDegrees = 120f, LocalStrikeElbowInnerDegrees = 140f;
+        private const float MaximumTorsoAssistDegrees = 24f, MaximumSpineAssistDegrees = 14f, MaximumLeanAssistDegrees = 12f;
+        private const float OwnerCrossfadeSeconds = .18f;
+        // Entering the gait while the body already moves: the legs join the stride almost at once (no skate),
+        // the torso and arms keep the longer blend.
+        private const float MovingLegCrossfadeSeconds = .05f;
+        private CharacterSecondaryMotion secondary;
+        private PoseCrossfade crossfade;
+        private readonly GameplayMoodPolicy mood = new GameplayMoodPolicy();
+        private VisualAttentionRig moodRig;
+        private bool lastOwnerLocomotion, pendingCrossfade;
+        private float flightPitch, flightRoll, lastFlightYaw;
+        private bool hasFlightYaw;
+        private float recoverPlayback = 1f;
+        private float bitingSince = -1f;
+        private double yawnRequestedUntil = double.MinValue;
+        private Transform chestBone, spineBone;
+        private bool opponentNear;
+        private float nextOpponentCheck;
+        // v0.3.0 round 4 (director 1): Human_Crouch is a crouch-amount axis (normalized time = crouch 0..1,
+        // author_motion crouch()), scrubbed from the authoritative CrouchFraction instead of being replayed
+        // from standing each time the static crouch is (re)entered.
+        private const float VisualCrouchRate = 6f;
+        private float visualCrouch = -1f;
+        /// <summary>Crouch amount the static crouch pose shows (the authoritative CrouchFraction, eased).</summary>
+        public float VisualCrouch => Mathf.Max(0f, visualCrouch);
+        // A held flyswatter points forward and out beside the thigh (not across the crotch) while it is not swinging.
+        private const float ToolCarryDegrees = 75f;
+        /// <summary>Degrees the idle wrist turned the held tool outward on the last frame (review).</summary>
+        public float LastToolCarryDegrees { get; private set; }
+        public float LastArmReachResidualMeters { get; private set; }
+        public float LastElbowInnerDegrees { get; private set; } = 180f;
+        /// <summary>Reach assists used by the last strike frame (clavicle, chest), for review.</summary>
+        public float LastClavicleAssistDegrees { get; private set; }
+        public float LastTorsoAssistDegrees { get; private set; }
+        public float LastLeanAssistDegrees { get; private set; }
+        /// <summary>World goal of the swat effector (palm or tool impact point) on the last solved frame.</summary>
+        public Vector3 LastStrikeGoal { get; private set; }
+        /// <summary>Distance between the effector and its goal after the last solve (reach residual included).</summary>
+        public float LastStrikeEffectorError { get; private set; }
+        /// <summary>Time.frameCount of the last frame the swat arm IK solved (diagnostics and tests).</summary>
+        public int LastStrikeSolveFrame { get; private set; } = -1;
+        public int CurrentMotion => currentMotion;
+        public int TemporaryMotion => temporaryMotion;
+        public bool UsingLocomotion => usingLocomotion;
+        public CharacterSecondaryMotion Secondary => secondary;
+        public GameplayMoodPolicy MoodPolicy => mood;
+        public Quaternion FlightTilt => Quaternion.Euler(flightPitch, 0f, flightRoll);
 
         public void BindLocomotion(HumanLocomotionPresenter value)
         {
@@ -61,11 +119,14 @@ namespace LetMeSleep.Presentation.Gameplay
         }
 
         private bool HasLocomotion => locomotion && locomotion.isActiveAndEnabled && locomotion.IsConfigured;
+        // v0.3.0: with the upper-body strike layer and the crouched gait the legs keep walking while
+        // striking or crouching; older controllers keep the previous full-body fallback.
         private bool CanUseLocomotion(GameplayModel.ActorSnapshot state) => HasLocomotion &&
             proxy.Role == PlayerRole.Human && state != null && state.Grounded &&
-            state.LifeState == GameplayModel.LifeState.Active && state.CrouchFraction <= 0.1f &&
-            state.StrikeState.Phase == GameplayModel.StrikePhase.None && temporaryMotion < 0 &&
-            PlanarSpeed(state.Velocity) > 0.1f;
+            state.LifeState == GameplayModel.LifeState.Active &&
+            (state.CrouchFraction <= 0.1f || locomotion.SupportsCrouchWalk) &&
+            (state.StrikeState.Phase == GameplayModel.StrikePhase.None || locomotion.SupportsStrikeLayer) &&
+            temporaryMotion < 0 && PlanarSpeed(state.Velocity) > 0.1f;
 
         private void ReleaseLocomotion()
         {
@@ -112,8 +173,16 @@ namespace LetMeSleep.Presentation.Gameplay
                 {
                     leftArm = FindArm("L");
                     rightArm = FindArm("R");
+                    chestBone = FindDescendant(view.transform, "Chest");
+                    spineBone = FindDescendant(view.transform, "Spine");
                 }
                 CacheMotionDurations();
+                if (view.Animator != null)
+                {
+                    secondary = new CharacterSecondaryMotion(proxy.Role, view.transform, view.Animator.transform);
+                    Transform rigRoot = FindDescendant(view.Animator.transform, "Root");
+                    crossfade = new PoseCrossfade(PoseCrossfade.CollectRig(rigRoot), PoseCrossfade.IsLegBone);
+                }
             }
         }
 
@@ -122,8 +191,10 @@ namespace LetMeSleep.Presentation.Gameplay
             if (state == null || proxy == null || state.ActorId != proxy.ActorId)
                 return;
 
+            if (visualCrouch < 0f) UpdateVisualCrouch(state.CrouchFraction); // a spawn never ramps
             bool discontinuity = current == null || ShouldCut(current, state);
             if (current != null && !current.Grounded && state.Grounded) landedFrame = Time.frameCount;
+            ObserveTransition(current, state);
             locomotionDiscontinuity |= discontinuity;
             // New human gait measures rendered displacement; smooth local visuals too, so
             // 30Hz snapshot jumps are not mistaken for 144Hz teleport-speed movement.
@@ -138,6 +209,12 @@ namespace LetMeSleep.Presentation.Gameplay
                 (state.CrouchFraction > .25f || state.LifeState != GameplayModel.LifeState.Active))
             {
                 // Crouch remains the lower-body pose; the arm solve supplies the stroke.
+                temporaryMotion = -1; temporaryUntil = 0;
+            }
+            if (proxy.Role == PlayerRole.Human && IsSoftTemporary(temporaryMotion) && InterruptsSoftTemporary(state))
+            {
+                // Land, Yawn and a standing Swat give way at once to movement: the gait (with its
+                // strike layer) takes over instead of sliding a full-body clip across the floor.
                 temporaryMotion = -1; temporaryUntil = 0;
             }
             uint tickDelta = unchecked(currentHostTick - previousHostTick);
@@ -156,16 +233,38 @@ namespace LetMeSleep.Presentation.Gameplay
 
         public void ApplyEvent(in GameplayModel.GameplayEvent item)
         {
-            if (view == null || item.SourceActorId != ActorId)
+            if (view == null || proxy == null)
                 return;
+            bool asSource = item.SourceActorId == ActorId;
+            bool asTarget = !asSource && item.TargetActorId != 0 && item.TargetActorId == ActorId;
+            if (!asSource && !asTarget)
+                return;
+            mood.Notify(item.Kind, asSource, asTarget, Time.unscaledTimeAsDouble);
+            if (asTarget)
+            {
+                if (item.Kind == GameplayModel.GameplayEventKind.BiteStarted && proxy.Role == PlayerRole.Human && !localActor)
+                    secondary?.Kick(-.06f);   // flinch when bitten
+                else if (item.Kind == GameplayModel.GameplayEventKind.StrikeImpact && proxy.Role == PlayerRole.Mosquito)
+                    secondary?.KickWobble(18f); // comic rebound of the swatted mosquito
+                return;
+            }
             int motion = -1;
+            float duration = -1f;
             switch (item.Kind)
             {
                 case GameplayModel.GameplayEventKind.StrikeStarted:
                     if (proxy.Role == PlayerRole.Human)
                     {
+                        if (!localActor) secondary?.Kick(-.045f);
+                        bool moving = current != null && PlanarSpeed(current.Velocity) > .1f;
                         if (current != null && current.CrouchFraction > .25f)
                         { temporaryMotion = -1; temporaryUntil = 0; ApplyMotion(current, false); }
+                        else if (moving && HasLocomotion && locomotion.SupportsStrikeLayer && current.Grounded &&
+                            current.LifeState == GameplayModel.LifeState.Active)
+                        {
+                            // Legs keep walking; the masked Swat layer and the arm solve carry the stroke.
+                            if (IsSoftTemporary(temporaryMotion)) { temporaryMotion = -1; temporaryUntil = 0; }
+                        }
                         else motion = 12;
                     }
                     break;
@@ -176,11 +275,59 @@ namespace LetMeSleep.Presentation.Gameplay
                     if (proxy.Role == PlayerRole.Mosquito) motion = 9;
                     break;
                 case GameplayModel.GameplayEventKind.MosquitoKnockedDown:
-                    if (proxy.Role == PlayerRole.Mosquito) motion = 10;
+                    if (proxy.Role == PlayerRole.Mosquito)
+                    {
+                        // v0.3.0 round 3: the swatted mosquito tumbles at once (Fall: 1.5 turns in 0.5 s, then belly
+                        // up) instead of a 0.25 s Hit flinch that left the fall to the last frames before touchdown;
+                        // Falling keeps playing the same clip and Stunned then crossfades into StunnedLoop.
+                        motion = HasMotion(Ids.MosquitoFall) ? Ids.MosquitoFall : Ids.MosquitoHit;
+                        duration = motion == Ids.MosquitoFall ? MosquitoTumbleSeconds : .25f;
+                        secondary?.Kick(-.28f); secondary?.KickWobble(24f);
+                    }
                     break;
             }
-            if (motion >= 0)
-                PlayTemporary(motion);
+            if (motion == Ids.HumanSwat && proxy.Role == PlayerRole.Human)
+                // The Swat clip is authored on the strike timeline scaled by StrikeClipTimeScale (see UpdateLocomotionOverlays).
+                PlayTemporary(motion, -1f, StrikeClipTimeScale);
+            else if (motion >= 0)
+                PlayTemporary(motion, duration);
+        }
+
+        private bool IsSoftTemporary(int motion) => proxy != null && proxy.Role == PlayerRole.Human &&
+            (motion == Ids.HumanLand || motion == Ids.HumanYawn || (motion == Ids.HumanSwat && HasLocomotion && locomotion.SupportsStrikeLayer));
+
+        private bool InterruptsSoftTemporary(GameplayModel.ActorSnapshot state)
+        {
+            if (state.LifeState != GameplayModel.LifeState.Active || !state.Grounded) return true;
+            if (PlanarSpeed(state.Velocity) > .1f) return true;
+            return temporaryMotion == Ids.HumanYawn &&
+                (state.CrouchFraction > .25f || state.StrikeState.Phase != GameplayModel.StrikePhase.None);
+        }
+
+        /// <summary>Discrete state changes between two authoritative snapshots (landing, take-off, perching).</summary>
+        private void ObserveTransition(GameplayModel.ActorSnapshot from, GameplayModel.ActorSnapshot to)
+        {
+            if (from == null || to == null || view == null) return;
+            if (proxy.Role == PlayerRole.Human)
+            {
+                if (!from.Grounded && to.Grounded && to.LifeState == GameplayModel.LifeState.Active)
+                {
+                    float impact = Mathf.Abs(Mathf.Min(0f, from.Velocity.Y));
+                    if (!localActor) secondary?.Kick(-.17f * Mathf.Clamp01(impact / 5f) - .03f);
+                    if (HasMotion(Ids.HumanLand) && PlanarSpeed(to.Velocity) <= .1f && to.CrouchFraction <= .25f &&
+                        to.StrikeState.Phase == GameplayModel.StrikePhase.None && temporaryMotion < 0)
+                        PlayTemporary(Ids.HumanLand, .45f);
+                }
+                else if (from.Grounded && !to.Grounded && to.Velocity.Y > .5f && !localActor)
+                    secondary?.Kick(.10f);
+                return;
+            }
+            if (from.LifeState == GameplayModel.LifeState.ApproachingSurface && to.LifeState == GameplayModel.LifeState.Surface)
+                secondary?.Kick(-.15f);
+            else if (from.LifeState == GameplayModel.LifeState.Surface && to.LifeState == GameplayModel.LifeState.Flying)
+                secondary?.Kick(.08f);
+            else if (from.LifeState == GameplayModel.LifeState.Falling && to.LifeState == GameplayModel.LifeState.Stunned)
+                secondary?.Kick(-.2f);
         }
 
         private void LateUpdate()
@@ -208,6 +355,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 locomotionDiscontinuity = true;
                 localGaitInterpolation = interpolateLocal;
             }
+            float crouchTarget = current.CrouchFraction;
             if (localActor && !interpolateLocal)
             {
                 SetWorldPose(current.Position.ToUnity(), current.BodyRotation.ToUnity());
@@ -220,6 +368,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 if (elapsed <= snapshotInterval)
                 {
                     float t = snapshotInterval <= 0f ? 1f : elapsed / snapshotInterval;
+                    if (!localActor) crouchTarget = Mathf.Lerp(previous.CrouchFraction, current.CrouchFraction, t);
                     position = Vector3.Lerp(previous.Position.ToUnity(), current.Position.ToUnity(), t);
                     rotation = Quaternion.Slerp(previous.BodyRotation.ToUnity(), current.BodyRotation.ToUnity(), t);
                 }
@@ -231,6 +380,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 }
                 SetWorldPose(position, rotation);
             }
+            UpdateVisualCrouch(crouchTarget);
 
             if (HasLocomotion)
             {
@@ -240,6 +390,7 @@ namespace LetMeSleep.Presentation.Gameplay
                     ReleaseLocomotion();
                     ApplyMotion(current, false);
                 }
+                UpdateLocomotionOverlays();
                 var owner = locomotion.EvaluateRenderedPose(transform.position, eligible, locomotionDiscontinuity,
                     Time.frameCount, Time.deltaTime);
                 if (owner == HumanLocomotionPresenter.PoseOwner.Controller)
@@ -251,10 +402,107 @@ namespace LetMeSleep.Presentation.Gameplay
                 else usingLocomotion = true;
                 locomotionDiscontinuity = false;
             }
+            // The gait graph and the controller cannot blend into each other: crossfade their switch (and any
+            // immediate Play) from the last rendered pose instead of popping.
+            if (crossfade != null)
+            {
+                if (usingLocomotion != lastOwnerLocomotion || pendingCrossfade)
+                {
+                    bool enteringStride = usingLocomotion && !lastOwnerLocomotion && PlanarSpeed(current.Velocity) > .1f;
+                    crossfade.Begin(OwnerCrossfadeSeconds, enteringStride ? MovingLegCrossfadeSeconds : OwnerCrossfadeSeconds);
+                }
+                lastOwnerLocomotion = usingLocomotion; pendingCrossfade = false;
+                crossfade.Apply(Time.deltaTime);
+            }
+            ScrubCrouchPose();
+            ApplySecondary();
+            ApplyToolCarry();
             ApplyAuthoritativeHands();
+            ApplyMood();
             view.RefreshAnchors();
             if (HasLocomotion) locomotion.PublishContacts(Time.frameCount, landedFrame == Time.frameCount);
             ApplyBiteAnchor();
+        }
+
+        private void UpdateLocomotionOverlays()
+        {
+            float crouch = Mathf.Clamp01((current.CrouchFraction - .1f) / .4f);
+            var strike = current.StrikeState;
+            float weight = 0f, seconds = 0f;
+            if (strike.Phase != GameplayModel.StrikePhase.None)
+            {
+                float elapsed = GameplayModel.StrikeVisualTrajectory.Elapsed(strike) +
+                    Mathf.Clamp(Time.unscaledTime - snapshotArrivalTime, 0f, snapshotInterval);
+                weight = 1f; seconds = elapsed * StrikeClipTimeScale;
+            }
+            locomotion.SetOverlayState(crouch, weight, seconds);
+        }
+
+        private void ApplySecondary()
+        {
+            if (secondary == null) return;
+            bool biting = proxy.Role == PlayerRole.Mosquito && current.LifeState == GameplayModel.LifeState.Biting;
+            if (biting && bitingSince < 0) bitingSince = Time.unscaledTime;
+            if (!biting) bitingSince = -1f;
+            secondary.Apply(new CharacterSecondaryMotion.Input
+            {
+                DeltaSeconds = Time.deltaTime,
+                GaitActive = usingLocomotion && HasLocomotion,
+                GaitPhase = HasLocomotion ? locomotion.Current.Phase : 0,
+                PlanarSpeed = PlanarSpeed(current.Velocity),
+                Biting = biting,
+                BitingSeconds = biting ? Time.unscaledTime - bitingSince : 0f,
+                CameraOnBody = localActor && proxy.Role == PlayerRole.Human
+            });
+        }
+
+        private void ApplyMood()
+        {
+            if (!moodRig && view) moodRig = view.GetComponent<VisualAttentionRig>();
+            double now = Time.unscaledTimeAsDouble;
+            if (proxy.Role == PlayerRole.Mosquito && Time.unscaledTime >= nextOpponentCheck)
+            {
+                nextOpponentCheck = Time.unscaledTime + .25f;
+                opponentNear = OpponentWithin(2f);
+            }
+            var result = mood.Evaluate(new GameplayMoodPolicy.Frame(proxy.Role, current.LifeState, PlanarSpeed(current.Velocity),
+                current.Grounded, current.CrouchFraction, current.StrikeState.Phase != GameplayModel.StrikePhase.None,
+                opponentNear), now);
+            if (moodRig && moodRig.IsConfigured)
+            {
+                // The first-person camera rides on the local human's head: its moods never pitch or roll it, and
+                // (round 4, measured in the maps: +2 to +8 cm of crouched eye) neither does the look-at, which only
+                // served the hidden first-person head. The eyes still track.
+                bool cameraOnHead = localActor && proxy.Role == PlayerRole.Human;
+                moodRig.MoodHeadPoseEnabled = !cameraOnHead;
+                if (cameraOnHead) moodRig.SetHeadTrackingEnabled(false);
+                moodRig.SetMood(result.Mood, result.Weight, result.Mood == FacialMood.Yawning ? .35f : .12f);
+            }
+            // The policy opens a yawn on one evaluation; the body clip keeps retrying while the face still yawns
+            // (a Land or another short temporary may hold the body for a moment).
+            if (result.StartYawn) yawnRequestedUntil = now + 2.0;
+            if (now < yawnRequestedUntil && result.Mood == FacialMood.Yawning && !localActor && proxy.Role == PlayerRole.Human &&
+                HasMotion(Ids.HumanYawn) && temporaryMotion < 0 && !usingLocomotion)
+            {
+                PlayTemporary(Ids.HumanYawn);
+                yawnRequestedUntil = double.MinValue;
+            }
+            else if (result.Mood != FacialMood.Yawning) yawnRequestedUntil = double.MinValue;
+        }
+
+        private bool OpponentWithin(float meters)
+        {
+            if (!world || world.Actors == null) return false;
+            Vector3 origin = transform.position, forward = transform.forward;
+            foreach (var pair in world.Actors)
+            {
+                var other = pair.Value;
+                if (!other || other == proxy || other.Role == proxy.Role || !other.gameObject.activeInHierarchy) continue;
+                Vector3 offset = other.transform.position + Vector3.up * .9f - origin;
+                float distance = offset.magnitude;
+                if (distance < meters && (distance < .01f || Vector3.Dot(forward, offset / distance) > .2f)) return true;
+            }
+            return false;
         }
 
         private void ApplyMotion(GameplayModel.ActorSnapshot state, bool immediate, bool allowLocomotion = true)
@@ -273,8 +521,46 @@ namespace LetMeSleep.Presentation.Gameplay
                 return;
             }
 
+            int previousMotion = currentMotion;
             currentMotion = motion;
+            if (IsRecover(motion)) PrepareRecover(state, motion);
             ApplyAnimatorSpeed(state, motion);
+            if (IsFlightLoop(motion) && view.Animator != null &&
+                TryGetMotion(motion, out CharacterView.MotionBinding flightBinding))
+            {
+                // Wingbeats keep their phase between Hover and Fly; a fresh flight starts at a per-actor phase.
+                float phase = MosquitoWingbeat.InitialPhase(ActorId);
+                if (IsFlightLoop(previousMotion))
+                    phase = Mathf.Repeat(view.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f);
+                float fade = immediate ? 0f : CrossFadeSeconds(state);
+                view.PlayMotion(motion, fade);
+                view.Animator.CrossFadeInFixedTime(flightBinding.StateName, fade, 0, phase * MotionDuration(motion));
+                if (immediate) pendingCrossfade = true;
+                return;
+            }
+            if (IsRecover(motion) && view.Animator != null && TryGetMotion(motion, out CharacterView.MotionBinding recoverBinding))
+            {
+                // The mosquito's 0.4 s Recover starts on the knocked-out belly-up pose: a short fade keeps its roll
+                // (director r4: a .14 s fade swallowed most of it and the roll read as a 2-frame snap).
+                float recoverFade = proxy.Role == PlayerRole.Mosquito ? .05f : .14f;
+                view.PlayMotion(motion, recoverFade);
+                view.Animator.CrossFadeInFixedTime(recoverBinding.StateName, recoverFade, 0, recoverStart * MotionDuration(motion));
+                return;
+            }
+            if (IsStaticCrouch(motion) && view.Animator != null && TryGetMotion(motion, out CharacterView.MotionBinding crouchBinding))
+            {
+                // Enter the crouch axis at the crouch the body already has (1 when stopping a sneak): never replay
+                // the stand-to-crouch ramp, which popped the body (and the first-person eye) upright for ~0.5 s.
+                // Coming off the gait graph the restored controller sits on its default (standing Idle) state: an
+                // Animator crossfade from there would lift the body for its duration, so the crouch is played at
+                // once and the frozen-pose crossfade blends from the last rendered (sneaking) pose instead.
+                bool atOnce = immediate || previousMotion < 0;
+                float crouchFade = atOnce ? 0f : CrossFadeSeconds(state);
+                view.PlayMotion(motion, crouchFade);
+                view.Animator.CrossFadeInFixedTime(crouchBinding.StateName, crouchFade, 0, CrouchPoseTime() * MotionDuration(motion));
+                if (atOnce) pendingCrossfade = true;
+                return;
+            }
             if (IsSurfaceWalk(motion) && view.Animator != null &&
                 TryGetMotion(motion, out CharacterView.MotionBinding surfaceBinding))
             {
@@ -292,9 +578,95 @@ namespace LetMeSleep.Presentation.Gameplay
             {
                 view.PlayMotion(motion, 0f);
                 view.Animator.Play(binding.StateName, 0, AnimationPhase(state, motion));
+                pendingCrossfade = true;
                 return;
             }
             view.PlayMotion(motion, CrossFadeSeconds(state));
+        }
+
+        private float recoverStart;
+        private bool IsRecover(int motion) => proxy != null &&
+            (proxy.Role == PlayerRole.Human ? motion == Ids.HumanRecover : motion == Ids.MosquitoRecover);
+        private bool IsFlightLoop(int motion) => proxy != null && proxy.Role == PlayerRole.Mosquito &&
+            (motion == Ids.MosquitoHover || motion == Ids.MosquitoFly);
+
+        /// <summary>
+        /// Recovering lasts ~0.4 s in the authority but the Recover clips 1.2-2.0 s: play the end of the clip,
+        /// up to 3x faster, so it finishes at RecoveryEndTick instead of being cut back to Idle mid-way.
+        /// </summary>
+        private void PrepareRecover(GameplayModel.ActorSnapshot state, int motion)
+        {
+            float length = MotionDuration(motion);
+            float remaining = state.RecoveryEndTick > currentHostTick ? (state.RecoveryEndTick - currentHostTick) / 30f : .4f;
+            remaining = Mathf.Clamp(remaining, .1f, length);
+            recoverPlayback = Mathf.Clamp(length / remaining, 1f, 3f);
+            recoverStart = Mathf.Clamp01(1f - remaining * recoverPlayback / Mathf.Max(.001f, length));
+        }
+
+        private bool IsStaticCrouch(int motion) => proxy != null && proxy.Role == PlayerRole.Human && motion == Ids.HumanCrouch;
+
+        /// <summary>Normalized time of the crouch axis clip for the crouch the body shows now.</summary>
+        private float CrouchPoseTime() => Mathf.Clamp01(VisualCrouch);
+
+        private void UpdateVisualCrouch(float target)
+        {
+            if (float.IsNaN(target) || float.IsInfinity(target)) target = 0f;
+            target = Mathf.Clamp01(target);
+            // The authority ramps crouching at 5/s in 30 Hz steps; the pose follows a little faster, smoothly.
+            visualCrouch = visualCrouch < 0f || float.IsNaN(visualCrouch) ? target
+                : Mathf.MoveTowards(visualCrouch, target, Time.deltaTime * VisualCrouchRate);
+        }
+
+        /// <summary>
+        /// Holds the static crouch on the crouch axis: the Animator plays the state at normal speed (so its
+        /// crossfades run), and whenever it is settled on it the time is set back to the crouch amount, so a
+        /// crouched body stays crouched however long it stands still and follows crouching down or up.
+        /// </summary>
+        private void ScrubCrouchPose()
+        {
+            if (!IsStaticCrouch(currentMotion) || temporaryMotion >= 0 || usingLocomotion || view.Animator == null ||
+                !view.Animator.isActiveAndEnabled || view.Animator.runtimeAnimatorController == null ||
+                view.Animator.IsInTransition(0) || !TryGetMotion(currentMotion, out CharacterView.MotionBinding binding))
+                return;
+            AnimatorStateInfo info = view.Animator.GetCurrentAnimatorStateInfo(0);
+            if (!info.IsName(binding.StateName)) return;
+            float wanted = CrouchPoseTime();
+            if (Mathf.Abs(Mathf.Min(1f, info.normalizedTime) - wanted) > .002f)
+                view.Animator.Play(binding.StateName, 0, wanted);
+        }
+
+        /// <summary>
+        /// Director r4 (6): while it is not swinging, the held flyswatter sticks out of the fist (thumb side, up and
+        /// forward) across the front of the crotch. With the arm hanging, the forearm twists (a roll about its own
+        /// axis, up to 75 deg, a natural pronation/supination range) so the handle points forward and out and the
+        /// net sits in front of and outside the thigh. The twist fades as the swat's pose weight rises (the arm
+        /// solve then owns the hand) and when a clip raises the forearm. The tool stays rigidly in the hand (it
+        /// follows the hand's grip socket).
+        /// </summary>
+        private void ApplyToolCarry()
+        {
+            LastToolCarryDegrees = 0f;
+            if (proxy.Role != PlayerRole.Human || rightArm == null || !rightArm.IsValid || !strikeTool ||
+                !strikeTool.gameObject.activeInHierarchy || !strikeTool.Grip || !strikeTool.Impact)
+                return;
+            float swing = current.StrikeState.Phase != GameplayModel.StrikePhase.None ? StrikeSwingPath.Weight(StrikeElapsed()) : 0f;
+            float weight = 1f - swing;
+            if (weight <= .001f) return;
+            Vector3 forearm = rightArm.Hand.position - rightArm.Lower.position;
+            if (!Finite(forearm) || forearm.sqrMagnitude < 1e-6f) return;
+            forearm.Normalize();
+            float hanging = Mathf.Clamp01((Vector3.Dot(forearm, -transform.up) - .55f) / .3f);
+            if (hanging <= .001f) return;
+            view.RefreshAnchors();
+            Vector3 along = strikeTool.Impact.position - strikeTool.Grip.position;
+            if (!Finite(along) || along.sqrMagnitude < 1e-6f) return;
+            Vector3 wanted = transform.forward * .55f + transform.right * .85f;
+            Vector3 from = Vector3.ProjectOnPlane(along, forearm), to = Vector3.ProjectOnPlane(wanted, forearm);
+            if (from.sqrMagnitude < 1e-6f || to.sqrMagnitude < 1e-6f) return;
+            float degrees = Mathf.Clamp(Vector3.SignedAngle(from, to, forearm), -ToolCarryDegrees, ToolCarryDegrees) * weight * hanging;
+            if (Mathf.Abs(degrees) < .01f) return;
+            rightArm.Hand.rotation = Quaternion.AngleAxis(degrees, forearm) * rightArm.Hand.rotation;
+            LastToolCarryDegrees = Mathf.Abs(degrees);
         }
 
         private void SynchronizeLoopPhase(GameplayModel.ActorSnapshot state, int motion)
@@ -314,15 +686,17 @@ namespace LetMeSleep.Presentation.Gameplay
                 view.Animator.Play(binding.StateName, 0, authoritative);
         }
 
-        private void PlayTemporary(int motion)
+        private void PlayTemporary(int motion, float durationOverride = -1f, float speed = 1f)
         {
             ReleaseLocomotion();
             temporaryMotion = motion;
-            float duration = MotionDuration(motion);
-            temporaryUntil = Time.unscaledTime + Mathf.Clamp(duration, 0.08f, 2.5f);
+            speed = Mathf.Clamp(float.IsNaN(speed) ? 1f : speed, .25f, 4f);
+            float clip = MotionDuration(motion) / speed;
+            float duration = durationOverride > 0f ? Mathf.Min(durationOverride, clip) : clip;
+            temporaryUntil = Time.unscaledTime + Mathf.Clamp(duration, 0.08f, 3.2f);
             currentMotion = motion;
             if (view.Animator != null)
-                view.Animator.speed = 1f;
+                view.Animator.speed = speed;
             view.PlayMotion(motion, 0.06f);
         }
 
@@ -358,6 +732,17 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (view.Animator == null || temporaryMotion >= 0)
                 return;
+            if (IsFlightLoop(motion))
+            {
+                // 8-12 Hz from flight speed, independent of the distance travelled (was 2.6-18.75 Hz).
+                view.Animator.speed = MosquitoWingbeat.Playback(state.Velocity.Length, MotionDuration(motion));
+                return;
+            }
+            if (IsRecover(motion))
+            {
+                view.Animator.speed = recoverPlayback;
+                return;
+            }
             if (!UsesAuthoritativeDistancePhase(motion))
             {
                 view.Animator.speed = 1f;
@@ -405,10 +790,13 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private bool UsesAuthoritativeDistancePhase(int motion)
         {
+            // Mosquito wingbeats no longer follow distance (Fly used to): only SurfaceWalk steps do.
             return proxy.Role == PlayerRole.Human
                 ? motion == 1 || motion == 2
-                : motion == 2 || motion == 6;
+                : motion == 6;
         }
+
+        private bool HasMotion(int id) => TryGetMotion(id, out _);
 
         private bool TryGetMotion(int id, out CharacterView.MotionBinding result)
         {
@@ -437,7 +825,12 @@ namespace LetMeSleep.Presentation.Gameplay
                 if (state.LifeState == GameplayModel.LifeState.Fainted) return 10;
                 if (state.LifeState == GameplayModel.LifeState.Recovering) return 11;
                 if (state.LifeState == GameplayModel.LifeState.Falling) return 9;
-                if (!state.Grounded) return state.Velocity.Y > 0.10f ? 4 : 9;
+                if (!state.Grounded)
+                {
+                    // Never the faint clip (Fall) for an ordinary jump: rising tuck, then falling flail.
+                    if (!HasMotion(Ids.HumanJumpAir)) return Ids.HumanJump;
+                    return state.Velocity.Y > 0.10f || !HasMotion(Ids.HumanFallAir) ? Ids.HumanJumpAir : Ids.HumanFallAir;
+                }
                 if (state.CrouchFraction > 0.25f) return 3;
                 float speed = PlanarSpeed(state.Velocity);
                 if (speed > 2.45f) return 2;
@@ -451,7 +844,8 @@ namespace LetMeSleep.Presentation.Gameplay
                 case GameplayModel.LifeState.PreparingBite: return 7;
                 case GameplayModel.LifeState.Biting: return 8;
                 case GameplayModel.LifeState.Falling: return 11;
-                case GameplayModel.LifeState.Stunned: return 10;
+                // Dizzy on its back; without the loop the end pose of Fall is held (never the Hit pose).
+                case GameplayModel.LifeState.Stunned: return HasMotion(Ids.MosquitoStunnedLoop) ? Ids.MosquitoStunnedLoop : Ids.MosquitoFall;
                 case GameplayModel.LifeState.Recovering: return 12;
                 case GameplayModel.LifeState.Flying: return state.Velocity.Length > 0.12f ? 2 : 1;
                 default: return 1;
@@ -540,6 +934,9 @@ namespace LetMeSleep.Presentation.Gameplay
             if (attention) attention.AfterEvaluation -= MeasureBiteResidual;
             attention = null;
             hasSurfaceHeading = false;
+            visualCrouch = -1f;
+            secondary?.Reset();
+            crossfade?.Cancel();
         }
 
         private void ApplyAuthoritativeHands()
@@ -547,90 +944,289 @@ namespace LetMeSleep.Presentation.Gameplay
             if (proxy.Role != PlayerRole.Human ||
                 current.StrikeState.Phase == GameplayModel.StrikePhase.None)
                 return;
+            float elapsed = StrikeElapsed();
             if (current.StrikeState.Hand < 0)
-                AlignArm(leftArm, 5u, -1f);
+                AlignArm(leftArm, 5u, -1f, elapsed);
             else
-                AlignArm(rightArm, 6u, 1f);
+                AlignArm(rightArm, 6u, 1f, elapsed);
         }
+
+        /// <summary>Authority strike seconds, continuous between the ~30 Hz snapshots.</summary>
+        private float StrikeElapsed() => Mathf.Min(GameplayModel.StrikeVisualTrajectory.Duration,
+            GameplayModel.StrikeVisualTrajectory.Elapsed(current.StrikeState) +
+            Mathf.Clamp(Time.unscaledTime - snapshotArrivalTime, 0f, snapshotInterval));
 
         private ArmChain FindArm(string side) => new ArmChain
         {
+            Shoulder = FindDescendant(view.transform, "Shoulder." + side),
             Upper = FindDescendant(view.transform, "UpperArm." + side),
             Lower = FindDescendant(view.transform, "LowerArm." + side),
-            Hand = FindDescendant(view.transform, "Hand." + side)
+            Hand = FindDescendant(view.transform, "Hand." + side),
+            Palm = FindDescendant(view.transform, "Socket.Grip." + side)
         };
 
-        private void AlignArm(ArmChain arm, uint localSurfaceId, float side)
+        /// <summary>Where the arm solve must put its end this frame (see StrikeSwingPath).</summary>
+        private struct SwingSolve
+        {
+            public Transform End;
+            public Vector3 EndTarget;
+            public Quaternion HandRotation;
+            public bool RotatesHand;
+            public float Reach;
+        }
+
+        /// <summary>
+        /// v0.3.0 round 3 (anim-r3): the swat follows StrikeSwingPath (cocked above the ear, a diagonal whip
+        /// into the authoritative target, follow-through across the body) instead of the authority's straight
+        /// shoulder-to-target line, with the elbow held at or below 120 deg in third person (140 deg for the
+        /// first-person local human, whose torso cannot help). The clavicle, a forward lean of the waist and
+        /// the chest/waist twist make up the rest of the reach, so the palm (bare hand) or the flyswatter's
+        /// impact point arrives on the authoritative target when the sweep ends. The held tool stays rigidly
+        /// mounted to the hand: the hand is rotated (radial alignment plus a wrist snap), never detached.
+        /// </summary>
+        private void AlignArm(ArmChain arm, uint localSurfaceId, float side, float elapsed)
         {
             if (arm == null || !arm.IsValid || !proxy.BodySurfaces.TryGetValue(
                     proxy.ActorId * 100 + localSurfaceId, out GameplayBodySurface forearm) ||
-                forearm.Collider == null)
+                !(forearm.Collider is CapsuleCollider))
                 return;
-            var capsule = forearm.Collider as CapsuleCollider;
-            if (capsule == null)
-                return;
-            Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
-            float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
-            // The collision center follows Authority's timeline. The anatomical proxy
-            // has different lengths and shoulder height; do not feed its clamped wrist
-            // back into the real rig as a second, unrelated contact trajectory.
-            var strike = current.StrikeState;
-            bool hasTool = GameplayModel.GameplayTools.IsFlyswatter(strike.ToolId) &&
-                strikeTool && strikeTool.Impact && strikeTool.Grip;
+            float weight = StrikeSwingPath.Weight(elapsed);
+            if (weight <= .001f) return;
+            bool hasTool = HoldsStrikeTool();
             view.RefreshAnchors();
-            Vector3 restContact = hasTool ? strikeTool.Impact.position : wrist;
-            Vector3 contact = GameplayModel.StrikeVisualTrajectory.Contact(strike, restContact.ToFloat()).ToUnity();
-            Quaternion handRotation = arm.Hand.rotation;
-            Vector3 target = contact;
+            Transform effector = hasTool ? strikeTool.Impact : arm.Palm ? arm.Palm : arm.Hand;
+            Vector3 shoulder = arm.Upper.position, rest = effector.position;
+            Vector3 up = transform.up, forward = transform.forward, outward = transform.right * side;
+            Vector3 target = current.StrikeState.Target.ToUnity();
+            if (!Finite(target) || !Finite(shoulder) || !Finite(rest)) return;
+            Vector3 cocked = hasTool
+                ? shoulder + up * .70f + outward * .16f - forward * .24f
+                : shoulder + up * .40f + outward * .14f - forward * .10f;
+            Vector3 follow = hasTool
+                ? shoulder - up * .50f - outward * .40f + forward * .45f
+                : shoulder - up * .55f - outward * .32f + forward * .28f;
+            // The hand cocks at crown height and the arc bulges up and well out to the striking side, so the whip
+            // comes over and around the head instead of dragging across the eyes. Director r4 (6): the flyswatter
+            // swings a little wider and its net rolls edge-on while it passes the head (StrikeSwingPath.ToolRoll).
+            Vector3 bulge = hasTool ? up * StrikeSwingPath.ToolBulgeUp + outward * StrikeSwingPath.ToolBulgeOut
+                : up * StrikeSwingPath.HandBulgeUp + outward * StrikeSwingPath.HandBulgeOut;
+            Vector3 path = StrikeSwingPath.Evaluate(elapsed, cocked, target, follow, bulge);
+            Vector3 goal = Vector3.Lerp(rest, path, weight);
+            Vector3 sweepAxis = Vector3.Cross(cocked - shoulder, target - shoulder);
+            sweepAxis = sweepAxis.sqrMagnitude > 1e-8f ? sweepAxis.normalized : outward;
+            float wrist = StrikeSwingPath.WristDegrees(elapsed) * weight;
+            float limit = localActor ? LocalStrikeElbowInnerDegrees : StrikeElbowInnerDegrees;
+            LastStrikeGoal = goal;
+            // Solve the arm, then let the clavicle and the torso close whatever the bent arm cannot reach: every
+            // assist is driven by the residual of a real solve (the palm is rigid with a flexed hand, so its reach
+            // cannot be predicted from the clip pose), and the arm is re-solved after each joint turns.
+            bool solvable = true;
+            float Residual()
+            {
+                // Two passes: the palm's offset from the wrist (and the tool's hand rotation) is re-measured once
+                // the forearm has turned.
+                for (int pass = 0; pass < 2 && solvable; pass++)
+                {
+                    SwingSolve solve = Swing(arm, goal, hasTool, weight, wrist, sweepAxis, effector, limit);
+                    if (!SolveWrist(arm, solve, outward, up)) { solvable = false; break; }
+                    if (solve.RotatesHand) arm.Hand.rotation = solve.HandRotation;
+                }
+                if (hasTool) view.RefreshAnchors();
+                return solvable ? Vector3.Distance(effector.position, goal) : 0f;
+            }
+            AssistReach(arm, weight, goal, Residual);
+            Residual();
+            if (!solvable) return;
             if (hasTool)
             {
-                // Rotate the hand and mounted grip together; never detach the tool or
-                // translate individual bones. Measure the full real Hand -> Impact
-                // offset, including the authored hand/socket offset, not only .365 m.
-                Vector3 offset = restContact - wrist;
-                Vector3 direction = GameplayModel.StrikeVisualTrajectory.ToolOffset((contact - shoulder).ToFloat(),
-                    offset.magnitude, Mathf.Abs(upperLength - lowerLength) + .0001f,
-                    (elbow - shoulder).ToFloat()).ToUnity();
-                if (offset.sqrMagnitude > .000001f && direction.sqrMagnitude > .000001f)
-                {
-                    Quaternion aligned = Quaternion.FromToRotation(offset, direction) * handRotation;
-                    Quaternion desired = Quaternion.Slerp(handRotation, aligned,
-                        GameplayModel.StrikeVisualTrajectory.PoseWeight(strike));
-                    Vector3 rotatedOffset = desired * Quaternion.Inverse(handRotation) * offset;
-                    handRotation = desired;
-                    target = contact - rotatedOffset;
-                }
+                // Forearm roll about the handle, once, after the solve: the tool keeps its direction and stays in the
+                // hand, the net turns edge-on mid-sweep (its centre leaves the arc by up to ~15 cm there; the roll is
+                // 0 at the impact, where the net is on the authoritative target).
+                float roll = StrikeSwingPath.ToolRoll(elapsed) * weight;
+                view.RefreshAnchors();
+                Vector3 handle = strikeTool.Impact.position - strikeTool.Grip.position;
+                if (Mathf.Abs(roll) > .01f && handle.sqrMagnitude > 1e-6f)
+                    arm.Hand.rotation = Quaternion.AngleAxis(roll * side, handle.normalized) * arm.Hand.rotation;
             }
-            if (!Finite(target) || !Finite(shoulder) || !Finite(elbow) || !Finite(wrist) ||
-                upperLength < .001f || lowerLength < .001f) return;
-            Vector3 delta = target - shoulder;
-            Vector3 axis = delta.sqrMagnitude > .000001f ? delta.normalized : (wrist - shoulder).normalized;
+            LastElbowInnerDegrees = TwoBoneSolver.InnerAngle(arm.Upper.position, arm.Lower.position, arm.Hand.position);
+            LastStrikeSolveFrame = Time.frameCount;
+            view.RefreshAnchors();
+            LastStrikeEffectorError = Vector3.Distance(effector.position, goal);
+        }
+
+        /// <summary>Analytic two-bone solve of the real wrist onto the solve's wrist target, the elbow inner angle
+        /// capped by the solve's reach; segments rotate about their joints and are never stretched.</summary>
+        private bool SolveWrist(ArmChain arm, SwingSolve solve, Vector3 outward, Vector3 up)
+        {
+            Vector3 root = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
+            float upperLength = Vector3.Distance(root, elbow), lowerLength = Vector3.Distance(elbow, wrist);
+            if (!Finite(solve.EndTarget) || upperLength < .001f || lowerLength < .001f) return false;
+            Vector3 delta = solve.EndTarget - root;
+            Vector3 axis = delta.sqrMagnitude > .000001f ? delta.normalized : (wrist - root).normalized;
             if (axis.sqrMagnitude < .5f) axis = transform.forward;
             float length = Mathf.Clamp(delta.magnitude, Mathf.Abs(upperLength - lowerLength) + .0001f,
-                upperLength + lowerLength - .0001f);
-            Vector3 bend = Vector3.ProjectOnPlane(elbow - shoulder, axis);
-            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.right * side - transform.forward * .3f, axis);
-            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.up, axis);
+                Mathf.Max(Mathf.Abs(upperLength - lowerLength) + .0001f, solve.Reach));
+            LastArmReachResidualMeters = Mathf.Max(0f, delta.magnitude - length);
+            Vector3 bend = Vector3.ProjectOnPlane(elbow - root, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(outward - transform.forward * .3f, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(up, axis);
             if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.forward, axis);
             float along = (upperLength * upperLength - lowerLength * lowerLength + length * length) / (2 * length);
-            Vector3 solvedElbow = shoulder + axis * along + bend.normalized *
+            Vector3 solvedElbow = root + axis * along + bend.normalized *
                 Mathf.Sqrt(Mathf.Max(0, upperLength * upperLength - along * along));
-            Vector3 reachableTarget = shoulder + axis * length;
-            // Rotate real segments around their joints. Never stretch local offsets to
-            // reach a collider target authored with different proportions.
-            arm.Upper.rotation = Quaternion.FromToRotation(elbow - shoulder, solvedElbow - shoulder) * arm.Upper.rotation;
+            Vector3 reachable = root + axis * length;
+            arm.Upper.rotation = Quaternion.FromToRotation(elbow - root, solvedElbow - root) * arm.Upper.rotation;
             arm.Lower.rotation = Quaternion.FromToRotation(arm.Hand.position - arm.Lower.position,
-                reachableTarget - arm.Lower.position) * arm.Lower.rotation;
-            // Bare-hand local finger/wrist pose remains authored. A held tool needs
-            // explicit wrist orientation as well as position to put Impact on the
-            // sweep; the socket, grip and tool remain rigidly mounted to that hand.
-            if (hasTool) arm.Hand.rotation = handRotation;
+                reachable - arm.Lower.position) * arm.Lower.rotation;
+            return true;
         }
+
+        /// <summary>
+        /// End of the arm solve for the current shoulder: the palm itself for a bare-hand slap, or the wrist
+        /// short of the goal by the held tool, whose hand rotation (radial from the shoulder, plus the wrist
+        /// snap about the sweep axis) is returned too. Reach keeps the elbow inner angle at the limit.
+        /// </summary>
+        private SwingSolve Swing(ArmChain arm, Vector3 goal, bool hasTool, float weight, float wristDegrees,
+            Vector3 sweepAxis, Transform effector, float elbowLimit)
+        {
+            // The tool hangs on a presentation anchor: refresh it after every assist moved the hand bones.
+            if (hasTool) view.RefreshAnchors();
+            Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
+            float upperLength = Vector3.Distance(shoulder, elbow), forearmLength = Vector3.Distance(elbow, wrist);
+            var result = new SwingSolve { HandRotation = arm.Hand.rotation };
+            if (hasTool)
+            {
+                Vector3 offset = effector.position - wrist;
+                Vector3 direction = GameplayModel.StrikeVisualTrajectory.ToolOffset((goal - shoulder).ToFloat(),
+                    offset.magnitude, Mathf.Abs(upperLength - forearmLength) + .0001f, (elbow - shoulder).ToFloat()).ToUnity();
+                result.End = arm.Hand;
+                result.EndTarget = goal;
+                if (offset.sqrMagnitude > .000001f && direction.sqrMagnitude > .000001f)
+                {
+                    direction = Quaternion.AngleAxis(wristDegrees, sweepAxis) * direction;
+                    Quaternion aligned = Quaternion.FromToRotation(offset, direction) * arm.Hand.rotation;
+                    Quaternion desired = Quaternion.Slerp(arm.Hand.rotation, aligned, weight);
+                    result.EndTarget = goal - desired * Quaternion.Inverse(arm.Hand.rotation) * offset;
+                    result.HandRotation = desired;
+                    result.RotatesHand = true;
+                }
+                result.Reach = Mathf.Min(upperLength + forearmLength - .0001f,
+                    TwoBoneSolver.MaximumReach(upperLength, forearmLength, elbowLimit));
+                return result;
+            }
+            // The palm is rigid with the hand (the clip's wrist is kept): aim the wrist short of the goal by the
+            // palm's current offset, so the elbow limit applies to the real shoulder-elbow-wrist angle.
+            result.End = arm.Hand;
+            result.EndTarget = goal - (effector.position - wrist);
+            result.Reach = Mathf.Min(upperLength + forearmLength - .0001f,
+                TwoBoneSolver.MaximumReach(upperLength, forearmLength, elbowLimit));
+            return result;
+        }
+
+        /// <summary>
+        /// A swat beyond the bent-elbow reach is made up first by the clavicle (up to 20 deg toward the goal),
+        /// then, in third person only, by the waist leaning forward (up to 12 deg on top of the clip's lean),
+        /// the chest twisting (up to 24 deg) and the waist twisting (up to 14 deg), all weighted like the
+        /// stroke. Each joint turns the shoulder toward the goal by the residual left after solving the arm.
+        /// The first-person eye rides on the head, so the local human only uses the clavicle.
+        /// </summary>
+        private void AssistReach(ArmChain arm, float weight, Vector3 goal, System.Func<float> residual)
+        {
+            LastClavicleAssistDegrees = LastTorsoAssistDegrees = LastLeanAssistDegrees = 0f;
+            if (weight <= .001f) return;
+            if (arm.Shoulder && arm.Upper.IsChildOf(arm.Shoulder))
+                LastClavicleAssistDegrees = TurnToward(arm.Shoulder, arm, goal, 20f * weight, residual, Vector3.zero, false);
+            if (localActor) return;
+            if (spineBone && arm.Upper.IsChildOf(spineBone))
+                LastLeanAssistDegrees = TurnToward(spineBone, arm, goal, MaximumLeanAssistDegrees * weight, residual, transform.right, true);
+            if (chestBone && arm.Upper.IsChildOf(chestBone))
+                LastTorsoAssistDegrees = TurnToward(chestBone, arm, goal, MaximumTorsoAssistDegrees * weight, residual, transform.up, false);
+            if (spineBone && chestBone && chestBone.IsChildOf(spineBone))
+                LastTorsoAssistDegrees += TurnToward(spineBone, arm, goal, MaximumSpineAssistDegrees * weight, residual, transform.up, false);
+        }
+
+        /// <summary>
+        /// Turns a joint so the shoulder swings toward the goal by the arc the solved arm is still short
+        /// (at most maximumDegrees, a few passes); with an axis the turn is about it only, and forwardOnly
+        /// (the waist lean) never pitches back.
+        /// </summary>
+        private static float TurnToward(Transform joint, ArmChain arm, Vector3 goal, float maximumDegrees,
+            System.Func<float> residual, Vector3 axis, bool forwardOnly)
+        {
+            bool aboutAxis = axis.sqrMagnitude > .5f;
+            float used = 0f;
+            for (int pass = 0; pass < 3 && used < maximumDegrees - .01f; pass++)
+            {
+                float deficit = residual();
+                Vector3 from = arm.Upper.position - joint.position, to = goal - joint.position;
+                if (aboutAxis) { from = Vector3.ProjectOnPlane(from, axis); to = Vector3.ProjectOnPlane(to, axis); }
+                if (deficit <= .002f || from.sqrMagnitude < 1e-6f || to.sqrMagnitude < 1e-6f) return used;
+                Vector3 turnAxis;
+                if (aboutAxis)
+                {
+                    float signed = Vector3.SignedAngle(from, to, axis);
+                    if (forwardOnly && signed <= .01f) return used;
+                    turnAxis = signed >= 0 ? axis.normalized : -axis.normalized;
+                }
+                else
+                {
+                    turnAxis = Vector3.Cross(from, to);
+                    if (turnAxis.sqrMagnitude < 1e-10f) return used;
+                    turnAxis.Normalize();
+                }
+                float angle = Mathf.Min(maximumDegrees - used, Vector3.Angle(from, to), deficit / from.magnitude * Mathf.Rad2Deg);
+                if (angle <= .01f) return used;
+                joint.rotation = Quaternion.AngleAxis(angle, turnAxis) * joint.rotation;
+                used += angle;
+            }
+            return used;
+        }
+
+        private bool HoldsStrikeTool() => GameplayModel.GameplayTools.IsFlyswatter(current.StrikeState.ToolId) &&
+            strikeTool && strikeTool.Impact && strikeTool.Grip;
 
         private void SetWorldPose(Vector3 position, Quaternion rotation)
         {
             rotation = ResolveVisualRotation(rotation);
-            transform.SetPositionAndRotation(position, rotation);
+            transform.SetPositionAndRotation(position + HoverBob(), rotation);
+        }
+
+        /// <summary>Remote hovering mosquitoes bob 12 mm at 0.8 Hz (the local camera follows its own body anyway).</summary>
+        private Vector3 HoverBob()
+        {
+            if (localActor || proxy == null || proxy.Role != PlayerRole.Mosquito || current == null ||
+                current.LifeState != GameplayModel.LifeState.Flying) return Vector3.zero;
+            float hover = 1f - Mathf.Clamp01(current.Velocity.Length / 1.2f);
+            float phase = MosquitoWingbeat.InitialPhase(ActorId ^ 0x5bd1e995u) * 2f * Mathf.PI;
+            return Vector3.up * (.012f * hover * Mathf.Sin(Time.unscaledTime * 2f * Mathf.PI * .8f + phase));
+        }
+
+        /// <summary>
+        /// Flight attitude (presentation only): nose down with forward speed (up to 18 deg), nose up when
+        /// climbing, and banking into turns from the yaw rate (up to 28 deg). Eased with 1 - exp(-10 dt).
+        /// </summary>
+        private Quaternion ResolveFlightTilt(Quaternion bodyRotation, float elapsed)
+        {
+            float pitchTarget = 0f, rollTarget = 0f;
+            float yaw = bodyRotation.eulerAngles.y;
+            if (current.LifeState == GameplayModel.LifeState.Flying)
+            {
+                Vector3 velocity = current.Velocity.ToUnity();
+                float forward = Vector3.Dot(velocity, bodyRotation * Vector3.forward);
+                pitchTarget = Mathf.Clamp01(forward / MosquitoWingbeat.MaximumSpeed) * 18f -
+                    Mathf.Clamp(velocity.y / MosquitoWingbeat.MaximumSpeed, -1f, 1f) * 8f;
+                if (hasFlightYaw && elapsed > 1e-4f)
+                {
+                    float yawRate = Mathf.DeltaAngle(lastFlightYaw, yaw) / elapsed;
+                    rollTarget = Mathf.Clamp(-yawRate * .08f, -28f, 28f);
+                }
+            }
+            if (elapsed > 1e-4f || !hasFlightYaw) { lastFlightYaw = yaw; hasFlightYaw = true; }
+            float blend = 1f - Mathf.Exp(-10f * elapsed);
+            flightPitch = Mathf.Lerp(flightPitch, pitchTarget, blend);
+            flightRoll = Mathf.Lerp(flightRoll, rollTarget, blend);
+            if (float.IsNaN(flightPitch) || float.IsNaN(flightRoll)) flightPitch = flightRoll = 0f;
+            return bodyRotation * Quaternion.Euler(flightPitch, 0f, flightRoll);
         }
 
         private Quaternion visualRotation;
@@ -661,6 +1257,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 if (biteUp.sqrMagnitude < .000001f) biteUp = Vector3.ProjectOnPlane(Vector3.forward, biteForward);
                 visualRotation = Quaternion.LookRotation(biteForward, biteUp.normalized);
                 returningFromSurface = true; // Reuse smooth visual release on detach to flight.
+                flightPitch = flightRoll = 0f; hasFlightYaw = false;
             }
             else if (supported && world.ResolveSurface(current.SurfaceAttachment.Value, out var contact) &&
                 TrySurfaceHeading(contact.WorldNormal, elapsed, out var up, out var forward))
@@ -670,19 +1267,21 @@ namespace LetMeSleep.Presentation.Gameplay
                 visualRotation = !hasVisualRotation || current.LifeState == GameplayModel.LifeState.Surface
                     ? target : Quaternion.Slerp(visualRotation, target, 1f - Mathf.Exp(-24f * elapsed));
                 returningFromSurface = true;
+                flightPitch = flightRoll = 0f; hasFlightYaw = false;
             }
             else if (hasVisualRotation && returningFromSurface && current.LifeState == GameplayModel.LifeState.Flying)
             {
-                visualRotation = Quaternion.Slerp(visualRotation, bodyRotation, 1f - Mathf.Exp(-24f * elapsed));
-                if (Quaternion.Angle(visualRotation, bodyRotation) < .1f)
+                Quaternion flight = ResolveFlightTilt(bodyRotation, elapsed);
+                visualRotation = Quaternion.Slerp(visualRotation, flight, 1f - Mathf.Exp(-24f * elapsed));
+                if (Quaternion.Angle(visualRotation, flight) < .1f)
                 {
-                    visualRotation = bodyRotation;
+                    visualRotation = flight;
                     returningFromSurface = false;
                 }
             }
             else
             {
-                visualRotation = bodyRotation;
+                visualRotation = ResolveFlightTilt(bodyRotation, elapsed);
                 returningFromSurface = false;
             }
             hasVisualRotation = true;

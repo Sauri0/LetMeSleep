@@ -41,6 +41,13 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private readonly Profile[] profiles;
         private double x, z, phase;
+        // v0.3.0 round 3: the gait blend follows a smoothed rendered speed (0.15 s), so one uneven frame or
+        // snapshot (a render hitch, network jitter) never pops a walking body into a one-frame trot or run
+        // stride; the phase still advances by the actual distance, so the feet keep their contacts.
+        public const double SpeedSmoothingSeconds = .15;
+        private double gaitSpeed;
+        private bool hasGaitSpeed;
+        public double GaitSpeed => gaitSpeed;
         private int lastFrame = -1;
         private bool baseline, pending;
         private Contact contact;
@@ -62,7 +69,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public void Suspend()
         {
             unchecked { Generation++; }
-            baseline = pending = false; phase = 0; lastFrame = -1;
+            baseline = pending = false; phase = 0; lastFrame = -1; hasGaitSpeed = false; gaitSpeed = 0;
             Current = new Sample(0, 0, 0, 0, 0, profiles);
         }
 
@@ -99,12 +106,17 @@ namespace LetMeSleep.Presentation.Gameplay
                 Current = new Sample(phase, 0, Current.Blend, Current.LowerProfile, Current.UpperProfile, profiles);
                 return Current;
             }
+            // Round 4: the first measured frame of a start never exceeds the walk profile (a snapshot catch-up on
+            // the first moving frame kicked the first stride into a trot/run swing with pumping arms); the smoothed
+            // speed then climbs to the real one within ~0.2 s.
+            if (!hasGaitSpeed) { gaitSpeed = Math.Min(speed, profiles[Math.Min(1, profiles.Length - 1)].Speed); hasGaitSpeed = true; }
+            else gaitSpeed += (speed - gaitSpeed) * (1 - Math.Exp(-deltaSeconds / SpeedSmoothingSeconds));
 
             int lower = 0;
-            while (lower + 1 < profiles.Length && speed >= profiles[lower + 1].Speed) lower++;
+            while (lower + 1 < profiles.Length && gaitSpeed >= profiles[lower + 1].Speed) lower++;
             int upper = Math.Min(lower + 1, profiles.Length - 1);
             double blend = lower == upper ? 0 : Math.Max(0, Math.Min(1,
-                (speed - profiles[lower].Speed) / (profiles[upper].Speed - profiles[lower].Speed)));
+                (gaitSpeed - profiles[lower].Speed) / (profiles[upper].Speed - profiles[lower].Speed)));
             double stride = profiles[lower].DistancePerCycle +
                 (profiles[upper].DistancePerCycle - profiles[lower].DistancePerCycle) * blend;
             double before = phase;

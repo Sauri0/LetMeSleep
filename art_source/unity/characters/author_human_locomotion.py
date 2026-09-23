@@ -3,9 +3,9 @@ import math
 import types
 import bpy
 from mathutils import Vector
-from author_motion import Pose
+from author_motion import Pose, gait_arms
 from build_characters import Character
-from human_locomotion_contract import (PROFILES, REPLACED, GRIP_BONES, FPS, END_FRAME,
+from human_locomotion_contract import (PROFILES, REPLACED, GRIP_BONES, FPS, END_FRAME, KNEE_OUT,
                                         foot, hip_height)
 from verify_human_menu import activate, curves
 
@@ -47,21 +47,23 @@ def author(rig):
             phase = i / (END_FRAME - 1)
             p.reset()
             p.translate('Hips', (0, 0, hip_height(phase, profile) - .78))
-            p.rotate('Chest', (profile['lean'], 0, 0))
-            p.rotate('Neck', (-profile['lean'] * .35, 0, 0))
+            # Shoulders counter-twist with the arms (right shoulder forward at phase 0).
+            twist = profile['twist'] * math.cos(2 * math.pi * phase)
+            p.rotate('Chest', (profile['lean'], twist, 0))
+            p.rotate('Neck', (-profile['lean'] * .35, -twist * .8, 0))
             p.update()
             for side, sign, offset in (('L', 1, 0.), ('R', -1, .5)):
                 forward, z, _ = foot(phase + offset, profile)
-                target = Vector((sign * .125, -forward, z))
+                target = Vector((sign * profile['track'], -forward, z))
                 upper = rig.pose.bones['UpperLeg.' + side]
                 reach = (target - upper.head).length
                 # Pose.chain clamps unreachable targets; reject BEFORE that clamp.
                 assert abs(.34 - .32) + .02 < reach <= .34 + .32 - .02, (profile['clip'], phase, side, reach)
                 p.chain('UpperLeg.' + side, 'LowerLeg.' + side, target,
-                        (sign * .125, -.6, .42), 'Foot.' + side)
-                p.rotate('UpperArm.' + side,
-                         (sign * profile['arm'] * math.sin(2 * math.pi * phase), 0, -sign * 1.18))
-                p.rotate('LowerArm.' + side, (profile['elbow'], 0, 0))
+                        (sign * (profile['track'] + profile.get('knee_out', KNEE_OUT)), -.6, .42), 'Foot.' + side)
+            low, high = profile['elbow_deg']
+            gait_arms(p, phase, profile['arm_swing_deg'], low, high, profile.get('arm_abduction_deg', 8.),
+                      profile.get('arm_abduction_forward_deg'), profile.get('arm_forward_scale', 1.), twist)
             pose = p.snapshot()
             # Replace whole transform dictionaries: never mix stale Euler and quaternion fields.
             pose.update(cached[profile['reference']][i])

@@ -67,7 +67,8 @@ for csproj in sorted(project.glob('*.csproj')):
         continue
     if match.group(2).replace('\r\n', '\n') != items.replace('\r\n', '\n'):
         text = text[:match.start(2)] + items + text[match.end(2):]
-        csproj.write_text(text, encoding='utf-8')
+        # newline='' keeps the CRLF items as written; text mode would turn them into CR CR LF.
+        csproj.write_text(text, encoding='utf-8', newline='')
         changed += 1
         print('updated', csproj.name, len(wanted), 'files')
 print('sync_csproj done, changed', changed)

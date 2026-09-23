@@ -2,8 +2,8 @@
   "species": "Human",
   "mesh_count": 5,
   "bones": 65,
-  "triangles": 21563,
-  "vertices": 11435,
+  "triangles": 17864,
+  "vertices": 9182,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -102,9 +102,9 @@
     {
       "name": "Human_Swat",
       "start": 1,
-      "end": 31,
+      "end": 61,
       "fps": 30,
-      "duration_seconds": 1.0,
+      "duration_seconds": 2.0,
       "loop": false,
       "root_motion": false
     },
@@ -145,6 +145,51 @@
       "root_motion": false
     },
     {
+      "name": "Human_JumpAir",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_FallAir",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_CrouchWalk",
+      "start": 1,
+      "end": 61,
+      "fps": 30,
+      "duration_seconds": 2.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Yawn",
+      "start": 1,
+      "end": 91,
+      "fps": 30,
+      "duration_seconds": 3.0,
+      "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Victory",
+      "start": 1,
+      "end": 31,
+      "fps": 30,
+      "duration_seconds": 1.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
       "name": "Human_WalkSlow",
       "start": 1,
       "end": 61,
@@ -174,10 +219,11 @@
     }
   },
   "contact": {
-    "clap_palm_center_distance_m": 0.050088134310600545,
+    "clap_palm_center_distance_m": 0.05008792048286237,
     "approximate_palm_thickness_m": 0.048,
     "target_surface_gap_m": 0.002,
     "sample_frame": 15,
+    "crouch_walk_distance_per_cycle_m": 0.96875,
     "minimum_leg_reach_margin_m": -0.014391654855345437
   },
   "bounds_min": [
@@ -187,13 +233,13 @@
   ],
   "bounds_max": [
     0.9720883369445801,
-    0.24210910499095917,
-    1.7660000324249268
+    0.18427348136901855,
+    1.7640000581741333
   ],
   "dimensions": [
     1.9442545771598816,
-    0.48310910165309906,
-    1.7660000324249268
+    0.42527347803115845,
+    1.7640000581741333
   ],
   "sockets": [
     "Socket.Eye",
@@ -213,10 +259,8 @@
         "Human_Skin",
         "Human_Pajamas",
         "Human_PajamaDots",
-        "Human_PantsShade",
         "Human_SlipperSole",
-        "Human_Slipper",
-        "Human_ShirtShade"
+        "Human_Slipper"
       ]
     },
     {
@@ -259,7 +303,10 @@
       "Blink25.R",
       "Blink50.R",
       "Blink75.R",
-      "Blink.R"
+      "Blink.R",
+      "Smile",
+      "MouthO",
+      "Frown"
     ]
   },
   "facial_contract": {
@@ -364,16 +411,6 @@
     "faces": 7,
     "flipped": 7,
     "vertices": 12
-  },
-  "eye_white_normals": {
-    "faces": 192,
-    "bend": 0.62,
-    "target": [
-      0.0,
-      -0.9284767508506775,
-      0.371390700340271
-    ],
-    "lowest_normal_z": -0.2667
   },
   "bone_names": [
     "Root",
@@ -1363,10 +1400,8 @@
     "Human_NightcapBand",
     "Human_PajamaDots",
     "Human_Pajamas",
-    "Human_PantsShade",
     "Human_Piping",
     "Human_Shirt",
-    "Human_ShirtShade",
     "Human_Skin",
     "Human_Slipper",
     "Human_SlipperSole"
@@ -1395,9 +1430,9 @@
     {
       "name": "Human_EyeWhiteShade",
       "color": {
-        "r": 0.9019607901573181,
-        "g": 0.9098039269447327,
-        "b": 0.9333333373069763,
+        "r": 0.886274516582489,
+        "g": 0.8941176533699036,
+        "b": 0.9254902005195618,
         "a": 1.0
       },
       "roughness": 0.6000000238418579
@@ -1415,9 +1450,9 @@
     {
       "name": "Human_Nightcap",
       "color": {
-        "r": 0.6901960968971252,
-        "g": 0.16470588743686676,
-        "b": 0.15294118225574493,
+        "r": 0.7843137383460999,
+        "g": 0.19607843458652496,
+        "b": 0.18039216101169586,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1426,8 +1461,8 @@
       "name": "Human_NightcapBand",
       "color": {
         "r": 0.5568627715110779,
-        "g": 0.13333334028720856,
-        "b": 0.125490203499794,
+        "g": 0.10196078568696976,
+        "b": 0.0941176488995552,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1435,9 +1470,9 @@
     {
       "name": "Human_PajamaDots",
       "color": {
-        "r": 0.8627451062202454,
-        "g": 0.8470588326454163,
-        "b": 0.8078431487083435,
+        "r": 0.9019607901573181,
+        "g": 0.8627451062202454,
+        "b": 0.7843137383460999,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1448,16 +1483,6 @@
         "r": 0.1764705926179886,
         "g": 0.30980393290519714,
         "b": 0.6039215922355652,
-        "a": 1.0
-      },
-      "roughness": 0.8799999952316284
-    },
-    {
-      "name": "Human_PantsShade",
-      "color": {
-        "r": 0.13725490868091583,
-        "g": 0.250980406999588,
-        "b": 0.4941176474094391,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1475,19 +1500,9 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.8745098114013672,
-        "g": 0.7568627595901489,
-        "b": 0.5843137502670288,
-        "a": 1.0
-      },
-      "roughness": 0.9200000166893005
-    },
-    {
-      "name": "Human_ShirtShade",
-      "color": {
-        "r": 0.7568627595901489,
-        "g": 0.6352941393852234,
-        "b": 0.46666666865348816,
+        "r": 0.9098039269447327,
+        "g": 0.8627451062202454,
+        "b": 0.772549033164978,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1526,76 +1541,91 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "3cb2803b0e734023c3a1913f3bdb25547de2663c30b8a04073d8772277b17725",
-    "LMS_Human_alpha.fbx": "1f1538b963a77d940ffc58ab7910cc613af1f6ae93d2def5e2e2e3c3e50189e4"
+    "LMS_Human_alpha.blend": "e90780e2578df17aa31f7d89dd0bf4216e606e4c469d486f9b453eaec218a50f",
+    "LMS_Human_alpha.fbx": "2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "50bed96cd424007c7893399ded147c8b57c866fedb558897489533df60d6f603",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r9b\\base15",
+    "baseline_blend_sha256": "431c5d63b0b4d0e32b88803b4ffd020e87cb9f84d919f8cf995c79a69e47d7cd",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-anim\\art_source\\unity\\characters\\.validation\\v030-anim-r4a\\base",
     "scene_before": {
-      "meshes": "9e1c26f6d09c239344bcf422b8917b8c311eaa2e20b71b89767df72533a8b8a0",
+      "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "e4e5c1b12099de4015e8cdbf208752b3ed1f679889607da3b229bde73702e17a"
+      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
     },
     "scene_after": {
-      "meshes": "9e1c26f6d09c239344bcf422b8917b8c311eaa2e20b71b89767df72533a8b8a0",
+      "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "e4e5c1b12099de4015e8cdbf208752b3ed1f679889607da3b229bde73702e17a"
+      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
     },
     "actions_before": {
-      "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
-      "Human_Clap": "30e00b6c97b48be48b29fecef178bedfc0bd3e22480010297370dc2927582fb7",
-      "Human_Crouch": "845c876030433d00cf618c4fb886e07d6cdda8664d0882ee28cb2026464867f8",
-      "Human_Faint": "e25c2c11774267fe7040f202ebfe3af83b1f142988b68e3952de9c260d88dcfc",
-      "Human_Fall": "07146a9e59b01046cf3d58d4862835bdaaf74c4ada65d25246dce74e5fee1b72",
+      "Human_Blink": "33809c4a6e207e3060f95d586cc9b98eda6de6a09917e1343e5852e1b4e2e463",
+      "Human_Clap": "289e9c877a7d6468bbc9b3c56cdd1f407bb4e56bb06f900412a0c04d3430ad8e",
+      "Human_Crouch": "13013260e3a73bb3f7c2a7338b008b7e2e433c7f5213a42161a3fd136dc70055",
+      "Human_CrouchWalk": "b1e56e6a5010d34b7e0560209236b337372ca289e28714c0498c429a24ddcfaa",
+      "Human_Faint": "ddd1ad77e0401f1ca41b38e4685bb745d197e3be2553246f9e5b65e70cc017a9",
+      "Human_Fall": "7d0e8095412c37042f8cfd8bfbc2bd866eb6c5737600ca122d1c83534e96c745",
+      "Human_FallAir": "afe3afd07d22cca90852abfa71b4c6b3639800e16cf7556bd0a5776d9eb72746",
       "Human_FingerCurl": "7bbbd1117be601ed107918f960e9f7fcf3db4b422ab6efc4faa6bda970619a20",
-      "Human_Hit": "3bb937e4c058fca2b553c023398eca67808301b66098c7177410bf738493524f",
-      "Human_Idle": "36577f05a93a189d4253c96deaa9845e42338c0f8c9b423262937115af1b639f",
-      "Human_Jump": "857551cb23a1e67058140a95967d87f365877edab8bbd67eb90b33a059ab813b",
-      "Human_Land": "6a03e31b5ddb3de3cc0ae077cfa9fa322426f5c0351db1e3576ccee6a744b4a6",
-      "Human_Recover": "5e51f0d7465a36d4fe4169339a1138ed6ac09db01bc8b5c37d046ad42060a210",
-      "Human_Run": "74fadb9fc0ddc81b70e499e114b1533489c40b475f329cb4510494a051e3539a",
-      "Human_Swat": "f4437b7929d96100ce1ddacef80136cbea7bd2753f920a40ef3507309a4a7b1a",
-      "Human_Turn": "b21b678f7ba5b5d4dfb4668f29a23f3286da55d7154df9be01671cc72fe0d7f7",
-      "Human_Walk": "1cbe2ad569228fb8ba9745df49acc3eed1f2dd79908fe246a897d01ed7683e93"
+      "Human_Hit": "4bf2ef062c3d76f12c32108abc702cdabc2e0a6cb838b62d30f1caf99c9a5ceb",
+      "Human_Idle": "619fa6eec89d0a40059cc4690f3432ee3c02201885c00bd6f3e082ad5969576e",
+      "Human_Jump": "7158ff2bbc24bcc47fb287cb564aba2d8a1eb4d368838038e97fec7fce036ef7",
+      "Human_JumpAir": "f5f2263dad8f24429893ab1d9df3b82ea3865b676f358f8acddd023dff70b82f",
+      "Human_Land": "3986455bc66c533db1c896f1105f141a131f2197af3c319d732b81764cdefef3",
+      "Human_Recover": "dae5d670e8f204678eeea12d98e34014a21d4842c5c857266120cc85b880df78",
+      "Human_Run": "fceed21fb50b4b10b01b90130b7bffde69071de281e4e7cc4a89841ff0115d90",
+      "Human_Swat": "77f7434f38aff7d2a92bb7e47560159474f7e3abd470f39a4e7f3c10aeee9804",
+      "Human_Turn": "d1a236e8f6a80cdcc81f90953214848eb2a7a2a9cf815b6aff167bb6e456e073",
+      "Human_Victory": "14ecb4e3f8e400151dc32019909f393d309ec9a9f91476a2cad49bda99698677",
+      "Human_Walk": "dcbd7d84a11a1f0760b78e16ae97d5a8a101d74ac8a562a1b92e3a17e8675aa0",
+      "Human_Yawn": "98304022b5c529e9d83aea04d0c100c4f7c3c3ddbb5be0272081d79637aacd23"
     },
     "actions_after": {
-      "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
-      "Human_Clap": "30e00b6c97b48be48b29fecef178bedfc0bd3e22480010297370dc2927582fb7",
-      "Human_Crouch": "845c876030433d00cf618c4fb886e07d6cdda8664d0882ee28cb2026464867f8",
-      "Human_Faint": "e25c2c11774267fe7040f202ebfe3af83b1f142988b68e3952de9c260d88dcfc",
-      "Human_Fall": "07146a9e59b01046cf3d58d4862835bdaaf74c4ada65d25246dce74e5fee1b72",
+      "Human_Blink": "33809c4a6e207e3060f95d586cc9b98eda6de6a09917e1343e5852e1b4e2e463",
+      "Human_Clap": "289e9c877a7d6468bbc9b3c56cdd1f407bb4e56bb06f900412a0c04d3430ad8e",
+      "Human_Crouch": "13013260e3a73bb3f7c2a7338b008b7e2e433c7f5213a42161a3fd136dc70055",
+      "Human_CrouchWalk": "b1e56e6a5010d34b7e0560209236b337372ca289e28714c0498c429a24ddcfaa",
+      "Human_Faint": "ddd1ad77e0401f1ca41b38e4685bb745d197e3be2553246f9e5b65e70cc017a9",
+      "Human_Fall": "7d0e8095412c37042f8cfd8bfbc2bd866eb6c5737600ca122d1c83534e96c745",
+      "Human_FallAir": "afe3afd07d22cca90852abfa71b4c6b3639800e16cf7556bd0a5776d9eb72746",
       "Human_FingerCurl": "7bbbd1117be601ed107918f960e9f7fcf3db4b422ab6efc4faa6bda970619a20",
-      "Human_Hit": "3bb937e4c058fca2b553c023398eca67808301b66098c7177410bf738493524f",
-      "Human_Idle": "36577f05a93a189d4253c96deaa9845e42338c0f8c9b423262937115af1b639f",
-      "Human_Jump": "857551cb23a1e67058140a95967d87f365877edab8bbd67eb90b33a059ab813b",
-      "Human_Land": "6a03e31b5ddb3de3cc0ae077cfa9fa322426f5c0351db1e3576ccee6a744b4a6",
-      "Human_Recover": "5e51f0d7465a36d4fe4169339a1138ed6ac09db01bc8b5c37d046ad42060a210",
-      "Human_Run": "833a3a889a7a265a7285bf9a039dd41393f5f4580ca742f164c98da933bb4044",
-      "Human_Swat": "f4437b7929d96100ce1ddacef80136cbea7bd2753f920a40ef3507309a4a7b1a",
-      "Human_Trot": "290d915c003e753def91f9ee28d88a99ae939a7b571ebf9b92684ed12ddc42d6",
-      "Human_Turn": "b21b678f7ba5b5d4dfb4668f29a23f3286da55d7154df9be01671cc72fe0d7f7",
-      "Human_Walk": "69964ca54d610533ed516543c990bcff5bbd338dd96b2ff24b3557702e136e04",
-      "Human_WalkSlow": "e8216be115f8937771820b306757da94e083eea3548ea596b43d80d4910e6428"
+      "Human_Hit": "4bf2ef062c3d76f12c32108abc702cdabc2e0a6cb838b62d30f1caf99c9a5ceb",
+      "Human_Idle": "619fa6eec89d0a40059cc4690f3432ee3c02201885c00bd6f3e082ad5969576e",
+      "Human_Jump": "7158ff2bbc24bcc47fb287cb564aba2d8a1eb4d368838038e97fec7fce036ef7",
+      "Human_JumpAir": "f5f2263dad8f24429893ab1d9df3b82ea3865b676f358f8acddd023dff70b82f",
+      "Human_Land": "3986455bc66c533db1c896f1105f141a131f2197af3c319d732b81764cdefef3",
+      "Human_Recover": "dae5d670e8f204678eeea12d98e34014a21d4842c5c857266120cc85b880df78",
+      "Human_Run": "40a08646613cd61d32bed297ad42ffa52b9df76133f5275e41fdabe6afb76920",
+      "Human_Swat": "77f7434f38aff7d2a92bb7e47560159474f7e3abd470f39a4e7f3c10aeee9804",
+      "Human_Trot": "e6f226189950d78e55bca4a035538996063b394274ae2887b1734728af0ac2d9",
+      "Human_Turn": "d1a236e8f6a80cdcc81f90953214848eb2a7a2a9cf815b6aff167bb6e456e073",
+      "Human_Victory": "14ecb4e3f8e400151dc32019909f393d309ec9a9f91476a2cad49bda99698677",
+      "Human_Walk": "ab58242dbbd1167de6e453c40d0083d184929c519dd1e8d7fbd1498167909b20",
+      "Human_WalkSlow": "17621da7f00e758f4fa6334cfa056212efa010f141b1ea80c58af5d28fee8240",
+      "Human_Yawn": "98304022b5c529e9d83aea04d0c100c4f7c3c3ddbb5be0272081d79637aacd23"
     },
     "preserved_action_names": [
       "Human_Blink",
       "Human_Clap",
       "Human_Crouch",
+      "Human_CrouchWalk",
       "Human_Faint",
       "Human_Fall",
+      "Human_FallAir",
       "Human_FingerCurl",
       "Human_Hit",
       "Human_Idle",
       "Human_Jump",
+      "Human_JumpAir",
       "Human_Land",
       "Human_Recover",
       "Human_Swat",
-      "Human_Turn"
+      "Human_Turn",
+      "Human_Victory",
+      "Human_Yawn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "3cb2803b0e734023c3a1913f3bdb25547de2663c30b8a04073d8772277b17725",
-      "LMS_Human_alpha.fbx": "1f1538b963a77d940ffc58ab7910cc613af1f6ae93d2def5e2e2e3c3e50189e4"
+      "LMS_Human_alpha.blend": "e90780e2578df17aa31f7d89dd0bf4216e606e4c469d486f9b453eaec218a50f",
+      "LMS_Human_alpha.fbx": "2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6"
     },
     "author": {
       "clips": [
@@ -1636,7 +1666,7 @@
           "root_motion": false
         }
       ],
-      "minimum_authored_extension_margin_m": 0.021489169152340226,
+      "minimum_authored_extension_margin_m": 0.021410866658686967,
       "grip_source_by_clip": {
         "Human_WalkSlow": "Human_Walk",
         "Human_Walk": "Human_Walk",

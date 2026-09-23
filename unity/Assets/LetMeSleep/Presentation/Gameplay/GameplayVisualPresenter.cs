@@ -143,6 +143,10 @@ namespace LetMeSleep.Presentation.Gameplay
         {
             if (visuals.TryGetValue(item.SourceActorId, out ActorVisualBinding visual) && visual != null)
                 visual.ApplyEvent(in item);
+            // v0.3.0 reactions of the affected actor (bitten human, swatted mosquito): presentation only.
+            if (item.TargetActorId != 0 && item.TargetActorId != item.SourceActorId &&
+                visuals.TryGetValue(item.TargetActorId, out ActorVisualBinding target) && target != null)
+                target.ApplyEvent(in item);
         }
 
         private void EnsureVisual(GameplayActorProxy proxy)

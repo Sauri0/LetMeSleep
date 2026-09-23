@@ -31,18 +31,32 @@ namespace LetMeSleep.Presentation.Gameplay
         public bool OwnsPose => graph.IsValid();
         public HumanLocomotionClock.Sample Current => clock != null ? clock.Current : default;
         public string ProfileRevision { get; private set; }
+        /// <summary>v0.3.0: an upper-body strike layer (masked Chest subtree) keeps the legs walking while striking.</summary>
+        public bool SupportsStrikeLayer => strikeClip && upperBodyMask;
+        /// <summary>v0.3.0: a crouched gait clip sampled on the same clock replaces the static crouch while moving.</summary>
+        public bool SupportsCrouchWalk => crouchClip;
+        public float StrikeLayerWeight { get; private set; }
+        /// <summary>The upper-body mask of the strike layer (shared per rig layout by HumanLocomotionSetup).</summary>
+        public AvatarMask UpperBodyMask => upperBodyMask;
+        public float CrouchWeight { get; private set; }
         private HumanLocomotionClock clock;
         private Animator animator;
         private AnimationClip[] clips;
+        private AnimationClip strikeClip, crouchClip;
+        private AvatarMask upperBodyMask;
+        private bool ownsMask;
         private Transform leftFoot, rightFoot;
         private PlayableGraph graph;
         private AnimationClipPlayable[] clipPlayables;
+        private AnimationClipPlayable crouchPlayable, strikePlayable;
         private AnimationMixerPlayable mixer;
+        private AnimationLayerMixerPlayable layers;
         private RuntimeAnimatorController savedController;
         private float savedSpeed;
         private bool savedRootMotion;
         private AnimatorCullingMode savedCulling;
         private int evaluatedFrame = -1, publishedFrame = -1;
+        private float crouchTarget, strikeTarget, strikeSeconds;
 
         // Caller certifies these are the new gait clips. No installation on old prefabs by inference.
         public void Configure(uint actorId, Animator target, GaitClip[] gaits,
@@ -66,6 +80,38 @@ namespace LetMeSleep.Presentation.Gameplay
             Suspend();
             ActorId = actorId; animator = target; clips = nextClips;
             leftFoot = left; rightFoot = right; ProfileRevision = profileRevision; clock = next;
+            strikeClip = crouchClip = null; ReleaseMask();
+        }
+
+        /// <summary>Optional v0.3.0 layers; null arguments leave the corresponding feature off. With ownsMask the
+        /// presenter destroys the (per-actor, runtime-created) mask when it is replaced or destroyed.</summary>
+        public void ConfigureOverlays(AnimationClip strike, AvatarMask upperBody, AnimationClip crouchWalk, bool ownsMask = false)
+        {
+            if (clock == null) throw new InvalidOperationException("Configure the gait clips first.");
+            if ((strike && strike.legacy) || (crouchWalk && (crouchWalk.legacy || crouchWalk.length <= 0)))
+                throw new ArgumentException("Overlay clips must be nonlegacy.");
+            if (strike && (!upperBody || upperBody.transformCount == 0))
+                throw new ArgumentException("The strike layer needs an upper-body transform mask.");
+            Suspend();
+            if (upperBodyMask != upperBody) ReleaseMask();
+            strikeClip = strike; crouchClip = crouchWalk;
+            upperBodyMask = strike ? upperBody : null;
+            this.ownsMask = upperBodyMask && ownsMask;
+            if (!strike && upperBody && ownsMask) Destroy(upperBody);
+        }
+
+        private void ReleaseMask()
+        {
+            if (ownsMask && upperBodyMask) Destroy(upperBodyMask);
+            upperBodyMask = null; ownsMask = false;
+        }
+
+        /// <summary>Per frame, before EvaluateRenderedPose: crouch amount 0..1, strike layer weight and clip time.</summary>
+        public void SetOverlayState(float crouch, float strikeWeight, float strikeTimeSeconds)
+        {
+            crouchTarget = SupportsCrouchWalk && Finite(crouch) ? Mathf.Clamp01(crouch) : 0;
+            strikeTarget = SupportsStrikeLayer && Finite(strikeWeight) ? Mathf.Clamp01(strikeWeight) : 0;
+            strikeSeconds = Finite(strikeTimeSeconds) ? Mathf.Max(0, strikeTimeSeconds) : 0;
         }
 
         // Call after base interpolation, before hands/anchors/facial final writers.
@@ -83,15 +129,30 @@ namespace LetMeSleep.Presentation.Gameplay
             uint generation = clock.Generation;
             var sample = clock.Advance(position.x, position.z, deltaSeconds, frameId, true);
             if (generation != clock.Generation) { ReleasePose(); evaluatedFrame = -1; return PoseOwner.Controller; }
+            bool fresh = !graph.IsValid();
             AcquirePose();
+            // Crouch and strike weights ease in/out; a fresh graph starts at the requested state.
+            CrouchWeight = fresh ? crouchTarget : Mathf.MoveTowards(CrouchWeight, crouchTarget, deltaSeconds * 5f);
+            StrikeLayerWeight = fresh ? strikeTarget : Mathf.MoveTowards(StrikeLayerWeight, strikeTarget, deltaSeconds * 10f);
+            float standing = 1f - CrouchWeight;
             for (int i = 0; i < clips.Length; i++)
             {
                 clipPlayables[i].SetTime((sample.Phase % 1) * clips[i].length);
                 mixer.SetInputWeight(i, 0);
             }
-            mixer.SetInputWeight(sample.LowerProfile, 1f - (float)sample.Blend);
+            mixer.SetInputWeight(sample.LowerProfile, standing * (1f - (float)sample.Blend));
             if (sample.UpperProfile != sample.LowerProfile)
-                mixer.SetInputWeight(sample.UpperProfile, (float)sample.Blend);
+                mixer.SetInputWeight(sample.UpperProfile, standing * (float)sample.Blend);
+            if (crouchPlayable.IsValid())
+            {
+                crouchPlayable.SetTime((sample.Phase % 1) * crouchClip.length);
+                mixer.SetInputWeight(clips.Length, CrouchWeight);
+            }
+            if (layers.IsValid())
+            {
+                strikePlayable.SetTime(Mathf.Min(strikeSeconds, strikeClip.length));
+                layers.SetInputWeight(1, StrikeLayerWeight);
+            }
             graph.Evaluate(0);
             evaluatedFrame = frameId;
             return PoseOwner.Locomotion;
@@ -127,26 +188,52 @@ namespace LetMeSleep.Presentation.Gameplay
             {
                 graph = PlayableGraph.Create("LMS_HumanLocomotion");
                 graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
-                mixer = AnimationMixerPlayable.Create(graph, clips.Length);
+                mixer = AnimationMixerPlayable.Create(graph, clips.Length + (crouchClip ? 1 : 0));
                 clipPlayables = new AnimationClipPlayable[clips.Length];
                 for (int i = 0; i < clips.Length; i++)
                 {
-                    var playable = AnimationClipPlayable.Create(graph, clips[i]);
-                    playable.SetSpeed(0); playable.SetApplyFootIK(false); playable.SetApplyPlayableIK(false);
+                    var playable = CreateClip(clips[i]);
                     graph.Connect(playable, 0, mixer, i);
                     clipPlayables[i] = playable;
                 }
+                crouchPlayable = default;
+                if (crouchClip)
+                {
+                    crouchPlayable = CreateClip(crouchClip);
+                    graph.Connect(crouchPlayable, 0, mixer, clips.Length);
+                }
+                Playable source = mixer;
+                layers = default; strikePlayable = default;
+                if (SupportsStrikeLayer)
+                {
+                    layers = AnimationLayerMixerPlayable.Create(graph, 2);
+                    graph.Connect(mixer, 0, layers, 0);
+                    strikePlayable = CreateClip(strikeClip);
+                    graph.Connect(strikePlayable, 0, layers, 1);
+                    layers.SetInputWeight(0, 1);
+                    layers.SetInputWeight(1, 0);
+                    layers.SetLayerMaskFromAvatarMask(1, upperBodyMask);
+                    source = layers;
+                }
                 var output = AnimationPlayableOutput.Create(graph, "Human gait", animator);
-                output.SetSourcePlayable(mixer);
+                output.SetSourcePlayable(source);
                 graph.Play();
             }
             catch { ReleasePose(true); throw; }
+        }
+
+        private AnimationClipPlayable CreateClip(AnimationClip clip)
+        {
+            var playable = AnimationClipPlayable.Create(graph, clip);
+            playable.SetSpeed(0); playable.SetApplyFootIK(false); playable.SetApplyPlayableIK(false);
+            return playable;
         }
 
         private void ReleasePose(bool restoreWithoutGraph = false)
         {
             bool owned = graph.IsValid();
             if (owned) graph.Destroy();
+            layers = default; strikePlayable = default; crouchPlayable = default;
             if ((!owned && !restoreWithoutGraph) || !animator) return;
             animator.runtimeAnimatorController = savedController;
             animator.speed = savedSpeed; animator.applyRootMotion = savedRootMotion;
@@ -156,6 +243,6 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
         private void OnDisable() => Suspend();
-        private void OnDestroy() { Suspend(); ContactReady = null; }
+        private void OnDestroy() { Suspend(); ReleaseMask(); ContactReady = null; }
     }
 }

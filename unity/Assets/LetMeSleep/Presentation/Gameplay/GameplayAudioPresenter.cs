@@ -122,6 +122,19 @@ namespace LetMeSleep.Presentation.Gameplay
             if (forget) locomotionSources.Clear();
         }
 
+        /// <summary>
+        /// v0.3.0 round 3 (anim-r3): a crouched human sneaks on tiptoe and makes no footstep sound (the crouched
+        /// gait publishes contacts since round 1, which let remote mosquitoes hear a hiding human). Presentation
+        /// only: nothing in the authority or the network changes.
+        /// </summary>
+        public const float SilentCrouchFraction = .25f;
+
+        /// <summary>Whether a foot contact of this human state plays a footstep cue.</summary>
+        public static bool PlaysFootstep(GameplayModel.ActorSnapshot state) =>
+            state != null && state.Role == PlayerRole.Human && state.LifeState == GameplayModel.LifeState.Active &&
+            state.Grounded && state.StrikeState.Phase == GameplayModel.StrikePhase.None &&
+            state.CrouchFraction <= SilentCrouchFraction;
+
         private void HandleFootContact(HumanLocomotionPresenter source, HumanLocomotionPresenter.FootContact contact)
         {
             if (!isActiveAndEnabled || !source ||
@@ -129,8 +142,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 !gameplay || gameplay.World == null || gameplay.LatestSnapshot == null ||
                 gameplay.LatestSnapshot.SimulationPhase != GameplayModel.SimulationPhase.Running ||
                 !gameplay.World.Actors.TryGetValue(source.ActorId, out var proxy) || proxy.State == null ||
-                proxy.Role != PlayerRole.Human || proxy.State.LifeState != GameplayModel.LifeState.Active ||
-                !proxy.State.Grounded || proxy.State.StrikeState.Phase != GameplayModel.StrikePhase.None ||
+                proxy.Role != PlayerRole.Human || !PlaysFootstep(proxy.State) ||
                 !audioDirector || !audioDirector.Catalog || !audioDirector.Emitters)
                 return;
             EnsureAudioZones(gameplay.World.MapRoot);
@@ -206,7 +218,7 @@ namespace LetMeSleep.Presentation.Gameplay
                     float planarSpeed = Mathf.Sqrt(actor.Velocity.X * actor.Velocity.X +
                         actor.Velocity.Z * actor.Velocity.Z);
                     bool walking = !first && previous.Grounded && actor.Grounded &&
-                        actor.LifeState == GameplayModel.LifeState.Active;
+                        actor.LifeState == GameplayModel.LifeState.Active && actor.CrouchFraction <= SilentCrouchFraction;
                     if (!sharedHumanLocomotionAudio && !locomotionSources.ContainsKey(actor.ActorId) &&
                         previous.Steps.Advance(displacement.magnitude, planarSpeed,
                         snapshot.HostTime - previous.HostTime, Time.unscaledTime, walking))

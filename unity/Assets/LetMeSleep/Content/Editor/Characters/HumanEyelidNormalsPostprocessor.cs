@@ -24,7 +24,11 @@ namespace LetMeSleep.Content.Characters.Editor
             internal Vector3[] Position, Normal, Tangent;
         }
 
-        public override uint GetVersion() => 1;
+        // v2 (v0.3.0 round 3): the mouth morphs (Smile, MouthO, Frown) get the same restriction, so opening
+        // the mouth never re-shades the cheeks, chin or eyes.
+        private static readonly HashSet<string> MouthNames = new HashSet<string>(StringComparer.Ordinal) { "Smile", "MouthO", "Frown" };
+
+        public override uint GetVersion() => 2;
         public override int GetPostprocessOrder() => 1000;
 
         private void OnPostprocessModel(GameObject root)
@@ -71,7 +75,7 @@ namespace LetMeSleep.Content.Characters.Editor
                         Tangent = new Vector3[vertexCount]
                     };
                     mesh.GetBlendShapeFrameVertices(shape, frameIndex, frame.Position, frame.Normal, frame.Tangent);
-                    if (blink)
+                    if (blink || MouthNames.Contains(name))
                     {
                         var moving = new bool[vertexCount];
                         for (int i = 0; i < vertexCount; i++) moving[i] = frame.Position[i].sqrMagnitude > 1e-14f;

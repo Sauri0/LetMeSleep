@@ -21,10 +21,15 @@ namespace LetMeSleep.Presentation
         [SerializeField, Min(0f)] private float collisionPadding = 0.015f;
         [SerializeField, Min(0f)] private float outwardDampingSeconds = 0.08f;
         [SerializeField, Min(0f)] private float rotationDampingSeconds = 0.05f;
-        // v0.3.0 scenes r2 (director #9, UI-06 7b): third-person framing. The body sits right of and below the crosshair
-        // (viewport x .6, y .3 from the bottom = image x .6, y .7) instead of covering it; the offset scales with the
-        // orbit distance and vanishes in first person. (0.5, 0.5) restores the centred orbit.
-        [SerializeField] private Vector2 bodyViewport = new Vector2(0.6f, 0.3f);
+        // v0.3.0: the camera rides a little above the mosquito (along its own up axis) so the body sits
+        // under the central reticle instead of covering it; lift grows with the orbit distance (a constant
+        // ~12 deg) and fades out toward first person or a collapsed orbit. Collision sweeps include it.
+        [SerializeField, Min(0f)] private float framingSlope = 0.22f;
+        [SerializeField, Min(0f)] private float maximumFramingLift = 0.36f;
+        // v0.3.0 review: W flies along the aim, so the lifted camera turns down just enough for the central
+        // reticle to cross the real flight line (from the body along the view) at this distance; closer
+        // targets sit a few cm under the reticle, and the body itself stays clear below it.
+        [SerializeField, Min(0f)] private float reticleConvergenceMeters = 4f;
 
         private struct RenderState { public Renderer Renderer; public bool ForceOff; }
         private struct BodyPart { public Transform Bone; public Bounds Bounds; }
@@ -52,9 +57,16 @@ namespace LetMeSleep.Presentation
         private bool initialized;
 
         public float DesiredDistance => desiredDistance;
-        public Vector2 BodyViewport { get => bodyViewport; set => bodyViewport = new Vector2(Mathf.Clamp(value.x, .2f, .8f), Mathf.Clamp(value.y, .2f, .8f)); }
-        public Vector3 FramingOffset { get; private set; }
+        public float ReticleConvergenceMeters => reticleConvergenceMeters;
+        /// <summary>World origin of the flight line (the body pivot), for reticle alignment checks.</summary>
+        public Vector3 FlightLineOrigin => pivot ? pivot.position : Vector3.zero;
+        /// <summary>World direction of the flight line (the authoritative view, smoothed like the orbit).</summary>
+        public Vector3 FlightLineDirection => smoothedRotation * Vector3.forward;
         public float ResolvedDistance => smoothedDistance;
+        /// <summary>Camera-space upward offset of the orbit pivot for the requested distance.</summary>
+        public float FramingLift(float requestedDistance) =>
+            float.IsNaN(requestedDistance) || float.IsInfinity(requestedDistance) ? 0f :
+            Mathf.Min(maximumFramingLift, Mathf.Max(0f, requestedDistance) * framingSlope);
 
         private void Awake()
         {
@@ -75,7 +87,11 @@ namespace LetMeSleep.Presentation
 
             float radius = preset != null ? preset.CameraCollisionRadius : 0.08f;
             Vector3 anchorPosition = ResolveSafePoint(safeAnchor.position, radius);
-            Vector3 desiredPivot = pivot.position;
+            float maximum = preset != null ? preset.MosquitoMaximumDistance : 2.5f;
+            float requested = Mathf.Clamp(desiredDistance, 0f, maximum);
+            // The lift follows the orbit actually available last frame: when a wall collapses the orbit, the
+            // camera comes back down into the body (which then hides) instead of hovering over its own back.
+            Vector3 desiredPivot = pivot.position + smoothedRotation * Vector3.up * FramingLift(Mathf.Min(requested, smoothedDistance));
             firstPersonBlend=0;
             if(TryBodyBounds(out var body))
             {
@@ -90,17 +106,7 @@ namespace LetMeSleep.Presentation
             if (IsBlocked(resolvedPivot, radius))
                 resolvedPivot = anchorPosition;
 
-            float maximum = preset != null ? preset.MosquitoMaximumDistance : 2.5f;
-            float requested = Mathf.Clamp(desiredDistance, 0f, maximum);
             EffectiveRequestedDistance=requested;
-            // Sweep 1b: slide the orbit centre so the body lands at bodyViewport (collision-safe, like the pivot).
-            Vector3 basePivot = resolvedPivot;
-            Vector3 framing = FramingShift(requested) * (1f - firstPersonBlend);
-            if (framing.sqrMagnitude > 1e-8f)
-            {
-                Vector3 shifted = Sweep(resolvedPivot, resolvedPivot + framing, radius);
-                if (!IsBlocked(shifted, radius)) resolvedPivot = shifted;
-            }
             Vector3 desiredCamera = resolvedPivot - smoothedRotation * Vector3.forward * requested;
 
             // Sweep 2: resolved pivot to the requested camera position.
@@ -121,30 +127,20 @@ namespace LetMeSleep.Presentation
                     outwardDampingSeconds, Mathf.Infinity, Time.unscaledDeltaTime);
             }
 
-            // The framing follows the resolved orbit: a wall that collapses the orbit also brings the body back to the
-            // centre, so a collapsed camera sits at the body (and hides it) instead of beside it.
-            float keep = requested > .001f ? Mathf.Clamp01(smoothedDistance / requested) : 0f;
-            Vector3 finalPivot = Vector3.Lerp(basePivot, resolvedPivot, keep);
-            Vector3 finalCamera = finalPivot - smoothedRotation * Vector3.forward * smoothedDistance;
-            if (keep < .999f && (finalPivot - resolvedPivot).sqrMagnitude > 1e-8f)
-            {
-                Vector3 swept = Sweep(finalPivot, finalCamera, radius);
-                finalCamera = IsBlocked(swept, radius) ? finalPivot : swept;
-            }
-            FramingOffset = finalPivot - basePivot;
-            cameraTransform.SetPositionAndRotation(finalCamera, smoothedRotation);
+            Vector3 cameraPosition = resolvedPivot - smoothedRotation * Vector3.forward * smoothedDistance;
+            cameraTransform.SetPositionAndRotation(cameraPosition, ReticleRotation(cameraPosition));
             UpdateLocalOcclusion();
         }
 
-        /// <summary>Camera-space shift that puts the orbit target at <see cref="bodyViewport"/> for a given distance.</summary>
-        private Vector3 FramingShift(float distance)
+        /// <summary>The view rotation turned (minimally) so the screen centre crosses the flight line at the
+        /// convergence distance; identity when the camera already sits on that line (first person).</summary>
+        private Quaternion ReticleRotation(Vector3 cameraPosition)
         {
-            if (distance <= .001f || !controlledCamera) return Vector3.zero;
-            float tanV = Mathf.Tan(controlledCamera.fieldOfView * .5f * Mathf.Deg2Rad);
-            float tanH = tanV * Mathf.Max(.1f, controlledCamera.aspect);
-            float right = -(bodyViewport.x - .5f) * 2f * distance * tanH;
-            float up = -(bodyViewport.y - .5f) * 2f * distance * tanV;
-            return smoothedRotation * new Vector3(right, up, 0f);
+            if (!pivot || !(reticleConvergenceMeters > 0f)) return smoothedRotation;
+            Vector3 forward = smoothedRotation * Vector3.forward;
+            Vector3 direction = pivot.position + forward * reticleConvergenceMeters - cameraPosition;
+            if (direction.sqrMagnitude < 1e-6f || Vector3.Dot(direction, forward) <= 0f) return smoothedRotation;
+            return Quaternion.FromToRotation(forward, direction.normalized) * smoothedRotation;
         }
 
         public void SetView(Quaternion authoritativeViewRotation, float requestedDistance)

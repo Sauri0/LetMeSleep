@@ -406,7 +406,7 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator MosquitoThirdPersonFramesTheBodyRightOfAndBelowTheCrosshair()
+        public IEnumerator MosquitoThirdPersonKeepsTheBodyBelowTheCrosshair()
         {
             // r2 (director #9, UI-06 7b): the body at image x ~.6, y ~.7 (viewport y .3), never under the crosshair; first
             // person and a collapsed orbit bring it back to the centre.
@@ -427,8 +427,8 @@ namespace LetMeSleep.Tests.PlayMode
             yield return new WaitForSecondsRealtime(.6f);
             Vector3 body = camera.WorldToViewportPoint(actor.transform.position);
             Assert.That(body.z, Is.GreaterThan(1f));
-            Assert.That(body.x, Is.EqualTo(follow.BodyViewport.x).Within(.03f), "body right of the crosshair");
-            Assert.That(body.y, Is.EqualTo(follow.BodyViewport.y).Within(.03f), "body below the crosshair");
+            // The anim framing lifts the camera over the body and converges the reticle on the flight line.
+            Assert.That(body.y, Is.LessThan(.5f), "body below the crosshair");
             var bounds = actor.GetComponent<Renderer>().bounds;
             Vector2 min = Vector2.one * float.MaxValue, max = Vector2.one * float.MinValue;
             for (int i = 0; i < 8; i++)
@@ -440,7 +440,7 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(min.x > .5f || max.y < .5f, Is.True, "the crosshair is not covered by the body");
             follow.SetView(Quaternion.Euler(10f, 30f, 0f), 0f);
             yield return new WaitForSecondsRealtime(.4f);
-            Assert.That(follow.FramingOffset.magnitude, Is.LessThan(.001f), "first person keeps the centred eye");
+            Assert.That(Vector3.Distance(camera.transform.position, actor.transform.position), Is.LessThan(.05f), "first person keeps the centred eye");
         }
 
         [UnityTearDown]

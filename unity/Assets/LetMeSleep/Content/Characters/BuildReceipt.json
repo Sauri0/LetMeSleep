@@ -1,8 +1,8 @@
 {
-    "builder": "v030-characters-9-review-eyes",
+    "builder": "v030-characters-10-expressive-motion",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "365090ddb0fb581a2c52e8510a4cae610204346163bf7bf880fc9a6cbb5a8431",
-    "builderDigest": "ec54a6add92018534429c365337527019269f05319898bb2a4f0c0e74387c1a7",
+    "sourceDigest": "900f34bbba7a13fe043aebd13efcd3978559c58c7d3bb8cf306ea68b710db1d2",
+    "builderDigest": "619f6040324df5560d8cd48812f5ced3bc72b98f4aeeeac5b3eaa508a5b94303",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -16,374 +16,6 @@
             "guid": "3b269a3fe040c2547a5f982cecf763d8"
         },
         {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/CustomizationBuildReceipt.json",
-            "guid": "240ff3dbcb5c42e408ccead9ee1d7c44"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/LMS_CustomizationCatalog.asset",
-            "guid": "bb378f6f11ba41448b0202c1c653698b"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.back__mochila.fbx",
-            "guid": "53f7b208dec16374ca73dc17cb1addb3"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.base__base.fbx",
-            "guid": "fa2dce5c1257ea24bac9e14ce1e63034"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.bottom__jean.fbx",
-            "guid": "3e46bdbe7548f2544bb432017ece6d13"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.bottom__pijama.fbx",
-            "guid": "50e7cffea1d5d234a9e96eaaf1a00d37"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.footwear__pantuflas.fbx",
-            "guid": "76db1d1147755a74680352e319fc4055"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.footwear__zapatillas.fbx",
-            "guid": "492146095e2d2a746b3448837cff70a6"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.glasses__redondos.fbx",
-            "guid": "eec74b832305cb84cae167db03685f91"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.glasses__sol.fbx",
-            "guid": "0ed4f9968a4b66141bd8dedcfc4559df"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.hair__corto.fbx",
-            "guid": "cd5cff663301bf148981b6be564f650c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.hair__despeinado.fbx",
-            "guid": "ff8750714de2bcf40abfab8e977c4574"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.hair__rulos.fbx",
-            "guid": "82cefbe907279ad4caf7c2eef6e39c5f"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.headwear__gorra.fbx",
-            "guid": "6687d39f2f40a6a41aa3e526805473d1"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.headwear__gorro-dormir.fbx",
-            "guid": "682b72512406acc48825996e9861d0b5"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.headwear__gorro-lana.fbx",
-            "guid": "24ae61abb1a3ae94890981cedf181a46"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.top__buzo.fbx",
-            "guid": "fea3cb19d9d78d4409db3710d340933c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Human/human.top__remera.fbx",
-            "guid": "25bfbed7cbca2ca458f3f331b0df34b3"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.accessory__flor.fbx",
-            "guid": "028ea4b5d9978f04e815bb64755b8640"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.accessory__hoja.fbx",
-            "guid": "93a3b337ba0009f40a881144dbc85ee1"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.base__base.fbx",
-            "guid": "538ab051a9b16c34aa8ac2f1f27a4a8c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.markings__anillos.fbx",
-            "guid": "5cb84ea820a343d4b9adcba781cae676"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.markings__lunares.fbx",
-            "guid": "90ef4fd949c8ba6478113e4a2bfea496"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.markings__rayas.fbx",
-            "guid": "f48e553813891a3488fb7054c316758b"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.proboscis__corta.fbx",
-            "guid": "57a986758b5f2f344853790a2a68c595"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.proboscis__curva.fbx",
-            "guid": "25dabab66c23a4a49b1f78c2ab7c93c6"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.proboscis__estandar.fbx",
-            "guid": "a7ba3f79c461b074c8633cfa0a46fb67"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.proboscis__larga.fbx",
-            "guid": "087f0d061b81dfe4899916bc3a500883"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.wings__clasicas.fbx",
-            "guid": "3c3f550a52b06934eb8022b1e6363b72"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.wings__largas.fbx",
-            "guid": "0b3d540792de6f9468fb4129e04dcf7e"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Models/Mosquito/mosquito.wings__redondas.fbx",
-            "guid": "74afd302732e0fa42b33f826c9484c10"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.back__mochila.prefab",
-            "guid": "e91b63b311e18f044a6d39d012ea351d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.base__base.prefab",
-            "guid": "79e54b063c08058409f6ec7fa92a5a5b"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.bottom__jean.prefab",
-            "guid": "25c8b536f28364b4d9d02cf47cd8aa31"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.bottom__pijama.prefab",
-            "guid": "4a6adcb10ca8a0341946363b210780d9"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.footwear__pantuflas.prefab",
-            "guid": "79ebc13ad8c6b424d8bb0cbe4fc7385b"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.footwear__zapatillas.prefab",
-            "guid": "f4e927042eed92d4b8ea6a462d61fa43"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.glasses__redondos.prefab",
-            "guid": "fec3d46877ea3cc4a8c8aff7b0729af3"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.glasses__sol.prefab",
-            "guid": "fd48f4d8722fd8b4da52eaa45d57a06d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.hair__corto.prefab",
-            "guid": "491b460accbbbda44ad1a07524a66bcc"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.hair__despeinado.prefab",
-            "guid": "094c5f916bb6a0e4a80b405d2f891103"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.hair__rulos.prefab",
-            "guid": "b847ba96fae5dba4b8498295ead4c3ff"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.headwear__gorra.prefab",
-            "guid": "1f0172fbe8ae38442b598b80e4e67390"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.headwear__gorro-dormir.prefab",
-            "guid": "d4288bfdcb854ce43b61cdaf5eed489c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.headwear__gorro-lana.prefab",
-            "guid": "d7f91f678a178184dbe36ed2d29a99df"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.top__buzo.prefab",
-            "guid": "bf70abeaf2e2a3849b039c857d6ea908"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Human/human.top__remera.prefab",
-            "guid": "fe3e6ade205658942aaea3d28352681b"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.accessory__flor.prefab",
-            "guid": "36f7e11503bdb7a4094550a7e3e5338a"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.accessory__hoja.prefab",
-            "guid": "ffbbb79e030aca44b92c25617cbd2d19"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.base__base.prefab",
-            "guid": "8c341eeb7e63fa94b852cc5ce8052a58"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.markings__anillos.prefab",
-            "guid": "20d9cb021484f834290ff57b4db7cd33"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.markings__lunares.prefab",
-            "guid": "2584e7d57ec83de4eaabcc1a8e08179d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.markings__rayas.prefab",
-            "guid": "d0bdf45f70999884bb0a5e78adb24f73"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.proboscis__corta.prefab",
-            "guid": "8ae30856458e93f43a478ca910639ff1"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.proboscis__curva.prefab",
-            "guid": "825c18b18ff89f14ea3ae0c1a249f8d8"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.proboscis__estandar.prefab",
-            "guid": "d334960f4169b7d438473ab4be51dde4"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.proboscis__larga.prefab",
-            "guid": "1223c2f9e5baec84e9eae00575982422"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.wings__clasicas.prefab",
-            "guid": "1cae6b7e020dca24186c80def44997e2"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.wings__largas.prefab",
-            "guid": "076a062a53175ec4095c2147af02974d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Parts/Mosquito/mosquito.wings__redondas.prefab",
-            "guid": "70e476225160aed4daccdbf3bea74758"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.back__mochila.png",
-            "guid": "8d1b4ef4ea6aa8a4ca9a8f765cb59569"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.back__none.png",
-            "guid": "e38d93a5eea25d64fa44241d9741be67"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.bottom__jean.png",
-            "guid": "c22d06bf1f6f9024998d79a8d5873296"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.bottom__pijama.png",
-            "guid": "8284af23119db2e4093c286d38381ec2"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.footwear__pantuflas.png",
-            "guid": "394a82b6cccc6bf47b451fc952150e91"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.footwear__zapatillas.png",
-            "guid": "71ee2ae5762fb0144919f9159ca1f27f"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.glasses__none.png",
-            "guid": "530d8aaee888bee42b7c016e72f63bf0"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.glasses__redondos.png",
-            "guid": "b7742a16776c57d4ab5210622afd7d8c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.glasses__sol.png",
-            "guid": "facd0226446e8294daa9bb901299448e"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.hair__corto.png",
-            "guid": "ed3bb6ead55e6014b858854c3cab253b"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.hair__despeinado.png",
-            "guid": "e8bfcb6fc4778544cb83d5c3ce44b89d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.hair__rulos.png",
-            "guid": "f32bc11bc83f0754dbf4e6d14d137b54"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.headwear__gorra.png",
-            "guid": "93f8f5f8967da8b41a56598f2eb8ea7e"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.headwear__gorro-dormir.png",
-            "guid": "be5c1d1109726ea4ca29e76ad9bafb7e"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.headwear__gorro-lana.png",
-            "guid": "21f09e4415d36354a92dd8847d572aa7"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.headwear__none.png",
-            "guid": "ad0cc94886bbdfa4b9577cd30a99f4d4"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.top__buzo.png",
-            "guid": "b0be9e68d08850e46929a42750f9d6a3"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/human.top__remera.png",
-            "guid": "c12d99d0c266f8b4ca52913418fbfd6d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.accessory__flor.png",
-            "guid": "072d73c41e22f0e45822322bed9bab87"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.accessory__hoja.png",
-            "guid": "180bdb88f403dcf4fb9bd04657620084"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.accessory__none.png",
-            "guid": "7dfbf3c996b21144b8b048e3bec04031"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.markings__anillos.png",
-            "guid": "5ce83d94c6bac804897a04074e2cf0f8"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.markings__lunares.png",
-            "guid": "2ad7277fad682e74196fd428c456c80c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.markings__none.png",
-            "guid": "2de42db797953374d9e12b54d4c013a2"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.markings__rayas.png",
-            "guid": "7c52f8088d8e4ae43895ffda219cf4b9"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.proboscis__corta.png",
-            "guid": "ccd8fd6f8b5a0be4bb7d7d68606c9456"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.proboscis__curva.png",
-            "guid": "437664969ede0004bbdf55c15104e883"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.proboscis__estandar.png",
-            "guid": "9c191bbd4782a7d498ecac57c0e5f9c5"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.proboscis__larga.png",
-            "guid": "77611c3ca317def4bbe74e13ff0c359d"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.wings__clasicas.png",
-            "guid": "cd87523a3f248c5489c58be0bd457320"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.wings__largas.png",
-            "guid": "3b32013ab5c6fb045849ec8fec9a0e45"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Customization/Thumbnails/mosquito.wings__redondas.png",
-            "guid": "ab4eb422b5758aa48b3ed6e70b84d512"
-        },
-        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Character_Expression.mat",
             "guid": "67ada2d5a9e9d694fae75bacf09eb5ba"
         },
@@ -392,48 +24,8 @@
             "guid": "0e789b08cb8c148479f44e7b29db1a90"
         },
         {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Backpack.mat",
-            "guid": "0e01c203a508807488ac98e598683c73"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_BackpackAccent.mat",
-            "guid": "005da0252facef146945b6317130e751"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_BackpackTrim.mat",
-            "guid": "bc9bd669a901ea240b43ac4ab82d2813"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Beanie.mat",
-            "guid": "8ecd7ee9a96daa849821eda894026608"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_BeanieCuff.mat",
-            "guid": "860ceaed60cccc448884541f37cd1a2c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Denim.mat",
-            "guid": "eb8e3c9571e80f246bb933cb725421a3"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_DenimLight.mat",
-            "guid": "53f66391cbed769448fbe8aaa373bf02"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_DenimShade.mat",
-            "guid": "4fbccdbf3d0639c47a0577785558942f"
-        },
-        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_EyeWhiteShade.mat",
             "guid": "58d91e1ae044a294099bbdae38375de9"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_GlassesFrame.mat",
-            "guid": "36caa50fc377bf14dbf58e1fa146f61c"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_GlassesLens.mat",
-            "guid": "284aaf176ce52f1419a622c5c3fd9d04"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Hair.mat",
@@ -456,20 +48,12 @@
             "guid": "89c74522fdbb2ad4581335d5b48ad6b1"
         },
         {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_PantsShade.mat",
-            "guid": "8e7e9939a0252ea4d848ffa7122ae81a"
-        },
-        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Piping.mat",
             "guid": "173b87cf85b82ea4886a77373b87e9af"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Shirt.mat",
             "guid": "662940dab54789841b3dc4c879735834"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_ShirtShade.mat",
-            "guid": "d2b51411c25bd284ca2bd279fb692131"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Skin.mat",
@@ -484,28 +68,8 @@
             "guid": "47c4034d4bc49e4468c73e8a9fee390a"
         },
         {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_SneakerLace.mat",
-            "guid": "38fe9d75951da3843904c94185110014"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_SneakerSole.mat",
-            "guid": "31c62035afc90404284c629519410ad5"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_SneakerTread.mat",
-            "guid": "b687a334bb92b374c9e453f154c88775"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_SneakerUpper.mat",
-            "guid": "bf65427e833b6bc45a0e9f3de1457909"
-        },
-        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Abdomen.mat",
             "guid": "89f1c62e682ae944aa3246bb476c5ff9"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Accent.mat",
-            "guid": "d0b357493c38662468ffebcedcff6a23"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Expression.mat",
@@ -516,36 +80,12 @@
             "guid": "510dc11afdff26348a1acbe875d253f6"
         },
         {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_FlowerCentre.mat",
-            "guid": "17d5bd175b2e7f546b040adffec1df11"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Leaf.mat",
-            "guid": "a4f7ac9bedb012542b37e588290fdf54"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_LeafUnder.mat",
-            "guid": "7cc16652a060e2d47a2da368516cefdf"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_LeafVein.mat",
-            "guid": "daff9c2f3a11d234c981204e3cab1ba3"
-        },
-        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_LegJoint.mat",
             "guid": "82fb884cadc319a4ba13e6f7d38132ef"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Legs.mat",
             "guid": "f8d6edd430080f54dada4071220e87f9"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Petal.mat",
-            "guid": "672304bf87e681f4e8f39e773bc6d7c0"
-        },
-        {
-            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_PetalUnder.mat",
-            "guid": "304460a1d81f7a24dbe4eca63ea1a642"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Shell.mat",
@@ -623,15 +163,15 @@
     "validations": [
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
-            "triangles": 21563,
+            "triangles": 17864,
             "renderers": 5,
             "bones": 65,
-            "clips": 17,
+            "clips": 22,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00010910608398262411,
+            "maximumLoopFootDelta": 0.00010924881644314155,
             "motions": [
                 {
                     "Id": 0,
@@ -733,6 +273,36 @@
                     "Id": 16,
                     "StateName": "Base Layer.Trot",
                     "ClipName": "Human_Trot",
+                    "Loop": true
+                },
+                {
+                    "Id": 17,
+                    "StateName": "Base Layer.JumpAir",
+                    "ClipName": "Human_JumpAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 18,
+                    "StateName": "Base Layer.FallAir",
+                    "ClipName": "Human_FallAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 19,
+                    "StateName": "Base Layer.CrouchWalk",
+                    "ClipName": "Human_CrouchWalk",
+                    "Loop": true
+                },
+                {
+                    "Id": 20,
+                    "StateName": "Base Layer.Yawn",
+                    "ClipName": "Human_Yawn",
+                    "Loop": false
+                },
+                {
+                    "Id": 21,
+                    "StateName": "Base Layer.Victory",
+                    "ClipName": "Human_Victory",
                     "Loop": true
                 }
             ],
@@ -867,15 +437,15 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
-            "triangles": 21563,
+            "triangles": 17864,
             "renderers": 5,
             "bones": 65,
-            "clips": 17,
+            "clips": 22,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
             "rootStationary": true,
-            "maximumLoopFootDelta": 0.00010910608398262411,
+            "maximumLoopFootDelta": 0.00010924881644314155,
             "motions": [
                 {
                     "Id": 0,
@@ -977,6 +547,36 @@
                     "Id": 16,
                     "StateName": "Base Layer.Trot",
                     "ClipName": "Human_Trot",
+                    "Loop": true
+                },
+                {
+                    "Id": 17,
+                    "StateName": "Base Layer.JumpAir",
+                    "ClipName": "Human_JumpAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 18,
+                    "StateName": "Base Layer.FallAir",
+                    "ClipName": "Human_FallAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 19,
+                    "StateName": "Base Layer.CrouchWalk",
+                    "ClipName": "Human_CrouchWalk",
+                    "Loop": true
+                },
+                {
+                    "Id": 20,
+                    "StateName": "Base Layer.Yawn",
+                    "ClipName": "Human_Yawn",
+                    "Loop": false
+                },
+                {
+                    "Id": 21,
+                    "StateName": "Base Layer.Victory",
+                    "ClipName": "Human_Victory",
                     "Loop": true
                 }
             ],
@@ -1111,10 +711,10 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab",
-            "triangles": 6146,
+            "triangles": 5698,
             "renderers": 3,
             "bones": 39,
-            "clips": 15,
+            "clips": 16,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
@@ -1210,6 +810,12 @@
                     "StateName": "Base Layer.Bite",
                     "ClipName": "Mosquito_Bite",
                     "Loop": false
+                },
+                {
+                    "Id": 15,
+                    "StateName": "Base Layer.StunnedLoop",
+                    "ClipName": "Mosquito_StunnedLoop",
+                    "Loop": true
                 }
             ],
             "anchors": [
