@@ -38,6 +38,18 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void CreatingWhileThePreviousRoomIsStillClosingIsReportedInsteadOfIgnored()
+        {
+            Assert.That(OnlineEntryPolicy.Evaluate(false, LobbyState.Leaving), Is.EqualTo(OnlineEntryDecision.WaitForPreviousRoom),
+                "Otherwise the UI stays on 'Creando sala…' until the player presses Cancelar.");
+            Assert.That(OnlineEntryPolicy.Evaluate(true, LobbyState.Leaving), Is.EqualTo(OnlineEntryDecision.IgnoreDuplicate));
+            Assert.That(OnlineEntryPolicy.Evaluate(false, LobbyState.Connected), Is.EqualTo(OnlineEntryDecision.IgnoreDuplicate));
+            Assert.That(OnlineEntryPolicy.Evaluate(true, null), Is.EqualTo(OnlineEntryDecision.IgnoreDuplicate));
+            foreach (var state in new LobbyState?[] { null, LobbyState.Idle, LobbyState.Closed, LobbyState.Failed })
+                Assert.That(OnlineEntryPolicy.Evaluate(false, state), Is.EqualTo(OnlineEntryDecision.Proceed), state?.ToString() ?? "no lobby");
+        }
+
+        [Test]
         public void JoinFailuresAndIntentionalLeavesKeepTheirOwnFlow()
         {
             Assert.That(RoomTeardownPolicy.ShouldTearDown(LobbyState.Failed, false, false), Is.False, "Join errors stay on the join screen.");

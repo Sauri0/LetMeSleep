@@ -23,6 +23,21 @@ namespace LetMeSleep.Bootstrap
         public void Reset() { roomKey = string.Empty; round = -1; }
     }
 
+    public enum OnlineEntryDecision { Proceed, IgnoreDuplicate, WaitForPreviousRoom }
+
+    public static class OnlineEntryPolicy
+    {
+        /// <summary>
+        /// Create/Join requests while an attempt is pending or a room is open are duplicates. While the previous
+        /// room is still being left the request cannot start yet, and the player must be told so: the UI already
+        /// locked itself on "Creando sala…" and nothing else would ever release it.
+        /// </summary>
+        public static OnlineEntryDecision Evaluate(bool pendingOnline, LobbyState? lobby)
+            => pendingOnline || lobby == LobbyState.Connected ? OnlineEntryDecision.IgnoreDuplicate
+                : lobby == LobbyState.Leaving ? OnlineEntryDecision.WaitForPreviousRoom
+                : OnlineEntryDecision.Proceed;
+    }
+
     public static class RoomTeardownPolicy
     {
         /// <summary>

@@ -126,7 +126,9 @@ namespace LetMeSleep.Bootstrap
         private void BeginOnline(string name, string code)
         {
             if (quiescing) return;
-            if (pendingOnline || lobby?.State == LobbyState.Connected || lobby?.State == LobbyState.Leaving) return;
+            var entry = OnlineEntryPolicy.Evaluate(pendingOnline, lobby?.State);
+            if (entry == OnlineEntryDecision.IgnoreDuplicate) return;
+            if (entry == OnlineEntryDecision.WaitForPreviousRoom) { ShowOnlineError("Todavía estamos cerrando la sala anterior. Probá de nuevo en unos segundos."); return; }
             playerName = (name ?? "").Trim(); if (playerName.Length == 0 || playerName.Length > 24) { ShowOnlineError("Escribí un nombre de hasta 24 caracteres."); return; }
             intentionalLeave = false; closingError = ""; createOnline = code == null; joinCode = code; pendingOnline = true; lastError = "";
             SavePreferences(); ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Connecting, canCancel: true));
