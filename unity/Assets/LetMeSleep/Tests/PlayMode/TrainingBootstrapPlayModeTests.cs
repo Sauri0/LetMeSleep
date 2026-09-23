@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Linq;
 using LetMeSleep.Bootstrap;
@@ -7,6 +9,7 @@ using LetMeSleep.Gameplay.Unity;
 using LetMeSleep.Presentation;
 using LetMeSleep.UI;
 using NUnit.Framework;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -16,18 +19,24 @@ namespace LetMeSleep.Tests.PlayMode
 {
     public sealed class TrainingBootstrapPlayModeTests
     {
-        private const string BootScene = "LetMeSleepBoot";
+        // The production scene (the only one in Build Settings), loaded by path so the test never depends on
+        // Build Settings order. It still offers the alfa house map exercised below.
+        private const string BootScene = "Assets/Scenes/LetMeSleepHiggsfield.unity";
         private AlfaApplication application;
 
         [UnitySetUp]
         public IEnumerator LoadBootScene()
         {
+            // Without an isolated data directory the application would migrate and overwrite the developer's
+            // real preferences under N:/LetMeSleep/UserData/Unity.
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "--lms-validation-data") < 0)
+                Assert.Ignore("Requires --lms-validation-data <isolated directory>.");
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            AsyncOperation load = SceneManager.LoadSceneAsync(BootScene, LoadSceneMode.Single);
-            Assert.That(load, Is.Not.Null, $"{BootScene} must be present and enabled in Build Settings.");
+            AsyncOperation load = EditorSceneManager.LoadSceneAsyncInPlayMode(BootScene, new LoadSceneParameters(LoadSceneMode.Single));
+            Assert.That(load, Is.Not.Null, $"{BootScene} must exist.");
             while (!load.isDone)
                 yield return null;
 
@@ -214,3 +223,4 @@ namespace LetMeSleep.Tests.PlayMode
         }
     }
 }
+#endif
