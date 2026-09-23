@@ -1,6 +1,6 @@
 {
-  "status": "Native candidate ready for Unity integration; artistic approval pending",
-  "selected_raw_directory": "N:\\LetMeSleep\\Worktrees\\characters\\art_source\\unity\\characters\\.validation\\menu-seated1\\menu-adjusted",
+  "status": "v0.3.0 sketch human (round 3, art-director corrections: face/eyes, short square T, straight legs + mules, faceted head, nose/mouth, materials, nightcap) regenerated from art_source human base; native numeric gates passed; Unity import and artistic approval pending",
+  "selected_raw_directory": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r3\\menu",
   "clips": {
     "MenuSeatedIdle": 8.0,
     "MenuLook": 4.0,
@@ -9,10 +9,10 @@
   },
   "numeric_gates_passed": true,
   "samples_both_formats": 920,
-  "max_source_fbx_bone_difference_m": 1.0794860289260646e-06,
-  "max_boundary_mesh_difference_m": 5.092623081992585e-07,
-  "max_foot_error_m": 1.3532835522199042e-07,
-  "min_pelvis_cloth_height_m": 0.5764555931091309,
+  "max_source_fbx_bone_difference_m": 8.55487590694864e-07,
+  "max_boundary_mesh_difference_m": 7.474384429445537e-07,
+  "max_foot_error_m": 5.969069167437188e-07,
+  "min_pelvis_cloth_height_m": 0.5929999947547913,
   "seat_top_height_m": 0.575,
   "max_seat_flat_interior_vertex_count": 0,
   "swat_midpoint": {
@@ -27,37 +27,37 @@
       -0.3449999988079071,
       0.6510000228881836
     ],
-    "pelvis_cloth_min_height_m": 0.5764555931091309,
+    "pelvis_cloth_min_height_m": 0.5929999947547913,
     "seat_interior_vertex_count": 0,
     "grip_source_m": [
-      -0.4999999403953552,
-      -0.529392421245575,
-      1.0930542945861816
+      -0.5361114144325256,
+      -0.6651577949523926,
+      1.1658260822296143
     ],
     "grip_delta_rotation_rows": [
       [
-        1.0000003576278687,
-        -1.1920930376163597e-07,
-        -1.3783576946480025e-07
+        0.31418901681900024,
+        -0.8826903104782104,
+        0.3494899868965149
       ],
       [
-        6.025155130373605e-08,
-        0.9848077893257141,
-        -0.17364820837974548
+        0.6646250486373901,
+        0.4673807621002197,
+        0.5829485654830933
       ],
       [
-        1.1232468288824293e-08,
-        0.1736481934785843,
-        0.9848081469535828
+        -0.6779080033302307,
+        0.04912371560931206,
+        0.7335037589073181
       ]
     ],
     "impact_source_m": [
-      -0.5,
-      -0.5976980328559875,
-      1.4516410827636719
+      -0.4041340947151184,
+      -0.4547184705734253,
+      1.4333093166351318
     ],
-    "impact_to_pass_distance_m": 0.2044917639137734,
-    "gaze_error_degrees": 1.0218245810859397
+    "impact_to_pass_distance_m": 0.3465059100063506,
+    "gaze_error_degrees": 90.09316628475715
   },
   "native_processes": [
     {
@@ -123,9 +123,10 @@
   "next_capture": "Director Unity with production mosquito, UI and lighting",
   "review_images": "review/*.png: exact sofa and production flyswatter, Blender control lighting",
   "known_visual_issues": [
-    "Right sleeve cuff ring and grip volume require review",
-    "Shoulders, lapels and bent legs remain rigid",
-    "Reaction face partly hidden in three-quarter witness",
+    "Round 2 cartoon hands: bind pose holds the relaxed idle curl; grip and cushion contact of the chunky fingers need a visual check in the Unity menu scene",
+    "Round 3 nightcap: thick soft tail swells out of the back-left of the crown and hangs behind the left ear (pompom at ear height, ~0.20 m behind the ear); confirm it clears the pillow/sofa in the Unity menu scene",
+    "Round 3 open-back slippers (bare heel) and 70 mm-high rolled cuffs: check ankle/cuff overlap during seated knee bend in Unity",
+    "T-shirt shoulder and thigh cloth still rigid-ish under bends",
     "No full moving sequence or Unity approval yet"
   ],
   "file_sha256": {
@@ -156,10 +157,10 @@
     "evidence/menu-roundtrip-motion-process.json": "c315281cfd0e07cbc60bbb504a7001ad8ef7134bb45a2d9013c6bc1ee33cbf37",
     "evidence/menu-roundtrip-motion.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "evidence/menu-roundtrip-motion.log": "30a2b4d1101a2665363b72c32d535d7150126c61b1da3c0165a374ca0863485a",
-    "LMS_HumanMenu.blend": "383101ee88808fba0a052d3552dafa977b316850df556057f7c00da6e3b6b734",
-    "LMS_HumanMenu.fbx": "905b942ce4ea5192d0bd2442179edbcfba5b1f848695e3cd61917f6a111be7f9",
-    "menu_audit.json": "e1528e2d1cc6492f01e578bebccafb184231419c6a7080e67070079fcf763170",
-    "menu_motion_audit.json": "28704cd586459793c0577573f9bc19de71cf67bc46375a4a7809726b327fc69b",
+    "LMS_HumanMenu.blend": "16c1d5b63c015345f9014d4e07ec5083b7ecb6820c5050761c3616c85a3f5fd5",
+    "LMS_HumanMenu.fbx": "c550d6b216af4fdc25cab6439655e390cb2c9d10bfc7999554453f057b4f8ce1",
+    "menu_audit.json": "082b2c6000eb3645c1a0914424404e69401dcdf450bdf1d99a7def3b84e04fb2",
+    "menu_motion_audit.json": "d7177fca2749c0bf06c6c30bceaa1a10466d5e00363a02d74e778d5aca915a34",
     "review/reaction.json": "678cd4d3fc43b5cffffd371b1f7336b7739d98546122191ed459eba2a3b0a2ce",
     "review/reaction.png": "7f0318ca4f141fcfd1a0d3785c34024727d3063d5a43a73605778b8a00072c05",
     "review/seated_front.json": "a08acad9c7d01b5c91ce8b0eb0bf5fdebb220b6349f9c98c5bf07a80d81833ec",
@@ -168,5 +169,19 @@
     "review/seated_side.png": "ef62d27b63fe72feb5a8a694bc8db187c626a55713343068507887c970d99d4b",
     "review/seated_three_quarter.json": "f95069f1c18892d0602b903005c309491b2e9f5b65a1066e99345ddaef2ed107",
     "review/seated_three_quarter.png": "d22d42a898475a374c50be73093ca927539584ddb420abf2d92d191eef740abd"
+  },
+  "v030_regeneration": {
+    "round": "human-r3",
+    "source": "art_source/unity/characters/human/LMS_Human_alpha.blend (build_characters.py --species Human, 15-clip base; snapshot .validation/v030-human-r3/base15)",
+    "checks": {
+      "verify_human_menu": true,
+      "audit_human_facial": true,
+      "audit_human_joints": true
+    },
+    "check_reports": {
+      "facial_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r3\\menu\\facial_audit.json",
+      "joint_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r3\\menu\\joint_audit.json"
+    },
+    "legacy_evidence": "evidence/ and review/ images/logs describe the previous (pre-v0.3.0) pajama-jacket geometry and were not regenerated"
   }
 }

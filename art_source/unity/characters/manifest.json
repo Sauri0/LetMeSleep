@@ -1,5 +1,5 @@
 {
-  "version": "0.9.4-alpha-human-reference9-mosquito-r3-candidate",
+  "version": "0.9.4-alpha-human-reference-quality-revision-5",
   "generator": "build_characters.py",
   "blender": "5.2.1 LTS",
   "source_units": "meters",
@@ -23,8 +23,8 @@
       "species": "Human",
       "mesh_count": 5,
       "bones": 65,
-      "triangles": 7980,
-      "vertices": 4118,
+      "triangles": 15618,
+      "vertices": 8107,
       "unweighted_vertices": 0,
       "bad_weight_sums": 0,
       "degenerate_triangles": 0,
@@ -168,11 +168,11 @@
       ],
       "curl": {
         "L": {
-          "inward_displacement_m": 0.0671095922589302,
+          "inward_displacement_m": 0.03647078946232796,
           "angle_radians_per_joint": 0.55
         },
         "R": {
-          "inward_displacement_m": 0.0671095922589302,
+          "inward_displacement_m": 0.03647078946232796,
           "angle_radians_per_joint": 0.55
         }
       },
@@ -184,19 +184,19 @@
         "minimum_leg_reach_margin_m": 0.0015927914013900146
       },
       "bounds_min": [
-        -0.9200505018234253,
-        -0.21799999475479126,
+        -0.9121531844139099,
+        -0.21050000190734863,
         0.0
       ],
       "bounds_max": [
-        0.9202574491500854,
-        0.1289999932050705,
-        1.8625340461730957
+        0.9121415019035339,
+        0.2641785442829132,
+        1.7612417936325073
       ],
       "dimensions": [
-        1.8403079509735107,
-        0.34699998795986176,
-        1.8625340461730957
+        1.8242946863174438,
+        0.47467854619026184,
+        1.7612417936325073
       ],
       "sockets": [
         "Socket.Eye",
@@ -212,11 +212,12 @@
         {
           "name": "HumanBody",
           "materials": [
-            "Human_Pajamas",
-            "Human_Piping",
-            "Human_SlipperSole",
+            "Human_Shirt",
             "Human_Skin",
-            "Character_EyeWhite"
+            "Human_Pajamas",
+            "Human_PajamaDots",
+            "Human_SlipperSole",
+            "Human_Slipper"
           ]
         },
         {
@@ -235,19 +236,130 @@
           "name": "HumanHead",
           "materials": [
             "Human_Skin",
+            "Character_Expression",
             "Character_EyeWhite",
-            "Character_Expression"
+            "Human_Hair"
           ]
         },
         {
           "name": "HumanNightcap",
           "materials": [
-            "Human_Pajamas",
-            "Human_Piping",
-            "Character_EyeWhite"
+            "Human_NightcapBand",
+            "Human_Nightcap",
+            "Human_Piping"
           ]
         }
       ],
+      "blend_shapes": {
+        "HumanHead": [
+          "Blink25.L",
+          "Blink50.L",
+          "Blink75.L",
+          "Blink.L",
+          "Blink25.R",
+          "Blink50.R",
+          "Blink75.R",
+          "Blink.R"
+        ]
+      },
+      "facial_contract": {
+        "renderer": "HumanHead",
+        "head_bone": "Head",
+        "neck_bone": "Neck",
+        "head_forward_local": [
+          0,
+          0,
+          1
+        ],
+        "head_up_local": [
+          0,
+          1,
+          0
+        ],
+        "eye_bones": [
+          "Eye.L",
+          "Eye.R"
+        ],
+        "eye_forward_local": [
+          0,
+          1,
+          0
+        ],
+        "eye_up_local": [
+          0,
+          0,
+          1
+        ],
+        "eye_bind_centers_source_m": {
+          "L": [
+            0.067,
+            -0.132,
+            1.53
+          ],
+          "R": [
+            -0.067,
+            -0.132,
+            1.53
+          ]
+        },
+        "blink_shapes": {
+          "L": "Blink.L",
+          "R": "Blink.R"
+        },
+        "unity_blink_range": [
+          0,
+          100
+        ],
+        "blink_samples": {
+          "L": [
+            "Basis",
+            "Blink25.L",
+            "Blink50.L",
+            "Blink75.L",
+            "Blink.L"
+          ],
+          "R": [
+            "Basis",
+            "Blink25.R",
+            "Blink50.R",
+            "Blink75.R",
+            "Blink.R"
+          ]
+        },
+        "blink_interpolation": "Piecewise adjacent samples at closure0/.25/.50/.75/1; two neighboring morph weights sum to100. Basis needs no weight. This keeps lid paths outside the globe.",
+        "writer": "One Presentation facial controller after animation, shared with gameplay",
+        "tracking": "Live target, smoothed/clamped offset from this frame animated base; never accumulate last frame offset",
+        "suggested_limits_degrees": {
+          "head_yaw": 55,
+          "head_pitch": 25,
+          "neck_yaw": 20,
+          "eye_yaw": 22,
+          "eye_pitch": 15
+        },
+        "legacy_blink_clip": "Eye local scale Z is a legacy signal only; read before resetting scale to1, map (1-z)/.93 to lid closure",
+        "eye_scale_runtime": [
+          1,
+          1,
+          1
+        ],
+        "eye_radius_m": 0.0605,
+        "scope": "Same rig names/hierarchy; v0.3.0 sketch face: large protruding eyes centred at Socket.Eye height 1.53; head/cap/skin material customization retained"
+      },
+      "eyelid_winding": {
+        "flipped_faces": 120,
+        "validated_faces": 240,
+        "samples_per_face": 5,
+        "sides": {
+          "L": {
+            "faces": 120,
+            "flipped": 60
+          },
+          "R": {
+            "faces": 120,
+            "flipped": 60
+          }
+        }
+      },
       "bone_names": [
         "Root",
         "Hips",
@@ -405,13 +517,13 @@
           "parent": "Head",
           "head_blender_m": [
             0.0,
-            -0.014999999664723873,
-            1.4600000381469727
+            -0.004999999888241291,
+            1.4249999523162842
           ],
           "tail_blender_m": [
             0.0,
             -0.03500000014901161,
-            1.3930000066757202
+            1.3600000143051147
           ]
         },
         {
@@ -446,56 +558,56 @@
           "name": "Eye.L",
           "parent": "Head",
           "head_blender_m": [
-            0.08799999952316284,
-            -0.17000000178813934,
-            1.5499999523162842
+            0.06700000166893005,
+            -0.13199999928474426,
+            1.5299999713897705
           ],
           "tail_blender_m": [
-            0.08799999952316284,
-            -0.20999999344348907,
-            1.5499999523162842
+            0.06700000166893005,
+            -0.19200000166893005,
+            1.5299999713897705
           ]
         },
         {
           "name": "Brow.L",
           "parent": "Head",
           "head_blender_m": [
-            0.08799999952316284,
-            -0.17000000178813934,
-            1.6399999856948853
+            0.07000000029802322,
+            -0.14000000059604645,
+            1.6100000143051147
           ],
           "tail_blender_m": [
-            0.08799999952316284,
-            -0.20999999344348907,
-            1.6399999856948853
+            0.07000000029802322,
+            -0.18000000715255737,
+            1.6100000143051147
           ]
         },
         {
           "name": "Eye.R",
           "parent": "Head",
           "head_blender_m": [
-            -0.08799999952316284,
-            -0.17000000178813934,
-            1.5499999523162842
+            -0.06700000166893005,
+            -0.13199999928474426,
+            1.5299999713897705
           ],
           "tail_blender_m": [
-            -0.08799999952316284,
-            -0.20999999344348907,
-            1.5499999523162842
+            -0.06700000166893005,
+            -0.19200000166893005,
+            1.5299999713897705
           ]
         },
         {
           "name": "Brow.R",
           "parent": "Head",
           "head_blender_m": [
-            -0.08799999952316284,
-            -0.17000000178813934,
-            1.6399999856948853
+            -0.07000000029802322,
+            -0.14000000059604645,
+            1.6100000143051147
           ],
           "tail_blender_m": [
-            -0.08799999952316284,
-            -0.20999999344348907,
-            1.6399999856948853
+            -0.07000000029802322,
+            -0.18000000715255737,
+            1.6100000143051147
           ]
         },
         {
@@ -600,210 +712,210 @@
           "name": "Index01.L",
           "parent": "Hand.L",
           "head_blender_m": [
-            0.8220000267028809,
+            0.8299999833106995,
             0.0,
-            1.184000015258789
+            1.187999963760376
           ],
           "tail_blender_m": [
-            0.8600120544433594,
-            0.0,
-            1.184000015258789
+            0.8621060252189636,
+            -0.003251355607062578,
+            1.1896065473556519
           ]
         },
         {
           "name": "Index02.L",
           "parent": "Index01.L",
           "head_blender_m": [
-            0.8600120544433594,
-            0.0,
-            1.184000015258789
+            0.8621060252189636,
+            -0.003251355607062578,
+            1.1896065473556519
           ],
           "tail_blender_m": [
-            0.8883000612258911,
-            0.0,
-            1.184000015258789
+            0.8849257230758667,
+            -0.01074196957051754,
+            1.1907484531402588
           ]
         },
         {
           "name": "Index03.L",
           "parent": "Index02.L",
           "head_blender_m": [
-            0.8883000612258911,
-            0.0,
-            1.184000015258789
+            0.8849257230758667,
+            -0.01074196957051754,
+            1.1907484531402588
           ],
           "tail_blender_m": [
-            0.9104000329971313,
-            0.0,
-            1.184000015258789
+            0.9003592729568481,
+            -0.02142307534813881,
+            1.1915208101272583
           ]
         },
         {
           "name": "Middle01.L",
           "parent": "Hand.L",
           "head_blender_m": [
-            0.8220000267028809,
+            0.8299999833106995,
             0.0,
-            1.159000039100647
+            1.159999966621399
           ],
           "tail_blender_m": [
-            0.8643980026245117,
-            0.0,
-            1.159000039100647
+            0.8658527731895447,
+            -0.00362651189789176,
+            1.1604301929473877
           ]
         },
         {
           "name": "Middle02.L",
           "parent": "Middle01.L",
           "head_blender_m": [
-            0.8643980026245117,
-            0.0,
-            1.159000039100647
+            0.8658527731895447,
+            -0.00362651189789176,
+            1.1604301929473877
           ],
           "tail_blender_m": [
-            0.8959500193595886,
-            0.0,
-            1.159000039100647
+            0.8913355469703674,
+            -0.011981427669525146,
+            1.1607359647750854
           ]
         },
         {
           "name": "Middle03.L",
           "parent": "Middle02.L",
           "head_blender_m": [
-            0.8959500193595886,
-            0.0,
-            1.159000039100647
+            0.8913355469703674,
+            -0.011981427669525146,
+            1.1607359647750854
           ],
           "tail_blender_m": [
-            0.9205999970436096,
-            0.0,
-            1.159000039100647
+            0.9085701704025269,
+            -0.02389496937394142,
+            1.160942792892456
           ]
         },
         {
           "name": "Ring01.L",
           "parent": "Hand.L",
           "head_blender_m": [
-            0.8220000267028809,
+            0.8299999833106995,
             0.0,
-            1.1330000162124634
+            1.13100004196167
           ],
           "tail_blender_m": [
-            0.8607430458068848,
-            0.0,
-            1.1330000162124634
+            0.8627496361732483,
+            -0.0033138818107545376,
+            1.1300172805786133
           ]
         },
         {
           "name": "Ring02.L",
           "parent": "Ring01.L",
           "head_blender_m": [
-            0.8607430458068848,
-            0.0,
-            1.1330000162124634
+            0.8627496361732483,
+            -0.0033138818107545376,
+            1.1300172805786133
           ],
           "tail_blender_m": [
-            0.8895750641822815,
-            0.0,
-            1.1330000162124634
+            0.8860267996788025,
+            -0.010948546230793,
+            1.1293187141418457
           ]
         },
         {
           "name": "Ring03.L",
           "parent": "Ring02.L",
           "head_blender_m": [
-            0.8895750641822815,
-            0.0,
-            1.1330000162124634
+            0.8860267996788025,
+            -0.010948546230793,
+            1.1293187141418457
           ],
           "tail_blender_m": [
-            0.912100076675415,
-            0.0,
-            1.1330000162124634
+            0.9017696976661682,
+            -0.02183505706489086,
+            1.128846287727356
           ]
         },
         {
           "name": "Little01.L",
           "parent": "Hand.L",
           "head_blender_m": [
-            0.8220000267028809,
+            0.8299999833106995,
             0.0,
-            1.1069999933242798
+            1.1030000448226929
           ],
           "tail_blender_m": [
-            0.8519710302352905,
-            0.0,
-            1.1069999933242798
+            0.8552649617195129,
+            -0.002563568763434887,
+            1.1009745597839355
           ]
         },
         {
           "name": "Little02.L",
           "parent": "Little01.L",
           "head_blender_m": [
-            0.8519710302352905,
-            0.0,
-            1.1069999933242798
+            0.8552649617195129,
+            -0.002563568763434887,
+            1.1009745597839355
           ],
           "tail_blender_m": [
-            0.8742750287055969,
-            0.0,
-            1.1069999933242798
+            0.873222291469574,
+            -0.008469630032777786,
+            1.0995348691940308
           ]
         },
         {
           "name": "Little03.L",
           "parent": "Little02.L",
           "head_blender_m": [
-            0.8742750287055969,
-            0.0,
-            1.1069999933242798
+            0.873222291469574,
+            -0.008469630032777786,
+            1.0995348691940308
           ],
           "tail_blender_m": [
-            0.891700029373169,
-            0.0,
-            1.1069999933242798
+            0.8853672742843628,
+            -0.016891270875930786,
+            1.09856116771698
           ]
         },
         {
           "name": "Thumb01.L",
           "parent": "Hand.L",
           "head_blender_m": [
-            0.7820000052452087,
+            0.7850000262260437,
             0.0,
-            1.190000057220459
+            1.1950000524520874
           ],
           "tail_blender_m": [
-            0.8027631044387817,
-            0.0,
-            1.2049494981765747
+            0.802602231502533,
+            -0.0015769432066008449,
+            1.2076736688613892
           ]
         },
         {
           "name": "Thumb02.L",
           "parent": "Thumb01.L",
           "head_blender_m": [
-            0.8027631044387817,
-            0.0,
-            1.2049494981765747
+            0.802602231502533,
+            -0.0015769432066008449,
+            1.2076736688613892
           ],
           "tail_blender_m": [
-            0.8182147145271301,
-            0.0,
-            1.2160747051239014
+            0.8153958916664124,
+            -0.005236521828919649,
+            1.2168850898742676
           ]
         },
         {
           "name": "Thumb03.L",
           "parent": "Thumb02.L",
           "head_blender_m": [
-            0.8182147145271301,
-            0.0,
-            1.2160747051239014
+            0.8153958916664124,
+            -0.005236521828919649,
+            1.2168850898742676
           ],
           "tail_blender_m": [
-            0.8302862644195557,
-            0.0,
-            1.2247662544250488
+            0.8246991634368896,
+            -0.01056995801627636,
+            1.223583459854126
           ]
         },
         {
@@ -880,210 +992,210 @@
           "name": "Index01.R",
           "parent": "Hand.R",
           "head_blender_m": [
-            -0.8220000267028809,
+            -0.8299999833106995,
             0.0,
-            1.184000015258789
+            1.187999963760376
           ],
           "tail_blender_m": [
-            -0.8600120544433594,
-            0.0,
-            1.184000015258789
+            -0.8621060252189636,
+            -0.003251355607062578,
+            1.1896065473556519
           ]
         },
         {
           "name": "Index02.R",
           "parent": "Index01.R",
           "head_blender_m": [
-            -0.8600120544433594,
-            0.0,
-            1.184000015258789
+            -0.8621060252189636,
+            -0.003251355607062578,
+            1.1896065473556519
           ],
           "tail_blender_m": [
-            -0.8883000612258911,
-            0.0,
-            1.184000015258789
+            -0.8849257230758667,
+            -0.01074196957051754,
+            1.1907484531402588
           ]
         },
         {
           "name": "Index03.R",
           "parent": "Index02.R",
           "head_blender_m": [
-            -0.8883000612258911,
-            0.0,
-            1.184000015258789
+            -0.8849257230758667,
+            -0.01074196957051754,
+            1.1907484531402588
           ],
           "tail_blender_m": [
-            -0.9104000329971313,
-            0.0,
-            1.184000015258789
+            -0.9003592729568481,
+            -0.02142307534813881,
+            1.1915208101272583
           ]
         },
         {
           "name": "Middle01.R",
           "parent": "Hand.R",
           "head_blender_m": [
-            -0.8220000267028809,
+            -0.8299999833106995,
             0.0,
-            1.159000039100647
+            1.159999966621399
           ],
           "tail_blender_m": [
-            -0.8643980026245117,
-            0.0,
-            1.159000039100647
+            -0.8658527731895447,
+            -0.00362651189789176,
+            1.1604301929473877
           ]
         },
         {
           "name": "Middle02.R",
           "parent": "Middle01.R",
           "head_blender_m": [
-            -0.8643980026245117,
-            0.0,
-            1.159000039100647
+            -0.8658527731895447,
+            -0.00362651189789176,
+            1.1604301929473877
           ],
           "tail_blender_m": [
-            -0.8959500193595886,
-            0.0,
-            1.159000039100647
+            -0.8913355469703674,
+            -0.011981427669525146,
+            1.1607359647750854
           ]
         },
         {
           "name": "Middle03.R",
           "parent": "Middle02.R",
           "head_blender_m": [
-            -0.8959500193595886,
-            0.0,
-            1.159000039100647
+            -0.8913355469703674,
+            -0.011981427669525146,
+            1.1607359647750854
           ],
           "tail_blender_m": [
-            -0.9205999970436096,
-            0.0,
-            1.159000039100647
+            -0.9085701704025269,
+            -0.02389496937394142,
+            1.160942792892456
           ]
         },
         {
           "name": "Ring01.R",
           "parent": "Hand.R",
           "head_blender_m": [
-            -0.8220000267028809,
+            -0.8299999833106995,
             0.0,
-            1.1330000162124634
+            1.13100004196167
           ],
           "tail_blender_m": [
-            -0.8607430458068848,
-            0.0,
-            1.1330000162124634
+            -0.8627496361732483,
+            -0.0033138818107545376,
+            1.1300172805786133
           ]
         },
         {
           "name": "Ring02.R",
           "parent": "Ring01.R",
           "head_blender_m": [
-            -0.8607430458068848,
-            0.0,
-            1.1330000162124634
+            -0.8627496361732483,
+            -0.0033138818107545376,
+            1.1300172805786133
           ],
           "tail_blender_m": [
-            -0.8895750641822815,
-            0.0,
-            1.1330000162124634
+            -0.8860267996788025,
+            -0.010948546230793,
+            1.1293187141418457
           ]
         },
         {
           "name": "Ring03.R",
           "parent": "Ring02.R",
           "head_blender_m": [
-            -0.8895750641822815,
-            0.0,
-            1.1330000162124634
+            -0.8860267996788025,
+            -0.010948546230793,
+            1.1293187141418457
           ],
           "tail_blender_m": [
-            -0.912100076675415,
-            0.0,
-            1.1330000162124634
+            -0.9017696976661682,
+            -0.02183505706489086,
+            1.128846287727356
           ]
         },
         {
           "name": "Little01.R",
           "parent": "Hand.R",
           "head_blender_m": [
-            -0.8220000267028809,
+            -0.8299999833106995,
             0.0,
-            1.1069999933242798
+            1.1030000448226929
           ],
           "tail_blender_m": [
-            -0.8519710302352905,
-            0.0,
-            1.1069999933242798
+            -0.8552649617195129,
+            -0.002563568763434887,
+            1.1009745597839355
           ]
         },
         {
           "name": "Little02.R",
           "parent": "Little01.R",
           "head_blender_m": [
-            -0.8519710302352905,
-            0.0,
-            1.1069999933242798
+            -0.8552649617195129,
+            -0.002563568763434887,
+            1.1009745597839355
           ],
           "tail_blender_m": [
-            -0.8742750287055969,
-            0.0,
-            1.1069999933242798
+            -0.873222291469574,
+            -0.008469630032777786,
+            1.0995348691940308
           ]
         },
         {
           "name": "Little03.R",
           "parent": "Little02.R",
           "head_blender_m": [
-            -0.8742750287055969,
-            0.0,
-            1.1069999933242798
+            -0.873222291469574,
+            -0.008469630032777786,
+            1.0995348691940308
           ],
           "tail_blender_m": [
-            -0.891700029373169,
-            0.0,
-            1.1069999933242798
+            -0.8853672742843628,
+            -0.016891270875930786,
+            1.09856116771698
           ]
         },
         {
           "name": "Thumb01.R",
           "parent": "Hand.R",
           "head_blender_m": [
-            -0.7820000052452087,
+            -0.7850000262260437,
             0.0,
-            1.190000057220459
+            1.1950000524520874
           ],
           "tail_blender_m": [
-            -0.8027631044387817,
-            0.0,
-            1.2049494981765747
+            -0.802602231502533,
+            -0.0015769432066008449,
+            1.2076736688613892
           ]
         },
         {
           "name": "Thumb02.R",
           "parent": "Thumb01.R",
           "head_blender_m": [
-            -0.8027631044387817,
-            0.0,
-            1.2049494981765747
+            -0.802602231502533,
+            -0.0015769432066008449,
+            1.2076736688613892
           ],
           "tail_blender_m": [
-            -0.8182147145271301,
-            0.0,
-            1.2160747051239014
+            -0.8153958916664124,
+            -0.005236521828919649,
+            1.2168850898742676
           ]
         },
         {
           "name": "Thumb03.R",
           "parent": "Thumb02.R",
           "head_blender_m": [
-            -0.8182147145271301,
-            0.0,
-            1.2160747051239014
+            -0.8153958916664124,
+            -0.005236521828919649,
+            1.2168850898742676
           ],
           "tail_blender_m": [
-            -0.8302862644195557,
-            0.0,
-            1.2247662544250488
+            -0.8246991634368896,
+            -0.01056995801627636,
+            1.223583459854126
           ]
         },
         {
@@ -1230,71 +1342,137 @@
       "materials": [
         "Character_Expression",
         "Character_EyeWhite",
+        "Human_Hair",
+        "Human_Nightcap",
+        "Human_NightcapBand",
+        "Human_PajamaDots",
         "Human_Pajamas",
         "Human_Piping",
+        "Human_Shirt",
         "Human_Skin",
+        "Human_Slipper",
         "Human_SlipperSole"
       ],
       "material_palette": [
         {
           "name": "Character_Expression",
           "color": {
-            "r": 0.04500000178813934,
-            "g": 0.03200000151991844,
-            "b": 0.04500000178813934,
+            "r": 0.08627451211214066,
+            "g": 0.06666667014360428,
+            "b": 0.05882352963089943,
             "a": 1.0
           },
-          "roughness": 0.8199999928474426
+          "roughness": 0.9200000166893005
         },
         {
           "name": "Character_EyeWhite",
           "color": {
-            "r": 0.8399999737739563,
-            "g": 0.8299999833106995,
-            "b": 0.7599999904632568,
+            "r": 0.9725490212440491,
+            "g": 0.9529411792755127,
+            "b": 0.9372549057006836,
             "a": 1.0
           },
-          "roughness": 0.7799999713897705
+          "roughness": 0.550000011920929
+        },
+        {
+          "name": "Human_Hair",
+          "color": {
+            "r": 0.22745098173618317,
+            "g": 0.14901961386203766,
+            "b": 0.09803921729326248,
+            "a": 1.0
+          },
+          "roughness": 0.8500000238418579
+        },
+        {
+          "name": "Human_Nightcap",
+          "color": {
+            "r": 0.6431372761726379,
+            "g": 0.11764705926179886,
+            "b": 0.10980392247438431,
+            "a": 1.0
+          },
+          "roughness": 0.949999988079071
+        },
+        {
+          "name": "Human_NightcapBand",
+          "color": {
+            "r": 0.5882353186607361,
+            "g": 0.10588235408067703,
+            "b": 0.10588235408067703,
+            "a": 1.0
+          },
+          "roughness": 0.949999988079071
+        },
+        {
+          "name": "Human_PajamaDots",
+          "color": {
+            "r": 0.9137254953384399,
+            "g": 0.8666666746139526,
+            "b": 0.7960784435272217,
+            "a": 1.0
+          },
+          "roughness": 0.8799999952316284
         },
         {
           "name": "Human_Pajamas",
           "color": {
-            "r": 0.11999999731779099,
-            "g": 0.30000001192092896,
-            "b": 0.4699999988079071,
+            "r": 0.1764705926179886,
+            "g": 0.30980393290519714,
+            "b": 0.6039215922355652,
             "a": 1.0
           },
-          "roughness": 0.8700000047683716
+          "roughness": 0.8799999952316284
         },
         {
           "name": "Human_Piping",
           "color": {
-            "r": 0.5299999713897705,
-            "g": 0.6700000166893005,
-            "b": 0.7099999785423279,
+            "r": 0.9607843160629272,
+            "g": 0.9490196108818054,
+            "b": 0.9254902005195618,
             "a": 1.0
           },
-          "roughness": 0.8700000047683716
+          "roughness": 0.8999999761581421
+        },
+        {
+          "name": "Human_Shirt",
+          "color": {
+            "r": 0.8941176533699036,
+            "g": 0.8352941274642944,
+            "b": 0.7254902124404907,
+            "a": 1.0
+          },
+          "roughness": 0.8999999761581421
         },
         {
           "name": "Human_Skin",
           "color": {
-            "r": 0.6700000166893005,
-            "g": 0.4300000071525574,
-            "b": 0.27000001072883606,
+            "r": 0.7490196228027344,
+            "g": 0.48627451062202454,
+            "b": 0.3019607961177826,
             "a": 1.0
           },
           "roughness": 0.8199999928474426
         },
         {
-          "name": "Human_SlipperSole",
+          "name": "Human_Slipper",
           "color": {
-            "r": 0.06499999761581421,
-            "g": 0.10000000149011612,
-            "b": 0.15000000596046448,
+            "r": 0.12156862765550613,
+            "g": 0.1764705926179886,
+            "b": 0.4000000059604645,
             "a": 1.0
           },
           "roughness": 0.8999999761581421
+        },
+        {
+          "name": "Human_SlipperSole",
+          "color": {
+            "r": 0.16470588743686676,
+            "g": 0.1882352977991104,
+            "b": 0.3137255012989044,
+            "a": 1.0
+          },
+          "roughness": 0.9200000166893005
         }
       ],
       "passed": true,
@@ -1303,9 +1481,9 @@
     {
       "species": "Mosquito",
       "mesh_count": 3,
-      "bones": 33,
-      "triangles": 2116,
-      "vertices": 1158,
+      "bones": 39,
+      "triangles": 4696,
+      "vertices": 2510,
       "unweighted_vertices": 0,
       "bad_weight_sums": 0,
       "degenerate_triangles": 0,
@@ -1462,7 +1640,140 @@
           0
         ],
         "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
-        "geometry_revision": "mosquito-planar-stance-r3",
+        "geometry_revision": "mosquito-sketch-r3-source",
+        "palette_srgb_hex": {
+          "shell": "#B8262B",
+          "segment": "#6E1418",
+          "legs": "#3A1418",
+          "joint": "#1A0C0E",
+          "eye": "#FAFAF8",
+          "pupil": "#141218",
+          "wing": "#DCDDF5",
+          "vein": "#C3C3E6",
+          "wing_edge": "#ECECFA"
+        },
+        "belly_shade": {
+          "vertex_color_layer": "Col",
+          "lower_fraction": 0.4,
+          "lowest_multiplier_linear": [
+            0.325307527630289,
+            0.36091630956662024,
+            0.37810239565865
+          ],
+          "unity_note": "URP/Lit ignores vertex colour; a vertex-colour multiply is needed to show it"
+        },
+        "face": {
+          "revision": "mosquito-facial-controls-v1",
+          "bind_is_open": true,
+          "parent": "Head",
+          "bones": [
+            "Pupil.L",
+            "LidUpper.L",
+            "LidLower.L",
+            "Pupil.R",
+            "LidUpper.R",
+            "LidLower.R"
+          ],
+          "total_rig_bones": 39,
+          "source_coordinates": "metres, Z up, -Y forward; actor scale .5 once",
+          "eye_centers_source_m": {
+            "L": [
+              0.037,
+              -0.066,
+              0.132
+            ],
+            "R": [
+              -0.037,
+              -0.066,
+              0.132
+            ]
+          },
+          "eye_radii_source_m": [
+            0.0355,
+            0.029,
+            0.0366
+          ],
+          "eye_white_forward_offset_source_m": 0.011,
+          "lid_radii_source_m": {
+            "x": 0.0392,
+            "yz": 0.0447,
+            "lower_inset": 0.0005
+          },
+          "lid_geometry_revision": "mosquito-sketch-r3-forward-white-cups",
+          "lid_rest_edges_degrees_about_x_from_front": {
+            "upper_front_center_to_pole": [
+              68.0,
+              84.0
+            ],
+            "upper_back": 198.0,
+            "lower_front_center_to_pole": [
+              -92.0,
+              -86.0
+            ],
+            "lower_back": -208.0
+          },
+          "pupil": {
+            "radii_source_m": [
+              0.0087,
+              0.0022,
+              0.0095
+            ],
+            "depth_source_m": 0.03940193549694342,
+            "inward_yaw_degrees": 2
+          },
+          "bone_tail_direction_source": [
+            1,
+            0,
+            0
+          ],
+          "gaze": {
+            "controls": [
+              "Pupil.L",
+              "Pupil.R"
+            ],
+            "yaw_axis_source": [
+              0,
+              0,
+              1
+            ],
+            "pitch_axis_source": [
+              1,
+              0,
+              0
+            ],
+            "yaw_limit_degrees": 12,
+            "pitch_limit_degrees": 10,
+            "order": "Rz(yaw) @ Rx(pitch) applied to bind around each eye center",
+            "white_eye_moves": false
+          },
+          "blink": {
+            "closure_range": [
+              0,
+              1
+            ],
+            "upper_angle_source_x_degrees": [
+              0,
+              90
+            ],
+            "lower_angle_source_x_degrees": [
+              0,
+              -90
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ],
+            "material": "Mosquito_Shell"
+          },
+          "eye_housing": "fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure",
+          "rest_pose": "upper shutter rests at ~68 deg over the top of the white (<=5% cover); blink closure 0..1 starts from that bind pose",
+          "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
+          "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
+          "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
+          "customization": "MosquitoSkin renderer; existing Mosquito_Shell color binding. EyeWhite/Expression remain unchanged.",
+          "native_status": "source candidate only; geometry, FBX axes, closure and runtime visibility await Director slot"
+        },
         "proboscis_descent_degrees": 44.38394009160077,
         "art_acceptance": "pending real render, complete clips, Unity and independent review",
         "minimum_surface_leg_reach_margin_m": 0.00686739145002313,
@@ -1579,23 +1890,53 @@
           ],
           "runtime_phase_sync_verified": false
         },
+        "flight": {
+          "clips": [
+            "Mosquito_Fly",
+            "Mosquito_Hover"
+          ],
+          "frames": 13,
+          "fps": 30,
+          "duration_seconds": 0.4,
+          "wingbeats_per_loop": 3,
+          "wingbeat_frequency_hz_at_speed_one": 7.5,
+          "air_endpoint_flap_radians": 0.58,
+          "fly_peak_flap_envelope_radians": 0.7,
+          "wing_source_axes": "mirror around each bind origin: Rz(sign*fold) @ Ry(-sign*flap)",
+          "secondary_channels": [
+            "Thorax",
+            "Abdomen01",
+            "Abdomen02",
+            "six leg IK chains"
+          ],
+          "root_motion": false,
+          "air_endpoint_dependents": [
+            "Fly",
+            "Hover",
+            "PerchEnter",
+            "Land",
+            "Brake",
+            "Detach"
+          ],
+          "acceptance": "candidate source only; normal-speed final-scale wings/body/legs and blends pending"
+        },
         "bite_tip_policy": "Head/Thorax/Proboscis bind transforms retained throughout BiteStart/BiteLoop/Bite",
         "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
       },
       "bounds_min": [
-        -0.2243417650461197,
-        -0.1904165893793106,
-        -0.1136966124176979
+        -0.26491206884384155,
+        -0.19030287861824036,
+        -0.11370769143104553
       ],
       "bounds_max": [
-        0.2243417650461197,
-        0.20399999618530273,
-        0.23977826535701752
+        0.26491206884384155,
+        0.21522346138954163,
+        0.21435943245887756
       ],
       "dimensions": [
-        0.4486835300922394,
-        0.39441658556461334,
-        0.3534748777747154
+        0.5298241376876831,
+        0.405526340007782,
+        0.3280671238899231
       ],
       "sockets": [
         "Socket.Mouth",
@@ -1614,7 +1955,8 @@
             "Mosquito_Abdomen",
             "Mosquito_EyeWhite",
             "Mosquito_Expression",
-            "Mosquito_Legs"
+            "Mosquito_Legs",
+            "Mosquito_LegJoint"
           ]
         },
         {
@@ -1626,10 +1968,12 @@
         {
           "name": "MosquitoVeins",
           "materials": [
+            "Mosquito_WingEdge",
             "Mosquito_WingVein"
           ]
         }
       ],
+      "blend_shapes": {},
       "bone_names": [
         "Root",
         "Thorax",
@@ -1637,6 +1981,12 @@
         "Proboscis",
         "Socket.Mouth",
         "Socket.AimForward",
+        "Pupil.L",
+        "LidUpper.L",
+        "LidLower.L",
+        "Pupil.R",
+        "LidUpper.R",
+        "LidLower.R",
         "Abdomen01",
         "Abdomen02",
         "Socket.Back",
@@ -1748,6 +2098,90 @@
             0.0,
             -0.11999999731779099,
             0.0
+          ]
+        },
+        {
+          "name": "Pupil.L",
+          "parent": "Head",
+          "head_blender_m": [
+            0.03700000047683716,
+            -0.06599999964237213,
+            0.13199999928474426
+          ],
+          "tail_blender_m": [
+            0.04899999871850014,
+            -0.06599999964237213,
+            0.13199999928474426
+          ]
+        },
+        {
+          "name": "LidUpper.L",
+          "parent": "Head",
+          "head_blender_m": [
+            0.03700000047683716,
+            -0.06599999964237213,
+            0.13199999928474426
+          ],
+          "tail_blender_m": [
+            0.04899999871850014,
+            -0.06599999964237213,
+            0.13199999928474426
+          ]
+        },
+        {
+          "name": "LidLower.L",
+          "parent": "Head",
+          "head_blender_m": [
+            0.03700000047683716,
+            -0.06599999964237213,
+            0.13199999928474426
+          ],
+          "tail_blender_m": [
+            0.04899999871850014,
+            -0.06599999964237213,
+            0.13199999928474426
+          ]
+        },
+        {
+          "name": "Pupil.R",
+          "parent": "Head",
+          "head_blender_m": [
+            -0.03700000047683716,
+            -0.06599999964237213,
+            0.13199999928474426
+          ],
+          "tail_blender_m": [
+            -0.02500000037252903,
+            -0.06599999964237213,
+            0.13199999928474426
+          ]
+        },
+        {
+          "name": "LidUpper.R",
+          "parent": "Head",
+          "head_blender_m": [
+            -0.03700000047683716,
+            -0.06599999964237213,
+            0.13199999928474426
+          ],
+          "tail_blender_m": [
+            -0.02500000037252903,
+            -0.06599999964237213,
+            0.13199999928474426
+          ]
+        },
+        {
+          "name": "LidLower.R",
+          "parent": "Head",
+          "head_blender_m": [
+            -0.03700000047683716,
+            -0.06599999964237213,
+            0.13199999928474426
+          ],
+          "tail_blender_m": [
+            -0.02500000037252903,
+            -0.06599999964237213,
+            0.13199999928474426
           ]
         },
         {
@@ -2133,81 +2567,103 @@
         "Mosquito_Abdomen",
         "Mosquito_Expression",
         "Mosquito_EyeWhite",
+        "Mosquito_LegJoint",
         "Mosquito_Legs",
         "Mosquito_Shell",
         "Mosquito_Wing",
+        "Mosquito_WingEdge",
         "Mosquito_WingVein"
       ],
       "material_palette": [
         {
           "name": "Mosquito_Abdomen",
           "color": {
-            "r": 0.49000000953674316,
-            "g": 0.08500000089406967,
-            "b": 0.03999999910593033,
+            "r": 0.4313725531101227,
+            "g": 0.0784313753247261,
+            "b": 0.0941176488995552,
+            "a": 1.0
+          },
+          "roughness": 0.8999999761581421
+        },
+        {
+          "name": "Mosquito_Expression",
+          "color": {
+            "r": 0.0784313753247261,
+            "g": 0.07058823853731155,
+            "b": 0.0941176488995552,
+            "a": 1.0
+          },
+          "roughness": 0.4000000059604645
+        },
+        {
+          "name": "Mosquito_EyeWhite",
+          "color": {
+            "r": 0.9803921580314636,
+            "g": 0.9803921580314636,
+            "b": 0.9725490212440491,
+            "a": 1.0
+          },
+          "roughness": 0.6000000238418579
+        },
+        {
+          "name": "Mosquito_LegJoint",
+          "color": {
+            "r": 0.10196078568696976,
+            "g": 0.0470588244497776,
+            "b": 0.054901961237192154,
             "a": 1.0
           },
           "roughness": 0.800000011920929
         },
         {
-          "name": "Mosquito_Expression",
-          "color": {
-            "r": 0.024000000208616257,
-            "g": 0.02199999988079071,
-            "b": 0.03500000014901161,
-            "a": 1.0
-          },
-          "roughness": 0.6399999856948853
-        },
-        {
-          "name": "Mosquito_EyeWhite",
-          "color": {
-            "r": 0.9399999976158142,
-            "g": 0.9100000262260437,
-            "b": 0.8199999928474426,
-            "a": 1.0
-          },
-          "roughness": 0.5799999833106995
-        },
-        {
           "name": "Mosquito_Legs",
           "color": {
-            "r": 0.10999999940395355,
-            "g": 0.05999999865889549,
-            "b": 0.06700000166893005,
+            "r": 0.22745098173618317,
+            "g": 0.0784313753247261,
+            "b": 0.0941176488995552,
             "a": 1.0
           },
-          "roughness": 0.8199999928474426
+          "roughness": 0.8600000143051147
         },
         {
           "name": "Mosquito_Shell",
           "color": {
-            "r": 0.36000001430511475,
-            "g": 0.04500000178813934,
-            "b": 0.027000000700354576,
+            "r": 0.7215686440467834,
+            "g": 0.14901961386203766,
+            "b": 0.16862745583057404,
             "a": 1.0
           },
-          "roughness": 0.7599999904632568
+          "roughness": 0.8999999761581421
         },
         {
           "name": "Mosquito_Wing",
           "color": {
-            "r": 0.6200000047683716,
-            "g": 0.6700000166893005,
-            "b": 0.8299999833106995,
-            "a": 0.41999998688697815
+            "r": 0.8627451062202454,
+            "g": 0.8666666746139526,
+            "b": 0.9607843160629272,
+            "a": 0.44999998807907104
           },
           "roughness": 0.8500000238418579
         },
         {
-          "name": "Mosquito_WingVein",
+          "name": "Mosquito_WingEdge",
           "color": {
-            "r": 0.38999998569488525,
-            "g": 0.4000000059604645,
-            "b": 0.5299999713897705,
+            "r": 0.9254902005195618,
+            "g": 0.9254902005195618,
+            "b": 0.9803921580314636,
             "a": 1.0
           },
-          "roughness": 0.8600000143051147
+          "roughness": 0.800000011920929
+        },
+        {
+          "name": "Mosquito_WingVein",
+          "color": {
+            "r": 0.7647058963775635,
+            "g": 0.7647058963775635,
+            "b": 0.9019607901573181,
+            "a": 1.0
+          },
+          "roughness": 0.800000011920929
         }
       ],
       "passed": true,
@@ -2334,73 +2790,181 @@
     }
   ],
   "files": {
+    "audit_fbx_eyelid_winding.py": {
+      "sha256": "9343aae32ec97f1f0fb9a87eaa3d4ac3a957b7ddc7864930f407b14e390bf373",
+      "bytes": 5381
+    },
+    "audit_human_facial.py": {
+      "sha256": "d18634c52416e1ebeee2c768ab9a7a94a86a73d0d48b559b688c9a883d8a2277",
+      "bytes": 5091
+    },
+    "audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    "audit_human_locomotion.py": {
+      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+      "bytes": 16584
+    },
+    "audit_mosquito_candidate.py": {
+      "sha256": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
+      "bytes": 19334
+    },
     "audit_motion.py": {
-      "sha256": "a3fa2d78ca67084729892a0236908e4c5c48750c009161868c2a9bca2cbb400b",
-      "bytes": 15791
+      "sha256": "7ba59a589255fbbe8d8d0a6b41fc273755d369f4f01b10f173813739a9566f78",
+      "bytes": 15845
     },
     "audit_surface_support.py": {
       "sha256": "d0e3cf766db767588e4f16a60738423efd6763d476ec1b984d4a48ddaec82538",
       "bytes": 5715
     },
+    "author_hand_weights.py": {
+      "sha256": "99a8ecdacecbec7c2d1ce3859d9021c995168a925382385486d6040cb7c91372",
+      "bytes": 4095
+    },
+    "author_human_facial.py": {
+      "sha256": "894f8f398c338924ae0b624a75d156e53df71e7263f654301960453791795e1d",
+      "bytes": 8432
+    },
     "author_human_geometry.py": {
-      "sha256": "3d4f8cc06bcf58bd77594f5a75c349d0739421dfc672d78a01c87292b9192805",
-      "bytes": 10158
+      "sha256": "f1743c1a949889588f553d6b52d9ac2d74d3b2a61886133e19c769ab6e9c9dd1",
+      "bytes": 22944
+    },
+    "author_human_joints.py": {
+      "sha256": "f31ab22823d648180bc66be155bc7f7fd38b09b0ef9082754d46fd046ada502a",
+      "bytes": 13001
+    },
+    "author_human_locomotion.py": {
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "bytes": 3798
+    },
+    "author_human_menu_motion.py": {
+      "sha256": "2a16740eb02adaea80fe08e3186a2213615c2a2309e7628207ed597e83cd7cb7",
+      "bytes": 3215
+    },
+    "author_mosquito_face.py": {
+      "sha256": "1a12d613f6d3c1a2eb999df37501da1dc306812d225e07ae92d3d2a029c63be8",
+      "bytes": 18191
     },
     "author_mosquito_geometry.py": {
-      "sha256": "5fa539d58e25131634182d228da9cb35acda8351c9e9e6a4f628d435c60ae3f5",
-      "bytes": 10076
+      "sha256": "bceca528b33b2077108eedea0602fb601837d0b12992654a2a6a653031a2679e",
+      "bytes": 35595
+    },
+    "author_mosquito_motion.py": {
+      "sha256": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
+      "bytes": 14726
     },
     "author_motion.py": {
-      "sha256": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
-      "bytes": 13399
+      "sha256": "4d31176de9c0a847bcfdcfe2b54a89d21bfcb955674885033278a95be843ef0a",
+      "bytes": 13775
     },
     "build_characters.py": {
-      "sha256": "d64d8f6c7a61489b1c7d8472fc520e68d7e57d6b25ab0824032fd677f1479a43",
-      "bytes": 27256
+      "sha256": "9390005c502d02128a68d902db15f328635475d1b2c5e094dda8cb2bfee83984",
+      "bytes": 24818
+    },
+    "build_mosquito_candidate.py": {
+      "sha256": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
+      "bytes": 1735
+    },
+    "check_human_locomotion_contract.py": {
+      "sha256": "f7147bc4ee3ca4140f0328de8c88ff2331a53d54301c496282540f2501c3175b",
+      "bytes": 4866
+    },
+    "check_mosquito_audit_math.py": {
+      "sha256": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
+      "bytes": 1783
+    },
+    "check_mosquito_face.py": {
+      "sha256": "c46f17afd1818897fc2af88328dec454bce87336d94b2eb91530e19069f43d10",
+      "bytes": 6028
+    },
+    "check_mosquito_source.py": {
+      "sha256": "816f694aa417892a5c3e1218305823153e2cfef5cd0abda09506b4da61f6c0c0",
+      "bytes": 6846
     },
     "check_motion_audit.py": {
       "sha256": "b5b0e0375157d0a6e0cc080aae7a92890b97fc69bea43ec6c38c7c2bf9878774",
       "bytes": 3396
     },
+    "compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
     "compile_unity.py": {
       "sha256": "9896720ccb80995441c52b482524f7c1d3ff2f0d14f83b4cd490a003da1a0ae9",
       "bytes": 2187
+    },
+    "export_human_locomotion.py": {
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "bytes": 6996
+    },
+    "export_human_menu.py": {
+      "sha256": "c5f27ad14b55bc5b48a48fc592ae762cec8c49c4db8c8bbfc0916efa8d9732f7",
+      "bytes": 3915
+    },
+    "human_locomotion_contract.py": {
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "bytes": 4202
+    },
+    "human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    "inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
     },
     "plan_visual_evidence.py": {
       "sha256": "68da0b552694d812993f724a5512882e83320ffc8f8af433030c60da50e04571",
       "bytes": 6815
     },
+    "render_human_menu.py": {
+      "sha256": "fac00d3351593f9b90e6ddecc84dcc49003312dc72e934fee87fe5f974df823e",
+      "bytes": 9592
+    },
     "render_human_witness.py": {
       "sha256": "52e8537fec37ef2924d02e3f41d882a57d95ef3b1cc31cb5846ace44f25373d1",
       "bytes": 5776
+    },
+    "render_mosquito_witness.py": {
+      "sha256": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267",
+      "bytes": 9224
     },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
       "bytes": 3233
     },
+    "render_sheet.py": {
+      "sha256": "8218fa5682125e310124d5e513826a4061575c55f84bd5d5b36a713b5dc42d9f",
+      "bytes": 3126
+    },
+    "repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    "run_menu_native_stage.py": {
+      "sha256": "298b7482f33f8453a8ac0238a8fe29f56818dcad300259982fc898e32f04610f",
+      "bytes": 2173
+    },
+    "run_mosquito_candidate.py": {
+      "sha256": "a8504db71c4bb0c7e9899d1add0802d4efbb113896afceb31a22791176dbb5c6",
+      "bytes": 8309
+    },
     "seal_manifest.py": {
       "sha256": "c0aa24282dfcf0f317dc96eea22bafaea678c078832844bad89da177b4ff5666",
       "bytes": 4197
     },
+    "study_mosquito_surface.py": {
+      "sha256": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
+      "bytes": 5466
+    },
     "verify_fbx.py": {
-      "sha256": "5a99642958b6a7ebed42a395f5307b39249b2d585e9e1db212b4a0b413a5294c",
-      "bytes": 2878
+      "sha256": "d6f43759e2031b24c2eab5089e6824a7aa552c0a5414d90ff1b173a43b06510a",
+      "bytes": 3124
     },
-    ".validation/probe_animation.py": {
-      "sha256": "78dcfd3960e987834b7a04584eed3433184e39b372694c45567c30156af2b207",
-      "bytes": 2142
-    },
-    ".validation/probe_clap.py": {
-      "sha256": "492d7b9cc7468e6b45b9b6f415a2b62f0f5337b30058fc7327a7eb9037e74d66",
-      "bytes": 1694
-    },
-    ".validation/probe_hips.py": {
-      "sha256": "670474f1617780d9abcec8cb6971e15f8ce05e88aae7a68d190bb91ff00c15c9",
-      "bytes": 1189
-    },
-    ".validation/run_bounded.py": {
-      "sha256": "2edf2a64450ed8d9d84c30bc95f964087cb1cd96a66457e271db6bed56f7bce2",
-      "bytes": 659
+    "verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
     },
     "flyswatter/LMS_Flyswatter_alpha.blend": {
       "sha256": "3181959bcc441ba25f86e768bd0e311e754cf898d58d331b09298d0f901a110c",
@@ -2411,176 +2975,408 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
-      "bytes": 928056
+      "sha256": "fd4be0bb67bdb3b6742505211bd3639cae5be9eefd205adae2452a4349e5cead",
+      "bytes": 1244328
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "348c0f48f5247102a8c873ff5f9d131a06e6e260421262185e24bf3a9db5a46d",
-      "bytes": 8176748
+      "sha256": "2087e1d849496b860f0ec53c414dc09d9a0018344407c62e443f301c2996e302",
+      "bytes": 10040828
+    },
+    "menu/LMS_HumanMenu.blend": {
+      "sha256": "16c1d5b63c015345f9014d4e07ec5083b7ecb6820c5050761c3616c85a3f5fd5",
+      "bytes": 1235631
+    },
+    "menu/LMS_HumanMenu.fbx": {
+      "sha256": "c550d6b216af4fdc25cab6439655e390cb2c9d10bfc7999554453f057b4f8ce1",
+      "bytes": 4127276
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
-      "sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
-      "bytes": 742529
+      "sha256": "0504e58deec3aeedf91c64cf292a061e471355996e319b62be217230c70b4d28",
+      "bytes": 829998
     },
     "mosquito/LMS_Mosquito_alpha.fbx": {
-      "sha256": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
-      "bytes": 3778956
+      "sha256": "87b80423a16c88fc7043a4c5bc7bbc64b32c5ca6145fd194429aaefabcb42c2d",
+      "bytes": 4477900
     },
-    "human/audit.json": {
-      "sha256": "78dc9a344db7ab015c44b191b784d78c361dd9917c4065309965b313ec524169",
-      "bytes": 24558
+    "diagnostics/gameplay-e9d15e7/gait_feasibility.py": {
+      "sha256": "16c56ca800da9b2ab1fd3456e4c79b4b9cb23d7d9460b4c198ee4181bfb838a1",
+      "bytes": 3280
     },
-    "human/fbx_roundtrip.json": {
-      "sha256": "467ed4d6472eb1a371f280e43dcedf3dbc9a180c9ecf9076ac62080f2c2dc7b7",
-      "bytes": 1323
+    "candidates/human-menu-joints3/human/LMS_Human_alpha.blend": {
+      "sha256": "ffdb5bb58b45de48d849b0f9691628acca0244ac67ae8dc80610bb56230e7e8c",
+      "bytes": 957246
     },
-    "human/motion_audit.json": {
-      "sha256": "88f21eb4f548ac72a2537d3dbe268d29ce004f83b1bcf955091a85ffa14c2944",
-      "bytes": 872003
+    "candidates/human-menu-joints3/human/LMS_Human_alpha.fbx": {
+      "sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
+      "bytes": 8483404
     },
-    "human/motion_gate.json": {
-      "sha256": "5b02d94807d1d1082065a24ab164f729479188ac83d8db5f3b7d4574b657b0df",
-      "bytes": 391
+    "candidates/human-menu-joints3/menu/LMS_HumanMenu.blend": {
+      "sha256": "e609a8be0d8ab2854c1e551042722740e77ba8551fafac408e46e92273181de8",
+      "bytes": 1109620
     },
-    "review/human-reference9/face_front.json": {
-      "sha256": "595e0a83e4dfd38768f8e8c37b67c19dd07d2251d67ec0983616e2ad46c2552f",
-      "bytes": 738
+    "candidates/human-menu-joints3/menu/LMS_HumanMenu.fbx": {
+      "sha256": "3412a9caaec030c3fe89d646fd063c8431ac3db38a9b76a8c49d8bc0d98470ff",
+      "bytes": 3987420
     },
-    "review/human-reference9/face_front.png": {
-      "sha256": "12e1215c529105f7a29e879976d7e4d482bed8a5d7ff844aa1e6cd31c1f29a65",
-      "bytes": 466946
+    "candidates/human-menu-joints3/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
     },
-    "review/human-reference9/face_profile.json": {
-      "sha256": "1137a1eb8bcc98ab97aa7903f7a1d96b596c4f92b656af98905657850661c213",
-      "bytes": 741
+    "candidates/human-menu-joints3/source-snapshot/audit_motion.py": {
+      "sha256": "a3c6b589627d3eb83187ba4159a915b61602bda58c1536f26b078afb69360a2c",
+      "bytes": 17180
     },
-    "review/human-reference9/face_profile.png": {
-      "sha256": "abacce4e642b1fb21e9e9e1d01785e41d68a6fd099598b26fa61b7faf25207ab",
-      "bytes": 432496
+    "candidates/human-menu-joints3/source-snapshot/author_human_joints.py": {
+      "sha256": "be4dbb4c2c9aaae9fe04126212883f40f412a043d368473302a740e01374868c",
+      "bytes": 5793
     },
-    "review/human-reference9/front.json": {
-      "sha256": "e8797cb48ea107143747bc67993836ea7bb42adc670a3b83eed36e2c1d2fd57c",
-      "bytes": 729
+    "candidates/human-menu-joints3/source-snapshot/render_human_menu.py": {
+      "sha256": "fac00d3351593f9b90e6ddecc84dcc49003312dc72e934fee87fe5f974df823e",
+      "bytes": 9592
     },
-    "review/human-reference9/front.png": {
-      "sha256": "4156d7e135b922050fab0d2ab1ab4ed79f557e7e3bbf93d2cf0fc4643d2ee69c",
-      "bytes": 444740
+    "candidates/human-menu-joints2/human/LMS_Human_alpha.blend": {
+      "sha256": "285c7bf6a8eef3ee831be003a4c9b49772cc16b8455d71ca11c9963d72543eda",
+      "bytes": 956192
     },
-    "review/human-reference9/hand_open.json": {
-      "sha256": "6c533aef41781f3687ecd045211cb640923ee580d01cab4c2dd8cb0e5eb4d9b1",
-      "bytes": 747
+    "candidates/human-menu-joints2/human/LMS_Human_alpha.fbx": {
+      "sha256": "ce1a8fe8b3375e33633e219e68acdc3eb15030f28504986768e397a0d3e23f54",
+      "bytes": 8483452
     },
-    "review/human-reference9/hand_open.png": {
-      "sha256": "9806dc6f69a4440fd1020722b065feb61f5ba2dcfa1a57f44075e48491d078c1",
-      "bytes": 436212
+    "candidates/human-menu-joints2/menu/LMS_HumanMenu.blend": {
+      "sha256": "716eeba06f87597f6722d971782d83b29edb0f060483cdb1e6d8cac5962c3301",
+      "bytes": 1108957
     },
-    "review/human-reference9/slipper.json": {
-      "sha256": "15a4d80883e4c9f865538c31222391822b2353184048068750afd553cf900893",
-      "bytes": 740
+    "candidates/human-menu-joints2/menu/LMS_HumanMenu.fbx": {
+      "sha256": "96aa49594a9bc26622509623e0fd8eb00ab2ba789f88e6a197b406faa458776d",
+      "bytes": 3987468
     },
-    "review/human-reference9/slipper.png": {
-      "sha256": "07c2f2bf93527ab70a66e69c731b5ddd162189257c00521b4979d2ed6a0af51f",
-      "bytes": 400546
+    "candidates/human-menu-joints2/source-snapshot/audit_human_facial.py": {
+      "sha256": "073cadb1b237b7755eca6e12129a79145ccff6c7aa06cfa9196a7fa5a11c0460",
+      "bytes": 4915
     },
-    "review/human-reference9/three_quarter.json": {
-      "sha256": "1704b9705d8afebfe7378a5492c0b72b3da4c59fb75fae09ed787eb834b675f9",
-      "bytes": 738
+    "candidates/human-menu-joints2/source-snapshot/audit_human_joints.py": {
+      "sha256": "92a61b0b1b257f9c05a4d6191b60505d72d97b1632e937e36049d981378c2bb6",
+      "bytes": 8774
     },
-    "review/human-reference9/three_quarter.png": {
-      "sha256": "8e69495a6d6269ae7dae4a4940c513282c909ce689bfcc80c236aa07c18c4859",
-      "bytes": 439904
+    "candidates/human-menu-joints2/source-snapshot/author_human_facial.py": {
+      "sha256": "f478c17c56a23a5610618c92dd9a84ecbb9a43624c6745a02d57697fc0c38532",
+      "bytes": 5098
     },
-    "mosquito/audit.json": {
-      "sha256": "f8b2c7f8b55e02daca1f04d15f6090da9a2338e13c24068f7efaf63f6a37f752",
-      "bytes": 21441
+    "candidates/human-menu-joints2/source-snapshot/author_human_geometry.py": {
+      "sha256": "60629e53cb230a149ba4aa0ecb8f761d4082727d4c59c8c6e690e9244dc322d0",
+      "bytes": 10752
     },
-    "mosquito/candidate.json": {
-      "sha256": "ee07cebf6727599c65394c7ed62f7b67a05de9da5dc3701efbafb817d1ea3543",
-      "bytes": 24258
+    "candidates/human-menu-joints2/source-snapshot/author_human_joints.py": {
+      "sha256": "7394ad442d95615a3154a0fd48b3713ad84d482042909ebbb27ea3a953446299",
+      "bytes": 5561
     },
-    "mosquito/candidate_motion_audit.json": {
-      "sha256": "1f3c83526b4c1579e6244a67997434f1c3aae85e422b3a109a48076a0dafb781",
-      "bytes": 443159
+    "candidates/human-menu-joints2/source-snapshot/author_human_menu_motion.py": {
+      "sha256": "2a16740eb02adaea80fe08e3186a2213615c2a2309e7628207ed597e83cd7cb7",
+      "bytes": 3215
     },
-    "mosquito/candidate_surface_support_audit.json": {
-      "sha256": "e31a7de0da92b104a2af3d473c8d74e659a14a100a3b75aa821e0bf2d19a0686",
-      "bytes": 356810
+    "candidates/human-menu-joints2/source-snapshot/build_characters.py": {
+      "sha256": "cc7200f37fa670db996affa248a51f8451deb51bc4da995634dce7bf61c6ef1e",
+      "bytes": 24367
     },
-    "author_mosquito_motion.py": {
-      "sha256": "1887e18dbb560747eeb96955b00f10a7c508316d26466d7fbdbd4cf97bb9494e",
-      "bytes": 12964
+    "candidates/human-menu-joints2/source-snapshot/export_human_menu.py": {
+      "sha256": "6933d6503711377c2febabc2c262f7251fdac2b10af4206b8eadb0d91d8ee00c",
+      "bytes": 3853
     },
-    "review/mosquito-planar-r3/front.png": {
-      "sha256": "8e324eae9ef7bb1a71eec4cfcd92d6b74df0442ec9ebcde3fd2384a900fc390b",
-      "bytes": 439878
+    "candidates/human-menu-joints2/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
     },
-    "review/mosquito-planar-r3/three_quarter.png": {
-      "sha256": "d0c8c6a6d73dde3f7e4cbb10aaa6dcceb5e155c3a813b9fe7aba47ae059a900f",
-      "bytes": 447621
+    "candidates/human-menu-joints2/source-snapshot/render_human_menu.py": {
+      "sha256": "ce04d636b13f77051dfefef8f55167582ecbfdb2d45804828c6db67cd2168dce",
+      "bytes": 9169
     },
-    "review/mosquito-planar-r3/wing_transmission.png": {
-      "sha256": "b08c5526385e4dadc27594446be9a04f91131acb2ab8bbd68a26fb510ada2cc5",
-      "bytes": 471779
+    "candidates/human-menu-joints2/source-snapshot/verify_fbx.py": {
+      "sha256": "0396e5643e0a7c8640bb0950cd6d221187c0a2722b28822664ed5138653df136",
+      "bytes": 3214
     },
-    "review/mosquito-planar-r3/witness.json": {
-      "sha256": "619fda18783057434a8dbabfc95e631679f75fd2b4e454a563ac7b788430c86d",
-      "bytes": 2304
+    "candidates/human-menu-joints2/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
+    },
+    "candidates/human-locomotion1/human/LMS_Human_alpha.blend": {
+      "sha256": "78db69ddd6e2923804ee2b2528c50f51536aefe0b349477a622aa554a4ae1e15",
+      "bytes": 1137503
+    },
+    "candidates/human-locomotion1/human/LMS_Human_alpha.fbx": {
+      "sha256": "ccb0f1f92918ea52e738719190be934d7ec14843b4b6206284bd4cb89895297b",
+      "bytes": 9892412
+    },
+    "candidates/human-locomotion1/human/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    "candidates/human-locomotion1/human/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+      "bytes": 16584
+    },
+    "candidates/human-locomotion1/human/source-snapshot/author_human_facial.py": {
+      "sha256": "b8ce9cb1db3be76924c9304aa607f952a8f8a170460cae9001f389099c77fb11",
+      "bytes": 7164
+    },
+    "candidates/human-locomotion1/human/source-snapshot/author_human_locomotion.py": {
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "bytes": 3798
+    },
+    "candidates/human-locomotion1/human/source-snapshot/author_motion.py": {
+      "sha256": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
+      "bytes": 13399
+    },
+    "candidates/human-locomotion1/human/source-snapshot/build_characters.py": {
+      "sha256": "77a7dd9c5b949456d582c36a0c94822b78859cf15327161b9837e301f4a3759d",
+      "bytes": 24659
+    },
+    "candidates/human-locomotion1/human/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    "candidates/human-locomotion1/human/source-snapshot/export_human_locomotion.py": {
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "bytes": 6996
+    },
+    "candidates/human-locomotion1/human/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "bytes": 4202
+    },
+    "candidates/human-locomotion1/human/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    "candidates/human-locomotion1/human/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    "candidates/human-locomotion1/human/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    "candidates/human-locomotion1/human/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
+    },
+    "candidates/human-blink-winding1/human/LMS_Human_alpha.blend": {
+      "sha256": "918ddcf802ef761cf89bf20bedcec4019de8d8adc4bb765c2e5c7361e3f862a1",
+      "bytes": 950497
+    },
+    "candidates/human-blink-winding1/human/LMS_Human_alpha.fbx": {
+      "sha256": "2473a8e6420dcb7c15d58c6dcb0e9fc64769bc8af6636844c71851a42bd84b66",
+      "bytes": 8483212
+    },
+    "candidates/human-blink-winding1/menu/LMS_HumanMenu.blend": {
+      "sha256": "665ff9c53429ae49346a370c1b57884bdaab9a4871f838b016e2fb04a2773ab2",
+      "bytes": 1109405
+    },
+    "candidates/human-blink-winding1/menu/LMS_HumanMenu.fbx": {
+      "sha256": "44738cda7b3cba4baa7b4e0b68e40acc1eda30a0bed701a153ebd0348aa3678c",
+      "bytes": 3987228
+    },
+    "candidates/human-blink-winding1/source-snapshot/audit_fbx_eyelid_winding.py": {
+      "sha256": "544944b84e7144ae60798345004e090bcb1e7b8aaa91b1170972431360bae018",
+      "bytes": 5243
+    },
+    "candidates/human-blink-winding1/source-snapshot/audit_human_facial.py": {
+      "sha256": "d18634c52416e1ebeee2c768ab9a7a94a86a73d0d48b559b688c9a883d8a2277",
+      "bytes": 5091
+    },
+    "candidates/human-blink-winding1/source-snapshot/author_human_facial.py": {
+      "sha256": "b8ce9cb1db3be76924c9304aa607f952a8f8a170460cae9001f389099c77fb11",
+      "bytes": 7164
+    },
+    "candidates/human-blink-winding1/source-snapshot/build_characters.py": {
+      "sha256": "77a7dd9c5b949456d582c36a0c94822b78859cf15327161b9837e301f4a3759d",
+      "bytes": 24659
+    },
+    "candidates/human-blink-winding1/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    "candidates/human-blink-winding1/source-snapshot/export_human_menu.py": {
+      "sha256": "c5f27ad14b55bc5b48a48fc592ae762cec8c49c4db8c8bbfc0916efa8d9732f7",
+      "bytes": 3915
+    },
+    "candidates/human-blink-winding1/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    "candidates/human-blink-winding1/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-human-r3/base15/LMS_Human_alpha.blend": {
+      "sha256": "ed30573fb8207ba2a56a255df9e0d6312b17ef6c5ff74bc0d85d7bb5ad199d43",
+      "bytes": 1054583
+    },
+    ".validation/v030-human-r3/base15/LMS_Human_alpha.fbx": {
+      "sha256": "fbbabc144703812ac23e663a0d1f1e4f9016f5483108b15481987e457105201e",
+      "bytes": 8642700
+    },
+    ".validation/v030-human-r3/menu/LMS_HumanMenu.blend": {
+      "sha256": "3cdf684b8daa7330f6f2a0d9b571887576cbc152dfcfad73c20c108fbd11e6de",
+      "bytes": 1247587
+    },
+    ".validation/v030-human-r3/menu/LMS_HumanMenu.fbx": {
+      "sha256": "cbdf5db2352b6e0c693e7d52fca794d2118236d839c93b62544cfe81a4f1b84e",
+      "bytes": 4134188
+    },
+    ".validation/v030-human-r2/base15/LMS_Human_alpha.blend": {
+      "sha256": "43f4ba5897a5f94a22b9c05f1751e86a229156c7e2a4e99638dc5d021aa3d445",
+      "bytes": 1023513
+    },
+    ".validation/v030-human-r2/base15/LMS_Human_alpha.fbx": {
+      "sha256": "82b13e56699c0fec1585569b5dfb97168d144085500614993923001df2439765",
+      "bytes": 8614540
+    },
+    ".validation/v030-human-r2/gait/LMS_Human_alpha.blend": {
+      "sha256": "4ded266087a296e53f5ef970d78b5111fc2829c35d7426233df947bdcb710f69",
+      "bytes": 1220346
+    },
+    ".validation/v030-human-r2/gait/LMS_Human_alpha.fbx": {
+      "sha256": "2fa67524dd33c650de80cf8396fdf4956c71ea28149b2ea314044981dbd03645",
+      "bytes": 10019820
+    },
+    ".validation/v030-human-r2/menu/LMS_HumanMenu.blend": {
+      "sha256": "6d17a4d2789661445760f00a4f46191b1c4e9899f949b59167a3cc0f1e7436a2",
+      "bytes": 1205213
+    },
+    ".validation/v030-human-r2/menu/LMS_HumanMenu.fbx": {
+      "sha256": "3e8dc9db87ca62d4b05ce64af1ee2e5e09acb99dc06e70584b854079027b2c44",
+      "bytes": 4106044
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+      "bytes": 16584
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/author_human_facial.py": {
+      "sha256": "f6e9d0829a6e2c9defa0fd8d46bb583a97d57b65b2c852e50c3e481f91d8048f",
+      "bytes": 8274
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/author_human_locomotion.py": {
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "bytes": 3798
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/author_motion.py": {
+      "sha256": "4d31176de9c0a847bcfdcfe2b54a89d21bfcb955674885033278a95be843ef0a",
+      "bytes": 13775
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/build_characters.py": {
+      "sha256": "f99248646ad2b2ee69e51ddccadf7826381e279596c51ad9a1ce5cf41ad6b502",
+      "bytes": 24475
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/export_human_locomotion.py": {
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "bytes": 6996
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "bytes": 4202
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-human-r2/gait/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
+    },
+    ".validation/v030-human-r1/base15/LMS_Human_alpha.blend": {
+      "sha256": "f416dc08c90beaa0d7945985f4e26a04aa09b82297193b5cf3136d08134e26a8",
+      "bytes": 1004753
+    },
+    ".validation/v030-human-r1/base15/LMS_Human_alpha.fbx": {
+      "sha256": "2e2aa5125f64652d1483780169aba1dc8763051af755d18b465c2a822a7f3440",
+      "bytes": 8543740
+    },
+    ".validation/v030-human-r1/gait/LMS_Human_alpha.blend": {
+      "sha256": "3b26484d16192a753cdb890f7fad8ca6adba23ac0109d537d2995381de2d74e7",
+      "bytes": 1196004
+    },
+    ".validation/v030-human-r1/gait/LMS_Human_alpha.fbx": {
+      "sha256": "1c74de6986e5bea7634fc26abf56c2894127b5860d22eae99c611b2db251baee",
+      "bytes": 9952972
+    },
+    ".validation/v030-human-r1/menu/LMS_HumanMenu.blend": {
+      "sha256": "66e43afeb385a22c93130f77fb7be211b2095b2aa0e27c738caee51db4baa8cd",
+      "bytes": 1175610
+    },
+    ".validation/v030-human-r1/menu/LMS_HumanMenu.fbx": {
+      "sha256": "59a80b99bbfa7ebd544b941abb3dbaf87eec5405f6501347a7ea4fd367c05432",
+      "bytes": 4047868
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
+      "bytes": 16584
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/author_human_facial.py": {
+      "sha256": "f6e9d0829a6e2c9defa0fd8d46bb583a97d57b65b2c852e50c3e481f91d8048f",
+      "bytes": 8274
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/author_human_locomotion.py": {
+      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
+      "bytes": 3798
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/author_motion.py": {
+      "sha256": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
+      "bytes": 13399
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/build_characters.py": {
+      "sha256": "c0537d43cd1be0d6d640fb84c12593a56041744ee7428f76ac5c31859bbcd031",
+      "bytes": 23320
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/export_human_locomotion.py": {
+      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
+      "bytes": 6996
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
+      "bytes": 4202
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-human-r1/gait/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
     }
   },
   "generated_species": [
     "Human"
   ],
-  "review_status": "Human reference9 and mosquito R3 candidates; species-specific numeric reports, visual defects and Unity review pending",
-  "human_candidate_evidence": {
-    "status": "NUMERIC_GATES_PASSED_VISUAL_REVIEW_REQUIRED",
-    "geometry_source_commit": "27e7195ced1433337118c935aa07a656cfe8adc6",
-    "source_sha256": "d0a1a3042171b5320761a2ef30a26be2368c35e39154367ee59398156cc6c615",
-    "fbx_sha256": "348c0f48f5247102a8c873ff5f9d131a06e6e260421262185e24bf3a9db5a46d",
-    "motion_audit_sha256": "88f21eb4f548ac72a2537d3dbe268d29ce004f83b1bcf955091a85ffa14c2944",
-    "motion_gate_sha256": "5b02d94807d1d1082065a24ab164f729479188ac83d8db5f3b7d4574b657b0df",
-    "roundtrip_sha256": "467ed4d6472eb1a371f280e43dcedf3dbc9a180c9ecf9076ac62080f2c2dc7b7",
-    "visual_approved": false,
-    "unity_import_verified": false,
-    "full_motion_video_reviewed": false,
-    "real_tool_grip_verified": false,
-    "reports": [
-      "human/audit.json",
-      "human/fbx_roundtrip.json",
-      "human/motion_audit.json",
-      "human/motion_gate.json"
-    ],
-    "views": [
-      "review/human-reference9/face_front.png",
-      "review/human-reference9/face_profile.png",
-      "review/human-reference9/front.png",
-      "review/human-reference9/hand_open.png",
-      "review/human-reference9/slipper.png",
-      "review/human-reference9/three_quarter.png"
-    ],
-    "numeric_motion_passed": true,
-    "numeric_roundtrip_passed": true
-  },
-  "global_reports_note": "Root motion_audit/motion_gate/fbx_roundtrip remain historical combined reports. Use species-specific candidate reports; do not infer current results from old global reports.",
-  "mosquito_candidate_evidence": {
-    "source_commit": "2f6ef3e71c2fc563721e9d1cec9c1f9e18c412c8",
-    "source_sha256": "0d3fe4436319a63c0d7177630f681ed64d7fc86726b962d4a7ee917e38d2c933",
-    "fbx_sha256": "0b32d7623a70259d2f9c7bed2262bd37a0296296d1cd6f175babd3df1de33abb",
-    "numeric_motion_samples": 894,
-    "numeric_support_samples": 636,
-    "numeric_motion_passed": true,
-    "numeric_support_passed": true,
-    "visual_approved": false,
-    "unity_import_verified": false,
-    "full_motion_video_reviewed": false,
-    "pending": [
-      "Front leg crossings",
-      "Unity import and runtime surface blends/local-remote phase",
-      "Independent visual acceptance"
-    ],
-    "reports": [
-      "mosquito/candidate.json",
-      "mosquito/candidate_motion_audit.json",
-      "mosquito/candidate_surface_support_audit.json"
-    ]
-  }
+  "review_status": "New selected-species source; motion, renders and Unity import pending"
 }

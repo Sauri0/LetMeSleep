@@ -8,59 +8,101 @@
   "skin_or_fbx_verified": false,
   "art_accepted": false,
   "source_sha256": {
-    "author_mosquito_geometry.py": "1133681acd0b0ec4c5fa52a162740580e2ad62830657ead7ff5315bceafb4f5d",
+    "author_mosquito_geometry.py": "bceca528b33b2077108eedea0602fb601837d0b12992654a2a6a653031a2679e",
     "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
     "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
-    "check_mosquito_source.py": "a8996960c376dde3bc84fbadf40dc664861f1ef4d3ae21f5c842b365bdf8e0ab",
+    "check_mosquito_source.py": "816f694aa417892a5c3e1218305823153e2cfef5cd0abda09506b4da61f6c0c0",
     "audit_mosquito_candidate.py": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
     "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
     "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
     "render_mosquito_witness.py": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267",
-    "author_mosquito_face.py": "f1afe1882dff8d71a52ab0a384902cbb33bb48999196f496bdf920710ea96215",
-    "check_mosquito_face.py": "a5a704f183a4e71d778bbbf657c32db94678128333fe2c1a89c4f91a84cce68c"
+    "author_mosquito_face.py": "1a12d613f6d3c1a2eb999df37501da1dc306812d225e07ae92d3d2a029c63be8",
+    "check_mosquito_face.py": "c46f17afd1818897fc2af88328dec454bce87336d94b2eb91530e19069f43d10"
   },
-  "comparison_asset_sha256": "4569500a1bd98df89168c9eb69a1e922d316a48e5ccf970832d98619fc925039",
+  "comparison_asset_sha256": "ddaf3083c0b34a84ba1eac14057ba62798fda5d680d2c56303669eb8bf844587",
   "custom_meshes": [
     {
       "name": "Thorax",
-      "vertices": 50,
-      "faces": 42,
+      "vertices": 42,
+      "faces": 80,
       "errors": []
     },
     {
       "name": "Head",
-      "vertices": 50,
-      "faces": 42,
+      "vertices": 42,
+      "faces": 80,
       "errors": []
     },
     {
       "name": "Abdomen",
-      "vertices": 90,
-      "faces": 82,
+      "vertices": 200,
+      "faces": 194,
+      "errors": []
+    },
+    {
+      "name": "Snout",
+      "vertices": 30,
+      "faces": 26,
       "errors": []
     },
     {
       "name": "Wing.1",
-      "vertices": 20,
-      "faces": 29,
+      "vertices": 24,
+      "faces": 35,
       "errors": []
     },
     {
       "name": "Brow.1",
-      "vertices": 12,
-      "faces": 14,
+      "vertices": 28,
+      "faces": 26,
+      "errors": []
+    },
+    {
+      "name": "LidLip.1",
+      "vertices": 55,
+      "faces": 52,
+      "errors": []
+    },
+    {
+      "name": "Eye.1",
+      "vertices": 52,
+      "faces": 60,
+      "errors": []
+    },
+    {
+      "name": "Pupil.1",
+      "vertices": 34,
+      "faces": 40,
       "errors": []
     },
     {
       "name": "Wing.-1",
-      "vertices": 20,
-      "faces": 29,
+      "vertices": 24,
+      "faces": 35,
       "errors": []
     },
     {
       "name": "Brow.-1",
-      "vertices": 12,
-      "faces": 14,
+      "vertices": 28,
+      "faces": 26,
+      "errors": []
+    },
+    {
+      "name": "LidLip.-1",
+      "vertices": 55,
+      "faces": 52,
+      "errors": []
+    },
+    {
+      "name": "Eye.-1",
+      "vertices": 52,
+      "faces": 60,
+      "errors": []
+    },
+    {
+      "name": "Pupil.-1",
+      "vertices": 34,
+      "faces": 40,
       "errors": []
     }
   ],

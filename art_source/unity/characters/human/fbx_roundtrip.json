@@ -1,14 +1,14 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "9e85748b5ec38f57791bb7377dbe43bc6328792986837c7fdb260371f6a8d20b",
-    "source_audit_sha256": "03d3142e8a6060ad29ce67b3577c227ebf47bd9cf9e34a863f88830896fdc762",
+    "fbx_sha256": "2087e1d849496b860f0ec53c414dc09d9a0018344407c62e443f301c2996e302",
+    "source_audit_sha256": "7241c1931d49395a89e5e95573a888192bc19a9f5a2e8f9f6c48364986349656",
     "dimensions": [
-      1.8401913046836853,
-      0.35000017285346985,
-      1.862534056586986
+      1.8242946863174438,
+      0.47467881441116333,
+      1.7612418034044905
     ],
-    "triangles": 9652,
+    "triangles": 15618,
     "bones": 65,
     "actions": [
       "Key|LMS_HumanRig|Human_Blink",
@@ -24,8 +24,10 @@
       "Key|LMS_HumanRig|Human_Recover",
       "Key|LMS_HumanRig|Human_Run",
       "Key|LMS_HumanRig|Human_Swat",
+      "Key|LMS_HumanRig|Human_Trot",
       "Key|LMS_HumanRig|Human_Turn",
       "Key|LMS_HumanRig|Human_Walk",
+      "Key|LMS_HumanRig|Human_WalkSlow",
       "LMS_HumanRig|LMS_HumanRig|Human_Blink",
       "LMS_HumanRig|LMS_HumanRig|Human_Clap",
       "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
@@ -39,8 +41,10 @@
       "LMS_HumanRig|LMS_HumanRig|Human_Recover",
       "LMS_HumanRig|LMS_HumanRig|Human_Run",
       "LMS_HumanRig|LMS_HumanRig|Human_Swat",
+      "LMS_HumanRig|LMS_HumanRig|Human_Trot",
       "LMS_HumanRig|LMS_HumanRig|Human_Turn",
-      "LMS_HumanRig|LMS_HumanRig|Human_Walk"
+      "LMS_HumanRig|LMS_HumanRig|Human_Walk",
+      "LMS_HumanRig|LMS_HumanRig|Human_WalkSlow"
     ],
     "sockets": [
       "Socket.Eye",

@@ -19,15 +19,48 @@
     "source_coordinates": "metres, Z up, -Y forward; actor scale .5 once",
     "eye_centers_source_m": {
       "L": [
-        0.027,
-        -0.094,
-        0.113
+        0.037,
+        -0.066,
+        0.132
       ],
       "R": [
-        -0.027,
-        -0.094,
-        0.113
+        -0.037,
+        -0.066,
+        0.132
       ]
+    },
+    "eye_radii_source_m": [
+      0.0355,
+      0.029,
+      0.0366
+    ],
+    "eye_white_forward_offset_source_m": 0.011,
+    "lid_radii_source_m": {
+      "x": 0.0392,
+      "yz": 0.0447,
+      "lower_inset": 0.0005
+    },
+    "lid_geometry_revision": "mosquito-sketch-r3-forward-white-cups",
+    "lid_rest_edges_degrees_about_x_from_front": {
+      "upper_front_center_to_pole": [
+        68.0,
+        84.0
+      ],
+      "upper_back": 198.0,
+      "lower_front_center_to_pole": [
+        -92.0,
+        -86.0
+      ],
+      "lower_back": -208.0
+    },
+    "pupil": {
+      "radii_source_m": [
+        0.0087,
+        0.0022,
+        0.0095
+      ],
+      "depth_source_m": 0.03940193549694342,
+      "inward_yaw_degrees": 2
     },
     "bone_tail_direction_source": [
       1,
@@ -74,7 +107,8 @@
       ],
       "material": "Mosquito_Shell"
     },
-    "eye_housing": "fixed rear shell weighted to Head, recessed .8 mm behind movable lids; covers posterior white during closure",
+    "eye_housing": "fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure",
+    "rest_pose": "upper shutter rests at ~68 deg over the top of the white (<=5% cover); blink closure 0..1 starts from that bind pose",
     "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
     "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
     "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
@@ -114,158 +148,158 @@
   "closed_front_coverage": [
     {
       "side_sign": 1,
-      "points": 670,
+      "points": 358,
       "uncovered_front_points": 0
     },
     {
       "side_sign": 1,
       "camera_source_x_sign": -1,
-      "points": 670,
+      "points": 358,
       "uncovered_side_points": 0
     },
     {
       "side_sign": 1,
       "camera_source_x_sign": 1,
-      "points": 670,
+      "points": 358,
       "uncovered_side_points": 0
     },
     {
       "side_sign": -1,
-      "points": 670,
+      "points": 358,
       "uncovered_front_points": 0
     },
     {
       "side_sign": -1,
       "camera_source_x_sign": -1,
-      "points": 670,
+      "points": 358,
       "uncovered_side_points": 0
     },
     {
       "side_sign": -1,
       "camera_source_x_sign": 1,
-      "points": 670,
+      "points": 358,
       "uncovered_side_points": 0
     }
   ],
   "lid_topology": [
     {
       "name": "Lid/1/True/0",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/1/False/0",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.25",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.25",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.5",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.5",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.75",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.75",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/1/True/1",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/1/False/1",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.25",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.25",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.5",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.5",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.75",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.75",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     },
     {
       "name": "Lid/-1/True/1",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 116,
+      "faces": 128,
       "errors": []
     },
     {
       "name": "Lid/-1/False/1",
-      "vertices": 94,
-      "faces": 100,
+      "vertices": 88,
+      "faces": 96,
       "errors": []
     }
   ],

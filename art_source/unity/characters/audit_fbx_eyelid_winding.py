@@ -57,12 +57,14 @@ def inspect(path, parser, test_fix):
         rows = []
         for side, sign in [('L', 1), ('R', -1)]:
             ids = shape_ids['Blink.'+side]
+            # Eye centre comes from the facial contract (v0.3.0 moved the eyes).
+            center = tuple(CONTRACT['eye_bind_centers_source_m'][side])
             for upper in [True, False]:
                 selected = [p for p in polygons if all(i in ids for i in p.vertices)
-                            and (sum(basis[i][2] for i in p.vertices)/len(p.vertices) > 1.558) == upper]
+                            and (sum(basis[i][2] for i in p.vertices)/len(p.vertices) > center[2]) == upper]
                 for name in CONTRACT['blink_samples'][side]:
                     signs = [_outward_measure([keys[name].data[i].co for i in p.vertices],
-                                             (sign*.081, -.108, 1.558)) for p in selected]
+                                             center) for p in selected]
                     rows.append({'side': side, 'lid': 'upper' if upper else 'lower', 'shape': name,
                                  'faces': len(signs), 'outward': sum(v > 1e-12 for v in signs),
                                  'inward': sum(v < -1e-12 for v in signs),

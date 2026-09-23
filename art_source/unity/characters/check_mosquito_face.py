@@ -3,9 +3,8 @@ import json
 import math
 from pathlib import Path
 
-from author_mosquito_face import (EYE_SECTIONS, HOUSING_RECESS, eye_center,
+from author_mosquito_face import (HOUSING_RECESS, eye_center, eye_mesh, pupil_mesh,
                                  facial_contract, lid_mesh, rotate_x)
-from author_mosquito_geometry import section_mesh
 from author_mosquito_motion import flight_channels, flight_contract
 from check_mosquito_source import inspect_mesh
 
@@ -32,21 +31,19 @@ def main():
     errors, topology, coverage = [], [], []
     for sign in (1, -1):
         center = eye_center(sign)
-        white, _ = section_mesh(EYE_SECTIONS)
-        eye_points = [(x + center[0], y, z) for x, y, z in white]
-        # Sample the actual pupil ellipsoid bounds at the gaze limits and center.
+        # Sketch r1: the white is the real emitted faceted ellipsoid, not the
+        # retired EYE_SECTIONS loft; the pupil samples are its real vertices.
+        eye_points, _ = eye_mesh(sign)
+        pupil_points, _ = pupil_mesh(sign)
+        # Sample the actual pupil mesh at the gaze limits and center.
         pupils = []
         for yaw in (-12, 0, 12):
             for pitch in (-10, 0, 10):
-                for row in range(7):
-                    latitude = -math.pi * .5 + math.pi * row / 6
-                    for col in range(10):
-                        longitude = math.tau * col / 10
-                        p = (sign * .002 + .006 * math.cos(latitude) * math.cos(longitude),
-                             -.026 + .0035 * math.cos(latitude) * math.sin(longitude), .009 * math.sin(latitude))
-                        x, y, z = rotate_x(p, math.radians(pitch))
-                        cy, sy = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
-                        pupils.append((center[0] + cy * x - sy * y, center[1] + sy * x + cy * y, center[2] + z))
+                for point in pupil_points:
+                    p = tuple(a - b for a, b in zip(point, center))
+                    x, y, z = rotate_x(p, math.radians(pitch))
+                    cy, sy = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+                    pupils.append((center[0] + cy * x - sy * y, center[1] + sy * x + cy * y, center[2] + z))
         for closure in (0, .25, .5, .75, 1):
             lids = [lid_mesh(sign, upper, closure) for upper in (True, False)]
             for upper, data in zip((True, False), lids):

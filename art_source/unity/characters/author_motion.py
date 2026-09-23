@@ -4,6 +4,12 @@ import math
 from mathutils import Vector, Matrix
 
 TAU=2*math.pi
+# v0.3.0 round 2 cartoon hands: the human bind pose already holds the relaxed
+# idle curl (FINGER_REST_AMOUNT of the fist, ~35 deg at the fingertip), so
+# Pose.fingers subtracts it and every authored amount keeps its absolute pose.
+FINGER_JOINT_ANGLES=(.42,.90,1.20)
+FINGER_REST_AMOUNT=.24
+THUMB_CURL_FACTOR=.72
 
 def smooth(t):
     t=max(0,min(1,t)); return t*t*t*(t*(t*6-15)+10)
@@ -47,8 +53,9 @@ class Pose:
             matrix.translation=target; self.rig.pose.bones[end].matrix=matrix; self.update()
     def fingers(self,side,amount):
         for digit in ['Index','Middle','Ring','Little','Thumb']:
-            for i,angle in enumerate([.42,.90,1.20],1):
-                self.rotate(f'{digit}{i:02d}.{side}',(angle*amount*(.72 if digit=='Thumb' else 1),0,0))
+            factor=THUMB_CURL_FACTOR if digit=='Thumb' else 1
+            for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
+                self.rotate(f'{digit}{i:02d}.{side}',(angle*(amount-FINGER_REST_AMOUNT)*factor,0,0))
     def snapshot(self):
         self.update()
         return {b.name:{'rotation_euler':tuple(b.rotation_euler),'location':tuple(b.location),'scale':tuple(b.scale)}

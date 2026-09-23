@@ -227,17 +227,43 @@ class Character:
 
 
 def human():
-    from author_human_geometry import head_and_cap,collar_and_pocket,slipper
-    from author_human_joints import clothing,wrist_weights
+    from author_human_geometry import head_and_cap,slipper
+    from author_human_joints import clothing,torso,wrist_weights
+    from author_human_facial import EYE_CENTERS
     c=Character('Human')
-    skin=material('Human_Skin',(.67,.43,.27),.82); blue=material('Human_Pajamas',(.12,.30,.47),.87)
-    trim=material('Human_Piping',(.53,.67,.71),.87); sole=material('Human_SlipperSole',(.065,.10,.15),.90)
-    white=material('Character_EyeWhite',(.84,.83,.76),.78); dark=material('Character_Expression',(.045,.032,.045),.82)
+    def palette(name,hexcode,roughness):
+        # v0.3.0 sketch palette. The audit/Unity palette keeps the sketch sRGB
+        # value (Unity SetColor is gamma space); the Blender node receives the
+        # linear equivalent so source renders show the same colour.
+        srgb=tuple(int(hexcode[i:i+2],16)/255 for i in (1,3,5))
+        m=material(name,srgb,roughness)
+        node=next(n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+        node.inputs['Base Color'].default_value=(*[v/12.92 if v<=.04045 else ((v+.055)/1.055)**2.4 for v in srgb],1)
+        return m
+    # Base colours are tuned so the sheet render reads like the sketch.
+    # Round 3: skin darker and less orange (render ~#D8915C lit / #BE7A4B
+    # shade), warm cream dots (UI-06), bright pompom (Human_Piping, now only on
+    # the pompom), darker rolled cap band, navy slipper upper on a #2A3050 sole.
+    m={'skin':palette('Human_Skin','#BF7C4D',.82),'pajamas':palette('Human_Pajamas','#2D4F9A',.88),
+       'trim':palette('Human_Piping','#F5F2EC',.90),'sole':palette('Human_SlipperSole','#2A3050',.92),
+       'white':palette('Character_EyeWhite','#F8F3EF',.55),'dark':palette('Character_Expression','#16110F',.92),
+       'shirt':palette('Human_Shirt','#E4D5B9',.90),'dots':palette('Human_PajamaDots','#E9DDCB',.88),
+       'cap':palette('Human_Nightcap','#A41E1C',.95),'band':palette('Human_NightcapBand','#961B1B',.95),
+       'hair':palette('Human_Hair','#3A2619',.85),'slipper':palette('Human_Slipper','#1F2D66',.90)}
+    # Blender look-dev only: a faint self-light keeps the underside of the huge
+    # eyeballs and of the pompom white under the top key (the audit/Unity
+    # palette is unchanged).
+    for key,strength in (('white',.55),('trim',.85)):
+        node=next(n for n in m[key].node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+        node.inputs['Emission Color'].default_value=node.inputs['Base Color'].default_value
+        node.inputs['Emission Strength'].default_value=strength
+    skin=m['skin']
     c.bone('Root',(0,0,0),(0,0,.10),deform=False)
     c.bone('Hips',(0,0,.75),(0,0,.88),'Root')
     c.bone('Spine',(0,0,.88),(0,0,1.05),'Hips'); c.bone('Chest',(0,0,1.05),(0,0,1.23),'Spine')
     c.bone('Neck',(0,0,1.23),(0,0,1.34),'Chest'); c.bone('Head',(0,0,1.34),(0,0,1.70),'Neck')
-    c.bone('Jaw',(0,-.015,1.46),(0,-.035,1.393),'Head')
+    c.bone('Jaw',(0,-.005,1.425),(0,-.035,1.360),'Head')
+    # Unity requires the first-person eye anchor at 1.53 m; the new eyeballs are centred there.
     c.bone('Socket.Eye',(0,-.17,1.53),(0,-.22,1.53),'Head',False)
     c.bone('Socket.Head',(0,0,1.72),(0,0,1.77),'Head',False)
     c.bone('Socket.Back',(0,.15,1.09),(0,.20,1.09),'Chest',False)
@@ -253,30 +279,38 @@ def human():
         c.bone('Foot.'+side,(s*.125,0,.12),(s*.125,-.12,.07),'LowerLeg.'+side)
         c.bone('Toe.'+side,(s*.125,-.12,.07),(s*.125,-.20,.07),'Foot.'+side)
         c.bone('Socket.Foot.'+side,(s*.125,-.07,0),(s*.125,-.12,0),'Foot.'+side,False)
-        c.bone('Eye.'+side,(s*.081,-.108,1.558),(s*.081,-.168,1.558),'Head',roll_front=(0,0,1))
-        c.bone('Brow.'+side,(s*.088,-.17,1.64),(s*.088,-.21,1.64),'Head')
-        clothing(mesh,tube,side,s,blue,trim)
-        tube('TrouserCuff.'+side,[(s*.125,0,.127),(s*.125,0,.164)],[.073]*2,[.082]*2,blue,'LowerLeg.'+side,10)
-        tube('TrouserHem.'+side,[(s*.125,0,.128),(s*.125,0,.133)],[.074]*2,[.083]*2,trim,'LowerLeg.'+side,10)
-        slipper(side,s,mesh,tube,strip,skin,blue,trim,sole)
+        eye=Vector(EYE_CENTERS[side])
+        c.bone('Eye.'+side,tuple(eye),tuple(eye+Vector((0,-.06,0))),'Head',roll_front=(0,0,1))
+        c.bone('Brow.'+side,(s*.070,-.140,1.610),(s*.070,-.180,1.610),'Head')
+        clothing(mesh,tube,side,s,m)
+        slipper(side,s,mesh,tube,m)
         # Hands are a single welded surface per side; final weights follow the finger chains.
-        parts=[tube('Palm.'+side,[(s*x,0,1.15) for x in [.687,.710,.735,.752,.775,.806,.835]],
-                    [.030,.030,.029,.033,.044,.049,.047],
-                    [.024,.023,.020,.019,.022,.024,.021],skin,'Hand.'+side,12)]
+        # Round 2 cartoon hands (PER-04): palm +15%, chunky short fingers (+40% thick,
+        # -15% long), thicker thumb, and a bind pose that already holds the relaxed
+        # idle curl (~35 deg at the tip) along each finger's own flexion axis.
+        from author_motion import FINGER_JOINT_ANGLES,FINGER_REST_AMOUNT,THUMB_CURL_FACTOR
+        parts=[tube('Palm.'+side,[(s*x,0,1.15) for x in [.687,.710,.735,.755,.780,.812,.842]],
+                    [.034,.034,.034,.041,.056,.063,.060],
+                    [.025,.024,.021,.021,.026,.028,.025],skin,'Hand.'+side,12)]
         paths=[]
-        for digit,zoff,length in [('Index',.034,.104),('Middle',.009,.116),('Ring',-.017,.106),('Little',-.043,.082),('Thumb',.040,.070)]:
-            length*=.85
-            start=Vector((s*(.822 if digit!='Thumb' else .782),0,1.15+zoff))
-            direction=Vector((s,0,.72 if digit=='Thumb' else 0)).normalized()
+        inward=Vector((0,-1,0))
+        for digit,zoff,length,spread in [('Index',.038,.104,.05),('Middle',.010,.116,.012),('Ring',-.019,.106,-.03),
+                                         ('Little',-.047,.082,-.08),('Thumb',.045,.070,None)]:
+            length*=.85*.85
+            start=Vector((s*(.830 if digit!='Thumb' else .785),0,1.15+zoff))
+            base=Vector((s,0,.72 if digit=='Thumb' else math.tan(spread))).normalized()
+            factor=THUMB_CURL_FACTOR if digit=='Thumb' else 1
             lengths=[length*.43,length*.32,length*.25]; points=[start]
-            parent='Hand.'+side
-            for i,ln in enumerate(lengths):
+            parent='Hand.'+side; curl=0.0
+            for i,(ln,angle) in enumerate(zip(lengths,FINGER_JOINT_ANGLES)):
+                curl+=angle*FINGER_REST_AMOUNT*factor
+                direction=base*math.cos(curl)+inward*math.sin(curl)
                 name=f'{digit}{i+1:02d}.{side}'; end=points[-1]+direction*ln
                 c.bone(name,points[-1],end,parent); paths.append((name,points[-1].copy(),end.copy(),digit))
                 points.append(end); parent=name
-            radii=([.018,.014,.0105,.007] if digit=='Thumb' else
-                   [.0095,.009,.0075,.005] if digit=='Little' else
-                   [.011,.0095,.0085,.006])
+            radii=([.0255,.0203,.0155,.0101] if digit=='Thumb' else
+                   [.0137,.0130,.0109,.0074] if digit=='Little' else
+                   [.0158,.0137,.0123,.0088])
             parts.append(tube(digit+'.'+side,points,radii,radii,skin,'Hand.'+side,8))
         bpy.ops.object.select_all(action='DESELECT')
         for p in parts: p.select_set(True)
@@ -298,32 +332,12 @@ def human():
             for bone,value in weight.items():groups[bone].add([i],value,'REPLACE')
         for poly in hand.data.polygons: poly.use_smooth=False
         c.finger_paths[side]=paths
-    # Continuous trouser seat behind the jacket joins the legs above the crotch.
-    tube('TrouserSeat',[(0,0,z) for z in [.685,.72,.77,.805]],
-         [.170,.211,.216,.208],[.087,.112,.119,.113],blue,'Hips',12)
-    torso=tube('PajamaJacket',[(0,0,z) for z in [.735,.78,.82,.96,1.07,1.17,1.235,1.285]],
-               [.224,.224,.214,.185,.210,.232,.191,.070],
-               [.116,.126,.124,.115,.129,.128,.120,.070],blue)
-    groups={n:torso.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
-    for v in torso.data.vertices:
-        weights=(('Hips',1-max(0,min(1,(v.co.z-.79)/.15))),('Chest',max(0,min(1,(v.co.z-1.02)/.13))))
-        wh,wc=[p[1] for p in weights]; ws=1-wh-wc
-        for n,w in [('Hips',wh),('Spine',ws),('Chest',wc)]:
-            if w>0: groups[n].add([v.index],w,'REPLACE')
-    strip('JacketPlacket',[(0,y,z) for y,z in [(-.127,.815),(-.125,.86),(-.119,.96),(-.132,1.07),(-.133,1.16)]],.003,trim,'Chest')
-    for y,z in [(-.132,.865),(-.125,.966),(-.138,1.072)]:
-        ellipsoid('JacketButton',(0,y,z),(.006,.0025,.006),white,'Chest',8,4)
-    collar_and_pocket(mesh,strip,blue,trim)
-    # Jacket details deform with the same body weights instead of rotating rigidly
-    # through the lower torso when crouching or leaning.
-    for detail in [o for o in bpy.context.scene.objects if o.name.startswith(('JacketPlacket','JacketButton','PocketPiping','PocketPatch'))]:
-        detail.vertex_groups.clear()
-        detail_groups={n:detail.vertex_groups.new(name=n) for n in ['Hips','Spine','Chest']}
-        for vertex in detail.data.vertices:
-            wh=1-max(0,min(1,(vertex.co.z-.79)/.15));wc=max(0,min(1,(vertex.co.z-1.02)/.13))
-            for name,weight in [('Hips',wh),('Spine',1-wh-wc),('Chest',wc)]:
-                if weight>0:detail_groups[name].add([vertex.index],weight,'REPLACE')
-    head_and_cap(c,mesh,tube,ellipsoid,strip,skin,blue,trim,white,dark)
+    # Continuous trouser seat joins the legs above the crotch (visible 0.10 m
+    # between the crotch and the raised T-shirt hem, under the waistband).
+    tube('TrouserSeat',[(0,0,z) for z in [.672,.692,.73,.80]],
+         [.118,.150,.160,.150],[.052,.068,.078,.080],m['pajamas'],'Hips',12)
+    torso(mesh,tube,m)
+    head_and_cap(c,mesh,tube,ellipsoid,m)
     from author_human_facial import eyelids
     eyelids(c,mesh,skin)
     c.bind()

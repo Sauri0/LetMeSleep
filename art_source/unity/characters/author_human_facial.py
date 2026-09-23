@@ -1,11 +1,27 @@
-"""Human pupil pivots and actual eyelid geometry, shared by menu/game exports."""
+"""Human pupil pivots and actual eyelid geometry, shared by menu/game exports.
+
+v0.3.0 caricature face (PER-01/PER-04): huge protruding eyeballs centred at the
+first-person camera height (Socket.Eye z=1.53, required by Unity). Open lids
+rest rotated back into the forehead/cheek so the neutral eye reads as a clean
+white sphere; the piecewise morph samples sweep them over the front.
+Round 3: 121 mm wide x 126 mm tall (slightly vertical) eyeballs set 11 mm
+deeper into a shallow socket so about half of each globe sits in the face.
+"""
 import math
+
+EYE_RADIUS=.0605
+EYE_HEIGHT_FACTOR=1.04
+EYE_CENTERS={'L':(.067,-.132,1.53),'R':(-.067,-.132,1.53)}
+# Lid shells (1.09 r) sit outside the globe and the pupil lens (max radius r+.003).
+LID_RADII=(EYE_RADIUS*1.09,EYE_RADIUS*1.09,EYE_RADIUS*EYE_HEIGHT_FACTOR*1.07)
+LID_SIDE_WRAP=.25
+LID_OPEN_TILT=.62
 
 CONTRACT={
     'renderer':'HumanHead','head_bone':'Head','neck_bone':'Neck',
     'head_forward_local':[0,0,1],'head_up_local':[0,1,0],
     'eye_bones':['Eye.L','Eye.R'],'eye_forward_local':[0,1,0],'eye_up_local':[0,0,1],
-    'eye_bind_centers_source_m':{'L':[.081,-.108,1.558],'R':[-.081,-.108,1.558]},
+    'eye_bind_centers_source_m':{side:list(center) for side,center in EYE_CENTERS.items()},
     'blink_shapes':{'L':'Blink.L','R':'Blink.R'},'unity_blink_range':[0,100],
     'blink_samples':{'L':['Basis','Blink25.L','Blink50.L','Blink75.L','Blink.L'],
                      'R':['Basis','Blink25.R','Blink50.R','Blink75.R','Blink.R']},
@@ -15,32 +31,42 @@ CONTRACT={
     'suggested_limits_degrees':{'head_yaw':55,'head_pitch':25,'neck_yaw':20,'eye_yaw':22,'eye_pitch':15},
     'legacy_blink_clip':'Eye local scale Z is a legacy signal only; read before resetting scale to1, map (1-z)/.93 to lid closure',
     'eye_scale_runtime':[1,1,1],
-    'scope':'Same rig names/hierarchy; eye bind centers corrected; head/cap/skin material customization retained'}
+    'eye_radius_m':EYE_RADIUS,
+    'scope':'Same rig names/hierarchy; v0.3.0 sketch face: large protruding eyes centred at Socket.Eye height 1.53; head/cap/skin material customization retained'}
 
 
 def eyelids(c, mesh, skin):
     c.facial_contract=CONTRACT
     names=lambda side:['Blink25.'+side,'Blink50.'+side,'Blink75.'+side,'Blink.'+side]
     c.eyelid_targets={name:{} for side in ['L','R'] for name in names(side)}
+    rx,ry,rz=LID_RADII
     for side,sign in [('L',1),('R',-1)]:
-        center=(sign*.081,-.108,1.558)
-        def point(phi,theta):
-            return (center[0]+.0555*math.sin(phi)*math.sin(theta),
-                    center[1]-.054*math.sin(phi)*math.cos(theta),
-                    center[2]+.0585*math.cos(phi))
+        center=EYE_CENTERS[side]
+        def point(phi,theta,tilt):
+            # Front shell of the lid ellipsoid, wrapped slightly past the eye
+            # equator, then pitched about the eye's X axis (tilt>0 folds the
+            # upper lid back over the top; the lower lid folds under/back).
+            x=rx*math.sin(phi)*math.sin(theta)
+            y=-ry*math.sin(phi)*math.cos(theta)
+            z=rz*math.cos(phi)
+            y,z=y*math.cos(tilt)+z*math.sin(tilt),-y*math.sin(tilt)+z*math.cos(tilt)
+            return (center[0]+x,center[1]+y,center[2]+z)
+        wrap=math.pi/2+LID_SIDE_WRAP
         for upper in [True,False]:
-            # Both lids rest outside the visible eye and meet below the center
-            # when closed. There is real skin across the sclera, not eye scale.
-            open_angles=[.035,.105,.17,.235,.31,.38] if upper else [math.pi-v for v in [.035,.105,.17,.235,.31,.38]]
+            # Open lids rest rotated into the head; closed lids meet below centre.
+            open_angles=[.035,.09,.15,.21,.27,.33] if upper else [math.pi-v for v in [.035,.09,.15,.21,.27,.33]]
             closed_angles=[.035,.365,.700,1.035,1.37,1.70] if upper else [math.pi-.035,2.825,2.54,2.26,1.98,1.70]
+            open_tilt=LID_OPEN_TILT if upper else -LID_OPEN_TILT
             count=13
-            vertices=[point(phi,-math.pi/2+j*math.pi/(count-1)) for phi in open_angles for j in range(count)]
+            thetas=[-wrap+j*2*wrap/(count-1) for j in range(count)]
+            vertices=[point(phi,theta,open_tilt) for phi in open_angles for theta in thetas]
             faces=[(r*count+j,r*count+j+1,(r+1)*count+j+1,(r+1)*count+j)
                    for r in range(len(open_angles)-1) for j in range(count-1)]
             obj=mesh('HeadLid'+('Upper.' if upper else 'Lower.')+side,vertices,faces,skin,'Head')
             for name,closure in zip(names(side),[.25,.50,.75,1]):
                 angles=[a+(b-a)*closure for a,b in zip(open_angles,closed_angles)]
-                targets=[point(phi,-math.pi/2+j*math.pi/(count-1)) for phi in angles for j in range(count)]
+                tilt=open_tilt*(1-closure)
+                targets=[point(phi,theta,tilt) for phi in angles for theta in thetas]
                 for original,target in zip(vertices,targets):
                     key=tuple(round(v,6) for v in original)
                     assert key not in c.eyelid_targets[name]
@@ -89,7 +115,7 @@ def orient_lid_faces(c, obj):
         assert len(ids)==156,(side,len(ids),'Eyelid vertex mapping changed')
         faces=[p for p in obj.data.polygons if all(i in ids for i in p.vertices)]
         assert len(faces)==120,(side,len(faces),'Eyelid topology changed')
-        center=(sign*.081,-.108,1.558);flipped=0
+        center=EYE_CENTERS[side];flipped=0
         for polygon in faces:
             points=[obj.data.vertices[i].co for i in polygon.vertices]
             if _outward_measure(points,center)<0:

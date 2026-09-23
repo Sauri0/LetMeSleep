@@ -62,13 +62,9 @@ def main():
         data = (ROOT / name).read_bytes()
         ast.parse(data)
         hashes[name] = hashlib.sha256(data).hexdigest()
-    meshes = []
-    for name, sections in (('Thorax', geometry.THORAX_SECTIONS), ('Head', geometry.HEAD_SECTIONS),
-                            ('Abdomen', geometry.ABDOMEN_SECTIONS)):
-        meshes.append(inspect_mesh(name, *geometry.section_mesh(sections)))
-    for side in (1, -1):
-        meshes.append(inspect_mesh('Wing.' + str(side), *geometry.wing_mesh(side)))
-        meshes.append(inspect_mesh('Brow.' + str(side), *geometry._brow_mesh(side)))
+    # Sketch r1 replaced the lofted *_SECTIONS tables with faceted ellipsoids and
+    # a banded loft; inspect every pure-data closed mesh the generator emits.
+    meshes = [inspect_mesh(name, vertices, faces) for name, vertices, faces in geometry.pure_meshes()]
     errors += [f"{m['name']}: {error}" for m in meshes for error in m['errors']]
 
     # Compare literal contracts against the existing generated baseline, not a
