@@ -104,7 +104,8 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(actions.LastEditedRole, Is.EqualTo(AlfaRole.Mosquito));
             AssertOption(actions.LastModularPreview, CustomizationRole.Human, "human.hair", "long");
             AssertOption(actions.LastModularPreview, CustomizationRole.Mosquito, "mosquito.base", "body-b");
-            Assert.That(CustomizationTextNamed(ui, "Status").text, Does.Contain("llegará cuando estén listas"));
+            // v0.3 art direction: no "coming later" notice (the viewer approximates the parts instead).
+            Assert.That(CustomizationTextNamed(ui, "Status").text, Does.Not.Contain("llegará"));
             Assert.That(Find(ui.transform, "Thumbnail").GetComponent<UnityEngine.UI.Image>().sprite, Is.SameAs(thumbnail),
                 "Only the supplied, real thumbnail is rendered for a visual option.");
 

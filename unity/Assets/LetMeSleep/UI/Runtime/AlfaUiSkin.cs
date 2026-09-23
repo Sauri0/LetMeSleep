@@ -224,6 +224,11 @@ namespace LetMeSleep.UI
         internal bool ThickFrame;
         /// <summary>Non-interactable control: flat disabled navy regardless of intent (see AlfaUiTheme.DisabledColors).</summary>
         internal bool Disabled;
+        /// <summary>
+        /// Disabled keeps the intent colours at half opacity instead of the flat navy (UI-06 APLICAR stays green,
+        /// dimmed to 50 %, when there is nothing to apply).
+        /// </summary>
+        internal bool DisabledKeepsIntent;
         internal Color ShadowColor = Color.clear;
         internal Vector2 ShadowOffset = new Vector2(0f, -AlfaUiTheme.ShadowOffset);
         internal Color FocusFrameColor = Color.clear;
@@ -263,7 +268,15 @@ namespace LetMeSleep.UI
             var bottom = FocusRecolorsFill ? Color.Lerp(GradientBottom, FocusGradientBottom, focusAmount) : GradientBottom;
             var frameColor = Color.Lerp(FrameColor, FocusFrameColor, focusAmount);
             var shadowColor = Color.Lerp(ShadowColor, FocusShadowColor, focusAmount);
-            if (Disabled)
+            if (Disabled && DisabledKeepsIntent)
+            {
+                // The UI blends in linear space: 0.36 coverage reads as the requested ~50 % green over the navy.
+                top = AlfaUiTheme.WithAlpha(GradientTop, GradientTop.a * 0.36f);
+                bottom = AlfaUiTheme.WithAlpha(GradientBottom, GradientBottom.a * 0.36f);
+                frameColor = AlfaUiTheme.WithAlpha(FrameColor, FrameColor.a * 0.45f);
+                shadowColor = AlfaUiTheme.WithAlpha(ShadowColor, ShadowColor.a * 0.3f);
+            }
+            else if (Disabled)
             {
                 AlfaUiTheme.DisabledColors(out top, out bottom, out frameColor, out _);
                 shadowColor = AlfaUiTheme.WithAlpha(ShadowColor, ShadowColor.a * 0.5f);

@@ -9,10 +9,13 @@ namespace LetMeSleep.UI
 {
     /// <summary>
     /// Settings (UI-06 screen 10, UI-05): tabs GENERAL / AUDIO / VIDEO / CONTROLES / ACCESIBILIDAD with icons on the
-    /// left, one row per real option (label on the left, control and value on the right), RESTAURAR and the green
-    /// APLICAR. GENERAL groups the most used options; every control of the same option edits the same draft and
-    /// all of them are refreshed together. Push-to-talk rebinding keeps unapplied edits, says that it is waiting for
-    /// a key and its Esc no longer closes the screen (ui-presentation-audio-4).
+    /// left, one row per real option (label on the left, control and value on the right), RESTAURAR and APLICAR,
+    /// always green (at 50 % when there is nothing to apply). Content follows the sketch: GENERAL has the language,
+    /// the mouse sensitivity and the voice chat key; the volumes live only in AUDIO and full screen only in VIDEO;
+    /// ACCESIBILIDAD has the options this build really has. Controls of the same option edit the same draft and are
+    /// refreshed together. Push-to-talk rebinding keeps unapplied edits, shows one waiting text (on its row) and its
+    /// Esc no longer closes the screen (ui-presentation-audio-4). Options the game does not have (subtitles, colour
+    /// blindness, text size) are not shown: adding them needs a new preferences schema (see MAPA-SISTEMAS, ui).
     /// </summary>
     public sealed partial class AlfaUiController
     {
@@ -77,15 +80,13 @@ namespace LetMeSleep.UI
             AlfaUiFactory.Place(pages, Vector2.zero, Vector2.one, new Vector2(324f, 96f), Vector2.zero);
 
             var general = SettingsPage(pages, SettingsTab.General, "GeneralPanel");
-            SliderRow(general, "Volumen general", "MasterVolumeSlider", draft => draft.MasterVolume, (draft, value) => draft.MasterVolume = value);
-            SliderRow(general, "Volumen de la música", "GeneralMusicSlider", draft => draft.MusicVolume, (draft, value) => draft.MusicVolume = value);
-            SliderRow(general, "Volumen de efectos", "GeneralEffectsSlider", draft => draft.EffectsVolume, (draft, value) => draft.EffectsVolume = value);
-            SliderRow(general, "Sensibilidad del humano", "GeneralHumanSensitivitySlider", draft => draft.HumanSensitivity, (draft, value) => draft.HumanSensitivity = value, 0.1f, 2f);
-            SliderRow(general, "Sensibilidad del mosquito", "GeneralMosquitoSensitivitySlider", draft => draft.MosquitoSensitivity, (draft, value) => draft.MosquitoSensitivity = value, 0.1f, 2f);
-            ToggleRow(general, "Pantalla completa", "GeneralFullScreen", draft => draft.FullScreen, (draft, value) => draft.FullScreen = value);
+            ValueRow(general, "Idioma", "Language", "Español");
+            SliderRow(general, "Sensibilidad del mouse · humano", "GeneralHumanSensitivitySlider", draft => draft.HumanSensitivity, (draft, value) => draft.HumanSensitivity = value, 0.1f, 2f);
+            SliderRow(general, "Sensibilidad del mouse · mosquito", "GeneralMosquitoSensitivitySlider", draft => draft.MosquitoSensitivity, (draft, value) => draft.MosquitoSensitivity = value, 0.1f, 2f);
+            BuildPushToTalkRow(general);
 
             var audio = SettingsPage(pages, SettingsTab.Audio, "AudioPanel");
-            SliderRow(audio, "Volumen general", "AudioMasterVolumeSlider", draft => draft.MasterVolume, (draft, value) => draft.MasterVolume = value);
+            SliderRow(audio, "Volumen general", "MasterVolumeSlider", draft => draft.MasterVolume, (draft, value) => draft.MasterVolume = value);
             SliderRow(audio, "Música", "MusicVolumeSlider", draft => draft.MusicVolume, (draft, value) => draft.MusicVolume = value);
             SliderRow(audio, "Efectos", "EffectsVolumeSlider", draft => draft.EffectsVolume, (draft, value) => draft.EffectsVolume = value);
             SliderRow(audio, "Voces del chat", "VoiceVolumeSlider", draft => draft.VoiceVolume, (draft, value) => draft.VoiceVolume = value);
@@ -114,14 +115,16 @@ namespace LetMeSleep.UI
             SliderRow(controls, "Sensibilidad del humano", "HumanSensitivitySlider", draft => draft.HumanSensitivity, (draft, value) => draft.HumanSensitivity = value, 0.1f, 2f);
             SliderRow(controls, "Sensibilidad del mosquito", "MosquitoSensitivitySlider", draft => draft.MosquitoSensitivity, (draft, value) => draft.MosquitoSensitivity = value, 0.1f, 2f);
             ToggleRow(controls, "Invertir eje vertical", "InvertY", draft => draft.InvertY, (draft, value) => draft.InvertY = value);
-            BuildPushToTalkRow(controls);
             BuildKeyReference(controls);
 
             var access = SettingsPage(pages, SettingsTab.Accessibility, "AccessibilityPanel");
-            reduceMotionRow = ToggleRow(access, "Reducir movimiento del menú", "ReduceMenuMotion", draft => draft.ReduceMenuMotion,
+            reduceMotionRow = ToggleRow(access, "Reducir movimiento", "ReduceMenuMotion", draft => draft.ReduceMenuMotion,
                 (draft, value) => draft.ReduceMenuMotion = value).gameObject;
             accessibilityEmptyNote = factory.Text(access, "AccessibilityNote",
                 "Esta versión todavía no tiene opciones de accesibilidad para este equipo.", AlfaUiTheme.BodySize, AlfaUiTheme.Moon200).gameObject;
+            var accessInfo = factory.Text(access, "AccessibilityInfo",
+                "Los estados del juego nunca dependen sólo del color: cada uno lleva un icono o un texto.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            accessInfo.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = 56f;
             reduceMotionRow.SetActive(false);
 
             var footer = factory.Horizontal(content, "Actions", 14f, TextAnchor.MiddleRight);
@@ -135,6 +138,8 @@ namespace LetMeSleep.UI
             resetLayout.flexibleWidth = 0f;
             settingsApplyButton = factory.Button(footer, "SettingsApplyButton", "APLICAR", ApplySettings, AlfaButtonStyle.Success, 72f, AlfaUiIconKind.Ready);
             factory.StrongLabel(settingsApplyButton, AlfaUiTheme.CtaSize);
+            // Always green; with nothing to apply it stays green at half opacity (never the flat navy).
+            AlfaUiFactory.KeepIntentWhenDisabled(settingsApplyButton);
             var applyLayout = settingsApplyButton.GetComponent<UnityEngine.UI.LayoutElement>();
             applyLayout.preferredWidth = applyLayout.minWidth = 300f;
             applyLayout.flexibleWidth = 0f;
@@ -209,12 +214,30 @@ namespace LetMeSleep.UI
             CycleButton(cycle, name + "Previous", AlfaUiIconKind.ChevronLeft, () => ChangeSetting(draft => step(draft, -1)));
             var well = factory.Inset(cycle, name + "Well", 52f);
             well.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
-            var value = factory.Text(well, name + "Value", "—", 23f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
+            // Values in the display face: its zero has no slash ("1920 × 1080", "60 FPS").
+            var value = factory.Text(well, name + "Value", "—", 25f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             value.textWrappingMode = TextWrappingModes.NoWrap;
             AlfaUiFactory.Fill(value.rectTransform, 10f, 10f, 4f, 4f);
             CycleButton(cycle, name + "Next", AlfaUiIconKind.ChevronRight, () => ChangeSetting(draft => step(draft, 1)));
             settingsRefreshers.Add(() => { if (settingsDraft != null) value.text = read(settingsDraft); });
             RememberFirstControl(page, name + "Previous");
+            return row;
+        }
+
+        /// <summary>
+        /// Read-only value row (the game has a single language): the value in a well, no arrows, so it never
+        /// invites a change that does not exist.
+        /// </summary>
+        private RectTransform ValueRow(Transform page, string label, string name, string value)
+        {
+            var row = SettingsRow(page, label, name + "Row");
+            var well = factory.Inset(row, name + "Well", 52f);
+            var layout = well.GetComponent<UnityEngine.UI.LayoutElement>();
+            layout.minWidth = layout.preferredWidth = 480f;
+            layout.flexibleWidth = 0f;
+            var text = factory.Text(well, name + "Value", value, 25f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            text.textWrappingMode = TextWrappingModes.NoWrap;
+            AlfaUiFactory.Fill(text.rectTransform, 10f, 10f, 4f, 4f);
             return row;
         }
 
@@ -230,7 +253,7 @@ namespace LetMeSleep.UI
 
         private void BuildPushToTalkRow(Transform page)
         {
-            var row = SettingsRow(page, "Tecla para hablar", "PushToTalkRow");
+            var row = SettingsRow(page, "Chat de voz · tecla para hablar", "PushToTalkRow");
             var group = factory.Horizontal(row, "PushToTalk", 12f, TextAnchor.MiddleLeft);
             var groupLayout = group.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
             groupLayout.minWidth = groupLayout.preferredWidth = 480f;
@@ -421,7 +444,8 @@ namespace LetMeSleep.UI
             }
             pttRebinding = true;
             pttRebindSnapshot = settingsDraft.Copy();
-            settingsStatus.text = "Presioná una tecla o un botón del mouse. Esc cancela.";
+            // The row says it is waiting; the footer stays quiet so there is a single waiting text.
+            settingsStatus.text = string.Empty;
             UpdatePushToTalkRow();
             UpdateSettingsInteractivity();
             RefreshSettingsApplyState();
@@ -461,7 +485,7 @@ namespace LetMeSleep.UI
                     : BindingKeyLabel(settingsDraft?.PushToTalkBinding));
             pushToTalkButton.interactable = inRoom && supported && !pttRebinding && !settingsApplyLatched;
             pushToTalkButtonLabel.text = pttRebinding ? "PULSÁ UNA TECLA…" : "CAMBIAR";
-            pushToTalkNote.text = pttRebinding ? "Esperando una tecla · Esc cancela" :
+            pushToTalkNote.text = pttRebinding ? "Esc cancela" :
                 !supported ? "Esta versión no permite cambiarla." :
                 !inRoom ? "Se cambia dentro de una sala, con el chat de voz activo." : string.Empty;
             pushToTalkNote.gameObject.SetActive(!string.IsNullOrEmpty(pushToTalkNote.text));

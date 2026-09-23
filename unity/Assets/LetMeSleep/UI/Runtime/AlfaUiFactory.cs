@@ -186,6 +186,56 @@ namespace LetMeSleep.UI
             if (material != null) text.fontSharedMaterial = material;
         }
 
+        private static readonly Dictionary<TMP_FontAsset, Material> OutlinedMaterials = new Dictionary<TMP_FontAsset, Material>();
+
+        /// <summary>
+        /// Big screen titles (pause, results): the display face with the sketch's comic treatment, a #0B1426 ink
+        /// contour and a hard 4-unit drop shadow underneath (UI-06 "¡HUMANOS GANAN!", "PARTIDA EN PAUSA").
+        /// </summary>
+        internal void OutlineTitle(TextMeshProUGUI text, float size = -1f)
+        {
+            if (text == null) return;
+            MakeDisplay(text, size);
+            var material = OutlinedMaterial(text.font);
+            if (material != null) text.fontSharedMaterial = material;
+        }
+
+        private static Material OutlinedMaterial(TMP_FontAsset font)
+        {
+            if (font == null || font.material == null) return null;
+            if (OutlinedMaterials.TryGetValue(font, out var cached) && cached != null) return cached;
+            var material = new Material(font.material) { name = font.name + " UI outlined title", hideFlags = HideFlags.HideAndDontSave };
+            if (material.HasProperty(ShaderUtilities.ID_OutlineWidth))
+            {
+                // The SDF spread (padding 9 at 72 pt) limits the contour; dilating the face keeps the letters full
+                // while the ink ring grows outwards (about 6-7 % of the em at title sizes).
+                material.SetColor(ShaderUtilities.ID_OutlineColor, AlfaUiTheme.Ink900);
+                material.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.42f);
+                material.SetFloat(ShaderUtilities.ID_FaceDilate, 0.36f);
+                material.EnableKeyword(ShaderUtilities.Keyword_Outline);
+            }
+            if (material.HasProperty(ShaderUtilities.ID_UnderlayColor))
+            {
+                material.EnableKeyword(ShaderUtilities.Keyword_Underlay);
+                material.SetColor(ShaderUtilities.ID_UnderlayColor, AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.85f));
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0f);
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.62f);
+                material.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.36f);
+                material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.05f);
+            }
+            OutlinedMaterials[font] = material;
+            return material;
+        }
+
+        /// <summary>Disabled keeps the button's intent at half opacity (APLICAR stays green, dimmed).</summary>
+        internal static void KeepIntentWhenDisabled(UnityEngine.UI.Button button)
+        {
+            var surface = button != null ? button.GetComponent<AlfaUiSurface>() : null;
+            if (surface == null) return;
+            surface.DisabledKeepsIntent = true;
+            surface.Refresh();
+        }
+
         private static Material ShadowedMaterial(TMP_FontAsset font)
         {
             if (font == null || font.material == null) return null;
@@ -1067,6 +1117,38 @@ namespace LetMeSleep.UI
             radialVignetteSprite.name = texture.name;
             radialVignetteSprite.hideFlags = HideFlags.HideAndDontSave;
             return radialVignetteSprite;
+        }
+
+        private static Sprite radialGlowSprite;
+
+        /// <summary>Opaque centre fading to transparent edges: soft team-coloured light behind the results winner.</summary>
+        internal static Sprite RadialGlowSprite()
+        {
+            if (radialGlowSprite != null) return radialGlowSprite;
+            const int size = 128;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false, true)
+            {
+                name = "LMS UI radial glow",
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            var pixels = new Color32[size * size];
+            for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+            {
+                var dx = (x + 0.5f) / size * 2f - 1f;
+                var dy = (y + 0.5f) / size * 2f - 1f;
+                var t = Mathf.Clamp01(Mathf.Sqrt(dx * dx + dy * dy));
+                var alpha = 1f - t * t * (3f - 2f * t);
+                pixels[y * size + x] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(255f * alpha * alpha));
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            radialGlowSprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
+            radialGlowSprite.name = texture.name;
+            radialGlowSprite.hideFlags = HideFlags.HideAndDontSave;
+            return radialGlowSprite;
         }
 
         /// <summary>Anchors a rect to a parent region with explicit edge offsets (stretched columns).</summary>

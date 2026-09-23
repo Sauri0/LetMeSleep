@@ -175,6 +175,31 @@ namespace LetMeSleep.UI
 
         internal static Color WithAlpha(Color color, float alpha) => new Color(color.r, color.g, color.b, alpha);
 
+        /// <summary>
+        /// Tabular figures for times and counters ("02:55", "20 / 20"): every run of digits is monospaced so clocks
+        /// do not jitter. Use on labels in the display face (LMS Barlow Narrow, whose zero has no slash).
+        /// </summary>
+        internal static string Digits(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value ?? string.Empty;
+            var builder = new System.Text.StringBuilder(value.Length + 24);
+            var inRun = false;
+            var inTag = false;
+            foreach (var character in value)
+            {
+                // Rich-text tags ("<color=#F2F6FF>") are copied untouched.
+                if (character == '<') inTag = true;
+                var digit = !inTag && character >= '0' && character <= '9';
+                if (character == '>') inTag = false;
+                if (digit && !inRun) builder.Append("<mspace=0.52em>");
+                if (!digit && inRun) builder.Append("</mspace>");
+                inRun = digit;
+                builder.Append(character);
+            }
+            if (inRun) builder.Append("</mspace>");
+            return builder.ToString();
+        }
+
         internal static Color Hex(string rgb, float alpha = 1f)
         {
             ColorUtility.TryParseHtmlString("#" + rgb, out var color);

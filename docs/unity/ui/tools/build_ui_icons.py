@@ -25,8 +25,10 @@ V030_KINDS = ['Gear','House','Enter','Map','Lock','Wifi','Warning','Invite','Cro
 # v0.3 stage 2: equipment slots (were procedural bars), customization categories, settings tabs and HUD.
 V030_STAGE2_KINDS = ['Hands','Flyswatter','Slipper','ElectricRacket','Aerosol','Blood','Palette','Dice','Undo','Mouse','Eye',
                      'Wings','Proboscis','Hat','Face','Accessibility','Trophy','Bolt']
+# v0.3 stage 2, art-direction pass: human health/lives heart (UI-06 HUD '100/100', mosquito 'VIDAS').
+V030_STAGE2B_KINDS = ['Heart']
 import sys, math
-REQUESTED = [a for a in sys.argv[1:] if not a.startswith('-')] or (ALFA_KINDS + V030_KINDS + V030_STAGE2_KINDS)
+REQUESTED = [a for a in sys.argv[1:] if not a.startswith('-')] or (ALFA_KINDS + V030_KINDS + V030_STAGE2_KINDS + V030_STAGE2B_KINDS)
 CLEAR = (0,0,0,0)
 for kind in REQUESTED:
     im = Image.new('RGBA', (128*S,128*S))
@@ -259,6 +261,11 @@ for kind in REQUESTED:
         rect((56,72,72,98)); rect((32,96,96,116),6)
     elif kind=='Bolt':
         poly([(76,6),(24,72),(58,72),(46,122),(104,50),(70,50),(90,6)])
+    elif kind=='Heart':
+        # Two lobes and a point, with a small highlight cut-out.
+        head(40,44,30); head(88,44,30)
+        poly([(12,52),(116,52),(64,116)])
+        head(34,36,8,CLEAR)
     dest = OUT / (kind+'.png')
     im.resize((128,128),Image.Resampling.LANCZOS).save(dest)
     meta(dest)

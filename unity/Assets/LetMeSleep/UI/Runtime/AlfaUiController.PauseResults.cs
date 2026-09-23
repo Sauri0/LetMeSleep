@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LetMeSleep.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,16 +10,28 @@ namespace LetMeSleep.UI
 {
     /// <summary>
     /// Pause (UI-06 screen 8) and results (screen 9).
-    /// Pause: left column "PARTIDA EN PAUSA" with CONTINUAR (blue), AJUSTES and SALIR over the still visible scene,
-    /// and the voice panel under it with a scrolling, pooled list of players (ui-presentation-audio-5 and -6): rows
-    /// are rebuilt only when the set of players changes, never while the pause is hidden, and focus survives.
+    /// Pause: the scene is dimmed with #0E1A30 at 56 % so the menu stands out; left column "PARTIDA EN PAUSA" (ink
+    /// contour and shadow) with CONTINUAR (blue), AJUSTES and SALIR; under it a compact voice panel whose list shows
+    /// whole rows only, fades at the bottom edge when it scrolls, and is pooled (ui-presentation-audio-5 and -6).
     /// There is no "VOLVER A LA SALA" mid-round: only the host can end a round, so it is not offered.
-    /// Results: big "¡HUMANOS GANAN!" / "¡MOSQUITOS GANAN!" banner in the team colour with the role portraits
-    /// (painted ones from Resources/AlfaUiPortraits, otherwise the in-game models), team chips and the actions that
-    /// exist: JUGAR DE NUEVO (training) or VOLVER A LA SALA (host), plus leaving.
+    /// Results: #0E1A30 at 58 % over the scene, a 116-unit "¡HUMANOS GANAN!" / "¡MOSQUITOS GANAN!" title with ink
+    /// contour and shadow, the two teams full body and unframed in a fixed order (human left, mosquito right) with
+    /// the winner celebrating at 1.15 (trophy and #FFC93C frame on its chip) and the loser behind at 0.8, labelled
+    /// player counts, and the actions that exist: JUGAR DE NUEVO (training) or VOLVER A LA SALA (host), plus leaving.
     /// </summary>
     public sealed partial class AlfaUiController
     {
+        private const float PauseVoiceRowHeight = 52f;
+        private const float PauseVoiceRowSpacing = 8f;
+        private const int PauseVoiceVisibleRows = 3;
+        private const float ResultsTitleHeight = 150f;
+        private const float ResultsChipHeight = 88f;
+        private const float ResultsWinnerScale = 1.15f;
+        private const float ResultsLoserScale = 0.8f;
+        private RectTransform resultsCard;
+        private float resultsLaidOutHeight = -1f;
+        private MatchOutcome resultsOutcome = MatchOutcome.Interrupted;
+
         private UnityEngine.UI.Button pauseLeaveButton;
         private TextMeshProUGUI pauseLeaveLabel;
         private UnityEngine.UI.Button pauseVoiceMuteButton;
@@ -26,6 +39,8 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI pauseVoiceStatus;
         private GameObject pauseVoicePanel;
         private RectTransform pauseVoicePeers;
+        private UnityEngine.UI.ScrollRect pauseVoiceScroll;
+        private GameObject pauseVoiceFade;
         private readonly List<string> pauseVoiceIds = new List<string>();
         private readonly Dictionary<string, UnityEngine.UI.Button> pauseVoiceRows = new Dictionary<string, UnityEngine.UI.Button>();
         private bool pauseVoiceDirty;
@@ -38,50 +53,63 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Button resultsPrimary;
         private UnityEngine.UI.Button resultsLeave;
         private ResultsUiState resultsState;
-        private UnityEngine.UI.Image resultsBannerTint;
-        private UnityEngine.UI.RawImage resultsHumanPortrait;
-        private UnityEngine.UI.RawImage resultsMosquitoPortrait;
+        private UnityEngine.UI.Image resultsGlow;
+        private readonly Dictionary<AlfaRole, ResultsFigure> resultsFigures = new Dictionary<AlfaRole, ResultsFigure>();
+        private readonly Dictionary<string, Texture2D> resultsFigureTextures = new Dictionary<string, Texture2D>();
         private readonly Dictionary<AlfaRole, ResultsChip> resultsChips = new Dictionary<AlfaRole, ResultsChip>();
 
         private sealed class ResultsChip
         {
             public RectTransform Root;
             public TextMeshProUGUI Count;
+            public TextMeshProUGUI Unit;
             public GameObject Crown;
+        }
+
+        private sealed class ResultsFigure
+        {
+            public RectTransform Root;
+            public UnityEngine.UI.RawImage Image;
+            public AlfaUiIcon Fallback;
         }
 
         private void BuildPause()
         {
             var view = factory.View("PauseView", transform, false);
             var backdrop = view.GetComponent<UnityEngine.UI.Image>();
-            backdrop.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, 0.34f);
+            // #0E1A30 over the scene; 0.7 in the UI's linear blending reads as the sketch's 50-60 % dim.
+            backdrop.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, 0.7f);
             backdrop.raycastTarget = true;
             screens[AlfaUiScreen.Pause] = view;
             var wash = AlfaUiFactory.Node("NightWash", view.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
             wash.sprite = AlfaUiFactory.LinearFadeSprite();
-            wash.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, 0.9f);
+            wash.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, 0.5f);
             wash.raycastTarget = false;
-            Anchor(wash.rectTransform, Vector2.zero, new Vector2(0.55f, 1f), new Vector2(0f, 0.5f), Vector2.zero, Vector2.zero);
+            Anchor(wash.rectTransform, Vector2.zero, new Vector2(0.5f, 1f), new Vector2(0f, 0.5f), Vector2.zero, Vector2.zero);
 
             var column = AlfaUiFactory.Node("PauseColumn", view.transform).GetComponent<RectTransform>();
             AlfaUiFactory.Place(column, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(64f, 40f), new Vector2(64f + 540f, -84f));
             const float cardHeight = 96f + 3f * 80f + 2f * 14f + 40f;
-            var card = factory.Panel(column, "PauseCard", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.96f));
+            var card = factory.Panel(column, "PauseCard", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.97f));
             Anchor(card, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, cardHeight));
             var content = factory.Vertical(card, "Content", 14f);
             AlfaUiFactory.Fill(content, 26f, 26f, 20f, 26f);
-            var title = factory.Title(content, "Title", "PARTIDA EN PAUSA", AlfaUiTheme.HeaderTitleSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
+            var title = factory.Title(content, "Title", "PARTIDA EN PAUSA", 46f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
+            factory.OutlineTitle(title, 46f);
             title.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = 60f;
             PauseButton(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, AlfaButtonStyle.Primary, AlfaUiIconKind.Play);
             PauseButton(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause), AlfaButtonStyle.Secondary, AlfaUiIconKind.Gear);
             pauseLeaveButton = PauseButton(content, "PauseLeaveButton", "SALIR DE LA SALA", LeaveGameplayContext, AlfaButtonStyle.Danger, AlfaUiIconKind.Exit);
             pauseLeaveLabel = pauseLeaveButton.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
-            var voice = factory.Panel(column, "PauseVoicePanel", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.94f));
+            // Compact voice panel: always shorter than the pause card; the list shows whole rows only.
+            var listHeight = PauseVoiceVisibleRows * PauseVoiceRowHeight + (PauseVoiceVisibleRows - 1) * PauseVoiceRowSpacing + 12f;
+            var voiceHeight = 150f + listHeight + 18f;
+            var voice = factory.Panel(column, "PauseVoicePanel", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.95f));
             pauseVoicePanel = voice.gameObject;
-            AlfaUiFactory.Place(voice, Vector2.zero, Vector2.one, Vector2.zero, new Vector2(0f, -(cardHeight + 18f)));
+            Anchor(voice, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -(cardHeight + 18f)), new Vector2(0f, voiceHeight));
             var header = factory.Horizontal(voice, "Header", 10f, TextAnchor.MiddleLeft);
-            Anchor(header, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -16f), new Vector2(-40f, 36f));
+            Anchor(header, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -14f), new Vector2(-40f, 34f));
             var mic = factory.Icon(header, "VoiceIcon", AlfaUiIconKind.Microphone, AlfaUiTheme.Sky400);
             var micLayout = mic.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
             micLayout.minWidth = micLayout.preferredWidth = 26f;
@@ -92,15 +120,30 @@ namespace LetMeSleep.UI
             pauseVoiceStatus = factory.Text(header, "PauseVoiceStatus", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.MidlineRight);
             pauseVoiceStatus.textWrappingMode = TextWrappingModes.NoWrap;
             pauseVoiceMuteButton = factory.Button(voice, "PauseVoiceMuteButton", "SILENCIAR MI MICRÓFONO", () =>
-                (actions as IVoiceActions)?.SetLocalVoiceMuted(!voiceState.LocalMuted), AlfaButtonStyle.Secondary, 58f, AlfaUiIconKind.Microphone);
-            Anchor((RectTransform)pauseVoiceMuteButton.transform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -62f), new Vector2(-40f, 58f));
+                (actions as IVoiceActions)?.SetLocalVoiceMuted(!voiceState.LocalMuted), AlfaButtonStyle.Secondary, 56f, AlfaUiIconKind.Microphone);
+            Anchor((RectTransform)pauseVoiceMuteButton.transform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -56f), new Vector2(-40f, 56f));
             pauseVoiceMuteLabel = pauseVoiceMuteButton.transform.Find("Label").GetComponent<TextMeshProUGUI>();
-            var hint = factory.Text(voice, "PeersHint", "Tocá a un jugador para silenciarlo o volver a escucharlo.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
-            hint.overflowMode = TextOverflowModes.Overflow;
-            Anchor(hint.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -128f), new Vector2(-40f, 54f));
-            var scroll = factory.ScrollView(voice, "PauseVoiceScroll", out pauseVoicePeers, 200f, true);
-            AlfaUiFactory.Place(scroll, Vector2.zero, Vector2.one, new Vector2(20f, 20f), new Vector2(-20f, -190f));
+            var hint = factory.Text(voice, "PeersHint", "Tocá a un jugador para silenciarlo.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
+            hint.textWrappingMode = TextWrappingModes.NoWrap;
+            Anchor(hint.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -118f), new Vector2(-40f, 28f));
+            var scroll = factory.ScrollView(voice, "PauseVoiceScroll", out pauseVoicePeers, listHeight, true);
+            Anchor(scroll, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -150f), new Vector2(-40f, listHeight));
             pauseVoicePeers.name = "PauseVoicePeers";
+            pauseVoicePeers.GetComponent<UnityEngine.UI.VerticalLayoutGroup>().spacing = PauseVoiceRowSpacing;
+            pauseVoiceScroll = scroll.GetComponent<UnityEngine.UI.ScrollRect>();
+            // The viewport keeps its inset (whole rows only) and leaves room for the bar instead of being resized.
+            pauseVoiceScroll.verticalScrollbarVisibility = UnityEngine.UI.ScrollRect.ScrollbarVisibility.AutoHide;
+            pauseVoiceScroll.viewport.offsetMax = new Vector2(-18f, -6f);
+            pauseVoiceScroll.scrollSensitivity = PauseVoiceRowHeight + PauseVoiceRowSpacing;
+            pauseVoiceScroll.onValueChanged.AddListener(_ => UpdatePauseVoiceFade());
+            // 24-unit fade at the bottom edge while more rows are below (no half-cut row reads as the last one).
+            var fade = AlfaUiFactory.Node("PeersFade", scroll, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            fade.sprite = AlfaUiFactory.VerticalFadeSprite();
+            fade.color = AlfaUiTheme.Night700;
+            fade.raycastTarget = false;
+            Anchor(fade.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 4f), new Vector2(-8f, 24f));
+            pauseVoiceFade = fade.gameObject;
+            pauseVoiceFade.SetActive(false);
             pauseVoiceEmpty = factory.Text(scroll, "PeersEmpty", "Todavía no hay otros jugadores en el chat de voz.", AlfaUiTheme.NoteSize,
                 AlfaUiTheme.Moon200, TextAlignmentOptions.Center).gameObject;
             AlfaUiFactory.Fill((RectTransform)pauseVoiceEmpty.transform, 20f, 20f, 20f, 20f);
@@ -124,6 +167,7 @@ namespace LetMeSleep.UI
             pauseLeaveLabel.text = gameplayIsTraining ? "SALIR DEL ENTRENAMIENTO" : "SALIR DE LA SALA";
             SetScreen(AlfaUiScreen.Pause, "PauseContinueButton");
             if (pauseVoiceDirty) RebuildPauseVoicePeers();
+            UpdatePauseVoiceFade();
         }
 
         private void ResumeFromPause()
@@ -171,7 +215,9 @@ namespace LetMeSleep.UI
                 {
                     var memberId = id;
                     var row = factory.Button(pauseVoicePeers, "VoicePeer_" + pauseVoiceRows.Count, string.Empty, () => ToggleVoicePeer(memberId),
-                        AlfaButtonStyle.Secondary, 52f, AlfaUiIconKind.Audio);
+                        AlfaButtonStyle.Secondary, PauseVoiceRowHeight, AlfaUiIconKind.Audio);
+                    var rowLayout = row.GetComponent<UnityEngine.UI.LayoutElement>();
+                    rowLayout.minHeight = rowLayout.preferredHeight = PauseVoiceRowHeight;
                     var label = row.transform.Find("Label").GetComponent<TextMeshProUGUI>();
                     label.alignment = TextAlignmentOptions.MidlineLeft;
                     label.richText = true;
@@ -196,6 +242,19 @@ namespace LetMeSleep.UI
                 }
                 row.interactable = actions is IVoiceActions;
             }
+            UpdatePauseVoiceFade();
+        }
+
+        private void UpdatePauseVoiceFade() => UpdateScrollFade(pauseVoiceScroll, pauseVoiceFade);
+
+        /// <summary>24-unit fade at a list's bottom edge while more content lies below it.</summary>
+        private static void UpdateScrollFade(UnityEngine.UI.ScrollRect scroll, GameObject fade)
+        {
+            if (fade == null || scroll == null || scroll.content == null || scroll.viewport == null) return;
+            var overflow = scroll.content.rect.height - scroll.viewport.rect.height;
+            var remaining = overflow - scroll.content.anchoredPosition.y;
+            var show = overflow > 1f && remaining > 2f;
+            if (fade.activeSelf != show) fade.SetActive(show);
         }
 
         private void ToggleVoicePeer(string memberId)
@@ -208,56 +267,47 @@ namespace LetMeSleep.UI
         private void BuildResults()
         {
             var view = factory.View("ResultsView", transform, false);
-            view.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, 0.62f);
+            // #0E1A30 over the scene. The UI blends in linear space, so 0.7 here reads as the sketch's ~58 % dim.
+            view.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, 0.7f);
             view.GetComponent<UnityEngine.UI.Image>().raycastTarget = true;
             screens[AlfaUiScreen.Results] = view;
-            var card = CenteredPanel(view.transform, "ResultsCard", 1240f, 800f);
-            card.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night800;
+            // No card: the teams stand over the dimmed scene (UI-06 9). ResultsCard is the layout frame only, as tall
+            // as the canvas allows (21:9 is short) so the figures take whatever height is left.
+            var card = AlfaUiFactory.Node("ResultsCard", view.transform).GetComponent<RectTransform>();
+            Anchor(card, new Vector2(0.5f, 0f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1400f, -40f));
+            resultsCard = card;
 
-            var banner = AlfaUiFactory.Node("ResultsBanner", card, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask)).GetComponent<RectTransform>();
-            AlfaUiFactory.Fill(banner, 20f, 20f, 20f, 322f);
-            var bannerImage = banner.GetComponent<UnityEngine.UI.Image>();
-            bannerImage.sprite = AlfaUiSkin.Fill(AlfaUiTheme.ButtonRadius);
-            bannerImage.type = UnityEngine.UI.Image.Type.Sliced;
-            bannerImage.color = AlfaUiTheme.PanelInset;
-            bannerImage.raycastTarget = false;
-            resultsBannerTint = AlfaUiFactory.Node("BannerTint", banner, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            resultsBannerTint.sprite = AlfaUiFactory.VerticalFadeSprite();
-            resultsBannerTint.raycastTarget = false;
-            AlfaUiFactory.Fill(resultsBannerTint.rectTransform);
-            resultsHumanPortrait = ResultsPortrait(banner, "HumanPortrait");
-            resultsMosquitoPortrait = ResultsPortrait(banner, "MosquitoPortrait");
-            // Ink at the top so the title reads over any portrait, and at the bottom for the team chips.
-            var topShade = AlfaUiFactory.Node("TopShade", banner, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            topShade.sprite = AlfaUiFactory.VerticalFadeSprite();
-            topShade.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.75f);
-            topShade.raycastTarget = false;
-            // Flipped in place (centre pivot) so the opaque end of the fade sits at the banner top.
-            Anchor(topShade.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -90f), new Vector2(0f, 180f));
-            topShade.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 180f);
-            var bottomShade = AlfaUiFactory.Node("BottomShade", banner, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            bottomShade.sprite = AlfaUiFactory.VerticalFadeSprite();
-            bottomShade.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.6f);
-            bottomShade.raycastTarget = false;
-            Anchor(bottomShade.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), Vector2.zero, new Vector2(0f, 120f));
-            resultsTitle = factory.Title(banner, "Title", "RONDA INTERRUMPIDA", 88f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Center);
+            resultsGlow = AlfaUiFactory.Node("WinnerGlow", card, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            resultsGlow.sprite = AlfaUiFactory.RadialGlowSprite();
+            resultsGlow.raycastTarget = false;
+
+            // Loser first so the winner is drawn in front when the two overlap.
+            resultsFigures[AlfaRole.Human] = ResultsFigureNode(card, "HumanFigure", AlfaUiIconKind.Human);
+            resultsFigures[AlfaRole.Mosquito] = ResultsFigureNode(card, "MosquitoFigure", AlfaUiIconKind.Mosquito);
+
+            var banner = AlfaUiFactory.Node("ResultsBanner", card).GetComponent<RectTransform>();
+            Anchor(banner, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, ResultsTitleHeight));
+            resultsTitle = factory.Title(banner, "Title", "RONDA INTERRUMPIDA", 116f, AlfaUiTheme.Lamp400, TextAlignmentOptions.Center);
+            factory.OutlineTitle(resultsTitle, 116f);
             resultsTitle.textWrappingMode = TextWrappingModes.NoWrap;
             resultsTitle.enableAutoSizing = true;
-            resultsTitle.fontSizeMin = 48f;
-            resultsTitle.fontSizeMax = 88f;
-            Anchor(resultsTitle.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -14f), new Vector2(-60f, 108f));
+            resultsTitle.fontSizeMin = 64f;
+            resultsTitle.fontSizeMax = 116f;
+            resultsTitle.characterSpacing = 3f;
+            AlfaUiFactory.Fill(resultsTitle.rectTransform, 20f, 20f, 4f, 4f);
 
-            var chips = factory.Horizontal(card, "Scoreboard", 48f, TextAnchor.MiddleCenter);
-            Anchor(chips, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 276f), new Vector2(820f, 88f));
-            resultsChips[AlfaRole.Human] = ResultsTeamChip(chips, "ResultsHumansChip", "HUMANOS", AlfaUiIconKind.Online);
-            resultsChips[AlfaRole.Mosquito] = ResultsTeamChip(chips, "ResultsMosquitoesChip", "MOSQUITOS", AlfaUiIconKind.Mosquito);
+            resultsChips[AlfaRole.Human] = ResultsTeamChip(card, "ResultsHumansChip", "HUMANOS", AlfaUiIconKind.Online);
+            resultsChips[AlfaRole.Mosquito] = ResultsTeamChip(card, "ResultsMosquitoesChip", "MOSQUITOS", AlfaUiIconKind.Mosquito);
 
-            resultsStats = factory.Text(card, "Stats", string.Empty, AlfaUiTheme.BodySize, AlfaUiTheme.Moon200, TextAlignmentOptions.Center);
+            resultsStats = factory.Text(card, "Stats", string.Empty, 24f, AlfaUiTheme.Moon200, TextAlignmentOptions.Center, true);
+            factory.MakeDisplay(resultsStats, 24f);
+            resultsStats.characterSpacing = 2f;
             resultsStats.overflowMode = TextOverflowModes.Overflow;
-            Anchor(resultsStats.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 128f), new Vector2(-80f, 132f));
+            resultsStats.alignment = TextAlignmentOptions.Top;
+            Anchor(resultsStats.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 100f), new Vector2(-80f, 92f));
 
             var buttons = factory.Horizontal(card, "ResultsActions", 24f, TextAnchor.MiddleCenter);
-            Anchor(buttons, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 26f), new Vector2(-80f, 84f));
+            Anchor(buttons, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 8f), new Vector2(-80f, 84f));
             resultsLeave = factory.Button(buttons, "ResultsLeaveButton", "SALIR DE LA SALA", ResultsLeaveAction, AlfaButtonStyle.Secondary, 84f, AlfaUiIconKind.Exit);
             resultsPrimary = factory.Button(buttons, "ResultsPrimaryButton", "VOLVER A LA SALA", ResultsPrimaryAction, AlfaButtonStyle.Primary, 84f, AlfaUiIconKind.Enter);
             foreach (var button in new[] { resultsLeave, resultsPrimary })
@@ -271,46 +321,38 @@ namespace LetMeSleep.UI
             resultsLeaveLabel = resultsLeave.transform.Find("Label").GetComponent<TextMeshProUGUI>();
         }
 
-        /// <summary>Portrait in a rounded, team-framed window (like the training cards) so it reads as intentional.</summary>
-        private UnityEngine.UI.RawImage ResultsPortrait(Transform banner, string name)
+        private ResultsFigure ResultsFigureNode(Transform card, string name, AlfaUiIconKind fallbackKind)
         {
-            var frame = AlfaUiFactory.Node(name + "Frame", banner, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask)).GetComponent<UnityEngine.UI.Image>();
-            frame.sprite = AlfaUiSkin.Fill(AlfaUiTheme.ButtonRadius);
-            frame.type = UnityEngine.UI.Image.Type.Sliced;
-            frame.color = AlfaUiTheme.PanelInset;
-            frame.raycastTarget = false;
-            var raw = AlfaUiFactory.Node(name, frame.transform, typeof(UnityEngine.UI.RawImage)).GetComponent<UnityEngine.UI.RawImage>();
-            raw.raycastTarget = false;
-            raw.enabled = false;
-            AlfaUiFactory.Fill(raw.rectTransform);
-            var ring = AlfaUiFactory.Node("Ring", frame.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            ring.sprite = AlfaUiSkin.Ring(AlfaUiTheme.ButtonRadius);
-            ring.type = UnityEngine.UI.Image.Type.Sliced;
-            ring.raycastTarget = false;
-            AlfaUiFactory.Fill(ring.rectTransform);
-            var fallback = factory.Icon(raw.transform, "Fallback", name.StartsWith("Human", StringComparison.Ordinal) ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito,
-                AlfaUiTheme.WithAlpha(AlfaUiTheme.Sheet100, 0.85f));
-            Anchor(fallback.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -10f), new Vector2(180f, 180f));
-            return raw;
+            var root = AlfaUiFactory.Node(name, card).GetComponent<RectTransform>();
+            var image = AlfaUiFactory.Node(name + "Image", root, typeof(UnityEngine.UI.RawImage)).GetComponent<UnityEngine.UI.RawImage>();
+            image.raycastTarget = false;
+            image.enabled = false;
+            AlfaUiFactory.Fill(image.rectTransform);
+            var fallback = factory.Icon(root, "Fallback", fallbackKind, AlfaUiTheme.WithAlpha(AlfaUiTheme.Sheet100, 0.85f));
+            Anchor(fallback.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(260f, 260f));
+            return new ResultsFigure { Root = root, Image = image, Fallback = fallback };
         }
 
         private ResultsChip ResultsTeamChip(Transform parent, string name, string label, AlfaUiIconKind icon)
         {
-            var chip = factory.Panel(parent, name, Color.white, 386f, 88f);
-            var layout = chip.GetComponent<UnityEngine.UI.LayoutElement>();
-            layout.minWidth = 386f;
-            layout.minHeight = 88f;
+            var chip = factory.Panel(parent, name, Color.white, 400f, 88f);
             var symbol = factory.Icon(chip, "Icon", icon, AlfaUiTheme.Sheet100);
-            Anchor(symbol.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(22f, 0f), new Vector2(54f, 54f));
-            var name2 = factory.Title(chip, "Team", label, 30f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
+            Anchor(symbol.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(20f, 0f), new Vector2(52f, 52f));
+            var name2 = factory.Title(chip, "Team", label, 32f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
             name2.textWrappingMode = TextWrappingModes.NoWrap;
-            Anchor(name2.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), new Vector2(92f, 0f), new Vector2(-190f, 0f));
-            var count = factory.Title(chip, "Count", string.Empty, 50f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineRight);
+            Anchor(name2.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), new Vector2(86f, 0f), new Vector2(-246f, 0f));
+            // Labelled count: the number with what it counts under it ("3" / "JUGADORES").
+            var count = factory.Title(chip, "Count", string.Empty, 40f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
             count.textWrappingMode = TextWrappingModes.NoWrap;
-            Anchor(count.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-24f, 0f), new Vector2(90f, 0f));
+            count.overflowMode = TextOverflowModes.Overflow;
+            Anchor(count.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-16f, -2f), new Vector2(136f, 52f));
+            var unit = factory.Caption(chip, "CountUnit", "JUGADORES");
+            unit.alignment = TextAlignmentOptions.Center;
+            unit.overflowMode = TextOverflowModes.Overflow;
+            Anchor(unit.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-16f, 6f), new Vector2(136f, 28f));
             var crown = factory.Icon(chip, "Crown", AlfaUiIconKind.Trophy, AlfaUiTheme.Lamp400);
-            Anchor(crown.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, 4f), new Vector2(40f, 40f));
-            return new ResultsChip { Root = chip, Count = count, Crown = crown.gameObject };
+            Anchor(crown.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, 6f), new Vector2(46f, 46f));
+            return new ResultsChip { Root = chip, Count = count, Unit = unit, Crown = crown.gameObject };
         }
 
         public void PresentResults(ResultsUiState state)
@@ -328,18 +370,22 @@ namespace LetMeSleep.UI
             var mosquitoes = state.Outcome == MatchOutcome.Mosquitoes;
             resultsTitle.text = humans ? "¡HUMANOS GANAN!" : mosquitoes ? "¡MOSQUITOS GANAN!" : "RONDA INTERRUMPIDA";
             resultsTitle.color = humans || mosquitoes ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Sheet100;
-            var team = humans ? AlfaUiTheme.TeamHuman : mosquitoes ? AlfaUiTheme.TeamMosquito : AlfaUiTheme.Border;
-            resultsBannerTint.color = AlfaUiTheme.WithAlpha(Color.Lerp(team, AlfaUiTheme.Night800, 0.25f), 0.85f);
-            PresentResultsPortraits(state.Outcome);
-            PresentResultsChip(AlfaRole.Human, state.HumansCount, humans, mosquitoes);
-            PresentResultsChip(AlfaRole.Mosquito, state.MosquitoesCount, mosquitoes, humans);
+            PresentResultsTeam(AlfaRole.Human, state.HumansCount, humans, mosquitoes);
+            PresentResultsTeam(AlfaRole.Mosquito, state.MosquitoesCount, mosquitoes, humans);
+            var team = humans ? AlfaUiTheme.TeamHuman : AlfaUiTheme.TeamMosquito;
+            resultsGlow.gameObject.SetActive(humans || mosquitoes);
+            resultsGlow.color = AlfaUiTheme.WithAlpha(Color.Lerp(team, Color.white, 0.1f), 0.38f);
+            resultsOutcome = state.Outcome;
+            LayoutResults();
 
-            var reason = string.IsNullOrWhiteSpace(state.Reason) ? string.Empty : "\n" + state.Reason;
-            resultsStats.text = "MODO " + AlfaModeText.Name(state.ModeId) + "  ·  " +
-                AlfaModeText.ResultScore(state.ModeId, state.BloodCurrent, state.BloodTarget, state.TasksCompleted, state.TasksGoal, state.MosquitoesAlive) +
-                "  ·  Tiempo " + FormatClock(state.ElapsedSeconds) + reason;
-            if (!state.IsTraining && !state.IsOwner) resultsStats.text += "\n<color=#FFC93C>ESPERANDO AL ANFITRIÓN…</color>";
-            if (state.IsTraining && !HasSelectedTrainingMap) resultsStats.text += "\n" + NoTrainingMaps;
+            // The score line only when it carries information: an interrupted round has no score or time.
+            var lines = new List<string>();
+            if (state.Outcome != MatchOutcome.Interrupted)
+                lines.Add("MODO " + AlfaModeText.Name(state.ModeId) + "   ·   " + ResultsScoreLine(state) + "   ·   TIEMPO " + FormatClock(state.ElapsedSeconds));
+            if (!string.IsNullOrWhiteSpace(state.Reason)) lines.Add("<color=#F2F6FF>" + Escape(state.Reason) + "</color>");
+            if (!state.IsTraining && !state.IsOwner) lines.Add("<color=#FFC93C>ESPERANDO AL ANFITRIÓN…</color>");
+            if (state.IsTraining && !HasSelectedTrainingMap) lines.Add(NoTrainingMaps);
+            resultsStats.text = AlfaUiTheme.Digits(string.Join("\n", lines));
 
             resultsPrimary.gameObject.SetActive(state.IsTraining || state.IsOwner);
             resultsPrimary.interactable = !state.IsTraining || TrainingModeAvailable;
@@ -352,68 +398,137 @@ namespace LetMeSleep.UI
             SetScreen(AlfaUiScreen.Results, resultsPrimary.gameObject.activeSelf ? "ResultsPrimaryButton" : "ResultsLeaveButton");
         }
 
+        /// <summary>Whole units, uppercase, display face: "SANGRE 20 / 20", "TAREAS 4 / 6", "MOSQUITOS VIVOS 2".</summary>
+        private static string ResultsScoreLine(ResultsUiState state)
+        {
+            if (state.ModeId == GameModes.Tasks) return "TAREAS " + state.TasksCompleted + " / " + state.TasksGoal;
+            if (state.ModeId == GameModes.Survival) return "MOSQUITOS VIVOS " + state.MosquitoesAlive;
+            var goal = Mathf.Max(0, Mathf.RoundToInt(state.BloodTarget));
+            return "SANGRE " + Mathf.Clamp(Mathf.FloorToInt(state.BloodCurrent + 0.0001f), 0, goal) + " / " + goal;
+        }
+
         private static void SetButtonIcon(UnityEngine.UI.Button button, AlfaUiIconKind kind)
         {
             var icon = button.transform.Find("IconPlate/Icon")?.GetComponent<AlfaUiIcon>();
             if (icon != null) icon.Kind = kind;
         }
 
-        /// <summary>Winner large on the left, loser smaller and dimmed on the right; side by side when interrupted.</summary>
-        private void PresentResultsPortraits(MatchOutcome outcome)
+        /// <summary>
+        /// One team: its figure (human always on the left, mosquito on the right) and its chip under it. The winner
+        /// celebrates at 1.15 with a trophy and a 3-unit #FFC93C frame; the loser stands behind at 0.8, dimmed.
+        /// </summary>
+        /// <summary>
+        /// Vertical plan of the results frame (from its top): title, figures standing on a floor line, the team
+        /// chips under it, then the score lines and the buttons at the bottom. Returns the floor (distance from the
+        /// top) and the unscaled figure box height that lets the 1.15 winner clear the title.
+        /// </summary>
+        private float ResultsFloor(out float boxHeight)
         {
-            var humanWon = outcome == MatchOutcome.Humans;
-            var mosquitoWon = outcome == MatchOutcome.Mosquitoes;
-            var winnerMin = new Vector2(0.05f, 0.05f); var winnerMax = new Vector2(0.57f, 0.71f);
-            var loserMin = new Vector2(0.6f, 0.05f); var loserMax = new Vector2(0.95f, 0.6f);
-            var evenLeftMin = new Vector2(0.05f, 0.05f); var evenLeftMax = new Vector2(0.49f, 0.66f);
-            var evenRightMin = new Vector2(0.51f, 0.05f); var evenRightMax = new Vector2(0.95f, 0.66f);
-            PlacePortrait(resultsHumanPortrait, AlfaRole.Human, humanWon ? winnerMin : mosquitoWon ? loserMin : evenLeftMin,
-                humanWon ? winnerMax : mosquitoWon ? loserMax : evenLeftMax, mosquitoWon);
-            PlacePortrait(resultsMosquitoPortrait, AlfaRole.Mosquito, mosquitoWon ? winnerMin : humanWon ? loserMin : evenRightMin,
-                mosquitoWon ? winnerMax : humanWon ? loserMax : evenRightMax, humanWon);
+            var height = resultsCard != null && resultsCard.rect.height > 1f ? resultsCard.rect.height : 1040f;
+            var chipTop = height - (100f + 92f + 10f) - ResultsChipHeight * ResultsWinnerScale;
+            var floor = chipTop - 10f;
+            boxHeight = Mathf.Clamp((floor - ResultsTitleHeight - 6f) / ResultsWinnerScale, 220f, 520f);
+            return floor;
         }
 
-        private void PlacePortrait(UnityEngine.UI.RawImage target, AlfaRole role, Vector2 min, Vector2 max, bool dim)
+        private void PresentResultsTeam(AlfaRole role, int count, bool winner, bool loser)
         {
-            var rect = (RectTransform)target.transform.parent;
-            rect.anchorMin = min;
-            rect.anchorMax = max;
-            rect.offsetMin = rect.offsetMax = Vector2.zero;
-            var team = role == AlfaRole.Human ? AlfaUiTheme.TeamHuman : AlfaUiTheme.TeamMosquito;
-            var ring = rect.Find("Ring")?.GetComponent<UnityEngine.UI.Image>();
-            if (ring != null) ring.color = AlfaUiTheme.WithAlpha(Color.Lerp(team, Color.white, dim ? 0.1f : 0.35f), dim ? 0.55f : 0.95f);
-            EnsureTrainingPortraits();
-            var source = role == AlfaRole.Human ? trainingHumanPortrait : trainingMosquitoPortrait;
-            var texture = source != null ? source.texture : null;
-            target.texture = texture;
-            target.enabled = true;
-            target.color = texture == null ? Color.clear : dim ? new Color(0.55f, 0.58f, 0.68f, 1f) : Color.white;
-            var fallback = target.transform.Find("Fallback");
-            if (fallback != null) fallback.gameObject.SetActive(texture == null);
-            if (texture == null) return;
-            // Cover the area at 1240 x 800 (banner 1200 x 458) without stretching: crop the longer side.
-            var areaAspect = (max.x - min.x) * 1200f / Mathf.Max(1f, (max.y - min.y) * 458f);
-            var textureAspect = texture.height > 0 ? (float)texture.width / texture.height : areaAspect;
-            target.uvRect = textureAspect > areaAspect
-                ? new Rect((1f - areaAspect / textureAspect) * 0.5f, 0f, areaAspect / textureAspect, 1f)
-                : new Rect(0f, 1f - textureAspect / areaAspect, 1f, textureAspect / areaAspect);
-        }
-
-        private void PresentResultsChip(AlfaRole role, int count, bool winner, bool loser)
-        {
-            var chip = resultsChips[role];
             var human = role == AlfaRole.Human;
+            var figure = resultsFigures[role];
+            var texture = ResultsFigureTexture(role, winner);
+            figure.Image.texture = texture;
+            figure.Image.enabled = texture != null;
+            figure.Fallback.gameObject.SetActive(texture == null);
+            figure.Image.color = loser ? new Color(0.55f, 0.6f, 0.72f, 0.92f) : Color.white;
+            figure.Fallback.color = AlfaUiTheme.WithAlpha(loser ? AlfaUiTheme.Moon200 : AlfaUiTheme.Sheet100, loser ? 0.6f : 0.9f);
+            if (winner) figure.Root.SetAsLastSibling();
+
+            var chip = resultsChips[role];
             var style = winner ? human ? AlfaButtonStyle.Primary : AlfaButtonStyle.Danger : AlfaButtonStyle.Secondary;
-            AlfaUiTheme.StyleColors(style, out var top, out var bottom, out var frame, out _);
+            AlfaUiTheme.StyleColors(style, out var top, out var bottom, out _, out _);
             AlfaUiFactory.SetSurface(chip.Root, top, bottom, winner ? AlfaUiTheme.Lamp400 : AlfaUiTheme.WithAlpha(human ? AlfaUiTheme.Sky400 : AlfaUiTheme.StatusWarn, 0.7f),
-                winner ? AlfaUiTheme.WithAlpha(AlfaUiTheme.Lamp400, 0.35f) : AlfaUiTheme.WithAlpha(Color.black, 0.4f));
+                winner ? AlfaUiTheme.WithAlpha(AlfaUiTheme.Lamp400, 0.35f) : AlfaUiTheme.WithAlpha(Color.black, 0.45f));
             AlfaUiFactory.MarkSelectedFrame(chip.Root, winner);
             if (winner) AlfaUiFactory.SetFrame(chip.Root, AlfaUiTheme.Lamp400);
             var icon = chip.Root.Find("Icon")?.GetComponent<AlfaUiIcon>();
             if (icon != null) icon.color = winner ? AlfaUiTheme.Sheet100 : human ? AlfaUiTheme.Sky400 : AlfaUiTheme.StatusWarn;
             chip.Count.text = count >= 0 ? count.ToString() : string.Empty;
+            chip.Unit.text = count >= 0 ? count == 1 ? "JUGADOR" : "JUGADORES" : string.Empty;
             chip.Count.color = loser ? AlfaUiTheme.Moon200 : AlfaUiTheme.Sheet100;
+            chip.Unit.color = winner ? AlfaUiTheme.WithAlpha(AlfaUiTheme.Sheet100, 0.85f) : AlfaUiTheme.LabelInk;
             chip.Crown.SetActive(winner);
+            if (winner) chip.Root.SetAsLastSibling();
+        }
+
+        /// <summary>
+        /// Places figures, chips and the winner glow from the frame's current height. Runs on present and again
+        /// whenever the canvas size changes (the size can still be stale when results are presented).
+        /// </summary>
+        private void LayoutResults()
+        {
+            if (resultsCard == null) return;
+            resultsLaidOutHeight = resultsCard.rect.height;
+            var floor = ResultsFloor(out var boxHeight);
+            foreach (var role in new[] { AlfaRole.Human, AlfaRole.Mosquito })
+            {
+                var human = role == AlfaRole.Human;
+                var winner = human ? resultsOutcome == MatchOutcome.Humans : resultsOutcome == MatchOutcome.Mosquitoes;
+                var loser = human ? resultsOutcome == MatchOutcome.Mosquitoes : resultsOutcome == MatchOutcome.Humans;
+                var x = human ? -300f : 300f;
+                var figure = resultsFigures[role];
+                var texture = figure.Image.texture;
+                var box = new Vector2(Mathf.Min(560f, boxHeight * 1.15f), boxHeight);
+                if (texture != null && texture.height > 0)
+                {
+                    var aspect = (float)texture.width / texture.height;
+                    box = aspect >= box.x / box.y ? new Vector2(box.x, box.x / aspect) : new Vector2(box.y * aspect, box.y);
+                }
+                // Loser a little further back: raised towards the horizon.
+                Anchor(figure.Root, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0f),
+                    new Vector2(x * (loser ? 0.92f : 1f), -floor + (loser ? 26f : 0f)), box);
+                figure.Root.localScale = Vector3.one * (winner ? ResultsWinnerScale : loser ? ResultsLoserScale : 1f);
+                var chip = resultsChips[role];
+                Anchor(chip.Root, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(x, -floor - 10f), new Vector2(400f, ResultsChipHeight));
+                chip.Root.localScale = Vector3.one * (winner ? ResultsWinnerScale : 1f);
+            }
+            Anchor(resultsGlow.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f),
+                new Vector2(resultsOutcome == MatchOutcome.Humans ? -300f : 300f, -floor + boxHeight * 0.55f), new Vector2(760f, boxHeight * 1.45f));
+        }
+
+        /// <summary>Per-frame layout upkeep of the stage-2 screens (called from LateUpdate).</summary>
+        private void UpdateStageTwoLayout()
+        {
+            if (screen == AlfaUiScreen.Results && resultsCard != null && Mathf.Abs(resultsCard.rect.height - resultsLaidOutHeight) > 0.5f) LayoutResults();
+            if (screen == AlfaUiScreen.Pause) UpdatePauseVoiceFade();
+            if (screen == AlfaUiScreen.Customization) UpdateOptionsFade();
+        }
+
+        /// <summary>
+        /// Full-body figure for a team: painted art in Resources/AlfaUiPortraits/&lt;Role&gt;Winner or &lt;Role&gt;
+        /// when it exists, otherwise the in-game model rendered once on transparency (arms up when it won).
+        /// </summary>
+        private Texture ResultsFigureTexture(AlfaRole role, bool celebrate)
+        {
+            var key = role + (celebrate ? ":win" : ":stand");
+            if (resultsFigureTextures.TryGetValue(key, out var cached)) return cached;
+            var painted = LoadRoleArt(role, celebrate ? "Winner" : string.Empty);
+            if (painted != null) return painted.texture;
+            Texture2D rendered = null;
+            if (portraitSetup != null && portraitSetup.IsUsable && screen != AlfaUiScreen.Customization)
+                rendered = role == AlfaRole.Human
+                    ? AlfaRolePortrait.RenderFigure(portraitSetup, role, 420, 700, celebrate)
+                    : AlfaRolePortrait.RenderFigure(portraitSetup, role, 720, 560, celebrate);
+            resultsFigureTextures[key] = rendered;
+            return rendered;
+        }
+
+        private static Sprite LoadRoleArt(AlfaRole role, string suffix)
+        {
+            var path = "AlfaUiPortraits/" + (role == AlfaRole.Human ? "Human" : "Mosquito") + suffix;
+            var sprite = Resources.Load<Sprite>(path);
+            if (sprite != null) return sprite;
+            var texture = Resources.Load<Texture2D>(path);
+            return texture == null ? null : Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
         }
 
         private void ResultsPrimaryAction()
@@ -447,6 +562,13 @@ namespace LetMeSleep.UI
                 LeaveActiveTraining();
             }
             else ConfirmLeave();
+        }
+
+        private void DestroyResultsFigures()
+        {
+            foreach (var texture in resultsFigureTextures.Values)
+                if (texture != null) Destroy(texture);
+            resultsFigureTextures.Clear();
         }
     }
 }

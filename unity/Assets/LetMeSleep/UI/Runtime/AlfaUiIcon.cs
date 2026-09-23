@@ -61,7 +61,9 @@ namespace LetMeSleep.UI
         Face,
         Accessibility,
         Trophy,
-        Bolt
+        Bolt,
+        // v0.3 stage 2, art-direction pass.
+        Heart
     }
 
     [DisallowMultipleComponent]

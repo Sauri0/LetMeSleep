@@ -186,7 +186,7 @@ namespace LetMeSleep.Tests.PlayMode
             ui.PresentSettings(new SettingsUiState(saved, saved, new[] { "1920 × 1080" }, new[] { "PC" }, true, true));
             ui.PresentVoice(new VoiceUiState(false, false, false, false, string.Empty, "V", string.Empty, null));
             ui.OpenSettings(AlfaUiScreen.MainMenu);
-            Invoke("SelectSettingsTab", SettingsTab("Controls"), false);
+            Invoke("SelectSettingsTab", SettingsTab("General"), false);
             yield return null;
             Assert.That(Find("PushToTalkRebindButton").GetComponent<UnityEngine.UI.Button>().interactable, Is.False);
             Assert.That(Label("PushToTalkNote"), Does.Contain("sala"));
@@ -205,11 +205,13 @@ namespace LetMeSleep.Tests.PlayMode
                 foreach (var other in new[] { "GeneralPanel", "AudioPanel", "VideoPanel", "ControlsPanel", "AccessibilityPanel" })
                     Assert.That(Find(other).gameObject.activeSelf, Is.EqualTo(other == page), tab + " shows " + other);
             }
-            // Twin controls of the same option stay in sync.
+            // Twin controls of the same option stay in sync (mouse sensitivity: GENERAL and CONTROLES).
+            Find("GeneralHumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value = 1.5f;
+            Assert.That(Find("HumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(1.5f).Within(0.001f));
             Find("MasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value = 0.2f;
-            Assert.That(Find("AudioMasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(0.2f).Within(0.001f));
             Find("SettingsResetButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             Assert.That(Find("MasterVolumeSlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(saved.MasterVolume).Within(0.001f));
+            Assert.That(Find("HumanSensitivitySlider").GetComponent<UnityEngine.UI.Slider>().value, Is.EqualTo(saved.HumanSensitivity).Within(0.001f));
         }
 
         [UnityTest]
@@ -245,12 +247,204 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(Find("ResultsHumansChip/Crown").gameObject.activeSelf, Is.True);
             Assert.That(Find("ResultsMosquitoesChip/Crown").gameObject.activeSelf, Is.False);
 
-            ui.PresentResults(new ResultsUiState(MatchOutcome.Mosquitoes, false, false, 20, 20, 90));
+            ui.PresentResults(new ResultsUiState(MatchOutcome.Mosquitoes, false, false, 20, 20, 90, humansCount: 3, mosquitoesCount: 2));
             yield return null;
             Assert.That(Label("ResultsBanner/Title"), Is.EqualTo("¡MOSQUITOS GANAN!"));
             Assert.That(Find("ResultsPrimaryButton").gameObject.activeSelf, Is.False, "Only the host returns the room to the lobby.");
             Assert.That(Label("Stats"), Does.Contain("ESPERANDO AL ANFITRIÓN"));
+            // Fixed order whoever wins: humans (figure and chip) on the left, mosquitoes on the right.
+            Assert.That(Find("HumanFigure").localPosition.x, Is.LessThan(Find("MosquitoFigure").localPosition.x));
+            Assert.That(Find("ResultsHumansChip").localPosition.x, Is.LessThan(Find("ResultsMosquitoesChip").localPosition.x));
+            Assert.That(Mathf.Abs(Find("HumanFigure").localPosition.x - Find("ResultsHumansChip").localPosition.x), Is.LessThan(40f),
+                "Each chip sits under its own team's figure.");
+            Assert.That(Find("MosquitoFigure").localScale.x, Is.EqualTo(1.15f).Within(0.001f), "The winner is shown at 1.15.");
+            Assert.That(Find("HumanFigure").localScale.x, Is.EqualTo(0.8f).Within(0.001f), "The loser stands behind at 0.8.");
+            Assert.That(Find("ResultsMosquitoesChip/Crown").gameObject.activeSelf, Is.True);
+            Assert.That(Label("ResultsHumansChip/CountUnit"), Is.EqualTo("JUGADORES"), "Team counts are labelled.");
+
+            ui.PresentResults(new ResultsUiState(MatchOutcome.Interrupted, false, false, 0, 20, 0, "Se perdió la conexión con la partida.",
+                modeId: GameModes.Tasks));
+            yield return null;
+            Assert.That(Label("Stats"), Does.Not.Contain("TAREAS").And.Not.Contain("TIEMPO"), "An interrupted round shows no empty score.");
+            Assert.That(Label("Stats"), Does.Contain("Se perdió la conexión"));
         }
+
+        [UnityTest]
+        public IEnumerator HumanHudShowsOneWarningPerSituationAndWholeBlood()
+        {
+            ui.PresentHud(new BloodHudUiState(AlfaRole.Human, 175, 0.2f, 18, interaction: "E · Confirmar reemplazo",
+                contextHint: "¡Te están picando! Buscá al mosquito y golpeá hacia él.", modeId: GameModes.Blood, mosquitoesAlive: 2,
+                equipment: new EquipmentHudUiState(new[]
+                {
+                    new EquipmentSlotUiState("MATAMOSCAS", "REUTILIZABLE", AlfaUiIconKind.Flyswatter),
+                    new EquipmentSlotUiState("RAQUETA ELÉCTRICA", "3 CARGAS", AlfaUiIconKind.ElectricRacket),
+                    new EquipmentSlotUiState("AEROSOL", "2,9 s", AlfaUiIconKind.Aerosol)
+                }, 0, .6f, swapOfferText: "E · REEMPLAZAR\nMATAMOSCAS POR PANTUFLA"), mosquitoesTotal: 4));
+            yield return UseCanvas(1920, 1080);
+            Assert.That(Label("ObjectiveValue"), Does.Contain("18").And.Not.Contain(","), "Blood is shown in whole units.");
+            Assert.That(Find("SwapOfferChip").gameObject.activeSelf, Is.True);
+            Assert.That(Label("SwapOffer"), Is.EqualTo("E · REEMPLAZAR MATAMOSCAS POR PANTUFLA"), "One line, one replacement notice.");
+            Assert.That(Find("InteractionPrompt").gameObject.activeSelf, Is.False, "The confirm prompt would repeat the swap chip.");
+            Assert.That(Label("ActorState"), Does.Contain("TE ESTÁN PICANDO"), "Being bitten is the central banner.");
+            Assert.That(Find("ContextHintPanel").gameObject.activeSelf, Is.False, "The corner toast never repeats the banner.");
+            var slot = (RectTransform)Find("EquipmentSlotPlate1");
+            Assert.That(slot.rect.width, Is.EqualTo(80f).Within(0.5f), "Inventory slots are 80 units.");
+            Assert.That(Label("EquipmentNumber1"), Is.EqualTo("1"));
+            Assert.That(Find("EquipmentSlotPlate0").localPosition.x, Is.GreaterThan(Find("EquipmentSlotPlate3").localPosition.x),
+                "Objects 1-3 first, the hands (key 0) close the row.");
+            Assert.That(Find("EquipmentSlotPlate1").GetComponent<UnityEngine.UI.Image>().color, Is.EqualTo(new Color(0.118f, 0.2f, 0.345f, 1f)).Using(ColorComparer),
+                "The selected slot keeps the navy #1E3358 fill (the frame marks it).");
+            Assert.That(Find("PrivateEquipment").GetComponent<UnityEngine.UI.Image>().color.a, Is.GreaterThanOrEqualTo(0.9f), "The tray is opaque enough to read.");
+        }
+
+        [UnityTest]
+        public IEnumerator MosquitoHudHasACompactLegendAndHearts()
+        {
+            ui.PresentHud(new BloodHudUiState(AlfaRole.Mosquito, 504, 0, 18, interaction: "Mantené E · Picar",
+                contextHint: "Interrumpiendo al humano · Mantené E · Soltá E para despegar", actorState: HudActorState.Extracting,
+                stateProgress01: .5f, modeId: GameModes.Tasks, tasksCompleted: 3, tasksGoal: 6, livesRemaining: 2, humansActive: 1, humansTotal: 4));
+            yield return UseCanvas(1920, 1080);
+            var legend = Find("ControlsLegend");
+            Assert.That(legend.Cast<Transform>().Count(row => row.gameObject.activeSelf), Is.LessThanOrEqualTo(4), "At most four legend rows.");
+            Assert.That(Label("LegendStatus"), Does.Contain("Interrumpiendo"), "The situation is in the legend header, in white.");
+            Assert.That(Find("LegendStatus").GetComponent<TMPro.TextMeshProUGUI>().color, Is.EqualTo(new Color(0.949f, 0.965f, 1f, 1f)).Using(ColorComparer));
+            var panel = (RectTransform)Find("ContextHintPanel");
+            Assert.That(panel.rect.width, Is.LessThanOrEqualTo(340f), "Compact legend.");
+            Assert.That(Label("Lives"), Does.Contain("VIDAS 2"));
+            Assert.That(Find("Hearts").Cast<Transform>().Count(heart => heart.gameObject.activeSelf), Is.EqualTo(2), "One heart per life.");
+        }
+
+        [UnityTest]
+        public IEnumerator CustomizationRailsViewsAndOneCallToAction()
+        {
+            ui.PresentCustomization(BasicState("warm", "blue", "red"));
+            ui.ShowCustomization();
+            yield return UseCanvas(1920, 1080);
+            foreach (var name in new[] { "CustomizationCategory_skin", "CustomizationCategory_pajama", "CustomizationCategory_accessories" })
+                Assert.That(Find(name).gameObject.activeInHierarchy, Is.True, name);
+            Assert.That(Label("CustomizationSaveButton/Label"), Is.EqualTo("APLICAR"));
+            Assert.That(Find("CustomizationSaveButton").GetComponent<UnityEngine.UI.Button>().interactable, Is.False, "Nothing to apply yet.");
+            foreach (var view in new[] { "PreviewFrontButton", "PreviewBackButton", "PreviewSideButton" })
+                Assert.That(Find(view).gameObject.activeInHierarchy, Is.True, view + " lives in VISTA PREVIA");
+            var front = (RectTransform)Find("PreviewFrontButton");
+            Assert.That(front.rect.height, Is.GreaterThanOrEqualTo(150f), "Angle views fill the free height.");
+            Assert.That(front.position.y, Is.GreaterThan(((RectTransform)Find("Actions")).position.y));
+
+            Invoke("SetCustomizationRole", AlfaRole.Mosquito);
+            yield return null;
+            Assert.That(Label("CustomizationCategory_mosquito/Label"), Is.EqualTo("COLORES"), "The colours category fits in one line.");
+            foreach (var locked in new[] { "CustomizationCategory_mosquito-body", "CustomizationCategory_mosquito-wings", "CustomizationCategory_mosquito-eyes", "CustomizationCategory_mosquito-proboscis" })
+            {
+                Assert.That(Find(locked).gameObject.activeInHierarchy, Is.True, locked);
+                Assert.That(Find(locked).GetComponent<UnityEngine.UI.Button>().interactable, Is.False, locked + " is locked in this build");
+                Assert.That(Find(locked + "/Lock"), Is.Not.Null);
+            }
+            Assert.That(Label("CustomizationSaveButton/Label"), Is.EqualTo("APLICAR"), "Changing the look keeps the same call to action.");
+            Assert.That(Find("CustomizationSaveButton").GetComponent<UnityEngine.UI.Button>().interactable, Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator ModularWingsAndEyesShareTheListWithTheirOwnPictures()
+        {
+            var snapshot = MosquitoSnapshot();
+            var selection = snapshot.DefaultSelection();
+            ui.PresentCustomization(new CustomizationUiState(snapshot, selection, selection, AlfaRole.Mosquito));
+            ui.ShowCustomization();
+            yield return UseCanvas(1920, 1080);
+            Invoke("SelectModularCategory", "mosquito.wings");
+            Canvas.ForceUpdateCanvases();
+            var viewport = Find("OptionsScroll").GetComponent<UnityEngine.UI.ScrollRect>().viewport;
+            Assert.That(Visible(viewport, Find("ModularOption_3_1")), Is.True, "Wings visible after jumping to ALAS.");
+            Assert.That(Visible(viewport, Find("ModularOption_4_1")), Is.True, "Eyes visible together with the wings (UI-06).");
+            var art = new[] { 1, 2, 3, 4 }.Select(i => Find("ModularOption_3_" + i + "/OptionArt")).ToArray();
+            Assert.That(art.All(item => item != null), Is.True, "Every wing style has its own picture.");
+            Assert.That(art.Select(item => item.GetComponent<UnityEngine.UI.Image>().sprite.texture.name).Distinct().Count(), Is.EqualTo(4),
+                "Four wing styles, four different silhouettes.");
+            Assert.That(Label("Status"), Does.Not.Contain("llegará"));
+        }
+
+        private static bool Visible(RectTransform viewport, Transform item)
+        {
+            if (item == null) return false;
+            var a = new Vector3[4]; var b = new Vector3[4];
+            viewport.GetWorldCorners(a); ((RectTransform)item).GetWorldCorners(b);
+            return b[1].y <= a[1].y + 1f && b[0].y >= a[0].y - 1f;
+        }
+
+        private static readonly IEqualityComparer<Color> ColorComparer = new ColorEquality();
+
+        private sealed class ColorEquality : IEqualityComparer<Color>
+        {
+            public bool Equals(Color a, Color b) => Mathf.Abs(a.r - b.r) < 0.01f && Mathf.Abs(a.g - b.g) < 0.01f && Mathf.Abs(a.b - b.b) < 0.01f && Mathf.Abs(a.a - b.a) < 0.01f;
+            public int GetHashCode(Color color) => 0;
+        }
+
+        [UnityTest]
+        public IEnumerator SettingsFollowTheSketchAndApplyStaysGreen()
+        {
+            var saved = Settings();
+            ui.PresentSettings(new SettingsUiState(saved, saved, new[] { "1920 × 1080" }, new[] { "PC" }, true, true, supportsReducedMenuMotion: true));
+            ui.PresentVoice(new VoiceUiState(true, false, false, true, "SALA", "V", string.Empty, null));
+            ui.OpenSettings(AlfaUiScreen.MainMenu);
+            yield return null;
+            var general = Find("GeneralPanel");
+            Assert.That(general.Find("LanguageRow"), Is.Not.Null, "GENERAL shows the language.");
+            Assert.That(general.Find("PushToTalkRow"), Is.Not.Null, "GENERAL has the voice chat key.");
+            Assert.That(general.GetComponentsInChildren<UnityEngine.UI.Slider>(true).Any(slider => slider.name.Contains("Volume")), Is.False,
+                "Volumes live only in AUDIO.");
+            Assert.That(general.Find("GeneralFullScreenRow"), Is.Null, "Full screen lives only in VIDEO.");
+            Assert.That(Find("AudioPanel").GetComponentsInChildren<UnityEngine.UI.Slider>(true).Any(slider => slider.name == "MasterVolumeSlider"), Is.True);
+            var apply = Find("SettingsApplyButton").GetComponent<UnityEngine.UI.Button>();
+            Assert.That(apply.interactable, Is.False);
+            var surface = Find("SettingsApplyButton").GetComponent("AlfaUiSurface");
+            var keepsIntent = surface.GetType().GetField("DisabledKeepsIntent", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(surface);
+            Assert.That(keepsIntent, Is.EqualTo(true), "APLICAR stays green (at 50 %) with nothing to apply.");
+            Find("PushToTalkRebindButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            Assert.That(Label("Actions/Status"), Is.Empty, "A single waiting text: the row's.");
+            Assert.That(Label("PushToTalkNote"), Is.EqualTo("Esc cancela"));
+        }
+
+        [UnityTest]
+        public IEnumerator PauseVoicePanelShowsWholeRowsAndStaysCompact()
+        {
+            var participants = Enumerable.Range(1, 9).Select(i => new VoiceParticipantUiState("m" + i, "Jugador " + i, true, false, false)).ToArray();
+            ui.PresentVoice(new VoiceUiState(true, false, false, true, "RONDA", "V", string.Empty, participants));
+            ui.ShowGameplay(false);
+            ui.ShowPause();
+            yield return UseCanvas(1920, 1080);
+            var card = (RectTransform)Find("PauseCard");
+            var voice = (RectTransform)Find("PauseVoicePanel");
+            Assert.That(voice.rect.height, Is.LessThan(card.rect.height), "The voice panel is smaller than the pause menu.");
+            var viewport = Find("PauseVoiceScroll").GetComponent<UnityEngine.UI.ScrollRect>().viewport;
+            var rows = viewport.rect.height / (52f + 8f);
+            Assert.That(Mathf.Abs(viewport.rect.height - (3 * 52f + 2 * 8f)), Is.LessThan(1f), "The list shows three whole rows: " + rows);
+            Assert.That(Find("PeersFade").gameObject.activeSelf, Is.True, "More rows below: the bottom edge fades.");
+        }
+
+        private static CustomizationCatalogSnapshot MosquitoSnapshot()
+        {
+            var slots = new List<CustomizationSlotRecord>
+            {
+                new CustomizationSlotRecord { Role = CustomizationRole.Human, SlotId = "human.base", Label = "PERSONAJE", WireSlotId = 1, Required = true, IsBaseSlot = true, DefaultOptionId = "base-a" },
+                new CustomizationSlotRecord { Role = CustomizationRole.Mosquito, SlotId = "mosquito.base", Label = "CUERPO", WireSlotId = 2, Required = true, IsBaseSlot = true, DefaultOptionId = "body-a" },
+                new CustomizationSlotRecord { Role = CustomizationRole.Mosquito, SlotId = "mosquito.wings", Label = "ALAS", WireSlotId = 3, DefaultOptionId = "wings-a" },
+                new CustomizationSlotRecord { Role = CustomizationRole.Mosquito, SlotId = "mosquito.eyes", Label = "OJOS", WireSlotId = 4, DefaultOptionId = "eyes-a" }
+            };
+            var options = new List<CustomizationOptionRecord>
+            {
+                Visual(CustomizationRole.Human, "human.base", "base-a", 1),
+                Visual(CustomizationRole.Mosquito, "mosquito.base", "body-a", 1),
+                Named("mosquito.wings", "wings-a", "FACETADAS", 1), Named("mosquito.wings", "wings-b", "REDONDAS", 2),
+                Named("mosquito.wings", "wings-c", "LARGAS Y FINAS", 3), Named("mosquito.wings", "wings-d", "CORTAS", 4),
+                Named("mosquito.eyes", "eyes-a", "GRANDES", 1), Named("mosquito.eyes", "eyes-b", "ENOJADOS", 2)
+            };
+            Assert.That(CustomizationCatalogSnapshot.TryCreate("lms.ui.stage2.art", 1, slots, options, out var snapshot, out var errors), Is.True, string.Join("\n", errors));
+            return snapshot;
+        }
+
+        private static CustomizationOptionRecord Named(string slotId, string optionId, string label, ushort wire) =>
+            new CustomizationOptionRecord { Role = CustomizationRole.Mosquito, SlotId = slotId, OptionId = optionId, WireOptionId = wire,
+                Kind = CustomizationOptionKind.SkinnedPart, Label = label, AssetId = "synthetic-" + optionId, HasRuntimeAsset = true };
 
         private static readonly Vector2Int[] Aspects =
         {
@@ -269,7 +463,7 @@ namespace LetMeSleep.Tests.PlayMode
                 ui.PresentHud(HumanHud());
                 Canvas.ForceUpdateCanvases();
                 AssertNoOverlap(size, "RoleBadge", "ClockBadge", "NetworkState", "TeamCounter", "VoiceChip", "PrivateTask",
-                    "PrivateEquipment", "InteractionPrompt", "ActorStatePanel", "ContextHintPanel");
+                    "PrivateEquipment", "SwapOfferChip", "InteractionPrompt", "ActorStatePanel", "ContextHintPanel");
                 ui.PresentHud(MosquitoHud());
                 Canvas.ForceUpdateCanvases();
                 AssertNoOverlap(size, "RoleBadge", "LivesChip", "ClockBadge", "TeamCounter", "VoiceChip", "InteractionPrompt",

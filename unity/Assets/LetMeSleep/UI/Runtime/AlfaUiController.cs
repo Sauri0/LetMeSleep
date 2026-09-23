@@ -1277,6 +1277,7 @@ namespace LetMeSleep.UI
             if (screen == AlfaUiScreen.Lobby) LayoutLobbyRoster();
             UpdateLobbyNametags();
             UpdateHudLayoutIfResized();
+            UpdateStageTwoLayout();
         }
 
         private void BuildTraining(AlfaUiDependencies dependencies)
@@ -1448,6 +1449,7 @@ namespace LetMeSleep.UI
                 Destroy(texture);
             }
             renderedPortraits.Clear();
+            DestroyResultsFigures();
         }
 
 

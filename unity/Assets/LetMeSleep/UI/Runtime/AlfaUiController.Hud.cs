@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LetMeSleep.Core;
 using TMPro;
 using UnityEngine;
@@ -6,25 +7,31 @@ using UnityEngine;
 namespace LetMeSleep.UI
 {
     /// <summary>
-    /// Gameplay HUD (UI-06 screens 7 and 7b, UI-01): objective card with icon, text and bar at the top left, the
-    /// clock on a plate at the top centre, the opposing team counter at the top right, the four square inventory
-    /// slots centred at the bottom with the stamina bar folded under them (human) and the real key legend at the
-    /// bottom right (mosquito). Everything the alpha HUD showed is kept: every mode's score, actor states, the
-    /// interaction prompt, context hints, lives, private task, network and voice state. The layout is recomputed
-    /// from the canvas width so nothing overlaps at 16:10, 5:4 or 21:9 (ui-presentation-audio-7).
-    /// Panel names used by the gameplay capture harness are kept: RoleBadge (now the objective card),
-    /// ClockBadge and ContextHintPanel are direct children of GameplayHudView; PrivateEquipment too.
+    /// Gameplay HUD (UI-06 screens 7 and 7b, UI-01): objective card with the character's face on a #FFC93C badge, text
+    /// and bar at the top left; the clock on a plate at the top centre (tabular figures); the opposing team counter
+    /// at the top right; four 80-unit inventory slots centred at the bottom on an opaque tray with the stamina bar
+    /// folded under them (human) and a compact four-row key legend at the bottom right under its own status header
+    /// (mosquito). Everything the alpha HUD showed is kept: every mode's score, actor states, the interaction
+    /// prompt, context hints, lives, private task, network and voice state. Only one warning is shown at a time: the
+    /// "being bitten" hint becomes the central banner, and the swap offer is one red chip (its duplicate prompt is
+    /// dropped). The layout is recomputed from the canvas width so nothing overlaps at 16:10, 5:4 or 21:9.
+    /// Panel names used by the gameplay capture harness are kept: RoleBadge (the objective card), ClockBadge and
+    /// ContextHintPanel are direct children of GameplayHudView; PrivateEquipment too.
     /// </summary>
     public sealed partial class AlfaUiController
     {
         private const float HudMargin = 24f;
-        private const float EquipmentSlotSize = 104f;
-        private const float EquipmentSlotGap = 12f;
-        private const float EquipmentPadding = 14f;
+        private const float EquipmentSlotSize = 80f;
+        private const float EquipmentSlotGap = 10f;
+        private const float EquipmentPadding = 12f;
         private const float EquipmentWidth = EquipmentPadding * 2f + EquipmentSlotSize * 4f + EquipmentSlotGap * 3f;
-        private const float EquipmentBaseHeight = 194f;
-        private const float LegendWidth = 360f;
+        private const float EquipmentSlotsBottom = 42f;
+        private const float EquipmentBaseHeight = EquipmentSlotsBottom + EquipmentSlotSize + 44f;
+        private const float LegendWidth = 340f;
+        private const float LegendRowHeight = 34f;
         private const float PromptMaxWidth = 620f;
+        private const string BittenBanner = "TE ESTÁN PICANDO · MIRÁ Y GOLPEÁ";
+        private static readonly Color ObjectiveBadge = AlfaUiTheme.Lamp400;
 
         private bool isSpectator;
         private AlfaRole hudRole = AlfaRole.Human;
@@ -38,6 +45,8 @@ namespace LetMeSleep.UI
         private AlfaUiIcon hudRoleIcon;
         private UnityEngine.UI.Image hudRoleBackground;
         private UnityEngine.UI.Image hudRoleRing;
+        private UnityEngine.UI.RawImage hudRoleFace;
+        private readonly Dictionary<AlfaRole, Texture> hudFaces = new Dictionary<AlfaRole, Texture>();
         private AlfaUiIcon hudScoreIcon;
         private UnityEngine.UI.Image hudBloodFill;
         private GameObject hudObjectiveBar;
@@ -53,6 +62,7 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Image hudTaskFill;
         private TextMeshProUGUI hudLives;
         private GameObject hudLivesChip;
+        private RectTransform hudLivesHearts;
         private TextMeshProUGUI hudInteraction;
         private TextMeshProUGUI hudHint;
         private TextMeshProUGUI hudActorState;
@@ -64,8 +74,10 @@ namespace LetMeSleep.UI
         private RectTransform hudHintRect;
         private UnityEngine.UI.Image hudProgress;
         private GameObject hudLegend;
-        private GameObject hudLegendRescueRow;
         private RectTransform hudLegendRect;
+        private GameObject hudLegendHeader;
+        private RectTransform hudLegendHeaderRect;
+        private TextMeshProUGUI hudLegendStatus;
         private GameObject hudReticle;
         private GameObject hudEquipmentPanel;
         private RectTransform hudEquipmentRect;
@@ -81,6 +93,7 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI hudThrowLabel;
         private UnityEngine.UI.Image hudThrowFill;
         private TextMeshProUGUI hudSwapOffer;
+        private GameObject hudSwapChip;
         private RectTransform hudSwapRect;
 
         private void BuildHud()
@@ -96,7 +109,7 @@ namespace LetMeSleep.UI
             BuildHudSideStatus(view.transform);
             BuildHudEquipment(view.transform);
 
-            hudPromptPanel = factory.Panel(view.transform, "InteractionPrompt", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.88f)).gameObject;
+            hudPromptPanel = factory.Panel(view.transform, "InteractionPrompt", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.94f)).gameObject;
             hudPromptRect = hudPromptPanel.GetComponent<RectTransform>();
             Anchor(hudPromptRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(560f, 56f));
             hudInteraction = factory.Text(hudPromptPanel.transform, "Interaction", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
@@ -106,11 +119,15 @@ namespace LetMeSleep.UI
             hudInteraction.fontSizeMax = 23f;
             AlfaUiFactory.Fill(hudInteraction.rectTransform, 16f, 16f, 6f, 6f);
 
-            hudStatePanel = factory.Panel(view.transform, "ActorStatePanel", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.9f)).gameObject;
+            hudStatePanel = factory.Panel(view.transform, "ActorStatePanel", AlfaUiTheme.PanelInset).gameObject;
+            AlfaUiFactory.SetSurface(hudStatePanel.GetComponent<RectTransform>(), frame: AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.95f));
             hudStateRect = hudStatePanel.GetComponent<RectTransform>();
             Anchor(hudStateRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 96f), new Vector2(460f, 64f));
-            hudActorState = factory.Text(hudStatePanel.transform, "ActorState", string.Empty, 22f, AlfaUiTheme.Pajama500, TextAlignmentOptions.Center, true);
+            hudActorState = factory.Text(hudStatePanel.transform, "ActorState", string.Empty, 23f, AlfaUiTheme.StatusWarn, TextAlignmentOptions.Center, true);
             hudActorState.textWrappingMode = TextWrappingModes.NoWrap;
+            hudActorState.enableAutoSizing = true;
+            hudActorState.fontSizeMin = AlfaUiTheme.MinTextSize;
+            hudActorState.fontSizeMax = 24f;
             AlfaUiFactory.Fill(hudActorState.rectTransform, 16f, 16f, 5f, 20f);
             hudProgress = AlfaUiFactory.ProgressBar(hudStatePanel.transform, "StateProgress", AlfaUiTheme.Lamp400, out var progressTrack);
             Anchor(progressTrack, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 10f), new Vector2(-28f, 8f));
@@ -122,21 +139,31 @@ namespace LetMeSleep.UI
             Anchor(reticle.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(18f, 18f));
         }
 
-        /// <summary>Top-left objective card (UI-06 "OBJETIVO"). Named RoleBadge for the gameplay capture harness.</summary>
+        /// <summary>
+        /// Top-left objective card (UI-06 "OBJETIVO"): the player's character face on a #FFC93C badge, the role and
+        /// objective, and the mode bar. Named RoleBadge for the gameplay capture harness.
+        /// </summary>
         private void BuildHudObjective(Transform view, Color ink)
         {
             var card = factory.Panel(view, "RoleBadge", ink);
             Anchor(card, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(HudMargin, -20f), new Vector2(520f, 112f));
-            hudRoleBackground = AlfaUiFactory.Node("RolePortrait", card, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            hudRoleBackground = AlfaUiFactory.Node("RolePortrait", card, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask)).GetComponent<UnityEngine.UI.Image>();
             hudRoleBackground.sprite = AlfaUiSkin.LargeCircle();
+            hudRoleBackground.color = ObjectiveBadge;
             hudRoleBackground.raycastTarget = false;
             Anchor(hudRoleBackground.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(84f, 84f));
-            hudRoleRing = AlfaUiFactory.Node("RoleRing", hudRoleBackground.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            hudRoleRing.sprite = AlfaUiSkin.CircleRing();
-            hudRoleRing.raycastTarget = false;
-            AlfaUiFactory.Fill(hudRoleRing.rectTransform);
-            hudRoleIcon = factory.Icon(hudRoleBackground.transform, "RoleIcon", AlfaUiIconKind.Human, AlfaUiTheme.Sheet100);
+            hudRoleFace = AlfaUiFactory.Node("RoleFace", hudRoleBackground.transform, typeof(UnityEngine.UI.RawImage)).GetComponent<UnityEngine.UI.RawImage>();
+            hudRoleFace.raycastTarget = false;
+            hudRoleFace.enabled = false;
+            AlfaUiFactory.Fill(hudRoleFace.rectTransform);
+            hudRoleIcon = factory.Icon(hudRoleBackground.transform, "RoleIcon", AlfaUiIconKind.Human, AlfaUiTheme.Ink900);
             AlfaUiFactory.Fill(hudRoleIcon.rectTransform, 18f, 18f, 16f, 20f);
+            // The ring sits outside the mask so it is never clipped.
+            hudRoleRing = AlfaUiFactory.Node("RoleRing", card, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            hudRoleRing.sprite = AlfaUiSkin.CircleRing();
+            hudRoleRing.color = AlfaUiTheme.Hex("E8A21A");
+            hudRoleRing.raycastTarget = false;
+            Anchor(hudRoleRing.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(12f, 0f), new Vector2(88f, 88f));
 
             hudRoleLabel = factory.Text(card, "RoleLabel", "HUMANO", AlfaUiTheme.MinTextSize, AlfaUiTheme.LabelInk, TextAlignmentOptions.TopLeft, true);
             hudRoleLabel.textWrappingMode = TextWrappingModes.NoWrap;
@@ -153,19 +180,31 @@ namespace LetMeSleep.UI
             hudObjectiveBar = AlfaUiFactory.Node("ObjectiveBar", card).gameObject;
             var bar = hudObjectiveBar.GetComponent<RectTransform>();
             Anchor(bar, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(112f, 10f), new Vector2(-126f, 30f));
-            hudScoreIcon = factory.Icon(bar, "ObjectiveIcon", AlfaUiIconKind.Blood, AlfaUiTheme.Pajama500);
-            Anchor(hudScoreIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(24f, 24f));
+            hudScoreIcon = factory.Icon(bar, "ObjectiveIcon", AlfaUiIconKind.Heart, AlfaUiTheme.TeamMosquito);
+            Anchor(hudScoreIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Vector2.zero, new Vector2(26f, 26f));
             hudBloodFill = AlfaUiFactory.ProgressBar(bar, "ObjectiveTrack", AlfaUiTheme.TeamMosquito, out var track);
-            Anchor(track, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0f, 0.5f), new Vector2(32f, 0f), new Vector2(-126f, 14f));
-            hudBlood = factory.Text(bar, "ObjectiveValue", string.Empty, AlfaUiTheme.MinTextSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineRight, true);
+            Anchor(track, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0f, 0.5f), new Vector2(34f, 0f), new Vector2(-128f, 16f));
+            hudBlood = factory.Text(bar, "ObjectiveValue", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineRight, true);
             hudBlood.textWrappingMode = TextWrappingModes.NoWrap;
             Anchor(hudBlood.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), Vector2.zero, new Vector2(88f, 30f));
 
-            hudLivesChip = factory.Panel(view, "LivesChip", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.82f), -1f, -1f, AlfaUiTheme.SmallRadius).gameObject;
-            Anchor(hudLivesChip.GetComponent<RectTransform>(), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(HudMargin, -142f), new Vector2(240f, 42f));
-            hudLives = factory.Text(hudLivesChip.transform, "Lives", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            // Lives (mosquito, tasks/survival) or spectator: "VIDAS" plus one heart per remaining life.
+            var livesChip = factory.Panel(view, "LivesChip", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.84f), -1f, -1f, AlfaUiTheme.SmallRadius);
+            hudLivesChip = livesChip.gameObject;
+            Anchor(livesChip, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(HudMargin, -142f), new Vector2(240f, 44f));
+            var livesRow = factory.Horizontal(livesChip, "LivesRow", 8f, TextAnchor.MiddleLeft);
+            AlfaUiFactory.Fill(livesRow, 16f, 12f, 4f, 4f);
+            hudLives = factory.Text(livesRow, "Lives", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft, true);
             hudLives.textWrappingMode = TextWrappingModes.NoWrap;
-            AlfaUiFactory.Fill(hudLives.rectTransform, 12f, 12f, 2f, 2f);
+            hudLives.characterSpacing = AlfaUiTheme.CaptionTracking;
+            hudLives.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
+            hudLivesHearts = factory.Horizontal(livesRow, "Hearts", 4f, TextAnchor.MiddleLeft);
+            for (var i = 0; i < 5; i++)
+            {
+                var heart = factory.Icon(hudLivesHearts, "Heart" + i, AlfaUiIconKind.Heart, AlfaUiTheme.TeamMosquito);
+                var element = heart.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+                element.minWidth = element.preferredWidth = element.minHeight = element.preferredHeight = 24f;
+            }
             hudLivesChip.SetActive(false);
         }
 
@@ -175,7 +214,7 @@ namespace LetMeSleep.UI
             Anchor(clock, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -20f), new Vector2(240f, 98f));
             var clockIcon = factory.Icon(clock, "ClockIcon", AlfaUiIconKind.Clock, AlfaUiTheme.Lamp400);
             Anchor(clockIcon.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(20f, -20f), new Vector2(30f, 30f));
-            hudClock = factory.Title(clock, "Clock", "03:00", 46f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
+            hudClock = factory.Title(clock, "Clock", AlfaUiTheme.Digits("03:00"), 48f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
             hudClock.textWrappingMode = TextWrappingModes.NoWrap;
             AlfaUiFactory.Fill(hudClock.rectTransform, 44f, 14f, 4f, 36f);
             hudMode = factory.Caption(clock, "ModeLabel", "MODO SANGRE");
@@ -199,7 +238,7 @@ namespace LetMeSleep.UI
             Anchor(hudTeamIcon.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-16f, 0f), new Vector2(68f, 68f));
             hudTeamCaption = factory.Caption(team, "TeamCaption", "MOSQUITOS");
             Anchor(hudTeamCaption.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(20f, -12f), new Vector2(-110f, 26f));
-            hudTeamCount = factory.Title(team, "TeamCount", "0", 44f, AlfaUiTheme.Sheet100, TextAlignmentOptions.TopLeft);
+            hudTeamCount = factory.Title(team, "TeamCount", "0", 46f, AlfaUiTheme.Sheet100, TextAlignmentOptions.TopLeft);
             hudTeamCount.textWrappingMode = TextWrappingModes.NoWrap;
             Anchor(hudTeamCount.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(20f, -36f), new Vector2(-110f, 56f));
             hudTeamPanel.SetActive(false);
@@ -230,7 +269,7 @@ namespace LetMeSleep.UI
             hudVoiceChip = voiceChip.gameObject;
             hudVoiceChip.SetActive(false);
 
-            hudTaskPanel = factory.Panel(view, "PrivateTask", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.9f)).gameObject;
+            hudTaskPanel = factory.Panel(view, "PrivateTask", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.92f)).gameObject;
             Anchor(hudTaskPanel.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-HudMargin, -178f), new Vector2(440f, 124f));
             hudTask = factory.Text(hudTaskPanel.transform, "PrivateTaskText", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
             hudTask.textWrappingMode = TextWrappingModes.Normal;
@@ -242,107 +281,124 @@ namespace LetMeSleep.UI
 
         private void BuildHudEquipment(Transform view)
         {
-            // Four square slots centred at the bottom (UI-06): hands plus three objects, number at the top left,
-            // big pictogram, short resource in the corner and the selected slot in blue with the 3-unit frame.
-            hudEquipmentPanel = factory.Panel(view, "PrivateEquipment", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.55f)).gameObject;
+            // UI-06 / UI-01 inventory: four square 80-unit slots on an opaque navy tray, number at the top left
+            // (the real keys: 1-3 for the objects, 0 for the hands, which close the row), big pictogram, short
+            // resource in the corner; the selected slot keeps the navy fill with a 3-unit #49B2FF frame.
+            hudEquipmentPanel = factory.Panel(view, "PrivateEquipment", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.92f)).gameObject;
             hudEquipmentRect = hudEquipmentPanel.GetComponent<RectTransform>();
-            AlfaUiFactory.SetSurface(hudEquipmentRect, frame: AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.55f), shadow: Color.clear);
+            AlfaUiFactory.SetSurface(hudEquipmentRect, frame: AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.95f));
             Anchor(hudEquipmentRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 18f), new Vector2(EquipmentWidth, EquipmentBaseHeight));
             for (int i = 0; i < 4; i++)
             {
-                var slot = factory.Panel(hudEquipmentPanel.transform, "EquipmentSlotPlate" + i, AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.9f));
-                Anchor(slot, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(EquipmentPadding + i * (EquipmentSlotSize + EquipmentSlotGap), 44f),
+                var column = i == 0 ? 3 : i - 1;
+                var slot = factory.Panel(hudEquipmentPanel.transform, "EquipmentSlotPlate" + i, AlfaUiTheme.PanelInset, -1f, -1f, AlfaUiTheme.SmallRadius);
+                Anchor(slot, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(EquipmentPadding + column * (EquipmentSlotSize + EquipmentSlotGap), EquipmentSlotsBottom),
                     new Vector2(EquipmentSlotSize, EquipmentSlotSize));
-                AlfaUiFactory.SetSurface(slot, shadow: Color.clear);
+                AlfaUiFactory.SetSurface(slot, Color.white, Color.white, AlfaUiTheme.WithAlpha(AlfaUiTheme.InsetBorder, 0.95f), Color.clear);
                 hudEquipmentSlots[i] = slot.GetComponent<UnityEngine.UI.Image>();
                 var number = factory.Title(slot, "EquipmentNumber" + i, i.ToString(), 22f, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft);
                 number.textWrappingMode = TextWrappingModes.NoWrap;
-                Anchor(number.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(9f, -3f), new Vector2(30f, 30f));
+                Anchor(number.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(7f, -1f), new Vector2(28f, 28f));
                 hudEquipmentNumbers[i] = number;
                 hudEquipmentIcons[i] = factory.Icon(slot, "EquipmentIcon" + i, i == 0 ? AlfaUiIconKind.Hands : AlfaUiIconKind.None, AlfaUiTheme.Moon200);
-                Anchor(hudEquipmentIcons[i].rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 2f), new Vector2(60f, 60f));
-                hudEquipmentLabels[i] = factory.Title(slot, "EquipmentSlot" + i, string.Empty, AlfaUiTheme.MinTextSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.BottomRight);
+                Anchor(hudEquipmentIcons[i].rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(2f, 0f), new Vector2(48f, 48f));
+                hudEquipmentLabels[i] = factory.Title(slot, "EquipmentSlot" + i, string.Empty, AlfaUiTheme.MinTextSize, AlfaUiTheme.Lamp400, TextAlignmentOptions.BottomRight);
                 hudEquipmentLabels[i].textWrappingMode = TextWrappingModes.NoWrap;
-                Anchor(hudEquipmentLabels[i].rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 2f), new Vector2(-14f, 28f));
+                Anchor(hudEquipmentLabels[i].rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 0f), new Vector2(-10f, 26f));
             }
             hudEquipmentSelected = factory.Title(hudEquipmentPanel.transform, "EquipmentSelectedLabel", "MANOS", 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
             hudEquipmentSelected.textWrappingMode = TextWrappingModes.NoWrap;
-            BottomRow(hudEquipmentSelected.rectTransform, 154f, 32f);
+            hudEquipmentSelected.enableAutoSizing = true;
+            hudEquipmentSelected.fontSizeMin = AlfaUiTheme.MinTextSize;
+            hudEquipmentSelected.fontSizeMax = 22f;
+            BottomRow(hudEquipmentSelected.rectTransform, EquipmentSlotsBottom + EquipmentSlotSize + 6f, 32f);
 
-            hudStaminaLabel = factory.Title(hudEquipmentPanel.transform, "StaminaLabel", "ESTAMINA 100%", AlfaUiTheme.MinTextSize, AlfaUiTheme.StatusOk, TextAlignmentOptions.MidlineLeft);
-            hudStaminaLabel.textWrappingMode = TextWrappingModes.NoWrap;
-            Anchor(hudStaminaLabel.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(EquipmentPadding + 28f, 8f), new Vector2(150f, 30f));
             var bolt = factory.Icon(hudEquipmentPanel.transform, "StaminaIcon", AlfaUiIconKind.Bolt, AlfaUiTheme.StatusOk);
-            Anchor(bolt.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(EquipmentPadding, 11f), new Vector2(22f, 22f));
+            Anchor(bolt.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(EquipmentPadding, 10f), new Vector2(22f, 22f));
+            hudStaminaLabel = factory.Title(hudEquipmentPanel.transform, "StaminaLabel", "100%", AlfaUiTheme.MinTextSize, AlfaUiTheme.StatusOk, TextAlignmentOptions.MidlineLeft);
+            hudStaminaLabel.textWrappingMode = TextWrappingModes.NoWrap;
+            Anchor(hudStaminaLabel.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(EquipmentPadding + 26f, 6f), new Vector2(64f, 30f));
             hudStaminaFill = AlfaUiFactory.ProgressBar(hudEquipmentPanel.transform, "StaminaTrack", AlfaUiTheme.StatusOk, out var staminaTrack);
-            Anchor(staminaTrack, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(EquipmentPadding + 186f, 18f),
-                new Vector2(-(EquipmentPadding * 2f + 186f), 10f));
+            Anchor(staminaTrack, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(EquipmentPadding + 94f, 16f),
+                new Vector2(-(EquipmentPadding * 2f + 94f), 10f));
 
             hudThrowTrack = AlfaUiFactory.Node("ThrowCharge", hudEquipmentPanel.transform).gameObject;
             hudThrowRect = hudThrowTrack.GetComponent<RectTransform>();
             BottomRow(hudThrowRect, EquipmentBaseHeight, 50f);
             hudThrowLabel = factory.Title(hudThrowTrack.transform, "ThrowLabel", "CARGA PANTUFLA", AlfaUiTheme.MinTextSize, AlfaUiTheme.Lamp400, TextAlignmentOptions.Left);
             hudThrowLabel.textWrappingMode = TextWrappingModes.NoWrap;
+            hudThrowLabel.enableAutoSizing = true;
+            hudThrowLabel.fontSizeMin = AlfaUiTheme.MinTextSize;
+            hudThrowLabel.fontSizeMax = 22f;
             Anchor(hudThrowLabel.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), Vector2.zero, new Vector2(0f, 32f));
             hudThrowFill = AlfaUiFactory.ProgressBar(hudThrowTrack.transform, "Track", AlfaUiTheme.Lamp400, out var throwTrack);
             Anchor(throwTrack, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 4f), new Vector2(0f, 10f));
-            hudSwapOffer = factory.Title(hudEquipmentPanel.transform, "SwapOffer", string.Empty, AlfaUiTheme.MinTextSize, AlfaUiTheme.StatusWarn, TextAlignmentOptions.Left);
-            hudSwapOffer.textWrappingMode = TextWrappingModes.Normal;
-            hudSwapOffer.overflowMode = TextOverflowModes.Overflow;
-            hudSwapRect = hudSwapOffer.rectTransform;
-            BottomRow(hudSwapRect, EquipmentBaseHeight, 60f);
             hudEquipmentPanel.SetActive(false);
+
+            // One replacement notice only: an opaque chip with a 2-unit #E0393E frame and #FF6B5E text, one line.
+            var swap = factory.Panel(view, "SwapOfferChip", AlfaUiTheme.PanelInset, -1f, -1f, AlfaUiTheme.SmallRadius);
+            AlfaUiFactory.SetSurface(swap, Color.white, Color.white, AlfaUiTheme.TeamMosquito, AlfaUiTheme.WithAlpha(Color.black, 0.4f));
+            hudSwapChip = swap.gameObject;
+            hudSwapRect = swap;
+            hudSwapOffer = factory.Text(swap, "SwapOffer", string.Empty, 22f, AlfaUiTheme.StatusWarn, TextAlignmentOptions.Center, true);
+            hudSwapOffer.textWrappingMode = TextWrappingModes.NoWrap;
+            hudSwapOffer.enableAutoSizing = true;
+            hudSwapOffer.fontSizeMin = AlfaUiTheme.MinTextSize;
+            hudSwapOffer.fontSizeMax = 23f;
+            AlfaUiFactory.Fill(hudSwapOffer.rectTransform, 18f, 18f, 4f, 4f);
+            hudSwapChip.SetActive(false);
         }
 
         private static void BottomRow(RectTransform rect, float y, float height) =>
             Anchor(rect, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, y), new Vector2(-EquipmentPadding * 2f, height));
 
         /// <summary>
-        /// Context help. Human: the hint line at the bottom left. Mosquito: the same panel at the bottom right
-        /// carries the real key legend (UI-06 7b) and, above it, the hint when it adds something to the legend.
+        /// Context help. Human: the hint line at the bottom left. Mosquito: the same panel at the bottom right carries
+        /// a compact legend of the four flight keys (UI-06 7b) under a header with the current situation in white.
         /// </summary>
         private void BuildHudHint(Transform view)
         {
-            hudHintPanel = factory.Panel(view, "ContextHintPanel", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.78f)).gameObject;
+            hudHintPanel = factory.Panel(view, "ContextHintPanel", AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.92f)).gameObject;
             hudHintRect = hudHintPanel.GetComponent<RectTransform>();
             Anchor(hudHintRect, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(HudMargin, HudMargin), new Vector2(600f, 78f));
-            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft);
+            hudHint = factory.Text(hudHintPanel.transform, "ContextHint", string.Empty, AlfaUiTheme.NoteSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.TopLeft);
             hudHint.textWrappingMode = TextWrappingModes.Normal;
             hudHint.enableAutoSizing = false;
             hudHint.overflowMode = TextOverflowModes.Overflow;
             Anchor(hudHint.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -12f), new Vector2(-32f, 56f));
 
+            var header = factory.Panel(hudHintPanel.transform, "LegendHeader", AlfaUiTheme.PanelHeader, -1f, -1f, AlfaUiTheme.SmallRadius);
+            AlfaUiFactory.SetSurface(header, Color.white, Color.white, AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.8f), Color.clear);
+            hudLegendHeader = header.gameObject;
+            hudLegendHeaderRect = header;
+            hudLegendStatus = factory.Text(header, "LegendStatus", string.Empty, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
+            hudLegendStatus.textWrappingMode = TextWrappingModes.Normal;
+            hudLegendStatus.overflowMode = TextOverflowModes.Overflow;
+            AlfaUiFactory.Fill(hudLegendStatus.rectTransform, 14f, 12f, 8f, 8f);
+            hudLegendHeader.SetActive(false);
+
             var legend = factory.Vertical(hudHintPanel.transform, "ControlsLegend", 6f);
             hudLegend = legend.gameObject;
             hudLegendRect = legend;
-            Anchor(legend, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 14f), new Vector2(-32f, 0f));
-            LegendRow(legend, "LegendAim", null, AlfaUiIconKind.Mouse, "Apuntar");
-            LegendRow(legend, "LegendFly", new[] { "W" }, AlfaUiIconKind.None, "Volar");
-            LegendRow(legend, "LegendClimb", new[] { "ESPACIO", "CTRL" }, AlfaUiIconKind.None, "Subir · bajar");
-            LegendRow(legend, "LegendPerch", new[] { "F" }, AlfaUiIconKind.None, "Posarte");
-            LegendRow(legend, "LegendBite", new[] { "E" }, AlfaUiIconKind.None, "Picar");
-            hudLegendRescueRow = LegendRow(legend, "LegendRescue", new[] { "R" }, AlfaUiIconKind.None, "Ayudar").gameObject;
+            Anchor(legend, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 12f), new Vector2(-28f, 0f));
+            LegendRow(legend, "LegendFly", new[] { "W" }, "Volar");
+            LegendRow(legend, "LegendClimb", new[] { "ESPACIO", "CTRL" }, "Subir · bajar");
+            LegendRow(legend, "LegendBite", new[] { "E" }, "Picar");
+            LegendRow(legend, "LegendPerch", new[] { "F" }, "Posarte");
             hudLegend.SetActive(false);
         }
 
-        private RectTransform LegendRow(Transform parent, string name, string[] keys, AlfaUiIconKind icon, string label)
+        private RectTransform LegendRow(Transform parent, string name, string[] keys, string label)
         {
-            var row = factory.Horizontal(parent, name, 12f, TextAnchor.MiddleLeft);
+            var row = factory.Horizontal(parent, name, 14f, TextAnchor.MiddleLeft);
             var rowLayout = row.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            rowLayout.minHeight = rowLayout.preferredHeight = 40f;
+            rowLayout.minHeight = rowLayout.preferredHeight = LegendRowHeight;
             // Keys right-aligned in their column so each sits next to its label (UI-06 7b legend).
-            var keysColumn = factory.Horizontal(row, "Keys", 8f, TextAnchor.MiddleRight);
+            var keysColumn = factory.Horizontal(row, "Keys", 6f, TextAnchor.MiddleRight);
             var keysLayout = keysColumn.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            keysLayout.minWidth = keysLayout.preferredWidth = 164f;
+            keysLayout.minWidth = keysLayout.preferredWidth = 154f;
             keysLayout.flexibleWidth = 0f;
-            if (icon != AlfaUiIconKind.None)
-            {
-                var symbol = factory.Icon(keysColumn, "Icon", icon, AlfaUiTheme.Sheet100);
-                var symbolLayout = symbol.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-                symbolLayout.minWidth = symbolLayout.preferredWidth = 36f;
-                symbolLayout.minHeight = symbolLayout.preferredHeight = 36f;
-            }
-            if (keys != null) foreach (var key in keys) factory.KeyCap(keysColumn, "Key_" + key, key, 36f);
+            foreach (var key in keys) factory.KeyCap(keysColumn, "Key_" + key, key, 32f);
             var text = factory.Text(row, "Label", label, 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
             text.textWrappingMode = TextWrappingModes.NoWrap;
             return row;
@@ -354,7 +410,7 @@ namespace LetMeSleep.UI
             isSpectator = state.IsSpectator;
             hudRole = state.Role;
             var human = state.Role == AlfaRole.Human;
-            hudClock.text = FormatClock(state.SecondsRemaining);
+            hudClock.text = AlfaUiTheme.Digits(FormatClock(state.SecondsRemaining));
             hudMode.text = "MODO " + AlfaModeText.Name(state.ModeId);
             PresentHudObjective(state, human);
             PresentHudTeamCounter(state, human);
@@ -362,30 +418,43 @@ namespace LetMeSleep.UI
             hudTaskPanel.SetActive(!state.IsSpectator && !string.IsNullOrWhiteSpace(state.PrivateTaskText));
             hudTask.text = state.PrivateTaskText;
             hudTaskFill.rectTransform.anchorMax = new Vector2(state.TaskProgress01, 1f);
-            hudLives.text = state.IsSpectator ? "ESPECTADOR" : !human && state.ModeId != GameModes.Blood ? $"VIDAS  {state.LivesRemaining}" : string.Empty;
-            hudLivesChip.SetActive(!string.IsNullOrEmpty(hudLives.text));
+            PresentHudLives(state, human);
 
             var equipment = state.IsSpectator ? null : state.Equipment;
             hudEquipmentPanel.SetActive(equipment != null);
+            var hasSwapOffer = equipment != null && !string.IsNullOrWhiteSpace(equipment.SwapOfferText);
             if (equipment != null) PresentHudEquipment(equipment);
+            else hudSwapChip.SetActive(false);
             hudReticle.SetActive(!state.IsSpectator);
 
-            hudInteraction.text = state.Interaction;
+            // One replacement notice: while the swap chip is up, its "confirm" prompt would say the same thing.
+            var interaction = state.Interaction ?? string.Empty;
+            if (hasSwapOffer && interaction.IndexOf("reemplaz", StringComparison.OrdinalIgnoreCase) >= 0) interaction = string.Empty;
+            hudInteraction.text = interaction;
+
             var hint = state.ContextHint ?? string.Empty;
-            // The mosquito legend already lists the flight keys: only a situational hint is repeated above it.
+            // Being bitten is shown once, as the central banner; the corner toast never repeats it.
+            var bitten = human && (state.ActorState == HudActorState.Bitten || hint.StartsWith("¡Te están picando", StringComparison.Ordinal));
+            if (bitten && hint.StartsWith("¡Te están picando", StringComparison.Ordinal)) hint = string.Empty;
+            // The mosquito legend already lists the flight keys: only a situational hint is shown, in its header.
             if (!human && hint.StartsWith("W · volar", StringComparison.Ordinal)) hint = string.Empty;
-            hudHint.text = hint;
-            hudActorState.text = state.ModeId != GameModes.Blood && state.ActorState == HudActorState.Extracting ? "INTERRUMPIENDO" : ActorStateText(state.Role, state.ActorState);
-            hudActorState.color = state.ActorState == HudActorState.Normal ? AlfaUiTheme.Moon200 : AlfaUiTheme.StatusWarn;
-            hudProgress.transform.parent.gameObject.SetActive(state.ActorState == HudActorState.Extracting || state.ActorState == HudActorState.Recovering);
+            var legendVisible = !human && !state.IsSpectator;
+            hudLegend.SetActive(legendVisible);
+            hudLegendStatus.text = legendVisible ? hint : string.Empty;
+            hudLegendHeader.SetActive(legendVisible && !string.IsNullOrWhiteSpace(hint));
+            hudHint.text = legendVisible ? string.Empty : hint;
+
+            var actorState = state.ActorState == HudActorState.Normal && bitten ? HudActorState.Bitten : state.ActorState;
+            hudActorState.text = state.ModeId != GameModes.Blood && actorState == HudActorState.Extracting ? "INTERRUMPIENDO" : ActorStateText(state.Role, actorState);
+            hudActorState.color = actorState == HudActorState.Normal ? AlfaUiTheme.Moon200 : actorState == HudActorState.Extracting ? AlfaUiTheme.Lamp400 : AlfaUiTheme.StatusWarn;
+            AlfaUiFactory.SetFrame(hudStatePanel.GetComponent<RectTransform>(), actorState == HudActorState.Bitten ? AlfaUiTheme.TeamMosquito : AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.95f));
+            hudProgress.transform.parent.gameObject.SetActive(actorState == HudActorState.Extracting || actorState == HudActorState.Recovering);
             hudProgress.rectTransform.anchorMax = new Vector2(state.StateProgress01, 1f);
             hudNetwork.text = state.NetworkMessage;
             hudPromptPanel.SetActive(!string.IsNullOrWhiteSpace(hudInteraction.text));
             hudStatePanel.SetActive(!string.IsNullOrWhiteSpace(hudActorState.text) ||
-                state.ActorState == HudActorState.Extracting || state.ActorState == HudActorState.Recovering);
-            hudLegend.SetActive(!human && !state.IsSpectator);
-            hudLegendRescueRow.SetActive(state.ModeId == GameModes.Tasks);
-            hudHintPanel.SetActive(hudLegend.activeSelf || !string.IsNullOrWhiteSpace(hudHint.text));
+                actorState == HudActorState.Extracting || actorState == HudActorState.Recovering);
+            hudHintPanel.SetActive(legendVisible || !string.IsNullOrWhiteSpace(hudHint.text));
             LayoutHud();
             if (screen != AlfaUiScreen.Gameplay && screen != AlfaUiScreen.Pause && screen != AlfaUiScreen.Settings)
                 ShowGameplay();
@@ -393,12 +462,9 @@ namespace LetMeSleep.UI
 
         private void PresentHudObjective(BloodHudUiState state, bool human)
         {
-            var team = human ? AlfaUiTheme.TeamHuman : AlfaUiTheme.TeamMosquito;
             var teamLight = human ? AlfaUiTheme.Sky400 : AlfaUiTheme.StatusWarn;
             hudRoleLabel.text = "<color=#" + ColorUtility.ToHtmlStringRGB(teamLight) + ">" + (human ? "HUMANO" : "MOSQUITO") + "</color>  ·  OBJETIVO";
-            hudRoleIcon.Kind = human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
-            hudRoleBackground.color = Color.Lerp(team, AlfaUiTheme.Ink900, 0.35f);
-            hudRoleRing.color = AlfaUiTheme.WithAlpha(Color.Lerp(team, Color.white, 0.35f), 0.95f);
+            PresentHudFace(state.Role);
 
             string text, value = string.Empty;
             float ratio = -1f;
@@ -426,21 +492,76 @@ namespace LetMeSleep.UI
             }
             else
             {
-                text = human ? "Evitá que te piquen" : "Picá al humano y juntá sangre";
-                ratio = state.BloodTarget > 0f ? Mathf.Clamp01(state.BloodCurrent / state.BloodTarget) : 0f;
-                value = state.BloodCurrent.ToString("0.#") + "/" + state.BloodTarget.ToString("0.#");
+                // Whole units only ("0/18", never "0,2/18"). The human sees the blood still safe as a heart bar that
+                // empties as mosquitoes feed (UI-06 "100/100"); the mosquito sees the blood collected filling up.
+                var target = Mathf.Max(0, Mathf.RoundToInt(state.BloodTarget));
+                var collected = Mathf.Clamp(Mathf.FloorToInt(state.BloodCurrent + 0.0001f), 0, target);
+                if (human)
+                {
+                    text = "Evitá que te piquen";
+                    var safe = target - collected;
+                    ratio = target > 0 ? Mathf.Clamp01(1f - state.BloodCurrent / state.BloodTarget) : 0f;
+                    value = safe + "/" + target;
+                    icon = AlfaUiIconKind.Heart;
+                }
+                else
+                {
+                    text = "Picá al humano y juntá sangre";
+                    ratio = target > 0 ? Mathf.Clamp01(state.BloodCurrent / state.BloodTarget) : 0f;
+                    value = collected + "/" + target;
+                    icon = AlfaUiIconKind.Blood;
+                }
                 bar = AlfaUiTheme.TeamMosquito;
-                icon = AlfaUiIconKind.Blood;
             }
             hudObjective.text = text;
-            hudBlood.text = value;
+            hudBlood.text = AlfaUiTheme.Digits(value);
             hudScoreIcon.Kind = icon;
-            hudScoreIcon.color = Color.Lerp(bar, Color.white, 0.15f);
+            hudScoreIcon.color = icon == AlfaUiIconKind.Heart || icon == AlfaUiIconKind.Blood ? AlfaUiTheme.TeamMosquito : Color.Lerp(bar, Color.white, 0.15f);
             var track = hudBloodFill.transform.parent.gameObject;
             track.SetActive(ratio >= 0f);
             AlfaUiFactory.SetBarColor(hudBloodFill, bar);
             hudBloodFill.rectTransform.anchorMax = new Vector2(Mathf.Max(0f, ratio), 1f);
             hudObjectiveBar.SetActive(ratio >= 0f || !string.IsNullOrEmpty(value));
+        }
+
+        /// <summary>
+        /// The objective badge shows the player's own character face (rendered once per role through the preview
+        /// rig) on #FFC93C; without a rig (tests, headless) the role pictogram stands in, in ink on the same disc.
+        /// </summary>
+        private void PresentHudFace(AlfaRole role)
+        {
+            if (!hudFaces.TryGetValue(role, out var face))
+            {
+                face = null;
+                var usable = portraitSetup != null && portraitSetup.IsUsable;
+                if (usable && screen != AlfaUiScreen.Customization)
+                {
+                    var rendered = AlfaRolePortrait.RenderHead(portraitSetup, role, 192, ObjectiveBadge);
+                    if (rendered != null)
+                    {
+                        renderedPortraits.Add(rendered);
+                        face = rendered;
+                    }
+                }
+                // One attempt per role (a failed render is not retried every HUD refresh).
+                if (!usable || screen != AlfaUiScreen.Customization) hudFaces[role] = face;
+            }
+            hudRoleFace.texture = face;
+            hudRoleFace.enabled = face != null;
+            hudRoleIcon.gameObject.SetActive(face == null);
+            hudRoleIcon.Kind = role == AlfaRole.Human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;
+        }
+
+        private void PresentHudLives(BloodHudUiState state, bool human)
+        {
+            var lives = !state.IsSpectator && !human && state.ModeId != GameModes.Blood ? Mathf.Clamp(state.LivesRemaining, 0, 5) : -1;
+            hudLives.text = state.IsSpectator ? "ESPECTADOR" : lives >= 0 ? "VIDAS " + lives : string.Empty;
+            for (var i = 0; i < hudLivesHearts.childCount; i++) hudLivesHearts.GetChild(i).gameObject.SetActive(i < lives);
+            hudLivesHearts.gameObject.SetActive(lives > 0);
+            hudLivesChip.SetActive(!string.IsNullOrEmpty(hudLives.text));
+            if (!hudLivesChip.activeSelf) return;
+            var width = 16f + hudLives.GetPreferredValues(hudLives.text).x + 12f + (lives > 0 ? lives * 28f : 0f) + 8f;
+            ((RectTransform)hudLivesChip.transform).sizeDelta = new Vector2(Mathf.Max(160f, width), 44f);
         }
 
         /// <summary>Opposing team at the top right: MOSQUITOS alive/total for humans, HUMANOS awake/total for mosquitoes.</summary>
@@ -453,7 +574,7 @@ namespace LetMeSleep.UI
             hudTeamPanel.SetActive(known);
             if (!known) return;
             hudTeamCaption.text = human ? "MOSQUITOS" : "HUMANOS";
-            hudTeamCount.text = total > 0 ? Mathf.Max(0, count) + "/" + total : count.ToString();
+            hudTeamCount.text = AlfaUiTheme.Digits(total > 0 ? Mathf.Max(0, count) + "/" + total : count.ToString());
             hudTeamIcon.Kind = human ? AlfaUiIconKind.Mosquito : AlfaUiIconKind.Online;
             hudTeamIcon.color = human ? AlfaUiTheme.StatusWarn : AlfaUiTheme.Sky400;
         }
@@ -470,8 +591,8 @@ namespace LetMeSleep.UI
                 hudEquipmentLabels[i].text = i == 0 ? string.Empty : ShortResource(slot.ResourceText);
                 SetEquipmentSlotSelected(i, selected);
                 hudEquipmentIcons[i].color = selected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Moon200;
-                hudEquipmentNumbers[i].color = selected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Moon200;
-                hudEquipmentLabels[i].color = selected ? AlfaUiTheme.Sheet100 : AlfaUiTheme.Lamp400;
+                hudEquipmentNumbers[i].color = selected ? AlfaUiTheme.Sky400 : AlfaUiTheme.Moon200;
+                hudEquipmentLabels[i].color = AlfaUiTheme.Lamp400;
                 if (!selected) continue;
                 var name = i == 0 ? "MANOS" : slot.Label;
                 var resource = i == 0 ? "SIN OBJETO" : slot.ResourceText;
@@ -479,18 +600,20 @@ namespace LetMeSleep.UI
             }
             var stamina = Mathf.RoundToInt(equipment.Stamina01 * 100);
             var staminaColor = equipment.Stamina01 < 0.25f ? AlfaUiTheme.StatusWarn : AlfaUiTheme.StatusOk;
-            hudStaminaLabel.text = "ESTAMINA " + stamina + "%";
+            hudStaminaLabel.text = AlfaUiTheme.Digits(stamina + "%");
             hudStaminaLabel.color = staminaColor;
+            hudEquipmentPanel.transform.Find("StaminaIcon").GetComponent<AlfaUiIcon>().color = staminaColor;
             AlfaUiFactory.SetBarColor(hudStaminaFill, staminaColor);
             hudStaminaFill.rectTransform.anchorMax = new Vector2(equipment.Stamina01, 1f);
             bool charging = equipment.ThrowCharge01 > 0 || equipment.ThrowAwaitingRelease;
             hudThrowTrack.SetActive(charging);
             hudThrowLabel.text = equipment.ThrowAwaitingRelease ? "LANZAMIENTO PENDIENTE" : "CARGA PANTUFLA  " + Mathf.RoundToInt(equipment.ThrowCharge01 * 100) + "% · SOLTÁ CLIC";
             hudThrowFill.rectTransform.anchorMax = new Vector2(equipment.ThrowCharge01, 1f);
-            hudSwapOffer.text = equipment.SwapOfferText;
             var hasSwapOffer = !string.IsNullOrWhiteSpace(equipment.SwapOfferText);
-            hudSwapOffer.gameObject.SetActive(hasSwapOffer);
-            UpdateEquipmentLayout(charging, hasSwapOffer);
+            // Bootstrap sends "E · REEMPLAZAR\n<A> POR <B>": one line on the chip.
+            hudSwapOffer.text = hasSwapOffer ? equipment.SwapOfferText.Replace("\r", string.Empty).Replace("\n", " ").Trim() : string.Empty;
+            hudSwapChip.SetActive(hasSwapOffer);
+            UpdateEquipmentLayout(charging);
         }
 
         /// <summary>"3 CARGAS" → "3", "2,9 s" stays, "REUTILIZABLE" is the default and is not repeated in the slot.</summary>
@@ -503,37 +626,32 @@ namespace LetMeSleep.UI
             return first.Length > 0 && char.IsDigit(first[0]) ? first : string.Empty;
         }
 
-        private void UpdateEquipmentLayout(bool charging, bool hasSwapOffer)
+        private void UpdateEquipmentLayout(bool charging)
         {
             var nextTop = EquipmentBaseHeight;
             if (charging)
             {
-                BottomRow(hudThrowRect, nextTop, 50f);
-                nextTop += 56f;
-            }
-            if (hasSwapOffer)
-            {
-                BottomRow(hudSwapRect, nextTop, 60f);
-                nextTop += 66f;
+                BottomRow(hudThrowRect, nextTop - 4f, 50f);
+                nextTop += 50f;
             }
             hudEquipmentRect.sizeDelta = new Vector2(EquipmentWidth, nextTop);
         }
 
-        /// <summary>Equipment slot plate: selected = primary blue with the 3-unit accent.blue frame.</summary>
+        /// <summary>Equipment slot plate: opaque inset navy; selected = #1E3358 with the 3-unit #49B2FF frame.</summary>
         private void SetEquipmentSlotSelected(int index, bool selected)
         {
             var plate = hudEquipmentSlots[index];
             if (plate == null) return;
-            plate.color = selected ? Color.white : AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, 0.9f);
-            AlfaUiFactory.SetSurface(plate, selected ? AlfaUiTheme.PrimaryHi : Color.white, selected ? AlfaUiTheme.Primary : new Color(0.8f, 0.84f, 0.9f, 1f),
-                selected ? AlfaUiTheme.Sky400 : AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.95f), Color.clear);
+            plate.color = selected ? AlfaUiTheme.Night600 : AlfaUiTheme.PanelInset;
+            AlfaUiFactory.SetSurface(plate, Color.white, Color.white,
+                selected ? AlfaUiTheme.Sky400 : AlfaUiTheme.WithAlpha(AlfaUiTheme.InsetBorder, 0.95f), Color.clear);
             AlfaUiFactory.MarkSelectedFrame(plate, selected);
-            if (selected) AlfaUiFactory.SetSurface(plate, shadow: AlfaUiTheme.WithAlpha(AlfaUiTheme.PrimaryHi, 0.4f));
+            if (selected) AlfaUiFactory.SetSurface(plate, shadow: AlfaUiTheme.WithAlpha(AlfaUiTheme.Sky400, 0.35f));
         }
 
         /// <summary>
-        /// Places the bottom widgets from the canvas width: the prompt and actor state stack above the belt (or
-        /// low in the centre without one), the hint/legend panel takes the corner and never reaches the centre.
+        /// Places the bottom widgets from the canvas width: the swap chip, prompt and actor state stack above the
+        /// tray (or low in the centre without one), the hint/legend panel takes the corner and never reaches the centre.
         /// </summary>
         private void LayoutHud()
         {
@@ -543,36 +661,46 @@ namespace LetMeSleep.UI
             hudLayoutWidth = width;
             // The network line sits under the clock and must stay clear of the objective card and the right stack.
             hudNetwork.rectTransform.sizeDelta = new Vector2(Mathf.Clamp(width - 2f * (HudMargin + 520f + 16f), 360f, 640f), 34f);
-            var human = hudRole == AlfaRole.Human;
             var belt = hudEquipmentPanel.activeSelf;
             var promptWidth = Mathf.Clamp(width - 2f * (HudMargin + LegendWidth + 16f), 420f, PromptMaxWidth);
-            var promptY = belt ? 18f + hudEquipmentRect.sizeDelta.y + 12f : 30f;
-            Anchor(hudPromptRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, promptY), new Vector2(promptWidth, 56f));
-            var stateY = promptY + (hudPromptPanel.activeSelf ? 66f : 0f);
-            Anchor(hudStateRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, stateY), new Vector2(Mathf.Min(460f, promptWidth), 64f));
+            var nextY = belt ? 18f + hudEquipmentRect.sizeDelta.y + 12f : 30f;
+            if (hudSwapChip.activeSelf)
+            {
+                var chipWidth = Mathf.Min(promptWidth, Mathf.Max(EquipmentWidth, hudSwapOffer.GetPreferredValues(hudSwapOffer.text).x + 40f));
+                Anchor(hudSwapRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, nextY), new Vector2(chipWidth, 50f));
+                nextY += 60f;
+            }
+            Anchor(hudPromptRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, nextY), new Vector2(promptWidth, 56f));
+            var stateY = nextY + (hudPromptPanel.activeSelf ? 66f : 0f);
+            Anchor(hudStateRect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, stateY), new Vector2(Mathf.Min(520f, promptWidth), 64f));
 
             var legend = hudLegend.activeSelf;
-            var hasHint = !string.IsNullOrWhiteSpace(hudHint.text);
-            float panelWidth;
-            if (legend) panelWidth = LegendWidth;
-            else
+            if (legend)
             {
-                var centreHalf = belt ? EquipmentWidth * 0.5f : promptWidth * 0.5f;
-                panelWidth = Mathf.Clamp(width * 0.5f - centreHalf - HudMargin - 16f, 280f, 600f);
+                // Mosquito: header (situation, white) over the four-row legend, bottom right.
+                var textWidth = LegendWidth - 26f;
+                var headerHeight = 0f;
+                if (hudLegendHeader.activeSelf)
+                {
+                    headerHeight = Mathf.Ceil(hudLegendStatus.GetPreferredValues(hudLegendStatus.text, textWidth, 0f).y) + 16f;
+                    Anchor(hudLegendHeaderRect, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -6f), new Vector2(-12f, headerHeight));
+                }
+                var legendRows = 0;
+                foreach (Transform row in hudLegendRect) if (row.gameObject.activeSelf) legendRows++;
+                var legendHeight = legendRows * LegendRowHeight + Mathf.Max(0, legendRows - 1) * 6f;
+                hudLegendRect.sizeDelta = new Vector2(-28f, legendHeight);
+                hudHint.gameObject.SetActive(false);
+                var height = 24f + legendHeight + (headerHeight > 0f ? headerHeight + 12f : 0f);
+                Anchor(hudHintRect, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-HudMargin, HudMargin), new Vector2(LegendWidth, height));
+                return;
             }
-            var textWidth = panelWidth - 32f;
-            var hintHeight = hasHint ? Mathf.Ceil(hudHint.GetPreferredValues(hudHint.text, textWidth, 0f).y) + 2f : 0f;
+            var hasHint = !string.IsNullOrWhiteSpace(hudHint.text);
+            var centreHalf = belt ? EquipmentWidth * 0.5f : promptWidth * 0.5f;
+            var panelWidth = Mathf.Clamp(width * 0.5f - centreHalf - HudMargin - 16f, 280f, 600f);
+            var hintHeight = hasHint ? Mathf.Ceil(hudHint.GetPreferredValues(hudHint.text, panelWidth - 32f, 0f).y) + 2f : 0f;
             hudHint.gameObject.SetActive(hasHint);
             Anchor(hudHint.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -12f), new Vector2(-32f, hintHeight));
-            var legendRows = 0;
-            foreach (Transform row in hudLegendRect) if (row.gameObject.activeSelf) legendRows++;
-            var legendHeight = legend ? legendRows * 40f + Mathf.Max(0, legendRows - 1) * 6f : 0f;
-            hudLegendRect.sizeDelta = new Vector2(-32f, legendHeight);
-            var height = 24f + hintHeight + (hasHint && legend ? 12f : 0f) + legendHeight;
-            if (legend)
-                Anchor(hudHintRect, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-HudMargin, HudMargin), new Vector2(panelWidth, height));
-            else
-                Anchor(hudHintRect, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(HudMargin, HudMargin), new Vector2(panelWidth, Mathf.Max(height, 60f)));
+            Anchor(hudHintRect, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(HudMargin, HudMargin), new Vector2(panelWidth, Mathf.Max(24f + hintHeight, 60f)));
         }
 
         private void UpdateHudLayoutIfResized()
@@ -587,7 +715,7 @@ namespace LetMeSleep.UI
             {
                 case HudActorState.Spectating: return "ELIMINADO · OBSERVANDO";
                 case HudActorState.Extracting: return "EXTRAYENDO";
-                case HudActorState.Bitten: return role == AlfaRole.Human ? "TE ESTÁN PICANDO · MIRÁ Y GOLPEÁ" : string.Empty;
+                case HudActorState.Bitten: return role == AlfaRole.Human ? BittenBanner : string.Empty;
                 case HudActorState.Recovering: return "RECUPERANDO…";
                 case HudActorState.Fainted: return "DESMAYADO";
                 case HudActorState.Stunned: return "ATURDIDO";
