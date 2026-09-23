@@ -18,23 +18,23 @@
       "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/AlfaGlobalVolume.asset",
       "tonemapping": "Neutral",
       "bloom": {
-        "threshold": 1.0,
+        "threshold": 1.3,
         "intensity": 0.8,
-        "scatter": 0.7,
+        "scatter": 0.55,
         "tint": [1, 0.96, 0.9],
         "highQuality": true
       },
       "color": {
-        "postExposure": -0.15,
-        "contrast": 10,
-        "saturation": 10,
+        "postExposure": 0.0,
+        "contrast": 5,
+        "saturation": 0,
         "colorFilter": [1, 1, 1]
       },
-      "shadows": [0.8, 0.92, 1.3, -0.05],
+      "shadows": [0.96, 0.98, 1.06, -0.02],
       "midtones": [1, 1, 1, 0],
       "highlights": [1.08, 1.0, 0.9, 0],
       "vignette": {
-        "intensity": 0.28,
+        "intensity": 0.14,
         "smoothness": 0.45,
         "color": [0.03, 0.05, 0.12]
       }
@@ -168,7 +168,7 @@
   "maps": [
     {
       "mapId": "hf-isla-del-laguito-v2",
-      "note": "Dia de vacaciones saturado (A25 A, ENV-04 Lake & Dock): r3 sendero de tierra #B9854A distinto de la arena, laguito #2F8FD0 con brillos, cumulos de base plana y acantilados con bruma al fondo.",
+      "note": "Dia de vacaciones saturado (A25 A, ENV-04 Lake & Dock): r3 sendero de tierra #B9854A distinto de la arena, laguito #2F8FD0 con brillos, cumulos de base plana y acantilados con bruma al fondo. scenes r2 (director #7): velador de la cabana encendido.",
       "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-isla-del-laguito-v2-Volume.asset",
       "volumeWeight": 1,
       "cameraFarPlane": 260,
@@ -305,12 +305,28 @@
           "index": 3,
           "yaw": 180,
           "note": "toward the island center; +Z looked into low pine branches"
+        },
+        {
+          "role": "human",
+          "index": 4,
+          "yaw": 14,
+          "note": "lookout: 2.5 m ahead along +Z; 14 degrees clears the view (20 m ahead)"
+        }
+      ],
+      "renderers": [
+        {
+          "match": "Environment/Cabin_Root/Interior_Bedside_Lamp",
+          "swapFrom": "Color_010",
+          "swapTo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_LampShadeGlowDay.mat",
+          "ignoreLocalLights": true,
+          "expect": 1,
+          "note": "Bedside lamp shade switched on #FFB347 (director #7); its light is a decor light."
         }
       ]
     },
     {
       "mapId": "hf-casa-del-patio-v1",
-      "note": "Noche azul marino (A23 C, ENV-03): r3 paredes interiores crema con zocalo de madera, rebote calido interior, chimenea de piedra con hogar de hollin y troncos oscuros, ventanas con cuarto iluminado y cortinas. r4 (director): chimenea de bloques de piedra facetados, llama 1.5x con brasas en el borde de los troncos, sin cortina detras del revestimiento, living mas calido.",
+      "note": "Noche azul marino (A23 C, ENV-03): r3 paredes interiores crema con zocalo de madera, rebote calido interior, chimenea de piedra con hogar de hollin y troncos oscuros, ventanas con cuarto iluminado y cortinas. r4 (director): chimenea de bloques de piedra facetados, llama 1.5x con brasas en el borde de los troncos, sin cortina detras del revestimiento, living mas calido. scenes r2 (director #8): fuego de la chimenea mas bajo (charco del piso <= #C07830).",
       "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-casa-del-patio-v1-Volume.asset",
       "volumeWeight": 1,
       "cameraFarPlane": 0,
@@ -429,13 +445,13 @@
         {
           "match": "Environment/CASA_Fireplace_Practical_Anchor",
           "color": [1.0, 0.58, 0.26],
-          "intensity": 1.1,
-          "range": 5.0,
+          "intensity": 0.6,
+          "range": 4.5,
           "flicker": 0.3,
-          "offset": [0, 0.05, 0.75],
+          "offset": [0, 0.6, 0.9],
           "flame": {
             "height": 1.2,
-            "offset": [-0.07, -0.4, -0.28]
+            "offset": [-0.07, -0.95, -0.43]
           }
         },
         {
@@ -639,6 +655,12 @@
       "spawnFacings": [
         {
           "role": "human",
+          "index": 1,
+          "yaw": 90,
+          "note": "hall: a wall within 1 m at the frame edge along +Z; toward the kitchen (2.7 m ahead, 2.4 m frame)"
+        },
+        {
+          "role": "human",
           "index": 2,
           "yaw": 202.5,
           "note": "along the hall; +Z faced a wall at 2.7 m"
@@ -646,14 +668,14 @@
         {
           "role": "human",
           "index": 3,
-          "yaw": 180,
-          "note": "upstairs landing; +Z faced a wall at 0.9 m"
+          "yaw": 108,
+          "note": "upstairs landing: 0.9 m at the frame edge at 180; most open view (2.8 m ahead)"
         }
       ]
     },
     {
       "mapId": "hf-campamento-pinar-v2",
-      "note": "Bosque azul oscuro con fogon central (A27 A, ENV-04 Campsite): r3 suelos de tierra calida #5E4634 y pasto #2F5A3A, faroles de poste con cristal ambar, llama y charco (luz solo al suelo), agua nocturna. r4 (director): primera vista a fogata/carpa/farol, carpa oliva, farol propio del refugio, madera de muelle y puente, postes de madera, reflejos continuos ambar en cada farol junto al agua.",
+      "note": "Bosque azul oscuro con fogon central (A27 A, ENV-04 Campsite): r3 suelos de tierra calida #5E4634 y pasto #2F5A3A, faroles de poste con cristal ambar, llama y charco (luz solo al suelo), agua nocturna. r4 (director): primera vista a fogata/carpa/farol, carpa oliva, farol propio del refugio, madera de muelle y puente, postes de madera, reflejos continuos ambar en cada farol junto al agua. scenes r2 (director #6): sin espuma palida en la charca del muelle (parecia hielo).",
       "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-campamento-pinar-v2-Volume.asset",
       "volumeWeight": 1,
       "cameraFarPlane": 0,
@@ -914,8 +936,8 @@
         {
           "index": 7,
           "name": "CAMP_Mat_Foam",
-          "baseColor": "#7488B0",
-          "emission": [0.05, 0.08, 0.16]
+          "baseColor": "#2A4A8A",
+          "emission": [0.01, 0.02, 0.05]
         },
         {
           "index": 8,
@@ -1178,6 +1200,12 @@
           "match": "Environment/CAMP_Jetty_EndPost_*",
           "swapFrom": "Color_027",
           "swapTo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_CampRailWood.mat"
+        },
+        {
+          "match": "Environment/Foam_Lake_*",
+          "hide": true,
+          "expect": 4,
+          "note": "Pale foam polygons of the jetty pond read as ice (director #6)."
         }
       ],
       "characterRim": {
@@ -1204,20 +1232,20 @@
         {
           "role": "human",
           "index": 1,
-          "yaw": 126,
-          "note": "toward the fire; +Z faced a tent wall at 1.9 m"
+          "yaw": 146,
+          "note": "director #9: a tent corner and a box within 1 m at 126; 146 keeps the fire in view (near, 14.1 m ahead)"
         },
         {
           "role": "human",
           "index": 2,
-          "yaw": 290,
-          "note": "toward the fire"
+          "yaw": 300,
+          "note": "nearest clear view toward the fire (8.8 m ahead)"
         },
         {
           "role": "human",
           "index": 3,
-          "yaw": 100,
-          "note": "toward the fire past the shelter"
+          "yaw": 62,
+          "note": "director #9: a barrel and the shelter post at the frame edge; most open view (9.8 m ahead, 4.1 m frame)"
         },
         {
           "role": "human",
@@ -1437,7 +1465,7 @@
     },
     {
       "mapId": "hf-puerto-del-faro-v1",
-      "note": "Noche azul marino (cielo #13265D a #1A2A6A, niebla #2A3570) con luces calidas; r3 pasto #33563A, empedrado de bajo contraste, faro #FFD27A con halo y haz, agua nocturna #16305A con reflejos, techos de madera adentro. r4 (director): haz calido angosto, foco #FFD27A, empedrado sin bisel brillante con juntas #353A48 y charcos calidos, escalera de madera, reflejos continuos, muelle de madera, cabanas de revoque calido, vidrio de faroles encendido.",
+      "note": "Noche azul marino (cielo #13265D a #1A2A6A, niebla #2A3570) con luces calidas; r3 pasto #33563A, empedrado de bajo contraste, faro #FFD27A con halo y haz, agua nocturna #16305A con reflejos, techos de madera adentro. r4 (director): haz calido angosto, foco #FFD27A, empedrado sin bisel brillante con juntas #353A48 y charcos calidos, escalera de madera, reflejos continuos, muelle de madera, cabanas de revoque calido, vidrio de faroles encendido. scenes r2 (director #5): sin estantes de libros cruzando las ventanas traseras de las cabanas.",
       "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-puerto-del-faro-v1-Volume.asset",
       "volumeWeight": 1,
       "cameraFarPlane": 125,
@@ -1979,6 +2007,12 @@
           "swapFrom": "Color_025",
           "swapTo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_PuertoGable.mat",
           "expect": 2
+        },
+        {
+          "match": "Environment/Cottage_0*_Shelf_Books",
+          "hide": true,
+          "expect": 3,
+          "note": "The book shelf crossed the back window of each cottage (director #5)."
         }
       ],
       "interiorVolumes": [
@@ -2029,8 +2063,20 @@
         {
           "role": "human",
           "index": 2,
-          "yaw": 100,
-          "note": "toward the village and harbor path; +Z faced the cottage door at 1.9 m"
+          "yaw": 102,
+          "note": "director #9: cottage wall at the left edge; most open view (5.7 m frame)"
+        },
+        {
+          "role": "human",
+          "index": 3,
+          "yaw": 276,
+          "note": "director #9: a pine trunk ahead and a cottage wall at the right; most open view (10.7 m ahead)"
+        },
+        {
+          "role": "human",
+          "index": 4,
+          "yaw": 76,
+          "note": "director #9: the lighthouse door at ~1 m; most open view (8.0 m)"
         }
       ]
     }

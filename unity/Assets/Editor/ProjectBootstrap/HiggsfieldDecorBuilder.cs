@@ -38,6 +38,7 @@ namespace LetMeSleep.Editor
         public const string CatalogPath = "Assets/LetMeSleep/Presentation/Generated/HiggsfieldFiveMaps.asset";
         public const string DefaultConfig = "docs/v030/maps/decor-v030.json";
         public const float SupportTolerance = 0.02f;
+        public const float OpeningMargin = 0.15f;
         const string Separator = "__";
 
         // ---------- Config ----------
@@ -52,6 +53,10 @@ namespace LetMeSleep.Editor
         {
             public string mapId;
             public string floorPattern, pathPattern, waterPattern, excludePattern;
+            // r2 (director #5): windows and doors (renderer names) are keep-outs for wall props, OpeningMargin around the frame.
+            public string openingPattern;
+            // Surfaces that never count as plain wall behind a wall prop (frames meshed with the whole cabin); default openingPattern.
+            public string openingHitPattern;
             public float? waterY;
             public int maxLights = 8;
             public Item[] items = Array.Empty<Item>();
@@ -63,6 +68,7 @@ namespace LetMeSleep.Editor
             public float[] at, dir, scale, faceAt;
             public float? yHint, yaw, height, waterOffset;
             public float search = 0.8f, sink;
+            // r2: prop "Light" places only a shadowless decor light at the item position (e.g. a map lamp switched on).
             public bool required, allowOverlap, organic;
             public LightSpec light;
             public HaloSpec halo;
@@ -72,7 +78,9 @@ namespace LetMeSleep.Editor
             public string id, group, near = null, mount = "floor", surfacePattern;
             public Dictionary<string, float> props;
             public float[] min, max, center, scale = { 0.85f, 1.15f };
-            public float radius, nearMin = 0.8f, nearMax = 2.2f, minSpacing = 1.5f, sink = 0.012f;
+            public float radius, radiusMin, nearMin = 0.8f, nearMax = 2.2f, minSpacing = 1.5f, sink = 0.012f;
+            // r2 (director #6): per-prop scale range overriding the scatter scale (e.g. flower groups >= 0.4 m tall).
+            public Dictionary<string, float[]> propScale;
             public float? yHint, waterOffset;
             public int count, attempts, seed = 1;
         }
@@ -137,6 +145,8 @@ namespace LetMeSleep.Editor
             public Dictionary<string, Placed> byId = new Dictionary<string, Placed>(StringComparer.Ordinal);
             public Regex floor, path, water, exclude;
             public List<Bounds> waterAreas = new List<Bounds>();
+            public List<(string name, Bounds box)> openings = new List<(string, Bounds)>();
+            public Regex opening;
             public GameObject root;
             public Dictionary<string, Transform> groups = new Dictionary<string, Transform>(StringComparer.Ordinal);
             public int lights;
@@ -156,6 +166,8 @@ namespace LetMeSleep.Editor
             ctx.path = new Regex(mapConfig.pathPattern ?? "^$");
             ctx.water = new Regex(mapConfig.waterPattern ?? "^$");
             ctx.exclude = new Regex(mapConfig.excludePattern ?? "^$");
+            ctx.opening = new Regex(mapConfig.openingHitPattern ?? mapConfig.openingPattern ?? "^$");
+            ctx.openings = Openings(ctx.instance, new Regex(mapConfig.openingPattern ?? "^$"));
             // Map geometry only: the invisible play-area walls and ceiling (_LMS_ArtificialBoundaries_v1) and triggers are
             // neither support nor obstacles for decoration.
             foreach (var collider in ctx.instance.GetComponentsInChildren<Collider>(true))
@@ -184,6 +196,13 @@ namespace LetMeSleep.Editor
             var accepted = new JArray();
             foreach (var item in mapConfig.items ?? Array.Empty<Item>())
             {
+                if (item.prop == "Light")
+                {
+                    Need(item.light != null && item.at != null && item.at.Length == 3, "Light items need a light and an [x, y, z] position: " + item.id);
+                    AttachLightAt(ctx, item);
+                    accepted.Add(new JObject { ["id"] = item.id, ["prop"] = "Light", ["position"] = new JArray(item.at[0], item.at[1], item.at[2]) });
+                    continue;
+                }
                 var placed = PlaceItem(ctx, item, out string reason);
                 if (placed == null)
                 {
@@ -304,7 +323,8 @@ namespace LetMeSleep.Editor
                 float px, pz;
                 if (scatter.center != null)
                 {
-                    double angle = random.NextDouble() * Math.PI * 2, r = Math.Sqrt(random.NextDouble()) * scatter.radius;
+                    double inner = Math.Max(0, Math.Min(scatter.radiusMin, scatter.radius)) / Math.Max(1e-4, scatter.radius);
+                    double angle = random.NextDouble() * Math.PI * 2, r = Math.Sqrt(inner * inner + random.NextDouble() * (1 - inner * inner)) * scatter.radius;
                     px = scatter.center[0] + (float)(Math.Cos(angle) * r); pz = scatter.center[1] + (float)(Math.Sin(angle) * r);
                 }
                 else
@@ -315,7 +335,8 @@ namespace LetMeSleep.Editor
                 double pick = random.NextDouble() * total; string prop = names[names.Length - 1];
                 foreach (var name in names) { pick -= scatter.props[name]; if (pick <= 0) { prop = name; break; } }
                 float yaw = (float)random.NextDouble() * 360f;
-                float s = Mathf.Lerp(scatter.scale[0], scatter.scale[1], (float)random.NextDouble());
+                var range = scatter.propScale != null && scatter.propScale.TryGetValue(prop, out var custom) ? custom : scatter.scale;
+                float s = Mathf.Lerp(range[0], range[1], (float)random.NextDouble());
                 var candidate = new Vector3(px, 0, pz);
                 if (mine.Any(p => (new Vector2(p.x - px, p.z - pz)).sqrMagnitude < scatter.minSpacing * scatter.minSpacing)) continue;
                 if (scatter.near == "path" && !NearSurface(ctx, px, pz, scatter.yHint, ctx.path, scatter.nearMin, scatter.nearMax)) continue;
@@ -418,7 +439,7 @@ namespace LetMeSleep.Editor
             Physics.SyncTransforms();
             Bounds bounds = PrefabBounds(go);
             string problem = Check(ctx, go, bounds, mount, organic, allowOverlap, target);
-            if (problem == null && mount == "wall") problem = WallContact(ctx, go, bounds);
+            if (problem == null && mount == "wall") problem = OpeningClash(ctx.openings, bounds) ?? WallContact(ctx, go, bounds);
             if (problem == null && (mount == "floor" || mount == "on") && prop != "LilyPads")
                 problem = Footprint(ctx, go, bounds, organic, target);
             if (problem != null) { Object.DestroyImmediate(go); reason = problem; return null; }
@@ -467,14 +488,45 @@ namespace LetMeSleep.Editor
             return null;
         }
 
-        /// <summary>A wall prop needs solid wall behind its left, centre and right at mid height (not a window or an edge).</summary>
+        /// <summary>
+        /// A wall prop needs plain wall behind all of it and <see cref="OpeningMargin"/> around it: a grid of rays from just in
+        /// front of the prop, over its back face grown by the margin, must hit a vertical map surface that is not a window,
+        /// door or frame (director r2 #5: a shelf crossed a cottage window).
+        /// </summary>
         static string WallContact(Context ctx, GameObject go, Bounds bounds)
         {
             Vector3 forward = go.transform.forward, right = go.transform.right;
-            float half = Mathf.Abs(Vector3.Dot(bounds.extents, new Vector3(Mathf.Abs(right.x), Mathf.Abs(right.y), Mathf.Abs(right.z)))) * 0.8f;
+            float half = Mathf.Abs(Vector3.Dot(bounds.extents, new Vector3(Mathf.Abs(right.x), Mathf.Abs(right.y), Mathf.Abs(right.z)))) + OpeningMargin;
+            float halfHeight = bounds.extents.y + OpeningMargin;
             Vector3 mid = new Vector3(go.transform.position.x, bounds.center.y, go.transform.position.z);
-            foreach (float t in new[] { -half, 0f, half })
-                if (!Cast(ctx, mid + right * t + forward * 0.05f, -forward, 0.16f, null, out _)) return "no wall behind the prop (window or edge)";
+            for (int i = 0; i <= 4; i++)
+                for (int j = 0; j <= 3; j++)
+                {
+                    float t = Mathf.Lerp(-half, half, i / 4f), h = Mathf.Lerp(-halfHeight, halfHeight, j / 3f);
+                    Vector3 origin = mid + right * t + Vector3.up * h + forward * 0.05f;
+                    if (!Cast(ctx, origin, -forward, 0.2f, null, out RaycastHit hit)) return "no wall behind the prop (window, edge or opening within " + OpeningMargin + " m)";
+                    if (Mathf.Abs(hit.normal.y) > 0.2f) return "wall behind not vertical at " + hit.collider.name;
+                    if (ctx.opening.IsMatch(hit.collider.name)) return "over an opening " + hit.collider.name;
+                }
+            return null;
+        }
+
+        /// <summary>Window and door renderers of the map (names matching the map's openingPattern), grown by the margin.</summary>
+        public static List<(string name, Bounds box)> Openings(EnvironmentMapDefinition map, Regex pattern)
+        {
+            var result = new List<(string, Bounds)>();
+            foreach (var renderer in map.GetComponentsInChildren<Renderer>(true))
+            {
+                if (!pattern.IsMatch(renderer.name)) continue;
+                var box = renderer.bounds; box.Expand(2f * OpeningMargin);
+                result.Add((renderer.name, box));
+            }
+            return result;
+        }
+
+        public static string OpeningClash(List<(string name, Bounds box)> openings, Bounds bounds)
+        {
+            foreach (var (name, box) in openings) if (box.Intersects(bounds)) return "within " + OpeningMargin + " m of the opening " + name;
             return null;
         }
 
@@ -615,6 +667,36 @@ namespace LetMeSleep.Editor
             }
         }
 
+        static void AttachLightAt(Context ctx, Item item)
+        {
+            var go = new GameObject("DecorLight_" + item.id);
+            go.transform.SetParent(Group(ctx, item.group ?? "Decor_Lights"), false);
+            go.transform.position = ctx.instance.transform.TransformPoint(new Vector3(item.at[0], item.at[1], item.at[2]));
+            var component = go.AddComponent<Light>();
+            component.type = LightType.Point;
+            Need(ColorUtility.TryParseHtmlString(item.light.color, out var color), "Bad light color " + item.light.color);
+            component.color = color;
+            component.intensity = item.light.intensity;
+            component.range = Mathf.Min(item.light.range, HiggsfieldMapCatalog.MaximumDecorLightRange);
+            component.shadows = LightShadows.None;
+            component.bounceIntensity = 0f;
+            component.renderMode = LightRenderMode.Auto;
+            component.cullingMask &= ~(1 << 30);
+            component.lightmapBakeType = LightmapBakeType.Realtime;
+            ctx.lights++;
+            if (item.light.flicker > 0) pendingFlickers.Add(new HiggsfieldDecorDressing.Flicker { Light = component, Amplitude = item.light.flicker, Seed = ctx.lights * 3.7f });
+            if (item.halo != null)
+            {
+                Need(ColorUtility.TryParseHtmlString(item.halo.color, out var haloColor), "Bad halo color " + item.halo.color);
+                haloColor.a = item.halo.alpha;
+                pendingHalos.Add(new HiggsfieldDecorDressing.Halo
+                {
+                    Anchor = go.transform, Size = item.halo.size, Color = haloColor, Intensity = item.halo.intensity,
+                    Offset = item.halo.offset == null ? Vector3.zero : new Vector3(item.halo.offset[0], item.halo.offset[1], item.halo.offset[2])
+                });
+            }
+        }
+
         static Transform Anchor(GameObject go, string name)
         {
             if (string.IsNullOrEmpty(name)) return go.transform;
@@ -655,6 +737,7 @@ namespace LetMeSleep.Editor
                 }
             Physics.SyncTransforms();
             var keepouts = HiggsfieldDecorClearance.Build(map);
+            var openings = Openings(map, new Regex(mapConfig.openingPattern ?? "^$"));
             foreach (var prop in props)
             {
                 string mount = prop.name.Split(new[] { Separator }, StringSplitOptions.None)[2];
@@ -675,14 +758,119 @@ namespace LetMeSleep.Editor
                 }
                 else if (mount == "wall")
                 {
+                    string clash = OpeningClash(openings, bounds);
+                    if (clash != null) problems.Add(prop.name + ": " + clash);
                     Vector3 mid = new Vector3(prop.position.x, bounds.center.y, prop.position.z);
-                    bool touching = Physics.RaycastAll(mid + prop.forward * 0.05f, -prop.forward, 0.16f, ~0, QueryTriggerInteraction.Ignore)
+                    bool touching = Physics.RaycastAll(mid + prop.forward * 0.05f, -prop.forward, 0.2f, ~0, QueryTriggerInteraction.Ignore)
                         .Any(h => support.Contains(h.collider));
                     if (!touching) problems.Add(prop.name + ": not against a wall");
                 }
             }
             Object.DestroyImmediate(map.gameObject);
             return problems;
+        }
+
+        // ---------- Spawn view clearance (director r2 #9) ----------
+        public const float SpawnEyeHeight = 1.55f;
+        // Centre of the first view and the whole 16:9 frame of the gameplay camera (horizontal half-angle ~46 degrees).
+        public const float SpawnCenterClearance = 3f, SpawnEdgeClearance = 1.5f;
+        public const float SpawnCenterCone = 20f, SpawnEdgeCone = 46f;
+
+        /// <summary>
+        /// For every human spawn of every map: how far the first view is free along the catalog's authored yaw, counting the
+        /// visible world (map colliders, visual-only map renderers such as foliage, and the saved decor), at eye, chest and
+        /// knee height over a +-<see cref="SpawnCenterCone"/> degree cone (>= <see cref="SpawnCenterClearance"/> m) and a
+        /// +-<see cref="SpawnEdgeCone"/> cone (>= <see cref="SpawnEdgeClearance"/> m). A blocked spawn gets the nearest clear
+        /// yaw as a suggestion; the facings themselves are gameplay data set by the atmosphere config (spawnFacings).
+        /// </summary>
+        public static JObject SpawnClearanceReport(string output)
+        {
+            var result = new JObject { ["utc"] = DateTime.UtcNow.ToString("o"), ["cone"] = SpawnCenterCone, ["edgeCone"] = SpawnEdgeCone,
+                ["centerClearanceM"] = SpawnCenterClearance, ["edgeClearanceM"] = SpawnEdgeClearance };
+            var maps = new JArray();
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var catalogIds = AssetDatabase.LoadAssetAtPath<HiggsfieldMapCatalog>(CatalogPath).Entries.Select(e => e.MapId).ToArray();
+            foreach (string mapId in catalogIds)
+            {
+                var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                var entry = AssetDatabase.LoadAssetAtPath<HiggsfieldMapCatalog>(CatalogPath).Resolve(mapId);
+                var map = (EnvironmentMapDefinition)PrefabUtility.InstantiatePrefab(entry.Prefab, scene);
+                if (entry.Decor)
+                {
+                    var decor = (GameObject)PrefabUtility.InstantiatePrefab(entry.Decor, scene);
+                    decor.transform.SetParent(map.transform, false);
+                }
+                var solid = new HashSet<Collider>();
+                foreach (var collider in map.GetComponentsInChildren<Collider>(true))
+                    if (!collider.isTrigger && !IsBoundary(collider.transform)) solid.Add(collider);
+                foreach (var filter in map.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    var renderer = filter.GetComponent<MeshRenderer>();
+                    if (!renderer || filter.GetComponent<Collider>() || !filter.sharedMesh || IsBoundary(filter.transform)) continue;
+                    if (renderer.sharedMaterials.Any(m => m && m.renderQueue >= 2500)) continue; // halos, glass, water sheets
+                    if (Regex.IsMatch(filter.name, "(?i)^(water|foam)")) continue;
+                    var added = filter.gameObject.AddComponent<MeshCollider>();
+                    added.sharedMesh = filter.sharedMesh;
+                    solid.Add(added);
+                }
+                Physics.SyncTransforms();
+                var rows = new JArray();
+                var points = map.HumanSpawnPoints ?? Array.Empty<Transform>();
+                for (int i = 0; i < points.Length; i++)
+                {
+                    if (!points[i]) continue;
+                    var free = new float[180];
+                    for (int k = 0; k < 180; k++)
+                    {
+                        float yaw = k * 2f;
+                        Vector3 direction = Quaternion.AngleAxis(yaw, Vector3.up) * Vector3.forward;
+                        float nearest = 20f;
+                        foreach (float height in new[] { SpawnEyeHeight, 1.0f, 0.5f })
+                            foreach (var hit in Physics.RaycastAll(points[i].position + Vector3.up * height, direction, 20f, ~0, QueryTriggerInteraction.Ignore))
+                                if (solid.Contains(hit.collider)) nearest = Mathf.Min(nearest, hit.distance);
+                        free[k] = nearest;
+                    }
+                    float Cone(float yaw, float half)
+                    {
+                        float min = float.MaxValue;
+                        for (float d = -half; d <= half + .01f; d += 2f) min = Mathf.Min(min, free[Mathf.RoundToInt(Mathf.Repeat(yaw + d, 360f) / 2f) % 180]);
+                        return min;
+                    }
+                    bool Clear(float yaw) => Cone(yaw, SpawnCenterCone) >= SpawnCenterClearance && Cone(yaw, SpawnEdgeCone) >= SpawnEdgeClearance;
+                    bool authored = entry.TryGetSpawnYaw(true, i, out float current);
+                    float suggestion = current;
+                    if (!Clear(current))
+                    {
+                        float best = float.NaN;
+                        for (int step = 1; step <= 90 && float.IsNaN(best); step++)
+                            foreach (float candidate in new[] { current + step * 2f, current - step * 2f })
+                                if (Clear(Mathf.Repeat(candidate, 360f))) { best = Mathf.Repeat(candidate, 360f); break; }
+                        suggestion = float.IsNaN(best) ? current : best;
+                    }
+                    // Most open view within 90 degrees of the authored one (what the player first sees, capped at 10 m).
+                    float Score(float yaw) => Mathf.Min(10f, Cone(yaw, SpawnEdgeCone)) + .3f * Mathf.Min(10f, Cone(yaw, SpawnCenterCone));
+                    float open = current; float openScore = Score(current);
+                    for (int step = -45; step <= 45; step++)
+                    {
+                        float candidate = Mathf.Repeat(current + step * 2f, 360f);
+                        float score = Score(candidate) - Mathf.Abs(step) * .002f;
+                        if (score > openScore + 1e-3f) { openScore = score; open = candidate; }
+                    }
+                    rows.Add(new JObject
+                    {
+                        ["index"] = i, ["authored"] = authored, ["yaw"] = current, ["clear"] = Clear(current),
+                        ["openYaw"] = open, ["openCenterFreeM"] = Math.Round(Cone(open, SpawnCenterCone), 2), ["openEdgeFreeM"] = Math.Round(Cone(open, SpawnEdgeCone), 2),
+                        ["centerFreeM"] = Math.Round(Cone(current, SpawnCenterCone), 2), ["edgeFreeM"] = Math.Round(Cone(current, SpawnEdgeCone), 2),
+                        ["suggestedYaw"] = suggestion, ["suggestedCenterFreeM"] = Math.Round(Cone(suggestion, SpawnCenterCone), 2),
+                        ["suggestedEdgeFreeM"] = Math.Round(Cone(suggestion, SpawnEdgeCone), 2)
+                    });
+                }
+                maps.Add(new JObject { ["mapId"] = mapId, ["humanSpawns"] = rows });
+            }
+            result["maps"] = maps;
+            File.WriteAllText(Path.Combine(output, "spawn-clearance.json"), result.ToString(Formatting.Indented) + "\n");
+            Debug.Log("LMS_SPAWN_CLEARANCE_REPORT " + Path.Combine(output, "spawn-clearance.json"));
+            return result;
         }
 
         // ---------- Helpers ----------

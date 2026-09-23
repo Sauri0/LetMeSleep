@@ -417,9 +417,9 @@ namespace LetMeSleep.Bootstrap
         }
         private SpawnActor[] MakeRoster(RoomView view)
         {
-            int human = 0, mosquito = 0;
+            int human = 0, mosquito = 0, humans = view.Members.Count(m => m.Role == PlayerRole.Human);
             return view.Members.Select((m, i) => new SpawnActor((uint)i + 1, m.Id, m.Role,
-                SpawnPoint(m.Role == PlayerRole.Human, m.Role == PlayerRole.Human ? human++ : mosquito++))).ToArray();
+                SpawnPoint(m.Role == PlayerRole.Human, m.Role == PlayerRole.Human ? human++ : mosquito++, humans))).ToArray();
         }
         // v0.3.0 (maps director #1/#9): the imported spawn EMPTYs carry no rotation, so the local view starts at the
         // map catalog's authored facing for that spawn (e.g. the camp spawn looks at the fire, not at a tent wall).
@@ -438,8 +438,29 @@ namespace LetMeSleep.Bootstrap
                 return;
             }
         }
-        private Float3 SpawnPoint(bool human, int index)
-        { var points = human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints; return points[index % points.Length].position.ToFloat(); }
+        private Float3 SpawnPoint(bool human, int index, int humansInRound = 1)
+        {
+            if (human) return map.HumanSpawnPoints[index % map.HumanSpawnPoints.Length].position.ToFloat();
+            var order = MosquitoSpawnOrder(map, humansInRound);
+            return map.MosquitoSpawnPoints[order[index % order.Length]].position.ToFloat();
+        }
+
+        /// <summary>
+        /// v0.3.0 scenes r2 (director #9): mosquitoes start at least <see cref="MinimumSpawnSeparation"/> m from every human
+        /// spawn used this round, so nobody is bitten in the first second ("TE ESTÁN PICANDO" at 02:59). Authored order among
+        /// the far-enough points, then the rest from the farthest; deterministic (the host sends the positions).
+        /// </summary>
+        public const float MinimumSpawnSeparation = 6f;
+        public static int[] MosquitoSpawnOrder(EnvironmentMapDefinition definition, int humansInRound)
+        {
+            var mosquitoes = definition.MosquitoSpawnPoints;
+            var humans = definition.HumanSpawnPoints;
+            int used = Mathf.Clamp(humansInRound, 1, Mathf.Max(1, humans.Length));
+            float Nearest(int i) => Enumerable.Range(0, used).Min(h => Vector3.Distance(mosquitoes[i].position, humans[h % humans.Length].position));
+            var far = Enumerable.Range(0, mosquitoes.Length).Where(i => Nearest(i) >= MinimumSpawnSeparation);
+            var near = Enumerable.Range(0, mosquitoes.Length).Where(i => Nearest(i) < MinimumSpawnSeparation).OrderByDescending(Nearest);
+            return far.Concat(near).ToArray();
+        }
         private void PresentGame(GameSessionState state)
         {
             ObservePlaytestResult(state);

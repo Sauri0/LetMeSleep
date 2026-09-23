@@ -26,6 +26,20 @@ namespace LetMeSleep.Presentation
         public float MosquitoScale = 1f;
         [Tooltip("Optional warm key on the sleeper / cool fill anchors for the living scene (null: the set's own lights only).")]
         public Transform WarmLightAnchor, CoolLightAnchor;
+        [Tooltip("v0.3.0 r2 (director #2): flattened sleeping lids, closed-eye lines, small smile and head turn toward the camera.")]
+        public SleepingFaceRig.Settings SleepFace = new SleepingFaceRig.Settings();
+        [Tooltip("How much the hovering mosquito turns toward MosquitoFaceTarget instead of its flight direction (0..1).")]
+        [Range(0f, 1f)] public float MosquitoFacing = .85f;
+        [Tooltip("Pupil size of the menu mosquito across the look axis (1 = authored ~25 % of the eye; director #3 asks >= 30 %).")]
+        [Range(1f, 1.6f)] public float MosquitoPupilScale = 1.32f;
+        [Tooltip("Director #3: pupil smoothness in the menu (a glossy 12-20 px pupil reflects the lamp and reads grey); " +
+                 "negative keeps the material's own value.")]
+        [Range(-1f, 1f)] public float MosquitoPupilSmoothness = .12f;
+        [Tooltip("Director #3: the menu mosquito hovers with its wings near their widest spread instead of full wingbeats. " +
+                 "Flight clip time (s) of the widest projected span; negative plays the full flap.")]
+        public float FlightHoverTime = -1f;
+        [Tooltip("Half amplitude (s of the flight clip) of the flutter around FlightHoverTime, and its rate (Hz).")]
+        public float FlightHoverWobble = .02f, FlightHoverRate = 9f;
 
         public bool IsComplete
         {

@@ -310,7 +310,7 @@ def main():
                               'los *_Emissive con _EmissionColor = color_srgb * emission_strength y keyword _EMISSION).',
             'decor_note': 'Solo decorativos: sin Collider/Rigidbody bajo MapRoot (ver docs/v030/MAPA-SISTEMAS.md, maps).',
         },
-        'rules': ['Let me sleep (nunca Bite & Build)', 'sin armas', 'sin texto en carteles', 'low-poly facetado, color plano',
+        'rules': ['Let me sleep (nunca Bite & Build)', 'sin armas', 'texto en carteles sólo en castellano y tallado (director v0.3.0: LAGO/CABAÑA, NO MOLESTAR, SILENCIO)', 'low-poly facetado, color plano',
                   'sin colliders', 'un FBX por prop', 'chaflán de 1 segmento (1-2 cm) en cantos de madera y cajas'],
         'unity_verification_pending': [
             'Conversión de anchors (-x, z, -y) contra un FBX importado (p. ej. Nightstand.lamp y AlarmClock.screen).',

@@ -925,16 +925,18 @@ def alarm_clock():
 def window():
     p = Prop('Window', 'Ventana con parteluces', 'bedroom', mount='wall', preview={'elev': 6, 'yaw': 18},
              notes='Ventana de pared (PRP-02 / UI-06), 0,095 m de profundidad total, con vista nocturna detrás de los '
-                   'parteluces: cielo #1A2A6A, colinas, pinos, estrellas y luna. Los paños de vista son emisivos (Emission 1) '
+                   'parteluces: cielo #1A2A6A, colinas #2A3F7A / #1E3560, pinos, estrellas y luna. Los paños de vista son emisivos (Emission 0,45) '
                    'para conservar su color con la sala a oscuras; se pueden reemplazar por un fondo real. Dorso en +Y '
                    'contra la pared; base = alféizar.')
     p.mat('Frame', C['wood'])
     p.mat('Trim', C['wood_light'])
     p.mat('Sash', C['wood_pale'])
-    p.mat('Sky', '#1A2A6A', emission=1.0, roughness=0.9)
+    # scenes r2: emission 0.45 (with the room's ambient on the same albedo the view measures ~#1A2A6A, not royal blue).
+    p.mat('Sky', '#1A2A6A', emission=0.45, roughness=0.9)
     p.mat('Moon', '#FFF2C4', emission=2.0, roughness=0.9)
-    p.mat('HillFar', '#2A4A7C', emission=1.0, roughness=0.9)
-    p.mat('HillNear', '#1E4A45', emission=1.0, roughness=0.9)
+    # v0.3.0 scenes r2 (director #4): far hills #2A3F7A and near hills #1E3560 under the #1A2A6A sky (no teal, no royal blue).
+    p.mat('HillFar', '#2A3F7A', emission=0.45, roughness=0.9)
+    p.mat('HillNear', '#1E3560', emission=0.45, roughness=0.9)
     W, H = 0.9, 1.25
     ox, oz0, oz1 = 0.35, 0.14, H - 0.14
     fd = 0.08                                   # frame depth: y in [-0.04, 0.04]
@@ -1811,4 +1813,302 @@ def rug_striped_red_blue():
     xc = [-W / 2, W / 2, -W / 2 + border, W / 2 - border] + stripes
     yc = [-H / 2, H / 2, -H / 2 + border, H / 2 - border, -H / 2 + border + line, H / 2 - border - line]
     rug(p, W, H, 0.015, xc, yc, part, 'Border')
+    return p
+
+
+
+# =============================================================================
+# v0.3.0 scenes r2 (art director's corrections): sala furniture, front-lawn props, carved signs
+# =============================================================================
+
+FONT_BOLD = Path(__file__).resolve().parents[4] / 'docs/unity/ui/tools/fonts/Barlow-Bold.ttf'
+TEXT_INK = '#3A2412'      # carved letters: darker than the wood core so they read at night
+
+
+def g_text(body, size, resolution=1, spacing=1.0):
+    """Flat glyph triangles of `body` in Barlow Bold (OFL, docs/unity/ui/tools/fonts), centred on the origin in local XY,
+    reading along +X and facing +Z (use front() to put it on a board facing the viewer)."""
+    import bpy
+    font = bpy.data.fonts.load(str(FONT_BOLD), check_existing=True)
+    cu = bpy.data.curves.new('lms_text', 'FONT')
+    cu.body = body
+    cu.font = font
+    cu.size = size
+    cu.resolution_u = resolution
+    cu.space_character = spacing
+    cu.align_x = 'CENTER'
+    cu.align_y = 'CENTER'
+    ob = bpy.data.objects.new('lms_text', cu)
+    bpy.context.scene.collection.objects.link(ob)
+    try:
+        ev = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        me = ev.to_mesh()
+        verts = [(v.co.x, v.co.y, 0.0) for v in me.vertices]
+        faces = [tuple(poly.vertices) for poly in me.polygons]
+        ev.to_mesh_clear()
+    finally:
+        bpy.data.objects.remove(ob)
+        bpy.data.curves.remove(cu)
+    assert faces, 'no glyphs for ' + body
+    return merge_close(verts, faces, 1e-6)
+
+
+def arrow_points(length, rot=0.0):
+    """Chunky arrow pointing +X (rot turns it counter-clockwise, degrees), centred on the origin."""
+    h = length
+    pts = [(-0.5 * h, -0.11 * h), (0.08 * h, -0.11 * h), (0.08 * h, -0.3 * h), (0.5 * h, 0.0),
+           (0.08 * h, 0.3 * h), (0.08 * h, 0.11 * h), (-0.5 * h, 0.11 * h)]
+    c, s = math.cos(math.radians(rot)), math.sin(math.radians(rot))
+    return [(x * c - y * s, x * s + y * c) for x, y in pts]
+
+
+@register
+def wood_chair():
+    p = Prop('WoodChair', 'Silla de madera', 'interior',
+             notes='Silla de la sala de espera (UI-06 pantalla 3): asiento de tablas, respaldo con tres listones. '
+                   'El frente (quien se sienta mira hacia allí) es -Y.')
+    p.mat('Frame', C['wood'])
+    p.mat('Seat', C['wood_light'])
+    p.mat('Slat', C['wood_pale'])
+    sx, sy, sz = 0.2, 0.19, 0.46
+    for x in (-sx, sx):
+        p.add('Frame', g_box(0.05, 0.05, sz, chamfer=0.008), M((x, -sy, sz / 2)))               # front legs
+        p.add('Frame', g_box(0.05, 0.055, 0.97, chamfer=0.008), M((x, sy + 0.02, 0.485), (-4, 0, 0)))  # back legs to the rail
+        p.add('Frame', g_box(0.035, 2 * sy, 0.035, chamfer=0.006), M((x, 0, 0.16)))             # side stretchers
+    p.add('Frame', g_box(2 * sx, 0.035, 0.035, chamfer=0.006), M((0, -sy, 0.16)))
+    for i in range(3):
+        p.add('Seat', g_box(2 * sx + 0.06, 0.15, 0.04, chamfer=0.01), M((0, -0.155 + i * 0.155, sz + 0.02), (0, 0, (i - 1) * 0.6)))
+    p.add('Frame', g_box(2 * sx + 0.04, 0.05, 0.08, chamfer=0.01), M((0, sy + 0.05, 0.92), (-4, 0, 0)))
+    for x in (-0.11, 0.0, 0.11):
+        p.add('Slat', g_box(0.05, 0.022, 0.36, chamfer=0.006), M((x, sy + 0.035, 0.7), (-4, 0, 0)))
+    return p
+
+
+@register
+def wood_table():
+    p = Prop('WoodTable', 'Mesa de madera', 'interior', preview={'elev': 25},
+             notes='Mesa de la sala (UI-06 pantalla 3): tablero de cuatro tablas con juntas, patas gruesas y faldón. '
+                   '1,6 x 0,9 m, 0,76 m de alto; el farol va arriba (anchor "top").')
+    p.mat('Top', C['wood_light'])
+    p.mat('Leg', C['wood'])
+    p.mat('Apron', C['wood_dark'])
+    W, D, H = 1.6, 0.9, 0.76
+    n = 4
+    plank = D / n
+    for i in range(n):
+        y = -D / 2 + plank * (i + 0.5)
+        p.add('Top', g_box(W, plank - 0.008, 0.05, chamfer=0.012), M((0, y, H - 0.025), (0, 0, p.rng.uniform(-0.25, 0.25))))
+    for x in (-W / 2 + 0.1, W / 2 - 0.1):
+        for y in (-D / 2 + 0.09, D / 2 - 0.09):
+            p.add('Leg', g_box(0.08, 0.08, H - 0.05, chamfer=0.012), M((x, y, (H - 0.05) / 2)))
+    p.add('Apron', g_box(W - 0.2, 0.04, 0.1, chamfer=0.008), M((0, -D / 2 + 0.09, H - 0.1)))
+    p.add('Apron', g_box(W - 0.2, 0.04, 0.1, chamfer=0.008), M((0, D / 2 - 0.09, H - 0.1)))
+    for x in (-W / 2 + 0.1, W / 2 - 0.1):
+        p.add('Apron', g_box(0.04, D - 0.18, 0.1, chamfer=0.008), M((x, 0, H - 0.1)))
+    p.anchor('top', (0, 0, H), note='Centro del tablero (para el farol, tazas, mapa).')
+    return p
+
+
+@register
+def park_bench():
+    p = Prop('ParkBench', 'Banco de jardín', 'exterior',
+             notes='Banco con respaldo y apoyabrazos (ENV-05, junto al porche): tablas claras sobre patas oscuras. '
+                   'Quien se sienta mira hacia -Y.')
+    p.mat('Plank', C['wood_light'])
+    p.mat('Frame', C['wood_dark'])
+    p.mat('Bolt', C['iron'])
+    W = 1.6
+    for i in range(3):
+        p.add('Plank', g_box(W, 0.12, 0.045, chamfer=0.012), M((0, -0.16 + i * 0.135, 0.45), (0, 0, (i - 1) * 0.4)))
+    for i in range(2):
+        p.add('Plank', g_box(W, 0.13, 0.04, chamfer=0.012), M((0, 0.235 + i * 0.035, 0.66 + i * 0.17), (-14, 0, 0)))
+    for x in (-W / 2 + 0.08, W / 2 - 0.08):
+        p.add('Frame', g_box(0.07, 0.07, 0.43, chamfer=0.01), M((x, -0.17, 0.215)))
+        p.add('Frame', g_box(0.07, 0.07, 0.92, chamfer=0.01), M((x, 0.2, 0.46), (-10, 0, 0)))
+        p.add('Frame', g_box(0.06, 0.46, 0.06, chamfer=0.01), M((x, 0.02, 0.41)))
+        p.add('Frame', g_box(0.08, 0.5, 0.05, chamfer=0.01), M((x, 0.0, 0.66)))             # armrest
+        p.add('Frame', g_box(0.05, 0.05, 0.2, chamfer=0.008), M((x, -0.2, 0.54)))             # armrest post
+        for y in (-0.16, 0.12):
+            p.add('Bolt', g_box(0.024, 0.024, 0.012), M((x, y, 0.478)))
+    return p
+
+
+def g_torus(R, r, n=16, m=6, phase=0.0):
+    """Ring in the XZ plane (wheel axis along Y), centred on the origin."""
+    verts, faces = [], []
+    for i in range(n):
+        a = 2 * math.pi * i / n + phase
+        for j in range(m):
+            b = 2 * math.pi * j / m
+            rr = R + r * math.cos(b)
+            verts.append((rr * math.cos(a), r * math.sin(b), rr * math.sin(a)))
+    for i in range(n):
+        for j in range(m):
+            a0, a1 = i * m + j, ((i + 1) % n) * m + j
+            b0, b1 = i * m + (j + 1) % m, ((i + 1) % n) * m + (j + 1) % m
+            faces.append((a0, b0, b1, a1))
+    return verts, faces
+
+
+@register
+def bicycle():
+    p = Prop('Bicycle', 'Bicicleta', 'exterior', preview={'elev': 12, 'yaw': 30},
+             notes='Bicicleta roja apoyada en su pata (ENV-05 junto al cartel): cuadro #C8322E, cubiertas negras, llantas '
+                   'metálicas, asiento y puños negros. Eje largo en X; inclinada 7 grados hacia la pata (lado -Y).')
+    p.mat('Frame', C['red'], roughness=0.5)
+    p.mat('Tire', C['black'], roughness=0.9)
+    p.mat('Rim', C['metal_light'], roughness=0.4, metallic=0.5)
+    p.mat('Seat', '#2A2420', roughness=0.8)
+    p.mat('Metal', C['metal_dark'], roughness=0.5, metallic=0.4)
+    R = 0.33
+    tilt = M((0, 0, 0), (7, 0, 0))                          # lean toward -Y (the kickstand side)
+
+    def A(part, geom, m=None):
+        p.add(part, geom, tilt @ (m if m is not None else M()))
+
+    def tube(a, b, rad=0.02, part='Frame'):
+        A(part, g_loft([a, b], [rad, rad], n=6))
+    rear, front_hub = (-0.52, 0.0, R), (0.52, 0.0, R)
+    bb, seat, head_top, head_low = (-0.04, 0.0, 0.3), (-0.2, 0.0, 0.8), (0.36, 0.0, 0.82), (0.39, 0.0, 0.68)
+    for hub in (rear, front_hub):
+        A('Tire', g_torus(R - 0.03, 0.03, n=16, m=6), M(hub))
+        A('Rim', g_torus(R - 0.072, 0.012, n=16, m=4, phase=math.pi / 16), M(hub))
+        A('Metal', g_cyl(0.035, 0.035, 0.1, n=6), M((hub[0], 0.05, hub[2]), (90, 0, 0)))
+        for k in range(4):
+            A('Rim', g_box(0.008, 0.008, 2 * (R - 0.08)), M(hub, (0, 45 * k, 0)))
+    tube(bb, seat)
+    tube(seat, head_top)
+    tube(bb, head_low, 0.024)
+    tube(head_low, head_top, 0.026)
+    for dy in (-0.045, 0.045):
+        tube((bb[0], dy, bb[2]), (rear[0], dy, rear[2]), 0.014)
+        tube((seat[0] + 0.02, dy * 0.6, seat[2] - 0.05), (rear[0], dy, rear[2]), 0.012)
+        tube((head_low[0], dy * 0.6, head_low[2]), (front_hub[0], dy, front_hub[2]), 0.015)
+    tube((seat[0], 0, seat[2]), (seat[0] - 0.03, 0, seat[2] + 0.08), 0.015, 'Metal')
+    A('Seat', g_hull([(seat[0] - 0.16, sy, seat[2] + 0.08 + sz) for sy in (-0.07, 0.07) for sz in (0, 0.045)] +
+                     [(seat[0] + 0.08, sy, seat[2] + 0.085 + sz) for sy in (-0.025, 0.025) for sz in (0, 0.035)]))
+    tube(head_top, (head_top[0] - 0.02, 0, head_top[2] + 0.1), 0.016, 'Metal')
+    bar = (head_top[0] - 0.02, 0, head_top[2] + 0.1)
+    tube((bar[0], -0.26, bar[2]), (bar[0], 0.26, bar[2]), 0.014, 'Metal')
+    for sy in (-1, 1):
+        tube((bar[0], sy * 0.2, bar[2]), (bar[0], sy * 0.29, bar[2]), 0.022, 'Seat')
+    A('Metal', g_cyl(0.06, 0.06, 0.03, n=8), M((bb[0], 0.015, bb[2]), (90, 0, 0)))
+    for sy, dx in ((-1, 0.14), (1, -0.14)):
+        tube((bb[0], sy * 0.05, bb[2]), (bb[0] + dx, sy * 0.06, bb[2] - 0.1 * sy), 0.012, 'Metal')
+        A('Metal', g_box(0.09, 0.04, 0.02), M((bb[0] + dx, sy * 0.1, bb[2] - 0.1 * sy)))
+    # Kickstand to the ground on the lean side: its foot lands on the tyres' ground plane after the tilt.
+    kick_top = (bb[0] - 0.12, -0.03, bb[2] - 0.02)
+    tilt_inv = tilt.inverted()
+    ground = tilt @ Vector((rear[0], 0.0, 0.0))
+    foot = tilt_inv @ Vector((bb[0] - 0.22, -0.27, ground.z))
+    tube(kick_top, tuple(foot), 0.012, 'Metal')
+    return p
+
+
+def plank_board(p, part, m, w, h, depth=0.06):
+    """One chunky signboard plank (bevelled prism) centred on m; its front face is local +depth/2."""
+    pts = [(-w / 2, -h / 2), (w / 2, -h / 2), (w / 2, h / 2), (-w / 2, h / 2)]
+    p.add(part, g_bevel(g_prism(pts, depth), 0.012), m)
+
+
+@register
+def sign_carved_board():
+    p = Prop('SignCarvedBoard', 'Cartel tallado "NO MOLESTAR"', 'exterior',
+             notes='Cartel grande de jardín sobre dos postes (ENV-05, a la derecha): dos tablas con las letras talladas '
+                   '"NO MOLESTAR" y "Zzz". Texto en castellano (Let me sleep); letras más oscuras que la madera.')
+    p.mat('Post', C['wood'])
+    p.mat('Board', C['wood_light'])
+    p.mat('Ink', TEXT_INK, roughness=0.95)
+    p.mat('Nail', C['iron'])
+    for x in (-0.62, 0.62):
+        p.add('Post', g_box(0.12, 0.12, 1.3, chamfer=0.016), M((x, 0.02, 0.65)))
+        p.add('Post', g_cyl(sq(0.06), 0.0, 0.06, n=4, phase=math.pi / 4), M((x, 0.02, 1.3)))
+    for z, tilt, text, size in ((1.08, 1.5, 'NO MOLESTAR', 0.15), (0.78, -1.0, 'Zzz', 0.17)):
+        m = front((0, -0.075, z), tilt)
+        plank_board(p, 'Board', m, 1.46, 0.26)
+        p.add('Ink', g_text(text, size), m @ M((0, 0, 0.0316)))
+        for x in (-0.62, 0.62):
+            for y in (-0.06, 0.06):
+                p.add('Nail', g_box(0.02, 0.02, 0.012), m @ M((x, y, 0.032)))
+    return p
+
+
+@register
+def sign_carved_arrows():
+    p = Prop('SignCarvedArrows', 'Cartel tallado con flechas', 'exterior',
+             notes='Poste con dos tablas en flecha (ENV-05, a la izquierda) con letras talladas "SILENCIO" y '
+                   '"ZONA DE SIESTA". Texto en castellano; letras más oscuras que la madera.')
+    p.mat('Post', C['wood'])
+    p.mat('Board', C['wood_light'])
+    p.mat('Ink', TEXT_INK, roughness=0.95)
+    p.mat('Nail', C['iron'])
+    p.add('Post', g_box(0.15, 0.15, 1.75, chamfer=0.018), M((0, 0, 0.875)))
+    p.add('Post', g_cyl(sq(0.075), 0.0, 0.07, n=4, phase=math.pi / 4), M((0, 0, 1.75)))
+    for z, direction, tilt, text, size in ((1.45, 1, 2.5, 'SILENCIO', 0.13), (1.08, -1, -3.0, 'ZONA DE SIESTA', 0.095)):
+        tip, body, hh, back = 0.62, 0.44, 0.15, -0.46
+        pts = [(back, -hh), (body, -hh), (tip, 0.0), (body, hh), (back, hh)]
+        pts = [(direction * x, y) for x, y in pts]
+        m = front((0, -0.105, z), tilt)
+        p.add('Board', g_bevel(g_prism(pts, 0.06), 0.012), m)
+        p.add('Ink', g_text(text, size), m @ M((direction * 0.03, 0, 0.0316)))
+        for y in (-0.08, 0.08):
+            p.add('Nail', g_box(0.02, 0.02, 0.012), m @ M((0, y, 0.032)))
+    return p
+
+
+@register
+def signpost_lake():
+    p = Prop('SignpostLake', 'Cartel "LAGO / CABAÑA"', 'exterior',
+             notes='Cartel de la Isla (ENV-04 01 "Forest path"): poste derecho con dos tablas en flecha hacia la derecha '
+                   '(vista de frente) talladas "LAGO ↑" y "CABAÑA →" (flechas como geometría). Tablas sin inclinación; '
+                   'el frente mira a -Y (Blender) / +Z (Unity).')
+    p.mat('Post', C['wood'])
+    p.mat('Board', C['wood_light'])
+    p.mat('Ink', TEXT_INK, roughness=0.95)
+    p.mat('Nail', C['iron'])
+    p.add('Post', g_box(0.15, 0.15, 1.85, chamfer=0.018), M((0, 0, 0.925)))
+    p.add('Post', g_cyl(sq(0.075), 0.0, 0.07, n=4, phase=math.pi / 4), M((0, 0, 1.85)))
+    tip, body, hh, back = 0.72, 0.52, 0.15, -0.3
+    pts = [(back, -hh), (body, -hh), (tip, 0.0), (body, hh), (back, hh)]
+    for z, text, size, arrow in ((1.55, 'LAGO', 0.15, (0.2, 90.0, 0.43)), (1.18, 'CABAÑA', 0.13, (0.19, 0.0, 0.47))):
+        m = front((0, -0.105, z))
+        p.add('Board', g_bevel(g_prism(pts, 0.06), 0.012), m)
+        p.add('Ink', g_text(text, size), m @ M((0.09, 0, 0.0316)))
+        p.add('Ink', g_prism(arrow_points(arrow[0], arrow[1]), 0.002), m @ M((arrow[2], 0, 0.0316)))
+        for y in (-0.08, 0.08):
+            p.add('Nail', g_box(0.02, 0.02, 0.012), m @ M((-0.2, y, 0.032)))
+    return p
+
+
+@register
+def wall_shelf():
+    p = Prop('WallShelf', 'Estante de pared', 'kitchen', mount='wall', preview={'elev': 12, 'yaw': 20},
+             notes='Estante de pared sobre dos ménsulas (ENV-03 cocina/dormitorio): frascos, una maceta chica y libros. '
+                   'El dorso queda en +Y contra la pared.')
+    p.mat('Board', C['wood_light'])
+    p.mat('Bracket', C['wood_dark'])
+    p.mat('Jar', '#8FB8C8', roughness=0.35)
+    p.mat('Lid', C['red'], roughness=0.5)
+    p.mat('Pot', C['terracotta'])
+    p.mat('Leaf', C['green'])
+    p.mat('BookRed', C['red'])
+    p.mat('BookBlue', C['blue_light'])
+    p.mat('BookCream', C['cream'])
+    depth = 0.22
+    yc = 0.02 - depth / 2                          # back of the board at y = +0.02 (wall)
+    p.add('Board', g_box(0.9, depth, 0.035, chamfer=0.008), M((0, yc, 0.3)))
+    for x in (-0.32, 0.32):
+        # Triangle in the wall-normal plane (local x = world y, local y = world z via TO_X), 3 cm thick along X.
+        p.add('Bracket', g_prism([(0.02, 0.28), (-0.14, 0.28), (0.02, 0.08)], 0.03), at(TO_X, (x, 0, 0)))
+        p.add('Bracket', g_box(0.03, 0.02, 0.26, chamfer=0.004), M((x, 0.01, 0.16)))
+    top = 0.3 + 0.0175
+    for x, h, r in ((-0.33, 0.14, 0.045), (-0.22, 0.11, 0.04)):
+        p.add('Jar', g_cyl(r, r, h, n=8), M((x, yc, top)))
+        p.add('Lid', g_cyl(r + 0.005, r + 0.005, 0.02, n=8), M((x, yc, top + h)))
+    p.add('Pot', g_cyl(0.05, 0.065, 0.09, n=8), M((0.02, yc, top)))
+    for k in range(5):
+        a = k * 72
+        p.add('Leaf', g_blade(0.13, (0.02, 0.03, 0.02, 0.0), pitch=35, bend=0.3), M((0.02, yc, top + 0.08), (0, 0, a)))
+    for i, (part, h, t) in enumerate((('BookRed', 0.2, 0.035), ('BookBlue', 0.18, 0.03), ('BookCream', 0.19, 0.032))):
+        p.add(part, g_box(t, 0.15, h, chamfer=0.004), M((0.2 + i * 0.038, yc, top + h / 2), (0, 4 if i == 2 else 0, 0)))
     return p

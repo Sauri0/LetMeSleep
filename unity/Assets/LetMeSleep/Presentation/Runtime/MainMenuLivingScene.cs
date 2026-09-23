@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HumanBeat = LetMeSleep.Presentation.MenuReactionPolicy.Beat;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -40,6 +41,23 @@ namespace LetMeSleep.Presentation
             public float SleepSwatCooldownSeconds = 8f;
             [Tooltip("Sleeping menu: point the hovering mosquito faces (default: the sleeper's ear).")]
             public Transform MosquitoFaceTarget;
+            // v0.3.0 scenes r2 (director #2/#3): flattened sleeping lids with closed-eye lines and a small smile, the head
+            // turned toward SleepFaceToward (the menu camera), and the mosquito looking toward its face target so its black
+            // pupils face the viewer. SleepFace null keeps the authored face.
+            public SleepingFaceRig.Settings SleepFace;
+            public Transform SleepHeadBone, SleepLeftEye, SleepRightEye, SleepFaceToward;
+            public Vector3 SleepEyeForward = Vector3.up, SleepHeadForward = Vector3.forward, SleepHeadUp = Vector3.up;
+            [Range(0f, 1f)] public float MosquitoFacing = .85f;
+            // Director #3: the menu mosquito's black pupils read at >= 30 % of the eye diameter (authored ~25 %): the pupil
+            // pivots scale across their look axis (never along it) after animation.
+            public Transform[] MosquitoPupils;
+            public Vector3 MosquitoPupilForward = Vector3.forward;
+            public float MosquitoPupilScale = 1f;
+            // Director #3: matte black pupils in the menu (per-material property block on Mosquito_Expression); < 0 = off.
+            public float MosquitoPupilSmoothness = -1f;
+            // Director #3: hover flutter. With FlightHoverTime >= 0 the flight clip plays a fast narrow flutter around that
+            // time (the wings' widest spread) instead of the full wingbeat, so the silhouette keeps its wingspan.
+            public float FlightHoverTime = -1f, FlightHoverWobble = .02f, FlightHoverRate = 9f;
         }
 
         private Bindings bindings;
@@ -47,7 +65,12 @@ namespace LetMeSleep.Presentation
         private AnimationMixerPlayable humanMixer;
         private AnimationClipPlayable idle, look, swat, returning, flight, sleep, sleepSwat;
         private int[] eyelidIndices;
+        private SleepingFaceRig sleepFace;
+        public SleepingFaceRig SleepFace => sleepFace;
         private readonly float[] eyelidWeights=new float[4];
+        private readonly List<(Renderer renderer,int index,MaterialPropertyBlock original)> pupilSlots=new List<(Renderer,int,MaterialPropertyBlock)>();
+        private MaterialPropertyBlock pupilBlock;
+        private bool pupilSlotsScanned;
         private float sinceSleepSwat;
         private bool configured, requestedActive = true, reducedMotion, running;
         private double elapsed;
@@ -127,7 +150,14 @@ namespace LetMeSleep.Presentation
                 MosquitoRotationOffset=value.MosquitoRotationOffset,
                 MenuSleep=value.MenuSleep, MenuSleepSwat=value.MenuSleepSwat, SleepEyelids=value.SleepEyelids,
                 SleepEyelidShapes=value.SleepEyelidShapes==null ? null : (string[])value.SleepEyelidShapes.Clone(),
-                SleepSwatCooldownSeconds=value.SleepSwatCooldownSeconds, MosquitoFaceTarget=value.MosquitoFaceTarget
+                SleepSwatCooldownSeconds=value.SleepSwatCooldownSeconds, MosquitoFaceTarget=value.MosquitoFaceTarget,
+                SleepFace=value.SleepFace, SleepHeadBone=value.SleepHeadBone, SleepLeftEye=value.SleepLeftEye, SleepRightEye=value.SleepRightEye,
+                SleepFaceToward=value.SleepFaceToward, SleepEyeForward=value.SleepEyeForward, SleepHeadForward=value.SleepHeadForward,
+                SleepHeadUp=value.SleepHeadUp, MosquitoFacing=Mathf.Clamp01(value.MosquitoFacing),
+                MosquitoPupils=value.MosquitoPupils==null ? null : (Transform[])value.MosquitoPupils.Clone(),
+                MosquitoPupilForward=value.MosquitoPupilForward, MosquitoPupilScale=Mathf.Clamp(value.MosquitoPupilScale,.5f,2f),
+                MosquitoPupilSmoothness=Mathf.Min(1f,value.MosquitoPupilSmoothness),
+                FlightHoverTime=value.FlightHoverTime, FlightHoverWobble=Mathf.Max(0f,value.FlightHoverWobble), FlightHoverRate=Mathf.Max(0f,value.FlightHoverRate)
             };
             if (sleeping)
             {
@@ -202,6 +232,13 @@ namespace LetMeSleep.Presentation
                     cool=CreateLight("Menu cool fill",bindings.CoolLightAnchor,new Color(.58f,.72f,1f),.45f,3.8f);
                     beat=HumanBeat.Idle; beatTime=0; sinceSleepSwat=0;
                     if(bindings.MosquitoAttention) bindings.MosquitoAttention.SetReducedMotion(reducedMotion);
+                    if (bindings.SleepFace!=null && bindings.SleepEyelids && bindings.SleepHeadBone && bindings.SleepEyelidShapes!=null &&
+                        bindings.SleepHeadBone.IsChildOf(bindings.HumanRoot))
+                        sleepFace=SleepingFaceRig.TryCreate(bindings.SleepFace,bindings.SleepEyelids,bindings.SleepHeadBone,bindings.SleepLeftEye,
+                            bindings.SleepRightEye,bindings.SleepEyeForward,bindings.SleepHeadForward,bindings.SleepHeadUp,
+                            new[]{bindings.SleepEyelidShapes[0],bindings.SleepEyelidShapes[1],bindings.SleepEyelidShapes[2],bindings.SleepEyelidShapes[3]},
+                            new[]{bindings.SleepEyelidShapes[4],bindings.SleepEyelidShapes[5],bindings.SleepEyelidShapes[6],bindings.SleepEyelidShapes[7]},
+                            bindings.SleepFaceToward);
                     lastSampleFrame=-1;
                     graph.Play();
                     return;
@@ -358,7 +395,13 @@ namespace LetMeSleep.Presentation
             humanMixer.SetInputWeight(0,1-swatWeight); humanMixer.SetInputWeight(1,swatWeight);
             sleep.SetTime(reducedMotion ? 0 : elapsed % bindings.MenuSleep.length);
             sleepSwat.SetTime(beat==HumanBeat.Swat ? Mathf.Min(beatTime,swatLength) : 0);
-            flight.SetTime(reducedMotion ? 0 : elapsed % bindings.Flight.length);
+            if (bindings.FlightHoverTime>=0f)
+            {
+                float hover=reducedMotion ? bindings.FlightHoverTime
+                    : bindings.FlightHoverTime+bindings.FlightHoverWobble*Mathf.Sin((float)(elapsed*bindings.FlightHoverRate*2.0*Math.PI));
+                flight.SetTime(Mathf.Repeat(hover,bindings.Flight.length));
+            }
+            else flight.SetTime(reducedMotion ? 0 : elapsed % bindings.Flight.length);
             bindings.HumanRoot.SetPositionAndRotation(bindings.HumanSeatRoot.position,bindings.HumanSeatRoot.rotation);
             bindings.MosquitoRoot.position=position;
             if (tangent.sqrMagnitude>.000001f)
@@ -369,17 +412,69 @@ namespace LetMeSleep.Presentation
                 // Hovering around its victim: the body keeps turning toward the sleeper's ear (eyes toward the room) instead
                 // of flying tail-first along the loop.
                 Vector3 toTarget=(bindings.MosquitoFaceTarget ? bindings.MosquitoFaceTarget.position : ear.position)-position;
-                Vector3 face=toTarget.sqrMagnitude>.0001f ? Vector3.Slerp(tangent.normalized,toTarget.normalized,.7f) : tangent;
+                Vector3 face=toTarget.sqrMagnitude>.0001f ? Vector3.Slerp(tangent.normalized,toTarget.normalized,bindings.MosquitoFacing) : tangent;
                 bindings.MosquitoRoot.rotation=Quaternion.LookRotation(face,Vector3.up)*Quaternion.Euler(0,0,bank)*Quaternion.Euler(bindings.MosquitoRotationOffset);
             }
             if (bindings.MosquitoAttention) bindings.MosquitoAttention.PrepareForAnimation();
             graph.Evaluate(0);
             WriteClosedEyes();
+            sleepFace?.Apply();
+            ScalePupils(bindings.MosquitoPupilScale);
+            MattePupils();
             if (bindings.MosquitoAttention)
             {
-                bindings.MosquitoAttention.SetLookTarget(ear);
+                // Looking toward the viewer side (not the far ear) keeps the black pupils visible from the menu camera.
+                bindings.MosquitoAttention.SetLookTarget(bindings.MosquitoFaceTarget ? bindings.MosquitoFaceTarget : ear);
                 bindings.MosquitoAttention.EvaluateAfterAnimation(deltaSeconds);
             }
+        }
+
+        private void ScalePupils(float factor)
+        {
+            if (bindings.MosquitoPupils==null) return;
+            Vector3 axis=bindings.MosquitoPupilForward.normalized;
+            Vector3 across=new Vector3(1f-Mathf.Abs(axis.x),1f-Mathf.Abs(axis.y),1f-Mathf.Abs(axis.z));
+            Vector3 scale=Vector3.one+across*(factor-1f);
+            foreach (var pupil in bindings.MosquitoPupils)
+                if (pupil && pupil.IsChildOf(bindings.MosquitoRoot)) pupil.localScale=scale;
+        }
+
+        private void MattePupils()
+        {
+            if (bindings.MosquitoPupilSmoothness<0f || !bindings.MosquitoRoot) return;
+            if (!pupilSlotsScanned)
+            {
+                pupilSlotsScanned=true;
+                foreach (var renderer in bindings.MosquitoRoot.GetComponentsInChildren<Renderer>(true))
+                {
+                    var materials=renderer.sharedMaterials;
+                    for (int i=0;i<materials.Length;i++)
+                    {
+                        if (!materials[i] || !materials[i].name.StartsWith("Mosquito_Expression",StringComparison.Ordinal)) continue;
+                        var original=new MaterialPropertyBlock();
+                        renderer.GetPropertyBlock(original,i);
+                        pupilSlots.Add((renderer,i,original));
+                    }
+                }
+            }
+            pupilBlock??=new MaterialPropertyBlock();
+            // Read back every frame: the character view may have set its own colour block on the same slot.
+            foreach (var slot in pupilSlots)
+            {
+                if (!slot.renderer) continue;
+                slot.renderer.GetPropertyBlock(pupilBlock,slot.index);
+                pupilBlock.SetFloat(SmoothnessId,bindings.MosquitoPupilSmoothness);
+                slot.renderer.SetPropertyBlock(pupilBlock,slot.index);
+            }
+        }
+
+        private static readonly int SmoothnessId=Shader.PropertyToID("_Smoothness");
+
+        private void RestorePupils()
+        {
+            foreach (var slot in pupilSlots)
+                if (slot.renderer) slot.renderer.SetPropertyBlock(slot.original.isEmpty ? null : slot.original,slot.index);
+            pupilSlots.Clear(); pupilSlotsScanned=false;
         }
 
         private void WriteClosedEyes()
@@ -429,6 +524,9 @@ namespace LetMeSleep.Presentation
             if(bindings.HumanAttention) { bindings.HumanAttention.PrepareForAnimation(); bindings.HumanAttention.ClearLookTarget(); }
             if(bindings.MosquitoAttention) { bindings.MosquitoAttention.PrepareForAnimation(); bindings.MosquitoAttention.ClearLookTarget(); }
             if(graph.IsValid()) graph.Destroy();
+            sleepFace?.Dispose(); sleepFace=null;
+            if (bindings.MosquitoPupils!=null) ScalePupils(1f);
+            RestorePupils();
             if(bindings.MenuSleep) OpenEyes();
             humanState.Restore(bindings.HumanAnimator); mosquitoState.Restore(bindings.MosquitoAnimator);
             if(bindings.HumanRoot) { bindings.HumanRoot.localPosition=humanPosition; bindings.HumanRoot.localRotation=humanRotation; }

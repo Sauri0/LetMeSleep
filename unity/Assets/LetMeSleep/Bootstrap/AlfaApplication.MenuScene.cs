@@ -100,6 +100,7 @@ namespace LetMeSleep.Bootstrap
                 contract.Rig.LeftBlinkShapes.CopyTo(shapes, 0);
                 contract.Rig.RightBlinkShapes.CopyTo(shapes, 4);
             }
+            var mosquitoContract = mosquito.GetComponentInChildren<VisualAttentionContract>(true);
             livingMenu = menuCharacters.AddComponent<MainMenuLivingScene>();
             bool configured = livingMenu.Configure(new MainMenuLivingScene.Bindings
             {
@@ -112,7 +113,16 @@ namespace LetMeSleep.Bootstrap
                 WarmLightAnchor = bedroom.WarmLightAnchor, CoolLightAnchor = bedroom.CoolLightAnchor,
                 CycleSeconds = 11f, FirstLookAfterSeconds = 2.5f, LookSeconds = .5f, SwatSeconds = MenuSleepSwat.length,
                 ReturnSeconds = .5f, NoticeRadius = 1.2f, SwatRadius = .5f, SwatContactNormalized = .5f,
-                SleepSwatCooldownSeconds = 9f, MosquitoFaceTarget = bedroom.MosquitoFaceTarget
+                SleepSwatCooldownSeconds = 9f, MosquitoFaceTarget = bedroom.MosquitoFaceTarget, MosquitoFacing = bedroom.MosquitoFacing,
+                // v0.3.0 r2 (director #2): flattened lids, closed-eye lines, smile, head turned toward the menu camera.
+                SleepFace = eyelids ? bedroom.SleepFace : null, SleepHeadBone = contract?.Rig?.Head,
+                SleepLeftEye = contract?.Rig?.LeftEye, SleepRightEye = contract?.Rig?.RightEye, SleepFaceToward = bedroom.CameraAnchor,
+                SleepEyeForward = contract?.Rig?.EyeForward ?? Vector3.up, SleepHeadForward = contract?.Rig?.HeadForward ?? Vector3.forward,
+                SleepHeadUp = contract?.Rig?.HeadUp ?? Vector3.up,
+                MosquitoPupils = mosquitoContract?.Rig != null ? new[] { mosquitoContract.Rig.LeftEye, mosquitoContract.Rig.RightEye } : null,
+                MosquitoPupilForward = mosquitoContract?.Rig?.EyeForward ?? Vector3.forward, MosquitoPupilScale = bedroom.MosquitoPupilScale,
+                MosquitoPupilSmoothness = bedroom.MosquitoPupilSmoothness,
+                FlightHoverTime = bedroom.FlightHoverTime, FlightHoverWobble = bedroom.FlightHoverWobble, FlightHoverRate = bedroom.FlightHoverRate
             });
             if (!configured) { Destroy(menuCharacters); menuCharacters = null; livingMenu = null; return; }
             livingMenu.SetReducedMotion(settings.ReduceMenuMotion);

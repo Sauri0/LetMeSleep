@@ -3,8 +3,8 @@
   "project": "Let me sleep",
   "generator": "art_source/unity/environments/v030_props/build_props.py",
   "sources": {
-    "build_props.py": "0dffbca0fde6fd7aaaa335cb24c03e2ac100ea725cbd68eb5e89b692ad34de1c",
-    "props_catalog.py": "6d4eed21b3df92a8dd8e3883a9ed3beb3fc9eac7267496332b449053a7624db1",
+    "build_props.py": "47b1d5b11050731e770e29c3b5cf358c1bca78c71d3fc377f403a4948a9c9f9a",
+    "props_catalog.py": "756d5d89359f9d5375075471d8bd039e43c197f7248a68e2d5a2b62991a5781f",
     "props_lib.py": "c362e1040b3678ef2e7e6e08b39b15e01259d855696efd7d4d0d694dbb5982cd"
   },
   "blender": "5.2.1 LTS",
@@ -53,7 +53,7 @@
   "rules": [
     "Let me sleep (nunca Bite & Build)",
     "sin armas",
-    "sin texto en carteles",
+    "texto en carteles sólo en castellano y tallado (director v0.3.0: LAGO/CABAÑA, NO MOLESTAR, SILENCIO)",
     "low-poly facetado, color plano",
     "sin colliders",
     "un FBX por prop",
@@ -2814,7 +2814,7 @@
       "name": "Window",
       "asset": "Prop_Window",
       "fbx": "Prop_Window.fbx",
-      "fbx_sha256": "3bac8f4469756a273ebf26c12ea77a53d041d644955dc440939ad076c071bfb4",
+      "fbx_sha256": "72ca0827c92eaeffd5572fb1861eb8771fdea45975b41a96f37d50c55d3e784e",
       "display_name_es": "Ventana con parteluces",
       "category": "bedroom",
       "mount": "wall",
@@ -2887,7 +2887,7 @@
             0.1441
           ],
           "emissive": true,
-          "emission_strength": 1.0,
+          "emission_strength": 0.45,
           "roughness": 0.9,
           "metallic": 0.0
         },
@@ -2910,14 +2910,14 @@
           "slot": 5,
           "name": "Prop_Window_HillFar_Emissive",
           "part": "HillFar",
-          "color_srgb": "#2A4A7C",
+          "color_srgb": "#2A3F7A",
           "base_color_linear": [
             0.0232,
-            0.0685,
-            0.2016
+            0.0497,
+            0.1946
           ],
           "emissive": true,
-          "emission_strength": 1.0,
+          "emission_strength": 0.45,
           "roughness": 0.9,
           "metallic": 0.0
         },
@@ -2925,19 +2925,19 @@
           "slot": 6,
           "name": "Prop_Window_HillNear_Emissive",
           "part": "HillNear",
-          "color_srgb": "#1E4A45",
+          "color_srgb": "#1E3560",
           "base_color_linear": [
             0.013,
-            0.0685,
-            0.0595
+            0.0356,
+            0.117
           ],
           "emissive": true,
-          "emission_strength": 1.0,
+          "emission_strength": 0.45,
           "roughness": 0.9,
           "metallic": 0.0
         }
       ],
-      "notes": "Ventana de pared (PRP-02 / UI-06), 0,095 m de profundidad total, con vista nocturna detrás de los parteluces: cielo #1A2A6A, colinas, pinos, estrellas y luna. Los paños de vista son emisivos (Emission 1) para conservar su color con la sala a oscuras; se pueden reemplazar por un fondo real. Dorso en +Y contra la pared; base = alféizar.",
+      "notes": "Ventana de pared (PRP-02 / UI-06), 0,095 m de profundidad total, con vista nocturna detrás de los parteluces: cielo #1A2A6A, colinas #2A3F7A / #1E3560, pinos, estrellas y luna. Los paños de vista son emisivos (Emission 0,45) para conservar su color con la sala a oscuras; se pueden reemplazar por un fondo real. Dorso en +Y contra la pared; base = alféizar.",
       "preview": {
         "elev": 6,
         "yaw": 18
@@ -5514,12 +5514,874 @@
         "identity_transform": true
       },
       "passed": true
+    },
+    {
+      "name": "WoodChair",
+      "asset": "Prop_WoodChair",
+      "fbx": "Prop_WoodChair.fbx",
+      "fbx_sha256": "1058e5317399a186b4f8ad6e3b5f84c4306d374fdfdcf3deed588594ae9084e7",
+      "display_name_es": "Silla de madera",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.4613,
+        "y": 0.503,
+        "z": 0.9704
+      },
+      "unity_size_m": {
+        "x": 0.4613,
+        "y": 0.9704,
+        "z": 0.503
+      },
+      "triangles": 616,
+      "vertices": 336,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_WoodChair_Frame",
+          "part": "Frame",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_WoodChair_Seat",
+          "part": "Seat",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_WoodChair_Slat",
+          "part": "Slat",
+          "color_srgb": "#C8955A",
+          "base_color_linear": [
+            0.5776,
+            0.3005,
+            0.1022
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Silla de la sala de espera (UI-06 pantalla 3): asiento de tablas, respaldo con tres listones. El frente (quien se sienta mira hacia allí) es -Y.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "WoodTable",
+      "asset": "Prop_WoodTable",
+      "fbx": "Prop_WoodTable.fbx",
+      "fbx_sha256": "fca3567bfa4a56e1060463f7f8d43f4818dd5c0ed33cf994abf16d6e1a68efed",
+      "display_name_es": "Mesa de madera",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.6007,
+        "y": 0.8967,
+        "z": 0.76
+      },
+      "unity_size_m": {
+        "x": 1.6007,
+        "y": 0.76,
+        "z": 0.8967
+      },
+      "triangles": 528,
+      "vertices": 288,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_WoodTable_Top",
+          "part": "Top",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_WoodTable_Leg",
+          "part": "Leg",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_WoodTable_Apron",
+          "part": "Apron",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Mesa de la sala (UI-06 pantalla 3): tablero de cuatro tablas con juntas, patas gruesas y faldón. 1,6 x 0,9 m, 0,76 m de alto; el farol va arriba (anchor \"top\").",
+      "preview": {
+        "elev": 25
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "top": {
+          "blender_m": [
+            0.0,
+            0.0008,
+            0.76
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.76,
+            -0.0008
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Centro del tablero (para el farol, tazas, mapa)."
+        }
+      }
+    },
+    {
+      "name": "ParkBench",
+      "asset": "Prop_ParkBench",
+      "fbx": "Prop_ParkBench.fbx",
+      "fbx_sha256": "081bf6c526991cc2b80c3ae0274900f132109294d71ebb4234fb64d41ecec425",
+      "display_name_es": "Banco de jardín",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.6006,
+        "y": 0.585,
+        "z": 0.9174
+      },
+      "unity_size_m": {
+        "x": 1.6006,
+        "y": 0.9174,
+        "z": 0.585
+      },
+      "triangles": 708,
+      "vertices": 392,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_ParkBench_Plank",
+          "part": "Plank",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_ParkBench_Frame",
+          "part": "Frame",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_ParkBench_Bolt",
+          "part": "Bolt",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Banco con respaldo y apoyabrazos (ENV-05, junto al porche): tablas claras sobre patas oscuras. Quien se sienta mira hacia -Y.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "Bicycle",
+      "asset": "Prop_Bicycle",
+      "fbx": "Prop_Bicycle.fbx",
+      "fbx_sha256": "9eed7ee217ef53e3a896cb5bd464fa4b6e2c1ac3671f65ad53d9dc9a92ebfdd2",
+      "display_name_es": "Bicicleta",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.7,
+        "y": 0.5803,
+        "z": 0.9743
+      },
+      "unity_size_m": {
+        "x": 1.7,
+        "y": 0.9743,
+        "z": 0.5803
+      },
+      "triangles": 1200,
+      "vertices": 664,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_Bicycle_Frame",
+          "part": "Frame",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_Bicycle_Tire",
+          "part": "Tire",
+          "color_srgb": "#1E1E24",
+          "base_color_linear": [
+            0.013,
+            0.013,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_Bicycle_Rim",
+          "part": "Rim",
+          "color_srgb": "#A3A9B3",
+          "base_color_linear": [
+            0.3663,
+            0.3968,
+            0.4508
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.4,
+          "metallic": 0.5
+        },
+        {
+          "slot": 3,
+          "name": "Prop_Bicycle_Seat",
+          "part": "Seat",
+          "color_srgb": "#2A2420",
+          "base_color_linear": [
+            0.0232,
+            0.0176,
+            0.0144
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_Bicycle_Metal",
+          "part": "Metal",
+          "color_srgb": "#3A3D46",
+          "base_color_linear": [
+            0.0423,
+            0.0467,
+            0.0612
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.4
+        }
+      ],
+      "notes": "Bicicleta roja apoyada en su pata (ENV-05 junto al cartel): cuadro #C8322E, cubiertas negras, llantas metálicas, asiento y puños negros. Eje largo en X; inclinada 7 grados hacia la pata (lado -Y).",
+      "preview": {
+        "elev": 12,
+        "yaw": 30
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "SignCarvedBoard",
+      "asset": "Prop_SignCarvedBoard",
+      "fbx": "Prop_SignCarvedBoard.fbx",
+      "fbx_sha256": "3375b8e4913113b89b7051258c0c57bedb3d2fa1d1d951053925ab9a16598cb5",
+      "display_name_es": "Cartel tallado \"NO MOLESTAR\"",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.4657,
+        "y": 0.193,
+        "z": 1.36
+      },
+      "unity_size_m": {
+        "x": 1.4657,
+        "y": 1.36,
+        "z": 0.193
+      },
+      "triangles": 631,
+      "vertices": 535,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_SignCarvedBoard_Post",
+          "part": "Post",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_SignCarvedBoard_Board",
+          "part": "Board",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_SignCarvedBoard_Ink",
+          "part": "Ink",
+          "color_srgb": "#3A2412",
+          "base_color_linear": [
+            0.0423,
+            0.0176,
+            0.006
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_SignCarvedBoard_Nail",
+          "part": "Nail",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Cartel grande de jardín sobre dos postes (ENV-05, a la derecha): dos tablas con las letras talladas \"NO MOLESTAR\" y \"Zzz\". Texto en castellano (Let me sleep); letras más oscuras que la madera.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "SignCarvedArrows",
+      "asset": "Prop_SignCarvedArrows",
+      "fbx": "Prop_SignCarvedArrows.fbx",
+      "fbx_sha256": "e971d89e15be6acccb45e2735bc599efb4fd8cc991974ae396ccbc7bdbdb4826",
+      "display_name_es": "Cartel tallado con flechas",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.2209,
+        "y": 0.218,
+        "z": 1.82
+      },
+      "unity_size_m": {
+        "x": 1.2209,
+        "y": 1.82,
+        "z": 0.218
+      },
+      "triangles": 706,
+      "vertices": 655,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_SignCarvedArrows_Post",
+          "part": "Post",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_SignCarvedArrows_Board",
+          "part": "Board",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_SignCarvedArrows_Ink",
+          "part": "Ink",
+          "color_srgb": "#3A2412",
+          "base_color_linear": [
+            0.0423,
+            0.0176,
+            0.006
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_SignCarvedArrows_Nail",
+          "part": "Nail",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Poste con dos tablas en flecha (ENV-05, a la izquierda) con letras talladas \"SILENCIO\" y \"ZONA DE SIESTA\". Texto en castellano; letras más oscuras que la madera.",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "SignpostLake",
+      "asset": "Prop_SignpostLake",
+      "fbx": "Prop_SignpostLake.fbx",
+      "fbx_sha256": "5fcc428145b060f970c6dca728ba2b9b60658a03c0ab788bfa8346f16e2a6f16",
+      "display_name_es": "Cartel \"LAGO / CABAÑA\"",
+      "category": "exterior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 1.0104,
+        "y": 0.218,
+        "z": 1.92
+      },
+      "unity_size_m": {
+        "x": 1.0104,
+        "y": 1.92,
+        "z": 0.218
+      },
+      "triangles": 528,
+      "vertices": 435,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_SignpostLake_Post",
+          "part": "Post",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_SignpostLake_Board",
+          "part": "Board",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_SignpostLake_Ink",
+          "part": "Ink",
+          "color_srgb": "#3A2412",
+          "base_color_linear": [
+            0.0423,
+            0.0176,
+            0.006
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_SignpostLake_Nail",
+          "part": "Nail",
+          "color_srgb": "#2B2D33",
+          "base_color_linear": [
+            0.0242,
+            0.0262,
+            0.0331
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Cartel de la Isla (ENV-04 01 \"Forest path\"): poste derecho con dos tablas en flecha hacia la derecha (vista de frente) talladas \"LAGO ↑\" y \"CABAÑA →\" (flechas como geometría). Tablas sin inclinación; el frente mira a -Y (Blender) / +Z (Unity).",
+      "preview": {},
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
+    },
+    {
+      "name": "WallShelf",
+      "asset": "Prop_WallShelf",
+      "fbx": "Prop_WallShelf.fbx",
+      "fbx_sha256": "b0b0923f1b88ecaf2685ed681fee21dd35fcd0065278f43f9017175e949a1255",
+      "display_name_es": "Estante de pared",
+      "category": "kitchen",
+      "mount": "wall",
+      "dimensions_m": {
+        "x": 0.9,
+        "y": 0.22,
+        "z": 0.4875
+      },
+      "unity_size_m": {
+        "x": 0.9,
+        "y": 0.4875,
+        "z": 0.22
+      },
+      "triangles": 540,
+      "vertices": 346,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_WallShelf_Board",
+          "part": "Board",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_WallShelf_Bracket",
+          "part": "Bracket",
+          "color_srgb": "#6E4424",
+          "base_color_linear": [
+            0.1559,
+            0.0578,
+            0.0176
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_WallShelf_Jar",
+          "part": "Jar",
+          "color_srgb": "#8FB8C8",
+          "base_color_linear": [
+            0.2747,
+            0.4793,
+            0.5776
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.35,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_WallShelf_Lid",
+          "part": "Lid",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.5,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_WallShelf_Pot",
+          "part": "Pot",
+          "color_srgb": "#C4683A",
+          "base_color_linear": [
+            0.552,
+            0.1384,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_WallShelf_Leaf",
+          "part": "Leaf",
+          "color_srgb": "#3E8E3A",
+          "base_color_linear": [
+            0.0482,
+            0.2705,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_WallShelf_BookRed",
+          "part": "BookRed",
+          "color_srgb": "#C8322E",
+          "base_color_linear": [
+            0.5776,
+            0.0319,
+            0.0273
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 7,
+          "name": "Prop_WallShelf_BookBlue",
+          "part": "BookBlue",
+          "color_srgb": "#4F78C4",
+          "base_color_linear": [
+            0.0782,
+            0.1878,
+            0.552
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 8,
+          "name": "Prop_WallShelf_BookCream",
+          "part": "BookCream",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Estante de pared sobre dos ménsulas (ENV-03 cocina/dormitorio): frascos, una maceta chica y libros. El dorso queda en +Y contra la pared.",
+      "preview": {
+        "elev": 12,
+        "yaw": 20
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
     }
   ],
   "totals": {
-    "props": 42,
-    "triangles": 24204,
-    "materials": 217,
+    "props": 50,
+    "triangles": 29661,
+    "materials": 252,
     "emissive_props": [
       "HandLantern",
       "TableLamp",
@@ -5532,7 +6394,16 @@
   "passed": true,
   "partial_merges": [
     "BedSleeper",
-    "RugStripedRedBlue"
+    "Bicycle",
+    "ParkBench",
+    "RugStripedRedBlue",
+    "SignCarvedArrows",
+    "SignCarvedBoard",
+    "SignpostLake",
+    "WallShelf",
+    "Window",
+    "WoodChair",
+    "WoodTable"
   ],
   "blend_note": "v030_props.blend holds the props of the last full build; props listed in partial_merges were built with --only and merged by merge_partial.py (their source is props_catalog.py)."
 }

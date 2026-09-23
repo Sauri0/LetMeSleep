@@ -27,6 +27,9 @@ namespace LetMeSleep.Presentation
         private static readonly Color LobbyStringFillColor = new Color(1f, 0.66f, 0.36f);
         public const string BulbHaloName = "Higgsfield_BulbHalo";
         private const float LobbyBulbHaloSize = 0.25f;
+        public static readonly Color LobbyAmbientSky = new Color(0.48f, 0.50f, 0.62f);
+        public static readonly Color LobbyAmbientEquator = new Color(0.60f, 0.61f, 0.72f);
+        public static readonly Color LobbyAmbientGround = new Color(0.42f, 0.40f, 0.44f);
         private static readonly Color LobbyBulbHaloColor = new Color(1f, 0.78f, 0.45f, 0.3f);
 
         [SerializeField] private AlfaPresentationPreset preset = null;
@@ -358,15 +361,17 @@ namespace LetMeSleep.Presentation
         private static void ApplyAmbientProfile(bool house)
         {
             RenderSettings.ambientMode = AmbientMode.Trilight;
+            // v0.3.0 scenes r2 (director #1/#2): the menu bedroom and the sala read navy (#2A3560) in shadow, not near black:
+            // a brighter cool night ambient under the warm lamps.
             RenderSettings.ambientSkyColor = house
                 ? new Color(0.30f, 0.36f, 0.48f)
-                : new Color(0.09f, 0.13f, 0.30f);
+                : LobbyAmbientSky;
             RenderSettings.ambientEquatorColor = house
                 ? new Color(0.22f, 0.23f, 0.30f)
-                : new Color(0.07f, 0.10f, 0.25f);
+                : LobbyAmbientEquator;
             RenderSettings.ambientGroundColor = house
                 ? new Color(0.15f, 0.14f, 0.19f)
-                : new Color(0.04f, 0.045f, 0.08f);
+                : LobbyAmbientGround;
             RenderSettings.ambientIntensity = house ? 1f : 1.08f;
             RenderSettings.reflectionIntensity = house ? 0.42f : 0.52f;
             RenderSettings.subtractiveShadowColor = new Color(0.018f, 0.025f, 0.045f);

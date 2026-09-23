@@ -21,6 +21,10 @@ namespace LetMeSleep.Presentation
         [SerializeField, Min(0f)] private float collisionPadding = 0.015f;
         [SerializeField, Min(0f)] private float outwardDampingSeconds = 0.08f;
         [SerializeField, Min(0f)] private float rotationDampingSeconds = 0.05f;
+        // v0.3.0 scenes r2 (director #9, UI-06 7b): third-person framing. The body sits right of and below the crosshair
+        // (viewport x .6, y .3 from the bottom = image x .6, y .7) instead of covering it; the offset scales with the
+        // orbit distance and vanishes in first person. (0.5, 0.5) restores the centred orbit.
+        [SerializeField] private Vector2 bodyViewport = new Vector2(0.6f, 0.3f);
 
         private struct RenderState { public Renderer Renderer; public bool ForceOff; }
         private struct BodyPart { public Transform Bone; public Bounds Bounds; }
@@ -48,6 +52,8 @@ namespace LetMeSleep.Presentation
         private bool initialized;
 
         public float DesiredDistance => desiredDistance;
+        public Vector2 BodyViewport { get => bodyViewport; set => bodyViewport = new Vector2(Mathf.Clamp(value.x, .2f, .8f), Mathf.Clamp(value.y, .2f, .8f)); }
+        public Vector3 FramingOffset { get; private set; }
         public float ResolvedDistance => smoothedDistance;
 
         private void Awake()
@@ -87,6 +93,14 @@ namespace LetMeSleep.Presentation
             float maximum = preset != null ? preset.MosquitoMaximumDistance : 2.5f;
             float requested = Mathf.Clamp(desiredDistance, 0f, maximum);
             EffectiveRequestedDistance=requested;
+            // Sweep 1b: slide the orbit centre so the body lands at bodyViewport (collision-safe, like the pivot).
+            Vector3 basePivot = resolvedPivot;
+            Vector3 framing = FramingShift(requested) * (1f - firstPersonBlend);
+            if (framing.sqrMagnitude > 1e-8f)
+            {
+                Vector3 shifted = Sweep(resolvedPivot, resolvedPivot + framing, radius);
+                if (!IsBlocked(shifted, radius)) resolvedPivot = shifted;
+            }
             Vector3 desiredCamera = resolvedPivot - smoothedRotation * Vector3.forward * requested;
 
             // Sweep 2: resolved pivot to the requested camera position.
@@ -107,10 +121,30 @@ namespace LetMeSleep.Presentation
                     outwardDampingSeconds, Mathf.Infinity, Time.unscaledDeltaTime);
             }
 
-            cameraTransform.SetPositionAndRotation(
-                resolvedPivot - smoothedRotation * Vector3.forward * smoothedDistance,
-                smoothedRotation);
+            // The framing follows the resolved orbit: a wall that collapses the orbit also brings the body back to the
+            // centre, so a collapsed camera sits at the body (and hides it) instead of beside it.
+            float keep = requested > .001f ? Mathf.Clamp01(smoothedDistance / requested) : 0f;
+            Vector3 finalPivot = Vector3.Lerp(basePivot, resolvedPivot, keep);
+            Vector3 finalCamera = finalPivot - smoothedRotation * Vector3.forward * smoothedDistance;
+            if (keep < .999f && (finalPivot - resolvedPivot).sqrMagnitude > 1e-8f)
+            {
+                Vector3 swept = Sweep(finalPivot, finalCamera, radius);
+                finalCamera = IsBlocked(swept, radius) ? finalPivot : swept;
+            }
+            FramingOffset = finalPivot - basePivot;
+            cameraTransform.SetPositionAndRotation(finalCamera, smoothedRotation);
             UpdateLocalOcclusion();
+        }
+
+        /// <summary>Camera-space shift that puts the orbit target at <see cref="bodyViewport"/> for a given distance.</summary>
+        private Vector3 FramingShift(float distance)
+        {
+            if (distance <= .001f || !controlledCamera) return Vector3.zero;
+            float tanV = Mathf.Tan(controlledCamera.fieldOfView * .5f * Mathf.Deg2Rad);
+            float tanH = tanV * Mathf.Max(.1f, controlledCamera.aspect);
+            float right = -(bodyViewport.x - .5f) * 2f * distance * tanH;
+            float up = -(bodyViewport.y - .5f) * 2f * distance * tanV;
+            return smoothedRotation * new Vector3(right, up, 0f);
         }
 
         public void SetView(Quaternion authoritativeViewRotation, float requestedDistance)

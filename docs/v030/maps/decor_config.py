@@ -13,8 +13,20 @@ Density follows the sketches: flowers, bushes, ferns and rocks along paths; lant
 buildings; rugs, pans, shelves, pots and paintings inside houses and cabins; docks with a post lantern, rowboat,
 barrels, lily pads and reeds (Isla, Puerto); Camp with firewood, log benches and a signpost; the yacht with folding
 chairs and lanterns. Warm decor lights only on night maps, capped per map.
+
+Round 2 (art director's corrections):
+  #5 windows and doors are keep-outs for wall props (openingPattern, 0.15 m around the frame); Puerto cottages get wall
+     shelves away from the windows.
+  #6 fewer tiny flowers and more medium props: flower groups scaled to >= 0.4 m; Casa front lawn (ENV-05) with a garden
+     bench, a fire ring with three stumps, a red bicycle, two carved signs ("NO MOLESTAR", "SILENCIO / ZONA DE SIESTA")
+     and two crate stacks 4-10 m from the porch; Camp plaza edge broken by 12 fern/bush clumps 3-6 m from the fire and a
+     red toolbox, crate and lantern by the tent (ENV-04 campsite).
+  #7 Isla: the lake sign faces the beach arrival path, upright, carved "LAGO (up) / CABANA (right)"; the two barrels at
+     human-spawn-0 at 0.8 scale, off the dock axis and asymmetric; the cabin bedside lamp lit (#FFB347) and a wall
+     shelf, a second painting and a hanging plant inside.
 """
 import json
+import math
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -38,6 +50,10 @@ def halo(size=0.7, alpha=0.35):
 PATH_EDGE = {'FlowersWhite': 3, 'FlowersYellow': 2, 'Fern': 2, 'Mushrooms': 1.2, 'RockCluster': 1, 'Bush': 1.2}
 FOREST = {'Fern': 3, 'Mushrooms': 2, 'RockCluster': 1.2, 'TreeStump': 1, 'Bush': 1.5}
 MEADOW = {'FlowersWhite': 3, 'FlowersYellow': 3, 'Bush': 1.5, 'Fern': 1}
+# r2 (director #6): night maps read medium props, not tiny flowers; flower groups >= 0.4 m tall (white 0.34 m, yellow 0.56 m).
+NIGHT_EDGE = {'Fern': 3, 'Bush': 1.8, 'RockCluster': 1.2, 'Mushrooms': 0.8, 'FlowersWhite': 0.9, 'FlowersYellow': 1.0}
+NIGHT_MEADOW = {'Bush': 2, 'Fern': 1.5, 'RockCluster': 1, 'TreeStump': 0.6, 'FlowersYellow': 1.2, 'FlowersWhite': 0.8}
+FLOWER_SCALE = {'FlowersWhite': [1.25, 1.5], 'FlowersYellow': [0.8, 1.05]}
 
 
 def camp():
@@ -72,10 +88,20 @@ def camp():
         item('jetty-rowboat', 'Rowboat', (37.4, -22.5), 'Decor_Dock', mount='water', yaw=90, waterOffset=-0.14, search=1.2),
         item('jetty-barrel-a', 'Barrel', (38.2, -15.6), 'Decor_Dock', search=2.0),
         item('jetty-barrel-b', 'Barrel', (37.9, -14.6), 'Decor_Dock', search=1.0),
-    ]
+        # r2 (director #6, ENV-04 campsite): red toolbox, crate and a lantern on it next to the east tent.
+        item('tent-toolbox', 'Toolbox', (9.4, -5.9), 'Decor_Camp', faceAt=fire, search=1.2),
+        item('tent-crate', 'Crate', (8.9, -8.0), 'Decor_Buildings', yaw=12, search=1.2),
+        item('tent-crate-lantern', 'HandLantern', (8.9, -8.0), 'Decor_Camp', mount='on', on='tent-crate', search=0.2, halo=halo(0.55)),
+    ] + PLAZA_CLUMPS
     scatters = [
-        {'id': 'camp-path-edge', 'group': 'Decor_PathEdges', 'props': PATH_EDGE, 'min': [-40, -32], 'max': [30, 28], 'count': 85,
-         'near': 'path', 'nearMin': 0.9, 'nearMax': 2.0, 'minSpacing': 1.7, 'seed': 3},
+        # r2 (director #6): the octagonal clearing edge broken by fern and bush clumps 3-6 m from the fire.
+        # The routes keep the plaza inside clear, so the clumps land on the octagon edge (5.4-6.0 m); the explicit
+        # PLAZA_CLUMPS below add bushes and large ferns across the outline itself.
+        {'id': 'camp-plaza-edge', 'group': 'Decor_PlazaEdge', 'props': {'Fern': 3, 'Bush': 2, 'RockCluster': 0.5},
+         'center': [0.7, 0.2], 'radius': 6.0, 'radiusMin': 3.4, 'count': 12, 'minSpacing': 1.4, 'attempts': 900, 'seed': 53,
+         'scale': [0.9, 1.2]},
+        {'id': 'camp-path-edge', 'group': 'Decor_PathEdges', 'props': NIGHT_EDGE, 'propScale': FLOWER_SCALE,
+         'min': [-40, -32], 'max': [30, 28], 'count': 80, 'near': 'path', 'nearMin': 0.9, 'nearMax': 2.0, 'minSpacing': 1.7, 'seed': 3},
         {'id': 'camp-forest', 'group': 'Decor_Forest', 'props': FOREST, 'min': [-45, -38], 'max': [46, 36], 'count': 26,
          'minSpacing': 3.2, 'seed': 5},
         {'id': 'camp-lily', 'group': 'Decor_Dock', 'props': {'LilyPads': 1}, 'min': [28, -33], 'max': [44, -22], 'count': 7,
@@ -86,7 +112,8 @@ def camp():
     return {'mapId': 'hf-campamento-pinar-v2',
             'floorPattern': r'^(CAMP_Terrain_(Grass|Paths|Plaza)|CAMP_Jetty_(Plank|Shore)|CAMP_Hill_|CAMP_Washroom_Floor)',
             'pathPattern': r'^CAMP_Terrain_(Paths|Plaza)$', 'waterPattern': r'^Water_(Lake|Creek)$', 'waterY': -0.12,
-            'excludePattern': r'^(CAMP_Tent|CAMP_Shelter_Roof|CAMP_Pine)', 'maxLights': 4, 'items': items, 'scatters': scatters}
+            'excludePattern': r'^(CAMP_Tent|CAMP_Shelter_Roof|CAMP_Pine)', 'openingPattern': r'^CAMP_Washroom_(Door|Lintel)',
+            'maxLights': 4, 'items': items, 'scatters': scatters}
 
 
 def isla():
@@ -94,14 +121,16 @@ def isla():
         # Lake dock (ENV-04 "Lake & Dock"): post lantern at the end, rowboat alongside, barrels at the bank.
         item('lakedock-lamppost', 'DockLampPost', (0.95, -8.8), 'Decor_Dock', yaw=180, search=0.6),
         item('lakedock-rowboat', 'Rowboat', (2.9, -9.6), 'Decor_Dock', mount='water', yaw=8, waterOffset=-0.14, search=1.5),
-        item('lakedock-barrel-a', 'Barrel', (1.9, -15.0), 'Decor_Dock', search=1.4),
-        item('lakedock-barrel-b', 'Barrel', (-1.9, -15.2), 'Decor_Dock', search=1.4),
+        # r2 (director #7): smaller barrels, both off the dock axis seen from human-spawn-0, 2.2 m apart and asymmetric.
+        item('lakedock-barrel-a', 'Barrel', (2.6, -15.2), 'Decor_Dock', scale=[0.8], search=1.0),
+        item('lakedock-barrel-b', 'Barrel', (4.6, -15.7), 'Decor_Dock', scale=[0.8], search=0.8),
         # Arrival dock and beach.
         item('arrival-lamppost', 'DockLampPost', (1.2, -45.4), 'Decor_Dock', yaw=180, search=0.8),
         item('arrival-crate-a', 'Crate', (2.4, -34.2), 'Decor_Dock', yaw=15, search=1.4),
         item('arrival-crate-b', 'Crate', (2.5, -34.2), 'Decor_Dock', mount='on', on='arrival-crate-a', yaw=40, search=0.2),
         item('arrival-barrel', 'Barrel', (-2.6, -34.6), 'Decor_Dock', search=1.4),
-        item('arrival-signpost', 'Signpost', (3.2, -21.2), 'Decor_PathEdges', yaw=200, search=1.6),
+        # r2 (director #7): upright carved sign facing the arrival along the beach path: LAGO ahead, CABANA to the right.
+        item('arrival-signpost', 'SignpostLake', (3.2, -21.2), 'Decor_PathEdges', faceAt=[3.2, -40.0], search=1.0),
         # Cabin (buildings): barrel, crates, potted plants, mailbox by the access path.
         item('cabin-mailbox', 'Mailbox', (21.4, -4.2), 'Decor_Buildings', yaw=90, search=1.6),
         item('cabin-crate', 'Crate', (34.9, 2.5), 'Decor_Buildings', yaw=20, search=1.4),
@@ -113,6 +142,12 @@ def isla():
         item('cabin-pans', 'HangingPans', (30.7, 3.3, -0.15), 'Decor_Interior', mount='wall', height=1.6, search=0.6),
         item('cabin-plant-in', 'PottedPlant', (33.34, 3.3, 3.87), 'Decor_Interior', search=0.5),
         item('cabin-chest', 'Chest', (25.56, 3.3, 5.08), 'Decor_Interior', yaw=127, search=0.5),
+        # r2 (director #7): bedside lamp switched on (its shade glows via the atmosphere config) and 2-3 wall/shelf objects.
+        item('cabin-lamp-light', 'Light', (29.3, 4.55, 6.32), 'Decor_Interior',
+             light={'color': WARM, 'intensity': 1.2, 'range': 3.5, 'flicker': 0.0}, halo={'color': WARM, 'size': 0.45, 'alpha': 0.3}),
+        item('cabin-shelf', 'WallShelf', (31.2, 3.3, 1.6), 'Decor_Interior', mount='wall', height=1.45, search=1.2),
+        item('cabin-painting-b', 'PaintingLandscape', (26.4, 3.3, 5.2), 'Decor_Interior', mount='wall', height=1.5, search=1.2),
+        item('cabin-plant-shelf', 'PottedPlant', (26.2, 3.3, 3.4), 'Decor_Interior', scale=[0.75], search=0.8),
         # Picnic area: a ball on the grass, a folding chair, a lantern and mugs already on the table.
         item('picnic-ball', 'SoccerBall', (19.6, -20.6), 'Decor_Picnic', search=1.5),
         item('picnic-chair', 'FoldingChair', (26.8, -24.9), 'Decor_Picnic', faceAt=[23, -23], search=1.2),
@@ -129,8 +164,26 @@ def isla():
     return {'mapId': 'hf-isla-del-laguito-v2',
             'floorPattern': r'^(Terrain_Island|Terrain_Banks_Submerged|Path_|Dock_|Cabin_Floor|Lookout_Terrace|Beach_)',
             'pathPattern': r'^Path_', 'waterPattern': r'^Water_Lake$', 'waterY': 1.0,
-            'excludePattern': r'^(Coast_Boulder|Pine_Tree|Shrub|Grove_Rock|Cabin_Roof|Lake_Shore_Rock)', 'maxLights': 0,
+            'excludePattern': r'^(Coast_Boulder|Pine_Tree|Shrub|Grove_Rock|Cabin_Roof|Lake_Shore_Rock)', 'maxLights': 1,
+            'openingPattern': r'^Cabin_Door_Open', 'openingHitPattern': r'^(Cabin_Door_Open|Cabin_Structural_and_Window_Frames)',
             'items': items, 'scatters': scatters}
+
+
+# r2-full2 review (director #6): bushes and big fern clumps straddling the octagonal plaza outline (~5.2 m from the fire)
+# between the radiating paths, so the clearing edge stops reading as a polygon. Rejected spots (routes) are skipped.
+PLAZA_CLUMP_PROPS = [('Bush', 1.15), ('Fern', 1.6), ('Bush', 1.0), ('RockCluster', 1.1), ('Bush', 1.2), ('Fern', 1.5),
+                     ('Bush', 1.05), ('Fern', 1.7), ('Bush', 1.1), ('Fern', 1.5)]
+PLAZA_CLUMPS = [item('plaza-clump-%02d' % i, prop, (round(0.7 + 5.5 * math.cos(math.radians(18 + 36 * i)), 2),
+                                                   round(0.2 + 5.5 * math.sin(math.radians(18 + 36 * i)), 2)),
+                     'Decor_PlazaEdge', scale=[scale], yaw=(47 * i) % 360, search=1.4)
+                for i, (prop, scale) in enumerate(PLAZA_CLUMP_PROPS)]
+
+LAWN_FIRE = (-8.6, -14.4)
+
+
+def ring(center, radius, degrees):
+    a = math.radians(degrees)
+    return (round(center[0] + radius * math.cos(a), 3), round(center[1] + radius * math.sin(a), 3))
 
 
 def casa():
@@ -148,7 +201,7 @@ def casa():
         item('woodpile-crate', 'Crate', (8.9, 8.9), 'Decor_Buildings', yaw=5, search=1.2),
         # Ground floor (ENV-03): striped rug in the hall, pans on the kitchen wall, plant and painting in the living room.
         item('hall-rug', 'RugRedStriped', (0.4, 0.3, -3.2), 'Decor_Interior', yaw=90, scale=[0.8], search=0.6),
-        item('kitchen-pans', 'HangingPans', (5.2, 0.3, -1.0), 'Decor_Interior', mount='wall', dir=[1, 0], height=1.75, search=0.8),
+        item('kitchen-pans', 'HangingPans', (5.2, 0.3, -2.3), 'Decor_Interior', mount='wall', dir=[1, 0], height=1.75, search=1.0),
         item('kitchen-plant', 'PottedPlant', (3.0, 0.3, -4.2), 'Decor_Interior', search=0.8),
         item('living-plant', 'PottedPlant', (-2.1, 0.3, 4.2), 'Decor_Interior', search=0.8),
         item('living-painting', 'PaintingLandscape', (-6.2, 0.3, -0.9), 'Decor_Interior', mount='wall', dir=[-1, 0], height=1.45, search=0.5),
@@ -166,16 +219,31 @@ def casa():
         item('porch-lantern-r', 'HandLantern', (2.4, 0.2, -5.6), 'Decor_Garden', search=0.6, halo=halo(0.5, 0.3)),
         item('garden-bush-a', 'Bush', (-8.5, -9.5), 'Decor_Garden', search=1.5),
         item('garden-bush-b', 'Bush', (8.5, -9.5), 'Decor_Garden', search=1.5),
+        # r2 (director #6, ENV-05): the front lawn 4-10 m from the porch gets medium props that read at night.
+        item('lawn-firering', 'Campfire', LAWN_FIRE, 'Decor_Lawn', search=1.0, scale=[0.85],
+             light={'color': '#FF9A3C', 'intensity': 1.8, 'range': 5.0, 'flicker': 0.25}, halo=halo(0.9, 0.3)),
+        item('lawn-stump-a', 'TreeStump', ring(LAWN_FIRE, 1.45, 35), 'Decor_Lawn', faceAt=LAWN_FIRE, search=0.5, scale=[0.8]),
+        item('lawn-stump-b', 'TreeStump', ring(LAWN_FIRE, 1.45, 155), 'Decor_Lawn', faceAt=LAWN_FIRE, search=0.5, scale=[0.8]),
+        item('lawn-stump-c', 'TreeStump', ring(LAWN_FIRE, 1.45, 275), 'Decor_Lawn', faceAt=LAWN_FIRE, search=0.5, scale=[0.8]),
+        item('lawn-bench', 'ParkBench', (-4.6, -16.6), 'Decor_Lawn', faceAt=LAWN_FIRE, search=1.2),
+        item('lawn-sign-arrows', 'SignCarvedArrows', (-2.4, -17.2), 'Decor_Lawn', faceAt=[0.8, -24.0], search=1.0),
+        item('lawn-sign-board', 'SignCarvedBoard', (3.2, -16.0), 'Decor_Lawn', faceAt=[-1.0, -24.0], search=1.0),
+        item('lawn-bicycle', 'Bicycle', (6.2, -14.4), 'Decor_Lawn', yaw=-70, search=1.2),
+        item('lawn-crates-e', 'Crate', (8.8, -12.4), 'Decor_Lawn', yaw=8, search=1.2),
+        item('lawn-crates-e-top', 'Crate', (8.8, -12.4), 'Decor_Lawn', mount='on', on='lawn-crates-e', yaw=31, scale=[0.8], search=0.2),
+        item('lawn-crates-w', 'Crate', (-12.4, -12.8), 'Decor_Lawn', yaw=-12, search=1.2),
+        item('lawn-crates-w-top', 'Crate', (-12.4, -12.8), 'Decor_Lawn', mount='on', on='lawn-crates-w', yaw=14, scale=[0.85], search=0.2),
     ]
     scatters = [
-        {'id': 'casa-path-edge', 'group': 'Decor_PathEdges', 'props': {'FlowersWhite': 3, 'FlowersYellow': 3, 'Bush': 1, 'Fern': 1, 'RockCluster': 0.6},
-         'min': [-20, -19], 'max': [20, 18], 'count': 45, 'near': 'path', 'nearMin': 0.7, 'nearMax': 1.6, 'minSpacing': 1.5, 'seed': 29},
-        {'id': 'casa-garden', 'group': 'Decor_Garden', 'props': MEADOW, 'min': [-20, -19], 'max': [20, 18], 'count': 20,
-         'minSpacing': 3.0, 'seed': 31},
+        {'id': 'casa-path-edge', 'group': 'Decor_PathEdges', 'props': NIGHT_EDGE, 'propScale': FLOWER_SCALE,
+         'min': [-20, -19], 'max': [20, 18], 'count': 36, 'near': 'path', 'nearMin': 0.7, 'nearMax': 1.6, 'minSpacing': 1.6, 'seed': 29},
+        {'id': 'casa-garden', 'group': 'Decor_Garden', 'props': NIGHT_MEADOW, 'propScale': FLOWER_SCALE,
+         'min': [-20, -19], 'max': [20, 18], 'count': 22, 'minSpacing': 3.0, 'seed': 31},
     ]
     return {'mapId': 'hf-casa-del-patio-v1',
             'floorPattern': r'^(CASA_Terrain_Dry_Property|CASA_Path_|CASA_Floorboard_|CASA_Floor_|CASA_Porch_(Front|Rear)_(Board|Support)|CASA_Shed_Floor)',
             'pathPattern': r'^CASA_Path_', 'excludePattern': r'^(CASA_Roof|CASA_Pine|CASA_Shrub|CASA_GardenBed|CASA_Vegetable)',
+            'openingPattern': r'^CASA_(Opening_\d+|Door_\d+|Window_\d+|Curtain_)',
             'maxLights': 3, 'items': items, 'scatters': scatters}
 
 
@@ -202,10 +270,13 @@ def puerto():
         item('c1-plant-in', 'PottedPlant', (-11.6, 3.36, -0.2), 'Decor_Interior', search=0.8),
         item('c2-rug', 'RugRedStriped', (-11.0, 3.36, 12.8), 'Decor_Interior', yaw=90, scale=[0.8], search=0.6),
         item('c2-painting', 'PaintingLandscape', (-10.4, 3.36, 14.0), 'Decor_Interior', mount='wall', dir=[0, 1], height=1.45, search=0.8),
-        item('c2-shelf', 'Bookshelf', (-9.3, 3.36, 11.5), 'Decor_Interior', yaw=-90, search=0.8),
+        item('c2-shelf', 'Bookshelf', (-9.3, 3.36, 10.9), 'Decor_Interior', yaw=-90, search=0.5),  # r2: farther from the east window
         item('c3-rug', 'RugBlue', (3.0, 3.36, 15.9), 'Decor_Interior', yaw=90, search=0.6),
         item('c3-painting', 'PaintingLandscape', (3.6, 3.36, 17.0), 'Decor_Interior', mount='wall', dir=[0, 1], height=1.45, search=0.8),
         item('c3-plant-in', 'PottedPlant', (4.7, 3.36, 13.8), 'Decor_Interior', search=0.8),
+        # r2 (director #5): wall shelves where the map's book shelves crossed the back windows, clear of the frames.
+        item('c1-shelf', 'WallShelf', (-15.9, 3.36, 0.8), 'Decor_Interior', mount='wall', dir=[0, 1], height=1.3, search=0.8),
+        item('c3-shelf', 'WallShelf', (0.2, 3.36, 18.8), 'Decor_Interior', mount='wall', dir=[0, 1], height=1.3, search=0.8),
     ]
     scatters = [
         {'id': 'puerto-path-edge', 'group': 'Decor_PathEdges', 'props': PATH_EDGE, 'min': [-28, -16], 'max': [36, 30], 'count': 80,
@@ -220,7 +291,9 @@ def puerto():
     return {'mapId': 'hf-puerto-del-faro-v1',
             'floorPattern': r'^(Terrain_Playable|Path_|Plaza_|Cottage_\d+_Floorboards|BoatWorkshop_Floorboards|Pier_\d_GroupedDeckPlanks|Workshop_QuaysidePorch_Support|Footbridge_CamberedContinuousDeck)',
             'pathPattern': r'^(Path_|Plaza_)', 'waterPattern': r'^Water_Ocean_Pueblo$', 'waterY': 0.0,
-            'excludePattern': r'^(Rock_|Pine_|BackdropPine|Terrain_North)', 'maxLights': 3, 'items': items, 'scatters': scatters}
+            'excludePattern': r'^(Rock_|Pine_|BackdropPine|Terrain_North)',
+            'openingPattern': r'(Window(Frames|Panes)|OpenDoor|WindowPlanter|Lighthouse_(OpenDoor|DoorStoneJambs))',
+            'maxLights': 3, 'items': items, 'scatters': scatters}
 
 
 def yate():
@@ -244,7 +317,8 @@ def yate():
     ]
     return {'mapId': 'hf-yate-a-la-deriva-v3',
             'floorPattern': r'^(YATE_Teak_|YATE_LowerCabinFloor|YATE_MainDeck_Continuous)',
-            'pathPattern': r'^$', 'maxLights': 0, 'items': items, 'scatters': []}
+            'pathPattern': r'^$', 'openingPattern': r'^YATE_(Porthole_|Salon_Window_|.*Door)', 'maxLights': 0,
+            'items': items, 'scatters': []}
 
 
 def main():

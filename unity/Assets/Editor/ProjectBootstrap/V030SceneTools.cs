@@ -15,6 +15,8 @@ namespace LetMeSleep.Editor
     ///   decor  HiggsfieldDecorBuilder (per-map Decor prefabs + catalog Entry.Decor, validated) -v030DecorConfig &lt;json&gt;
     ///   menu   V030MenuSceneBuilder (bedroom menu set, lobby decor, AlfaApplication bindings)
     ///   plans  HiggsfieldDecorPlanner (JSON dumps and plan images, with decor when present)
+    ///   spawns HiggsfieldDecorBuilder.SpawnClearanceReport (free first view of every human spawn, decor included)
+    ///   atmosphere HiggsfieldAtmosphereCorrection (docs/v030/maps/atmosphere-v030.json or -higgsfieldAtmosphereConfig)
     /// </summary>
     public static class V030SceneTools
     {
@@ -35,6 +37,15 @@ namespace LetMeSleep.Editor
                         case "decor": HiggsfieldDecorBuilder.BuildFromConfig(output); break;
                         case "menu": V030MenuSceneBuilder.Build(output); break;
                         case "plans": HiggsfieldDecorPlanner.Dump(Path.Combine(output, "plans"), true); break;
+                        case "spawns": HiggsfieldDecorBuilder.SpawnClearanceReport(output); break;
+                        case "atmosphere":
+                        {
+                            string repository = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+                            string config = V030PropLibraryImporter.Argument("-higgsfieldAtmosphereConfig") ??
+                                Path.Combine(repository, "docs/v030/maps/atmosphere-v030.json");
+                            HiggsfieldAtmosphereCorrection.Apply(Path.GetFullPath(config));
+                            break;
+                        }
                         default: throw new ArgumentException("Unknown step " + step);
                     }
                     Debug.Log("LMS_V030_STEP_DONE " + step);

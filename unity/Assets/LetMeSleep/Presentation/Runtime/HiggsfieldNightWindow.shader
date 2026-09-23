@@ -122,6 +122,10 @@ Shader "LetMeSleep/Higgsfield/NightWindow"
                 return output;
             }
 
+            // v0.3.0 scenes r2 (director #5): the room side of a pane is decided by the wall plane that holds it, not by the
+            // eye being strictly inside the room box, so a viewer in a doorway or on the threshold sees the night outside
+            // through the far windows instead of the exterior "lit room" face. An outside viewer (beyond that wall, or off
+            // to the side of the room) still sees the warm lit window.
             bool SeenFromInside(float3 pane, float3 eye)
             {
                 if (_ForceNight > 0.5) return true;
@@ -131,8 +135,16 @@ Shader "LetMeSleep/Higgsfield/NightWindow"
                     if (i >= count) break;
                     float3 lo = _LMS_InteriorMin[i].xyz, hi = _LMS_InteriorMax[i].xyz;
                     bool paneNear = all(pane >= lo - _InteriorMargin) && all(pane <= hi + _InteriorMargin);
-                    bool eyeInside = all(eye >= lo) && all(eye <= hi);
-                    if (paneNear && eyeInside) return true;
+                    if (!paneNear) continue;
+                    float3 dLo = abs(pane - lo), dHi = abs(pane - hi);
+                    float3 d = min(dLo, dHi);
+                    float3 axis = d.x <= d.y && d.x <= d.z ? float3(1, 0, 0) : (d.y <= d.z ? float3(0, 1, 0) : float3(0, 0, 1));
+                    float e = dot(eye, axis), l = dot(lo, axis), h = dot(hi, axis);
+                    bool nearLow = dot(dLo, axis) <= dot(dHi, axis);
+                    bool roomSide = nearLow ? e >= l - 0.02 : e <= h + 0.02;
+                    float3 others = 1.0 - axis;
+                    bool beside = all((eye >= lo - 0.6) * others + axis > 0.5) && all((eye <= hi + 0.6) * others + axis > 0.5);
+                    if (roomSide && beside) return true;
                 }
                 return false;
             }

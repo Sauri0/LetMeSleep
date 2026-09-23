@@ -60,11 +60,22 @@ MonoBehaviour:
       SkyFillLightLayers: 0
     LocalLights: []
     SuppressLightPaths: []
-    RendererOverrides: []
+    RendererOverrides:
+    - Path: Environment/Cabin_Root/Interior_Bedside_Lamp
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 2100000, guid: e057cacc71f44554ead684469cc6f9e6, type: 2}
+      SwapTo: {fileID: 2100000, guid: 89165fa4fc6049647a0616f591b4710d, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     SpawnFacings:
     - Human: 1
       Index: 3
       YawDegrees: 180
+    - Human: 1
+      Index: 4
+      YawDegrees: 14
     Decor: {fileID: 6052659169120681741, guid: d079d33cf81c2fa45bf71f5718f3d94c, type: 3}
   - MapId: hf-casa-del-patio-v1
     DisplayName: Casa del patio
@@ -791,20 +802,20 @@ MonoBehaviour:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.58, b: 0.26, a: 1}
-        UnityIntensity: 1.1
-        Range: 5
+        UnityIntensity: 0.6
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0.3
-        LocalOffset: {x: 0, y: 0.05, z: 0.75}
+        LocalOffset: {x: 0, y: 0.6, z: 0.9}
         HaloSize: 0
         HaloOffset: {x: 0, y: 0, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
         HaloIntensity: 1
         FlameHeight: 1.2
-        FlameOffset: {x: -0.07, y: -0.4, z: -0.28}
+        FlameOffset: {x: -0.07, y: -0.95, z: -0.43}
         LightLayers: 0
         HaloDepthTolerance: 0
         BeamLength: 0
@@ -1261,11 +1272,14 @@ MonoBehaviour:
       ExtraSwaps: []
     SpawnFacings:
     - Human: 1
+      Index: 1
+      YawDegrees: 90
+    - Human: 1
       Index: 2
       YawDegrees: 202.5
     - Human: 1
       Index: 3
-      YawDegrees: 180
+      YawDegrees: 108
     Decor: {fileID: 5850038375857353931, guid: 3d17a80e3e4c23f47a85f2305e807e5d, type: 3}
   - MapId: hf-campamento-pinar-v2
     DisplayName: Campamento del pinar
@@ -4904,19 +4918,51 @@ MonoBehaviour:
       SwapTo: {fileID: 0}
       AddLightLayers: 16
       ExtraSwaps: []
+    - Path: Environment/Foam_Lake_01
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Foam_Lake_02
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Foam_Lake_03
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Foam_Lake_04
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
     SpawnFacings:
     - Human: 1
       Index: 0
       YawDegrees: 152
     - Human: 1
       Index: 1
-      YawDegrees: 126
+      YawDegrees: 146
     - Human: 1
       Index: 2
-      YawDegrees: 290
+      YawDegrees: 300
     - Human: 1
       Index: 3
-      YawDegrees: 100
+      YawDegrees: 62
     - Human: 1
       Index: 4
       YawDegrees: 242
@@ -6341,6 +6387,14 @@ MonoBehaviour:
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
       ExtraSwaps: []
+    - Path: Environment/Cottage_01_Shelf_Books
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_Side-1_SealedWall
       Hide: 0
       CastShadowsOff: 0
@@ -6453,6 +6507,14 @@ MonoBehaviour:
       SwapTo: {fileID: 2100000, guid: 64437815857d234489d6c96868dd928c, type: 2}
       AddLightLayers: 0
       ExtraSwaps: []
+    - Path: Environment/Cottage_02_Shelf_Books
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_Side-1_SealedWall
       Hide: 0
       CastShadowsOff: 0
@@ -6563,6 +6625,14 @@ MonoBehaviour:
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Shelf_Books
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
       AddLightLayers: 0
       ExtraSwaps: []
     - Path: Environment/Cottage_03_Side-1_SealedWall
@@ -6782,5 +6852,11 @@ MonoBehaviour:
     SpawnFacings:
     - Human: 1
       Index: 2
-      YawDegrees: 100
+      YawDegrees: 102
+    - Human: 1
+      Index: 3
+      YawDegrees: 276
+    - Human: 1
+      Index: 4
+      YawDegrees: 76
     Decor: {fileID: 7136378327366653657, guid: f32eb8937741d2844953f5136ed9fe33, type: 3}

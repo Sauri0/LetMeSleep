@@ -1,7 +1,7 @@
 """Render the v0.3 menu wordmark and its cartoon mosquito. Pillow only; no editor, network or GPU.
 
 UI-06 / art direction:
-- "LET ME" in a cream gradient #FFF1CC -> #F2C27A with "ME" at 75 %, "SLEEP" in #B8E8FF -> #6CC3F7.
+- "LET ME" in #FFC93C (gradient #FFD455 -> #FFBE26) with "ME" at 75 %, "SLEEP" in #49B2FF (#5EBDFF -> #36A6F6).
 - Upright, heavy, rounded letters: Barlow Bold (OFL, docs/unity/ui/tools/fonts) fattened with a round-joined
   stroke of its own colour, so every corner is rounded like Lilita One.
 - 9 px ink outline (#0B1426) and a solid 6 px downward extrusion, all measured at 1080p.
@@ -24,8 +24,10 @@ X = 2  # render scale against the 1080p layout
 
 INK = (11, 20, 38, 255)
 INK_EXTRUDE = (6, 11, 22, 255)
-CREAM = ((0xFF, 0xF1, 0xCC), (0xF2, 0xC2, 0x7A))
-SKY = ((0xB8, 0xE8, 0xFF), (0x6C, 0xC3, 0xF7))
+# v0.3.0 scenes r2 (director #10, GUIA-ESTILO accent.yellow / accent.blue): "LET ME" reads #FFC93C and "SLEEP" #49B2FF
+# (narrow gradients centred on the tokens; the soft top gloss stays), ink outline #0B1426.
+CREAM = ((0xFF, 0xD4, 0x55), (0xFF, 0xBE, 0x26))
+SKY = ((0x5E, 0xBD, 0xFF), (0x36, 0xA6, 0xF6))
 
 
 def meta(path, folder=False, max_size=2048):
