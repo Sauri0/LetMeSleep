@@ -36,18 +36,19 @@ namespace LetMeSleep.Presentation
         /// <summary>
         /// v0.3.0 review: every mood must read at a 64 px thumbnail, so each one differs from the others in
         /// at least two strong channels (lids, lid/brow tilt, pupil or eyeball size, squint, jaw, head pose).
-        /// The human cap hides lifted brows, so raised-brow moods use wide eyes and head pose instead.
+        /// The human cap hides lifted brows, so raised-brow moods use wide eyes and head pose instead; lowered brows
+        /// drag the upper lid skin, so angry/focused keep them within ~6 mm and rely on the V tilt.
         /// </summary>
         public static FacialMoodShape For(FacialMood mood)
         {
             switch (mood)
             {
                 case FacialMood.Happy: return new FacialMoodShape { Upper = .15f, Lower = .78f, Tilt = -12, Pupil = 1.12f, BrowLift = .002f, BrowTilt = -10, Jaw = 12, EyeSize = 1, Squint = .58f, HeadPitch = -3, HeadRoll = 9 };
-                case FacialMood.Angry: return new FacialMoodShape { Upper = .38f, Lower = .20f, Tilt = 32, Pupil = .78f, BrowLift = -.014f, BrowTilt = 34, Jaw = 0, EyeSize = .96f, Squint = .30f, HeadPitch = 9, HeadRoll = 0 };
+                case FacialMood.Angry: return new FacialMoodShape { Upper = .30f, Lower = .20f, Tilt = 32, Pupil = .78f, BrowLift = -.006f, BrowTilt = 34, Jaw = 0, EyeSize = .96f, Squint = .15f, HeadPitch = 9, HeadRoll = 0 };
                 case FacialMood.Alert: return new FacialMoodShape { Upper = .10f, Lower = .12f, Tilt = 8, Pupil = .60f, BrowLift = .002f, BrowTilt = -8, Jaw = 0, EyeSize = 1.12f, Squint = 0, HeadPitch = -6, HeadRoll = 0 };
                 case FacialMood.Sleepy: return new FacialMoodShape { Upper = .66f, Lower = .22f, Tilt = -14, Pupil = 1f, BrowLift = -.004f, BrowTilt = -10, Jaw = 2, EyeSize = 1, Squint = .08f, HeadPitch = 10, HeadRoll = 9 };
                 case FacialMood.Surprised: return new FacialMoodShape { Upper = 0, Lower = 0, Tilt = -12, Pupil = .45f, BrowLift = .004f, BrowTilt = -12, Jaw = 13, EyeSize = 1.16f, Squint = 0, HeadPitch = -13, HeadRoll = 0 };
-                case FacialMood.Focused: return new FacialMoodShape { Upper = .32f, Lower = .44f, Tilt = 12, Pupil = .74f, BrowLift = -.007f, BrowTilt = 14, Jaw = 0, EyeSize = .97f, Squint = .50f, HeadPitch = 5, HeadRoll = 0 };
+                case FacialMood.Focused: return new FacialMoodShape { Upper = .25f, Lower = .44f, Tilt = 12, Pupil = .74f, BrowLift = -.004f, BrowTilt = 14, Jaw = 0, EyeSize = .97f, Squint = .30f, HeadPitch = 5, HeadRoll = 0 };
                 case FacialMood.Dizzy: return new FacialMoodShape { Upper = .34f, Lower = .12f, Tilt = -6, Pupil = .95f, BrowLift = .002f, BrowTilt = -6, Jaw = 5, Dizzy = 1, EyeSize = 1, Squint = .1f, HeadPitch = 0, HeadRoll = 0 };
                 case FacialMood.Excited: return new FacialMoodShape { Upper = 0, Lower = .34f, Tilt = -8, Pupil = 1.34f, BrowLift = .004f, BrowTilt = -6, Jaw = 16, EyeSize = 1.05f, Squint = .18f, HeadPitch = -5, HeadRoll = -8 };
                 case FacialMood.Yawning: return new FacialMoodShape { Upper = .88f, Lower = .30f, Tilt = -6, Pupil = 1f, BrowLift = .003f, BrowTilt = -4, Jaw = 0, EyeSize = 1, Squint = 0, HeadPitch = -6, HeadRoll = 0 };

@@ -366,7 +366,7 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(Vector3.Distance(brow.position, browNeutral), Is.LessThan(.0005f), "The rig restores its own writes.");
             humanRig.SetMood(FacialMood.Angry);
             Settle(humanRig);
-            Assert.That(Vector3.Dot(brow.position - browNeutral, human.transform.up), Is.LessThan(-.006f), "Angry lowers the brows.");
+            Assert.That(Vector3.Dot(brow.position - browNeutral, human.transform.up), Is.LessThan(-.004f), "Angry lowers the brows.");
             humanRig.PrepareForAnimation();
             Assert.That(eye.localScale.x, Is.EqualTo(eye.localScale.y).Within(1e-4f), "The squint is restored.");
 
