@@ -5,11 +5,12 @@ Z up, front toward Blender -Y, base centred at the origin (Prop.build()
 re-centres the base anyway). Style references: PRP-01, PRP-02, ENV-01,
 ENV-03, ENV-04, ENV-05 and docs/v030/GUIA-ESTILO-BOCETOS.md. No weapons.
 """
+import copy
 import math
 from mathutils import Vector, Matrix
 from props_lib import (C, M, Prop, look_matrix, g_box, g_cyl, g_ico, g_hull, rock_points, boulder_points, g_loft,
                        g_prism, g_poly_rings, circle, g_blade, g_fan, g_revolve, g_sheet,
-                       g_solidify, merge_close)
+                       g_solidify, merge_close, g_bevel)
 
 REGISTRY = []
 
@@ -128,28 +129,29 @@ def crate():
     p.add('Core', g_box(c, c, c), M((0, 0, h)))
     for sx in (-1, 1):
         for sy in (-1, 1):
-            p.add('Frame', g_box(b, b, S, chamfer=0.01), M((sx * e, sy * e, h)))
+            p.add('Frame', g_box(b, b, S, chamfer=0.015), M((sx * e, sy * e, h)))
     for s1 in (-1, 1):
         for s2 in (-1, 1):
-            p.add('Frame', g_box(S - 2 * b + 0.002, b, b, chamfer=0.01), M((0, s1 * e, h + s2 * e)))
-            p.add('Frame', g_box(b, S - 2 * b + 0.002, b, chamfer=0.01), M((s1 * e, 0, h + s2 * e)))
-    t = 0.022
+            p.add('Frame', g_box(S - 2 * b + 0.002, b, b, chamfer=0.015), M((0, s1 * e, h + s2 * e)))
+            p.add('Frame', g_box(b, S - 2 * b + 0.002, b, chamfer=0.015), M((s1 * e, 0, h + s2 * e)))
+    t = 0.024
     off = c / 2 + t / 2
     W = S - 2 * b
     ph = (W - 0.02) / 3
     for k in range(3):
         d = (k - 1) * (ph + 0.01)
-        p.add('Plank', g_box(W, t, ph), M((0, -off, h + d)))
-        p.add('Plank', g_box(W, t, ph), M((0, off, h + d)))
-        p.add('Plank', g_box(t, W, ph), M((-off, 0, h + d)))
-        p.add('Plank', g_box(t, W, ph), M((off, 0, h + d)))
-        p.add('Plank', g_box(W, ph, t), M((0, d, h + off)))
+        # PRP-01 edge glints: every plank keeps a 1 cm one-segment chamfer
+        p.add('Plank', g_box(W, t, ph, chamfer=0.01), M((0, -off, h + d)))
+        p.add('Plank', g_box(W, t, ph, chamfer=0.01), M((0, off, h + d)))
+        p.add('Plank', g_box(t, W, ph, chamfer=0.01), M((-off, 0, h + d)))
+        p.add('Plank', g_box(t, W, ph, chamfer=0.01), M((off, 0, h + d)))
+        p.add('Plank', g_box(W, ph, t, chamfer=0.01), M((0, d, h + off)))
     dl = math.hypot(W, W) - 0.03
-    o2 = off + t / 2 + 0.009
-    p.add('Frame', g_box(dl, 0.018, 0.075), M((0, -o2, h), (0, 45, 0)))
-    p.add('Frame', g_box(dl, 0.018, 0.075), M((0, o2, h), (0, -45, 0)))
-    p.add('Frame', g_box(0.018, dl, 0.075), M((-o2, 0, h), (45, 0, 0)))
-    p.add('Frame', g_box(0.018, dl, 0.075), M((o2, 0, h), (-45, 0, 0)))
+    o2 = off + t / 2 + 0.011
+    p.add('Frame', g_box(dl, 0.022, 0.075, chamfer=0.009), M((0, -o2, h), (0, 45, 0)))
+    p.add('Frame', g_box(dl, 0.022, 0.075, chamfer=0.009), M((0, o2, h), (0, -45, 0)))
+    p.add('Frame', g_box(0.022, dl, 0.075, chamfer=0.009), M((-o2, 0, h), (45, 0, 0)))
+    p.add('Frame', g_box(0.022, dl, 0.075, chamfer=0.009), M((o2, 0, h), (-45, 0, 0)))
     return p
 
 
@@ -168,17 +170,17 @@ def chest():
     for k in range(3):
         z = 0.105 + k * 0.11
         for s in (-1, 1):
-            p.add('Wood', g_box(L - 0.08, 0.016, 0.1), M((0, s * (cd + 0.008), z)))
-            p.add('Wood', g_box(0.016, D - 0.08, 0.1), M((s * (cw + 0.008), 0, z)))
+            p.add('Wood', g_box(L - 0.08, 0.022, 0.1, chamfer=0.01), M((0, s * (cd + 0.011), z)))
+            p.add('Wood', g_box(0.022, D - 0.08, 0.1, chamfer=0.01), M((s * (cw + 0.011), 0, z)))
     for sx in (-1, 1):
         for sy in (-1, 1):
-            p.add('Iron', g_box(0.05, 0.05, 0.33), M((sx * (L / 2 - 0.025), sy * (D / 2 - 0.025), 0.215)))
+            p.add('Iron', g_box(0.05, 0.05, 0.33, chamfer=0.01), M((sx * (L / 2 - 0.025), sy * (D / 2 - 0.025), 0.215)))
     arc = [(D / 2 * math.cos(math.radians(a)), 0.2 * math.sin(math.radians(a))) for a in range(0, 181, 30)]
-    p.add('Lid', g_prism(arc, L - 0.02), at(TO_X, (0, 0, 0.388)))
+    p.add('Lid', g_bevel(g_prism(arc, L - 0.02), 0.015), at(TO_X, (0, 0, 0.388)))
     arc2 = [(0.285 * math.cos(math.radians(a)), 0.215 * math.sin(math.radians(a))) for a in range(0, 181, 30)]
     for sx in (-1, 1):
-        p.add('Iron', g_prism(arc2, 0.06), at(TO_X, (sx * 0.28, 0, 0.385)))
-        p.add('Iron', g_box(0.06, D + 0.012, 0.33), M((sx * 0.28, 0, 0.215)))
+        p.add('Iron', g_bevel(g_prism(arc2, 0.06), 0.01), at(TO_X, (sx * 0.28, 0, 0.385)))
+        p.add('Iron', g_box(0.06, D + 0.012, 0.33, chamfer=0.01), M((sx * 0.28, 0, 0.215)))
         p.add('Iron', g_box(0.025, 0.16, 0.03, chamfer=0.006), M((sx * (L / 2 + 0.012), 0, 0.3)))
     p.add('Lock', g_box(0.1, 0.03, 0.13, chamfer=0.006), M((0, -(D / 2 + 0.008), 0.38)))
     p.add('Iron', g_box(0.018, 0.01, 0.035), M((0, -(D / 2 + 0.026), 0.36)))
@@ -194,15 +196,17 @@ def barrel():
     p.mat('Hoop', C['metal_dark'], roughness=0.5, metallic=0.45)
     n = 14
     body = [(0.285, 0.0), (0.312, 0.12), (0.336, 0.3), (0.345, 0.475), (0.336, 0.65), (0.312, 0.83), (0.285, 0.95)]
-    prof = body + [(0.255, 0.95), (0.255, 0.925)]
+    # 1.5 cm chamfer on the bottom and top rims (PRP-01 barrel edge glints)
+    prof = [(0.268, 0.0), (0.287, 0.014)] + body[1:-1] + [(0.287, 0.935), (0.27, 0.95), (0.255, 0.95), (0.255, 0.925)]
+    nb = len(body) + 2                      # bands up to the top chamfer alternate staves
 
     def ids(i, j):
-        if i < len(body) - 1:
+        if i < nb - 1:
             return j % 2
-        return 0 if i == len(body) - 1 else 2
+        return 0 if i == nb - 1 else 2
     p.add({0: 'Stave', 1: 'StaveLight', 2: 'Lid'}, g_revolve(prof, n=n, ids_fn=ids))
     p.add('Lid', g_disc(0.255, n, 0.925, math.pi / n))
-    p.add('Stave', g_disc(0.285, n, 0.0, math.pi / n, up=False))
+    p.add('Stave', g_disc(0.268, n, 0.0, math.pi / n, up=False))
 
     def r_at(z):
         for (r0, z0), (r1, z1) in zip(body, body[1:]):
@@ -630,107 +634,177 @@ def soccer_ball():
 # bedroom / main-menu scene (UI-06: humano dormido, velador, reloj 03:27, ventana)
 # =============================================================================
 
+# UI-06 menu vignette recipe (Validation/V030/Props/vignette_menu.png), in bed-local Blender metres: bed pivot at
+# the origin, headboard toward +Y, Z up. build_props.py adds the derived positions and Unity-local copies; the
+# camera comes from render_props.py --search-menu-camera (head in the central third, nightstand + lamp + clock in
+# the right third and >= 35 % of the frame height, camera at pillow height 1.2 m from the headboard).
+MENU_LAYOUT = {
+    'reference': 'UI-06 panel 1 (menú principal): durmiente en el tercio central, mesa de luz con velador y reloj '
+                 'en el tercio derecho; el tercio izquierdo queda para el logo y los botones.',
+    'resolution': [1600, 900],
+    'wall_gap_m': 0.01,
+    'nightstand_gap_m': 0.16,
+    'wainscot_height_m': 1.55,
+    'colors_srgb': {'wall': '#2A3560', 'wainscot': '#8B5A2B', 'wainscot_trim': '#A86F3A', 'floor': '#5A3A24',
+                    'world': '#101830'},
+    'window': {'x_m': -1.6, 'sill_z_m': 0.98},
+    'moon': {'color_srgb': '#6A7BD0', 'strength': 2.0, 'direction': [0.45, 0.45, -0.77]},
+    'lamp': {'color_rgb_linear': [1.0, 0.8, 0.45], 'watts': 27.0, 'radius_m': 0.06},
+    'sleeper_fill': {'color_rgb_linear': [1.0, 0.72, 0.42], 'watts': 9.0, 'offset_from_head_m': [0.3, -0.35, 0.25]},
+    'world_strength': 0.35,
+    'glare_strength': 0.3,
+    'camera': {'location': [-0.5071, -0.0726, 0.92], 'look_at': [-0.1387, 0.7025, 0.78], 'lens_mm': 20,
+               'sensor_width_mm': 36.0, 'headboard_distance_m': 1.2, 'azimuth_deg': 25},
+}
+
+BED_W, BED_L = 0.86, 2.1          # single bed: 0.72 m mattress so the 0.62 m pillow covers 86 %
+PILLOW = (0.62, 0.40, 0.16)
+
+
+def g_cushion(size, sec=10, expo=2.8, stations=None):
+    """Rounded rectangular cushion along X: superellipse sections (sec regular facets around)
+    lofted through pinched ends. Convex, so faces are oriented against the centre."""
+    PW, PD, PH = size
+    if stations is None:
+        stations = [(-PW / 2, 0.84, 0.34), (-PW / 2 + 0.05, 0.96, 0.82), (-PW / 2 + 0.17, 1.0, 1.0),
+                    (PW / 2 - 0.17, 1.0, 1.0), (PW / 2 - 0.05, 0.96, 0.82), (PW / 2, 0.84, 0.34)]
+    e = 2.0 / expo
+    verts, faces = [], []
+    for x, sy, sz in stations:
+        for k in range(sec):
+            a = 2 * math.pi * k / sec
+            c, s_ = math.cos(a), math.sin(a)
+            verts.append((x, math.copysign(abs(c) ** e, c) * PD / 2 * sy, math.copysign(abs(s_) ** e, s_) * PH / 2 * sz))
+    for i in range(len(stations) - 1):
+        for k in range(sec):
+            a, b = i * sec + k, i * sec + (k + 1) % sec
+            faces.append((a, b, b + sec, a + sec))
+    last = (len(stations) - 1) * sec
+    faces.append(tuple(range(sec)))
+    faces.append(tuple(range(last, last + sec)))
+    out = []
+    for f in faces:
+        a, b, c = (Vector(verts[i]) for i in f[:3])
+        cen = sum((Vector(verts[i]) for i in f), Vector()) / len(f)
+        out.append(f if (b - a).cross(c - a).dot(cen) >= 0 else tuple(reversed(f)))
+    return verts, out
+
+
 @register
 def bed():
     p = Prop('Bed', 'Cama con acolchado rojo', 'bedroom', preview={'yaw': -38, 'elev': 28},
-             notes='Cama de madera de plaza y media (PRP-02 / ENV-03 / UI-06): cabecera en +Y, pie hacia -Y. '
-                   'Colchón a 0,55 m; el acolchado cubre desde el pie hasta el doblez de sábana. '
-                   'Anchor "sleeper_head": centro de la almohada para la cabeza del humano dormido.')
+             notes='Cama de madera de una plaza (PRP-02 / ENV-03 / UI-06): cabecera en +Y, pie hacia -Y. Colchón grueso '
+                   '(0,33-0,62 m) entre largueros laterales de 0,43 m; acolchado rojo con franja #8E2A2A cerca de los pies, '
+                   'cara superior a ~0,66 m (0,06 m sobre el larguero de la piecera, 0,60 m) que cae 0,08 m por los lados. '
+                   'Almohada: cojín rectangular redondeado 0,62 x 0,40 x 0,16 m (86 % del ancho del colchón, 10 facetas '
+                   'regulares). Anchor "sleeper_head": nuca del humano dormido; "menu_layout": receta de la viñeta UI-06 '
+                   '(cámara, mesa de luz y luces) en coordenadas de la cama.')
     p.mat('Wood', C['wood'])
     p.mat('WoodLight', C['wood_light'])
     p.mat('Mattress', '#E9E1D0', roughness=0.9)
     p.mat('Sheet', C['cream'], roughness=0.9)
     p.mat('Quilt', C['red'], roughness=0.9)
     p.mat('QuiltDark', C['red_dark'], roughness=0.9)
-    p.mat('Pillow', C['white'], roughness=0.9)
+    p.mat('QuiltBand', '#8E2A2A', roughness=0.9)
+    p.mat('Pillow', '#F2EEE6', roughness=0.9)
     rng = p.rng
-    W, L, post = 1.2, 2.14, 0.1
+    W, L, post = BED_W, BED_L, 0.1
     hx, hy = W / 2 - post / 2, L / 2 - post / 2
     w_in = W - 2 * post
+    rail_z0, rail_z1 = 0.25, 0.43            # side rails (largueros laterales)
+    foot_top = 0.60                          # top of the footboard rail (larguero de la piecera)
+    m_z0, m_z1 = 0.33, 0.62                  # thick mattress (0.29 m)
+    Wm, Lm = W - 0.14, L - 2 * post - 0.01   # 0.72 x 1.89
+    q_top = foot_top + 0.06                  # quilt top face 0.66
+    q_side = q_top - 0.08                    # quilt hem on the long sides 0.58
     for sx in (-1, 1):
-        p.add('Wood', g_box(post, post, 1.08, chamfer=0.012), M((sx * hx, hy, 0.54)))
-        p.add('WoodLight', g_box(post + 0.03, post + 0.03, 0.04, chamfer=0.008), M((sx * hx, hy, 1.1)))
-        p.add('Wood', g_box(post, post, 0.72, chamfer=0.012), M((sx * hx, -hy, 0.36)))
-        p.add('WoodLight', g_box(post + 0.03, post + 0.03, 0.04, chamfer=0.008), M((sx * hx, -hy, 0.74)))
-        p.add('Wood', g_box(0.06, L - 2 * post + 0.004, 0.18, chamfer=0.01), M((sx * (W / 2 - 0.03), 0, 0.3)))
-    # headboard: panel + arched top rail (PRP-02)
-    p.add('Wood', g_box(w_in, 0.05, 0.46), M((0, hy, 0.64)))
-    p.add('WoodLight', g_box(w_in, 0.07, 0.06), M((0, hy, 0.44)))
+        p.add('Wood', g_box(post, post, 1.1, chamfer=0.015), M((sx * hx, hy, 0.55)))
+        p.add('WoodLight', g_box(post + 0.03, post + 0.03, 0.04, chamfer=0.012), M((sx * hx, hy, 1.12)))
+        p.add('Wood', g_box(post, post, 0.76, chamfer=0.015), M((sx * hx, -hy, 0.38)))
+        p.add('WoodLight', g_box(post + 0.03, post + 0.03, 0.04, chamfer=0.012), M((sx * hx, -hy, 0.78)))
+        p.add('Wood', g_box(0.06, L - 2 * post + 0.004, rail_z1 - rail_z0, chamfer=0.015),
+              M((sx * (W / 2 - 0.03), 0, (rail_z0 + rail_z1) / 2)))
+    # headboard: panel + lower rail + arched top rail (PRP-02)
+    p.add('Wood', g_box(w_in, 0.05, 0.5, chamfer=0.012), M((0, hy, 0.69)))
+    p.add('WoodLight', g_box(w_in, 0.07, 0.06, chamfer=0.012), M((0, hy, 0.47)))
     xs = [w_in / 2 - w_in * i / 8 for i in range(9)]
-    arch = [(-w_in / 2, 0.86), (w_in / 2, 0.86)] + [(x, 0.95 + 0.08 * math.cos(math.pi * x / w_in)) for x in xs]
-    p.add('WoodLight', g_prism(arch, 0.08), front((0, hy, 0)))
-    # footboard
-    p.add('Wood', g_box(w_in, 0.05, 0.3), M((0, -hy, 0.44)))
-    p.add('WoodLight', g_box(w_in + 0.004, 0.08, 0.07, chamfer=0.01), M((0, -hy, 0.625)))
-    # mattress
-    Wm, Lm = W - 0.13, L - 2 * post - 0.01
-    p.add('Mattress', g_box(Wm, Lm, 0.22, chamfer=0.03), M((0, 0, 0.44)))
-    # quilt: faceted drape from the foot to a turned-down sheet fold
-    top = 0.555
-    y0 = -hy + 0.03                     # 5 mm in front of the footboard panel (inner face at -hy + 0.025)
-    y1 = -Lm / 2 + 0.01                 # crest just inside the mattress end (the drape clears the chamfer)
-    y_fold = L / 2 - post - 0.66
-    ys = [y0, y1] + [y1 + (y_fold - 0.16 - y1) * k / 6 for k in range(1, 7)] +         [y_fold - 0.09, y_fold - 0.03, y_fold + 0.01]
-    xq = [-(Wm / 2 + 0.042), -(Wm / 2 + 0.012), -0.36, -0.18, 0.0, 0.18, 0.36, Wm / 2 + 0.012, Wm / 2 + 0.042]
-    cols = len(xq)
-    grid, parts = [], []
+    arch = [(-w_in / 2, 0.9), (w_in / 2, 0.9)] + [(x, 0.98 + 0.07 * math.cos(math.pi * x / w_in)) for x in xs]
+    p.add('WoodLight', g_bevel(g_prism(arch, 0.08), 0.012), front((0, hy, 0)))
+    # footboard: panel + top rail (the 'larguero' the quilt clears by 6 cm)
+    p.add('Wood', g_box(w_in, 0.05, 0.3, chamfer=0.012), M((0, -hy, 0.42)))
+    p.add('WoodLight', g_box(w_in + 0.004, 0.08, 0.06, chamfer=0.015), M((0, -hy, foot_top - 0.03)))
+    p.add('Mattress', g_box(Wm, Lm, m_z1 - m_z0, chamfer=0.03), M((0, 0, (m_z0 + m_z1) / 2)))
+    # quilt: faceted drape from the foot to a turned-down sheet fold; dark band near the feet (PRP-02)
+    y_fold = L / 2 - post - 0.55
+    y0 = -Lm / 2 - 0.012
+    y1 = -Lm / 2 + 0.02
+    yb0, yb1 = y1 + 0.14, y1 + 0.26
+    y_end = y_fold - 0.16
+    ys = [y0, y1, yb0, yb1] + [yb1 + (y_end - yb1) * k / 5 for k in range(1, 6)] + \
+        [y_fold - 0.09, y_fold - 0.03, y_fold + 0.01]
+    band = (2,)                                      # face row between yb0 and yb1
+    xq = [-(Wm / 2 + 0.012), -(Wm / 2 - 0.02), -0.2, -0.1, 0.0, 0.1, 0.2, Wm / 2 - 0.02, Wm / 2 + 0.012]
+    cols, nrow = len(xq), len(ys)
+    grid = []
     for i, y in enumerate(ys):
         row = []
         for j, x in enumerate(xq):
             edge = j in (0, cols - 1)
             rim = j in (1, cols - 2)
-            crown = 0.03 * math.cos(math.pi * x / (Wm + 0.03))          # body-shaped rise in the middle
+            crown = 0.015 * math.cos(math.pi * x / (Wm + 0.03))
             if i == 0:
-                z = 0.4 if edge else 0.43
+                z = 0.48
+            elif i == nrow - 1:
+                z = m_z1 - 0.03 if edge else m_z1 + 0.006
             elif edge:
-                z = 0.395
-            elif i == len(ys) - 1:
-                z = top - 0.005
-            elif i == len(ys) - 2:
-                z = top + 0.05 + crown
-            elif i == len(ys) - 3:
-                z = top + 0.03 + crown
-            elif rim:
-                z = top + 0.012
+                z = q_side
+            elif i == nrow - 3:
+                z = q_top + 0.03 + crown
+            elif i == nrow - 2:
+                z = q_top + 0.015 + crown
+            elif rim or i == 1:
+                z = q_top - 0.02
             else:
-                # quilted puffs: checkerboard of stitch (low) and puff (high) vertices + a little noise
-                z = top + 0.018 + crown + (0.028 if (i + j) % 2 else 0.0) + rng.uniform(-0.004, 0.004)
+                # quilted puffs: checkerboard of stitch (low) and puff (high) vertices, mean ~ q_top
+                z = q_top - 0.02 + crown + (0.026 if (i + j) % 2 else 0.0) + rng.uniform(-0.003, 0.003)
             row.append((x, y, z))
         grid.append(row)
     verts = [pt for row in grid for pt in row]
-    faces = []
-    for i in range(len(ys) - 1):
+    faces, parts = [], []
+    for i in range(nrow - 1):
         for j in range(cols - 1):
             a = i * cols + j
             faces.append((a, a + 1, a + cols + 1, a + cols))
-            if i >= len(ys) - 3:
+            if i >= nrow - 3:
                 parts.append('Sheet')
+            elif i in band:
+                parts.append('QuiltBand')
             elif i == 0 or j in (0, cols - 2):
                 parts.append('QuiltDark')
             else:
                 parts.append('Quilt')
     p.add(parts, (verts, faces))
-    # pillow: squarish puffy cushion (ico pushed toward a rounded box, thinner at the rim)
-    pv, pf = g_ico(1.0, 2)
-    cushion = []
-    for x, y, z in pv:
-        sx_ = math.copysign(abs(x) ** 0.6, x)
-        sy_ = math.copysign(abs(y) ** 0.6, y)
-        k = 1.0 - 0.45 * max(abs(sx_), abs(sy_)) ** 3
-        cushion.append((0.34 * sx_, 0.2 * sy_, 0.11 * z * k))
-    py = L / 2 - post - 0.25
-    p.add('Pillow', (cushion, pf), M((0, py, top + 0.075), (-12, 0, 0)))
-    p.anchor('sleeper_head', (0, py - 0.03, top + 0.175), normal=(0, 0, 1),
-             note='Superficie de la almohada donde apoya la nuca el humano dormido; el cuerpo sigue hacia -Y '
-                  'bajo el acolchado (z 0,56-0,62).')
+    # pillow: rounded rectangular cushion 0.62 x 0.40 x 0.16, leaning 6 deg on the headboard
+    PW, PD, PH = PILLOW
+    py = hy - 0.04 - PD / 2 - 0.005
+    pz = m_z1 + PH / 2 - 0.006
+    p.add('Pillow', g_cushion(PILLOW), M((0, py, pz), (6, 0, 0)))
+    p.anchor('sleeper_head', (0, py - 0.03, pz + PH / 2 - 0.012), normal=(0, 0, 1),
+             note='Centro de la cara superior de la almohada, donde apoya la nuca el humano dormido; el cuerpo sigue '
+                  'hacia -Y bajo el acolchado (cara superior ~0,66 m).')
+    p.extra['bed_heights_m'] = {'side_rail_top': rail_z1, 'footboard_rail_top': foot_top, 'mattress': [m_z0, m_z1],
+                                'quilt_top': round(q_top, 3), 'quilt_side_hem': round(q_side, 3),
+                                'mattress_width': round(Wm, 3),
+                                'pillow_size': list(PILLOW), 'pillow_to_mattress_width': round(PW / Wm, 3)}
+    p.extra['menu_layout'] = copy.deepcopy(MENU_LAYOUT)
     return p
 
 
 @register
 def nightstand():
     p = Prop('Nightstand', 'Mesa de luz', 'bedroom',
-             notes='Mesa de luz con cajón y estante abierto (PRP-02 / ENV-01). Tapa a 0,59 m: anchors "lamp" y "clock" '
-                   'para apoyar la lámpara y el despertador.')
+             notes='Mesa de luz con cajón y estante abierto (PRP-02 / ENV-01), cantos con chaflán de 1-1,5 cm. Tapa a '
+                   '0,59 m: anchors "lamp" y "clock" para apoyar la lámpara y el despertador.')
     p.mat('Wood', C['wood'])
     p.mat('WoodLight', C['wood_light'])
     p.mat('Drawer', C['wood_pale'])
@@ -742,56 +816,74 @@ def nightstand():
     z0, z1 = 0.1, 0.55
     for sx in (-1, 1):
         for sy in (-1, 1):
-            p.add('Wood', g_box(0.06, 0.06, z0 + 0.01), M((sx * (W / 2 - 0.04), sy * (D / 2 - 0.04), (z0 + 0.01) / 2)))
-        p.add('Wood', g_box(0.04, D - 0.02, z1 - z0, chamfer=0.006), M((sx * (W / 2 - 0.02), 0, (z0 + z1) / 2)))
+            p.add('Wood', g_box(0.06, 0.06, z0 + 0.01, chamfer=0.012),
+                  M((sx * (W / 2 - 0.04), sy * (D / 2 - 0.04), (z0 + 0.01) / 2)))
+        p.add('Wood', g_box(0.04, D - 0.02, z1 - z0, chamfer=0.012), M((sx * (W / 2 - 0.02), 0, (z0 + z1) / 2)))
     wi = W - 0.08
-    p.add('Wood', g_box(wi, 0.025, z1 - z0), M((0, D / 2 - 0.0225, (z0 + z1) / 2)))
-    p.add('Wood', g_box(wi, D - 0.04, 0.03), M((0, 0, z0 + 0.015)))
-    p.add('Wood', g_box(wi, D - 0.04, 0.03), M((0, 0, 0.34)))
+    p.add('Wood', g_box(wi, 0.025, z1 - z0, chamfer=0.01), M((0, D / 2 - 0.0225, (z0 + z1) / 2)))
+    p.add('Wood', g_box(wi, D - 0.04, 0.03, chamfer=0.01), M((0, 0, z0 + 0.015)))
+    p.add('Wood', g_box(wi, D - 0.04, 0.03, chamfer=0.01), M((0, 0, 0.34)))
     p.add('Inside', g_box(wi, 0.004, 0.2), M((0, D / 2 - 0.037, 0.23)))
-    p.add('WoodLight', g_box(W + 0.04, D + 0.04, 0.04, chamfer=0.008), M((0, 0, z1 + 0.02)))
-    p.add('Drawer', g_box(W - 0.1, 0.03, 0.17, chamfer=0.008), M((0, -D / 2 + 0.03, 0.445)))
+    p.add('WoodLight', g_box(W + 0.04, D + 0.04, 0.04, chamfer=0.015), M((0, 0, z1 + 0.02)))
+    p.add('Drawer', g_box(W - 0.1, 0.03, 0.17, chamfer=0.012), M((0, -D / 2 + 0.03, 0.445)))
     p.add('Handle', g_box(0.09, 0.022, 0.022, chamfer=0.005), M((0, -D / 2 + 0.006, 0.46)))
-    p.add('BookBlue', g_box(0.22, 0.16, 0.035), M((-0.04, 0.01, z0 + 0.03 + 0.0175), (0, 0, 4)))
-    p.add('BookRed', g_box(0.19, 0.14, 0.03), M((-0.03, 0.0, z0 + 0.03 + 0.035 + 0.015), (0, 0, -7)))
+    p.add('BookBlue', g_box(0.22, 0.16, 0.035, chamfer=0.006), M((-0.04, 0.01, z0 + 0.03 + 0.0175), (0, 0, 4)))
+    p.add('BookRed', g_box(0.19, 0.14, 0.03, chamfer=0.006), M((-0.03, 0.0, z0 + 0.03 + 0.035 + 0.015), (0, 0, -7)))
     topz = z1 + 0.04
     p.anchor('lamp', (0.1, 0.06, topz), note='Base de TableLamp.')
-    p.anchor('clock', (-0.12, -0.09, topz), note='Base de AlarmClock (girarlo ~15° hacia la cámara).')
+    p.anchor('clock', (-0.12, -0.09, topz), note='Base de AlarmClock (girarlo hacia la cámara, ver Bed.menu_layout).')
     return p
+
+
+LAMP_SHADE_Z, LAMP_SHADE_H = 0.262, 0.2
 
 
 @register
 def table_lamp():
     p = Prop('TableLamp', 'Lámpara de mesa', 'bedroom',
-             notes='Velador con base de cerámica y pantalla emisiva cálida (UI-06). Luz sugerida: Point #FFB347 '
-                   'en el anchor "light" (dentro de la pantalla), rango 3-4 m; halo con bloom.')
-    p.mat('Ceramic', '#4B5A63', roughness=0.4)
+             notes='Velador (UI-06): jarrón cerámico verde bronce #6B6A3A de 0,16 x 0,18 m con panza, cuello y anillo '
+                   '#A86F3A; pantalla ámbar emisiva (#FFB347 costados, #FF8A2A cara inferior, emisión 1,8-2). Luz: Point '
+                   '#FFB347 en el anchor "light" (tercio superior de la pantalla), rango 3-4 m, sin sombras. En Unity la '
+                   'malla del velador va en un Rendering Layer propio que su luz excluye (Light.renderingLayerMask sin '
+                   'esa capa) para que el jarrón no se queme.')
+    p.mat('Ceramic', '#6B6A3A', roughness=0.45)
+    p.mat('Ring', C['wood_light'], roughness=0.5)
     p.mat('Brass', C['brass'], roughness=0.4, metallic=0.6)
-    p.mat('Shade', '#FFE0A3', emission=1.6, roughness=0.8)
-    p.mat('Glow', C['amber'], emission=3.0, roughness=0.8)
+    p.mat('Shade', C['amber'], emission=1.8, roughness=0.8)
+    p.mat('ShadeBottom', '#FF8A2A', emission=2.0, roughness=0.8)
     n = 10
-    p.add('Brass', g_cyl(0.088, 0.082, 0.016, n=n), M())
-    prof = [(0.074, 0.016), (0.098, 0.042), (0.108, 0.088), (0.1, 0.136), (0.074, 0.174), (0.04, 0.198), (0.026, 0.206)]
-    p.add('Ceramic', g_revolve(prof, n=n))
-    p.add('Brass', g_cyl(0.03, 0.022, 0.018, n=8), M((0, 0, 0.204)))
-    p.add('Brass', g_cyl(0.012, 0.012, 0.09, n=6), M((0, 0, 0.22)))
-    sz, sh = 0.285, 0.215
-    p.add(['Shade'] * n + ['Shade', 'Glow'], g_cyl(0.168, 0.097, sh, n=n), M((0, 0, sz)))
-    p.add('Brass', g_cyl(0.172, 0.171, 0.014, n=n, caps=(False, False)), M((0, 0, sz)))
-    p.add('Brass', g_cyl(0.1, 0.099, 0.01, n=n, caps=(False, False)), M((0, 0, sz + sh - 0.01)))
-    p.add('Brass', g_cyl(0.014, 0.0, 0.028, n=6), M((0, 0, sz + sh)))
-    p.anchor('light', (0, 0, sz + 0.07), note='Point #FFB347 dentro de la pantalla.')
+    # ceramic jar: foot, belly, shoulder ring, neck and lip (Ø 0.16 m, 0.18 m tall)
+    prof = [(0.05, 0.0), (0.064, 0.016), (0.078, 0.05), (0.08, 0.072), (0.079, 0.094), (0.07, 0.114), (0.056, 0.13),
+            (0.036, 0.143), (0.027, 0.152), (0.027, 0.168), (0.035, 0.174), (0.035, 0.18)]
+    ring_bands = (3, 10)
+    p.add({0: 'Ceramic', 1: 'Ring'}, g_revolve(prof, n=n, ids_fn=lambda i, j: 1 if i in ring_bands else 0))
+    p.add('Ceramic', g_disc(0.05, n, 0.0, math.pi / n, up=False))
+    p.add('Ring', g_disc(0.035, n, 0.18, math.pi / n))
+    p.add('Brass', g_cyl(0.024, 0.02, 0.02, n=8), M((0, 0, 0.18)))
+    p.add('Brass', g_cyl(0.009, 0.009, 0.07, n=6), M((0, 0, 0.2)))
+    sz, sh = LAMP_SHADE_Z, LAMP_SHADE_H
+    p.add(['Shade'] * n + ['Shade', 'ShadeBottom'], g_cyl(0.15, 0.088, sh, n=n), M((0, 0, sz)))
+    p.add('Brass', g_cyl(0.154, 0.153, 0.012, n=n, caps=(False, False)), M((0, 0, sz)))
+    p.add('Brass', g_cyl(0.091, 0.09, 0.01, n=n, caps=(False, False)), M((0, 0, sz + sh - 0.01)))
+    p.add('Brass', g_cyl(0.014, 0.0, 0.026, n=6), M((0, 0, sz + sh)))
+    p.anchor('light', (0, 0, sz + sh * 0.8),
+             note='Point #FFB347 en el tercio superior de la pantalla, sin sombras; excluir la malla del velador '
+                  'de esta luz (Rendering Layers).')
     return p
+
+
+CLOCK_SCREEN = (0.164, 0.056)
 
 
 @register
 def alarm_clock():
     p = Prop('AlarmClock', 'Reloj despertador digital', 'bedroom', preview={'yaw': 24, 'elev': 24},
-             notes='Despertador de cuña (frente inclinado ~15°) con pantalla emisiva roja oscura SIN números: Unity escribe '
-                   '"03:27" (TMP rojo #FF3B30, alto ~0,04 m) 1 mm por delante del anchor "screen", con su normal.')
+             notes='Despertador de cuña (frente inclinado ~15°) con pantalla casi negra #140808 (emisión 0,12) SIN números: '
+                   'Unity escribe "03:27" (TMP #FF3B30 con intensidad HDR x2,5, dígitos de 0,046 m = 82 % del alto de la '
+                   'pantalla) 1 mm por delante del anchor "screen", con su normal. Contraste dígito/fondo >= 4:1.')
     p.mat('Body', '#2A2D35', roughness=0.45)
     p.mat('Bezel', '#17191E', roughness=0.4)
-    p.mat('Screen', '#4A0E0E', emission=1.0, roughness=0.2)
+    p.mat('Screen', '#140808', emission=0.12, roughness=0.2)
     p.mat('Button', C['metal_light'], roughness=0.4, metallic=0.3)
     p.mat('Feet', C['black'], roughness=0.9)
     W, z0 = 0.2, 0.008
@@ -808,7 +900,7 @@ def alarm_clock():
     zc = z0 + H / 2
     yc = (yb + yt) / 2
     frame = M((0, yc, zc), (-tilt, 0, 0))
-    sw, sh = 0.15, 0.056
+    sw, sh = CLOCK_SCREEN
     p.add('Screen', g_box(sw, 0.006, sh), frame @ M((0, -0.001, 0)))
     for s_ in (-1, 1):
         p.add('Bezel', g_box(sw + 0.016, 0.008, 0.008), frame @ M((0, -0.002, s_ * (sh / 2 + 0.004))))
@@ -820,15 +912,20 @@ def alarm_clock():
     ctr = frame @ Vector((0, -0.004, 0))
     p.anchor('screen', tuple(ctr), normal=nrm, size=(sw, sh),
              note='Centro de la cara de la pantalla (inclinada ~15° hacia atrás); texto "03:27" centrado, sin tocar el bisel.')
+    p.extra['clock_text'] = {'text': '03:27', 'color_srgb': '#FF3B30', 'hdr_intensity': 2.5, 'digit_height_m': 0.046,
+                             'digit_height_ratio': round(0.046 / sh, 3), 'max_width_m': round(sw - 0.012, 3),
+                             'offset_along_normal_m': 0.001, 'screen_color_srgb': '#140808', 'screen_emission': 0.12,
+                             'min_contrast': 4.0}
     return p
 
 
 @register
 def window():
     p = Prop('Window', 'Ventana con parteluces', 'bedroom', mount='wall', preview={'elev': 6, 'yaw': 18},
-             notes='Ventana de pared (PRP-02 / UI-06) con vista nocturna detrás de los parteluces: cielo #1A2A6A, colinas '
-                   'y luna. Los paños de vista son emisivos (Emission 1) para conservar su color con la sala a oscuras; '
-                   'se pueden reemplazar por un fondo real. Dorso en +Y contra la pared; base = alféizar.')
+             notes='Ventana de pared (PRP-02 / UI-06), 0,095 m de profundidad total, con vista nocturna detrás de los '
+                   'parteluces: cielo #1A2A6A, colinas, pinos, estrellas y luna. Los paños de vista son emisivos (Emission 1) '
+                   'para conservar su color con la sala a oscuras; se pueden reemplazar por un fondo real. Dorso en +Y '
+                   'contra la pared; base = alféizar.')
     p.mat('Frame', C['wood'])
     p.mat('Trim', C['wood_light'])
     p.mat('Sash', C['wood_pale'])
@@ -836,41 +933,40 @@ def window():
     p.mat('Moon', '#FFF2C4', emission=2.0, roughness=0.9)
     p.mat('HillFar', '#2A4A7C', emission=1.0, roughness=0.9)
     p.mat('HillNear', '#1E4A45', emission=1.0, roughness=0.9)
-    p.mat('Glint', '#6F8FD0', emission=1.0, roughness=0.2)
     W, H = 0.9, 1.25
     ox, oz0, oz1 = 0.35, 0.14, H - 0.14
+    fd = 0.08                                   # frame depth: y in [-0.04, 0.04]
+    fh = oz1 + 0.08 - 0.06
     for sx in (-1, 1):
-        p.add('Frame', g_box(0.1, 0.12, oz1 + 0.08 - 0.06), M((sx * (ox + 0.05), 0, 0.06 + (oz1 + 0.08 - 0.06) / 2)))
-    p.add('Frame', g_box(2 * ox, 0.12, 0.08), M((0, 0, oz0 - 0.04)))
-    p.add('Frame', g_box(2 * ox, 0.12, 0.08), M((0, 0, oz1 + 0.04)))
-    p.add('Trim', g_box(W + 0.12, 0.2, 0.06, chamfer=0.012), M((0, -0.04, 0.03)))
-    p.add('Trim', g_box(W + 0.1, 0.17, 0.06, chamfer=0.012), M((0, -0.025, H - 0.03)))
+        p.add('Frame', g_box(0.1, fd, fh, chamfer=0.012), M((sx * (ox + 0.05), 0, 0.06 + fh / 2)))
+    p.add('Frame', g_box(2 * ox, fd, 0.08, chamfer=0.01), M((0, 0, oz0 - 0.04)))
+    p.add('Frame', g_box(2 * ox, fd, 0.08, chamfer=0.01), M((0, 0, oz1 + 0.04)))
+    p.add('Trim', g_box(W + 0.12, 0.095, 0.06, chamfer=0.012), M((0, -0.0075, 0.03)))       # sill: y -0.055..0.04
+    p.add('Trim', g_box(W + 0.1, 0.09, 0.06, chamfer=0.012), M((0, -0.005, H - 0.03)))      # head: y -0.05..0.04
     oh = oz1 - oz0
-    t = 0.035
+    t, sd = 0.035, 0.04                          # sash bars: y in [-0.02, 0.02]
     for sx in (-1, 1):
-        p.add('Sash', g_box(t, 0.05, oh), M((sx * (ox - t / 2), 0, oz0 + oh / 2)))
+        p.add('Sash', g_box(t, sd, oh), M((sx * (ox - t / 2), 0, oz0 + oh / 2)))
     for z in (oz0 + t / 2, oz1 - t / 2):
-        p.add('Sash', g_box(2 * ox - 2 * t, 0.05, t), M((0, 0, z)))
+        p.add('Sash', g_box(2 * ox - 2 * t, sd, t), M((0, 0, z)))
     zm = oz0 + oh * 0.56
-    p.add('Sash', g_box(t, 0.05, oh - 2 * t), M((0, 0, oz0 + oh / 2)))
-    p.add('Sash', g_box(2 * ox - 2 * t, 0.05, t), M((0, 0, zm)))
+    p.add('Sash', g_box(t, sd, oh - 2 * t), M((0, 0, oz0 + oh / 2)))
+    p.add('Sash', g_box(2 * ox - 2 * t, sd, t), M((0, 0, zm)))
 
     def layer(part, pts, y):
         p.add(part, g_prism(pts, 0.002), front((0, y, 0)))
-    layer('Sky', [(-ox, oz0), (ox, oz0), (ox, oz1), (-ox, oz1)], 0.036)
-    layer('Moon', [(0.17 + x, 0.93 + y) for x, y in circle(0.065, 10)], 0.033)
-    for sx_, sz_ in ((-0.22, 1.02), (-0.08, 0.9), (0.28, 0.76), (-0.26, 0.78)):
-        layer('Moon', [(sx_, sz_ - 0.013), (sx_ + 0.008, sz_), (sx_, sz_ + 0.013), (sx_ - 0.008, sz_)], 0.033)
+    layer('Sky', [(-ox, oz0), (ox, oz0), (ox, oz1), (-ox, oz1)], 0.032)
+    layer('Moon', [(0.17 + x, 0.93 + y) for x, y in circle(0.065, 10)], 0.029)
+    for sx_, sz_ in ((-0.22, 1.02), (-0.08, 0.9), (0.28, 0.76), (-0.26, 0.78), (-0.14, 1.06)):
+        layer('Moon', [(sx_, sz_ - 0.013), (sx_ + 0.008, sz_), (sx_, sz_ + 0.013), (sx_ - 0.008, sz_)], 0.029)
     far = [(-ox, oz0), (ox, oz0), (ox, 0.5), (0.2, 0.6), (0.06, 0.53), (-0.1, 0.64), (-0.26, 0.55), (-ox, 0.58)]
-    layer('HillFar', far, 0.031)
+    layer('HillFar', far, 0.027)
     near = [(-ox, oz0), (ox, oz0), (ox, 0.4), (0.16, 0.33), (-0.04, 0.42), (-0.2, 0.36), (-ox, 0.4)]
-    layer('HillNear', near, 0.029)
+    layer('HillNear', near, 0.025)
     for x, zb, s in ((-0.24, 0.33, 1.0), (-0.16, 0.36, 0.75), (0.24, 0.32, 0.9)):
-        layer('HillNear', [(x - 0.04 * s, zb), (x + 0.04 * s, zb), (x, zb + 0.13 * s)], 0.028)
-    for dx in (0.0, 0.05):
-        layer('Glint', [(-0.3 + dx, 0.84), (-0.27 + dx, 0.84), (-0.14 + dx, 1.05), (-0.17 + dx, 1.05)], 0.027)
-    p.anchor('view', (0, 0.036, (oz0 + oz1) / 2), normal=(0, -1, 0), size=(2 * ox, oh),
-             note='Paño de vista (cielo). Para un fondo real, ocultar Sky/Moon/Hill*/Glint y poner el fondo detrás.')
+        layer('HillNear', [(x - 0.04 * s, zb), (x + 0.04 * s, zb), (x, zb + 0.13 * s)], 0.023)
+    p.anchor('view', (0, 0.032, (oz0 + oz1) / 2), normal=(0, -1, 0), size=(2 * ox, oh),
+             note='Paño de vista (cielo). Para un fondo real, ocultar Sky/Moon/Hill* y poner el fondo detrás.')
     return p
 
 
@@ -941,7 +1037,7 @@ def signpost():
     p.mat('Groove', C['wood_core'], roughness=0.95)
     p.mat('Nail', C['iron'])
     # chunky PRP-01 / ENV-04 proportions: thick post, two fat arrow boards made of two planks each
-    p.add('Post', g_box(0.15, 0.15, 1.8, chamfer=0.015), M((0, 0, 0.9)))
+    p.add('Post', g_box(0.15, 0.15, 1.8, chamfer=0.018), M((0, 0, 0.9)))
     p.add('Groove', g_cyl(sq(0.075), 0.0, 0.07, n=4, phase=math.pi / 4), M((0, 0, 1.8)))
     tipx, bodyx, hh, back = 0.56, 0.36, 0.15, -0.42
     xa = tipx - (tipx - bodyx) * 0.008 / hh
@@ -951,8 +1047,8 @@ def signpost():
         tp = [(direction * x, y) for x, y in top]
         bp = [(direction * x, y) for x, y in bot]
         m = front((0, -0.105, z), tilt)
-        p.add('Board', g_prism(tp, 0.06), m)
-        p.add('Board', g_prism(bp, 0.06), m)
+        p.add('Board', g_bevel(g_prism(tp, 0.06), 0.012), m)
+        p.add('Board', g_bevel(g_prism(bp, 0.06), 0.012), m)
         p.add('Groove', g_box(0.9, 0.016, 0.052), m @ M((direction * 0.06, 0, 0)))
         for y in (-0.075, 0.075):
             p.add('Nail', g_box(0.02, 0.02, 0.012), m @ M((0, y, 0.03)))
@@ -961,39 +1057,50 @@ def signpost():
 
 @register
 def mailbox():
-    p = Prop('Mailbox', 'Buzón rojo', 'exterior')
+    p = Prop('Mailbox', 'Buzón rojo', 'exterior',
+             notes='Buzón PRP-01: caja de túnel de 0,48 x 0,30 x 0,30 m con frente abierto sobre un poste corto de sección '
+                   '0,10 m; bandera roja #C62E36 en un brazo rojo que sobresale 0,18 m sobre el techo (1,10 m en total).')
     p.mat('Body', C['red'], roughness=0.5)
     p.mat('Door', C['red_dark'], roughness=0.5)
-    p.mat('Flag', C['red_light'], roughness=0.5)
+    p.mat('Flag', '#C62E36', roughness=0.5)
     p.mat('Metal', C['metal_dark'], roughness=0.5, metallic=0.4)
     p.mat('Post', C['wood'])
     p.mat('Plate', C['wood_dark'])
     p.mat('Inside', '#3A1512', roughness=0.9)
-    # chunky PRP-01 mailbox: tunnel body with an open front, raised flag on the right side
-    p.add('Post', g_box(0.14, 0.14, 1.02, chamfer=0.014), M((0, 0.06, 0.51)))
-    p.add('Plate', g_box(0.26, 0.56, 0.04, chamfer=0.008), M((0, 0.0, 1.04)))
-    W, hw, L, z0, yc = 0.15, 0.15, 0.56, 1.06, 0.0
+    TOTAL, FLAG_UP = 1.10, 0.18
+    W, L, Hb = 0.15, 0.48, 0.30                  # half width, length, height of the box
+    hw = Hb - W                                  # straight wall under the arched roof
+    z_roof = TOTAL - FLAG_UP                     # 0.92
+    z0 = z_roof - Hb                             # 0.62 box bottom
+    plate_t = 0.03
+    post_h = z0 - plate_t
+    p.add('Post', g_box(0.10, 0.10, post_h, chamfer=0.012), M((0, 0.03, post_h / 2)))
+    p.add('Plate', g_box(0.2, L - 0.06, plate_t, chamfer=0.008), M((0, 0.0, post_h + plate_t / 2)))
     prof = [(-W, 0.0), (W, 0.0), (W, hw)] + \
         [(W * math.cos(math.radians(a)), hw + W * math.sin(math.radians(a))) for a in (30, 60, 90, 120, 150)] + \
         [(-W, hw)]
     n = len(prof)
-    m = front((0, yc, z0))
+    m = front((0, 0, z0))
     p.add('Body', g_prism(prof, L, caps=False), m)
     p.add('Body', ([(x, y, -L / 2) for x, y in prof], [tuple(reversed(range(n)))]), m)       # back cap (+Y)
     cen = (0.0, 0.14)
     ring_v, ring_f, ring_i = g_poly_rings(prof, [1.0, 0.78], z=L / 2, center=cen)
     p.add('Door', (ring_v, [f for f, i in zip(ring_f, ring_i) if i == 0]), m)                  # front rim
     inner = [(cen[0] + (x - cen[0]) * 0.78, cen[1] + (y - cen[1]) * 0.78) for x, y in prof]
-    depth = 0.4
+    depth = 0.36
     tv, tf = g_prism(inner, depth, z0=L / 2 - depth, caps=False)
     p.add('Inside', (tv, [tuple(reversed(f)) for f in tf]), m)                                  # tunnel walls face inward
     p.add('Inside', ([(x, y, L / 2 - depth) for x, y in inner], [tuple(range(n))]), m)         # back of the tunnel
-    for zz in (0.12, -0.12):                                                                    # two rolled bands
+    for zz in (0.13, -0.13):                                                                    # two rolled bands
         band = [(x * 1.035, y * 1.03 - 0.004) for x, y in prof]
         p.add('Door', g_prism(band, 0.035), m @ M((0, 0, zz)))
-    p.add('Metal', g_box(0.022, 0.022, 0.3), M((W + 0.02, 0.1, z0 + 0.1)))
-    p.add('Metal', g_box(0.03, 0.05, 0.05, chamfer=0.006), M((W + 0.012, 0.1, z0 + 0.06)))
-    p.add('Flag', g_box(0.014, 0.15, 0.1, chamfer=0.004), M((W + 0.02, 0.03, z0 + 0.21)))
+    # raised flag: red arm on the right side, 0.18 m above the roof, flag plate fully above the silhouette
+    xa, ya = W + 0.027, 0.13
+    arm_z0 = z0 + 0.07
+    p.add('Metal', g_box(0.03, 0.05, 0.05, chamfer=0.006), M((W + 0.012, ya, arm_z0 + 0.02)))
+    p.add('Flag', g_box(0.024, 0.024, TOTAL - arm_z0, chamfer=0.005), M((xa, ya, (arm_z0 + TOTAL) / 2)))
+    p.add('Flag', g_box(0.016, 0.15, 0.09, chamfer=0.004), M((xa, ya + 0.012 + 0.075, TOTAL - 0.045)))
+    p.extra['flag'] = {'arm_top_above_roof_m': FLAG_UP, 'flag_bottom_above_roof_m': round(TOTAL - 0.09 - z_roof, 3)}
     return p
 
 
@@ -1005,18 +1112,18 @@ def picnic_table():
     p.mat('Beam', C['wood_dark'])
     for i in range(5):
         y = -0.32 + i * 0.16
-        p.add('Top', g_box(1.8, 0.145, 0.045, chamfer=0.01), M((0, y, 0.7275), (0, 0, p.rng.uniform(-0.4, 0.4))))
+        p.add('Top', g_box(1.8, 0.145, 0.045, chamfer=0.013), M((0, y, 0.7275), (0, 0, p.rng.uniform(-0.4, 0.4))))
     for s in (-1, 1):
         for k in (-1, 1):
-            p.add('Top', g_box(1.8, 0.125, 0.045, chamfer=0.01), M((0, s * (0.62 + k * 0.066), 0.4275)))
+            p.add('Top', g_box(1.8, 0.125, 0.045, chamfer=0.013), M((0, s * (0.62 + k * 0.066), 0.4275)))
     for x in (-0.62, 0.62):
-        p.add('Beam', g_box(0.07, 1.52, 0.07, chamfer=0.008), M((x, 0, 0.37)))
-        p.add('Beam', g_box(0.07, 0.8, 0.05, chamfer=0.006), M((x, 0, 0.68)))
+        p.add('Beam', g_box(0.07, 1.52, 0.07, chamfer=0.012), M((x, 0, 0.37)))
+        p.add('Beam', g_box(0.07, 0.8, 0.05, chamfer=0.01), M((x, 0, 0.68)))
         for s in (-1, 1):
             y0, y1, z0, z1 = s * 0.66, s * 0.14, 0.0, 0.705
             Ll = math.hypot(y1 - y0, z1 - z0)
             ang = math.degrees(math.atan2(y1 - y0, z1 - z0))
-            p.add('Leg', g_box(0.05, 0.09, Ll, chamfer=0.008), M((x + 0.06 * (1 if x < 0 else -1), (y0 + y1) / 2, Ll / 2 * math.cos(math.radians(ang))),
+            p.add('Leg', g_box(0.05, 0.09, Ll, chamfer=0.012), M((x + 0.06 * (1 if x < 0 else -1), (y0 + y1) / 2, Ll / 2 * math.cos(math.radians(ang))),
                                                                 (-ang, 0, 0)))
     return p
 
@@ -1132,43 +1239,47 @@ def log_bench():
 
 @register
 def firewood():
-    p = Prop('Firewood', 'Leña apilada', 'camp')
+    p = Prop('Firewood', 'Leña apilada', 'camp', preview={'yaw': 66, 'elev': 22},
+             notes='Pila de leña en pirámide 2+1 (LOGS de PRP-01): troncos gruesos de Ø 0,24 m con testas claras '
+                   '#D9A566 y anillos concéntricos.')
     p.mat('Bark', C['bark'])
     p.mat('BarkDark', C['bark_dark'])
-    p.mat('EndGrain', C['end_grain'])
-    p.mat('Ring', C['end_ring'])
+    p.mat('EndGrain', '#D9A566')
+    p.mat('Ring', '#9A6333')
     rng = p.rng
-    # fat logs (PRP-01 'logs': radius/length ~ 1/6) stacked 3-2-1
-    r = 0.105
-    dz = r * math.sqrt(3) * 0.98
-    rows = [(-2 * r, r), (0.0, r), (2 * r, r), (-r, r + dz), (r, r + dz), (0.0, r + 2 * dz)]
-    ids = {0: 'Bark', 1: 'EndGrain', 2: 'Ring', 3: 'EndGrain'}
-    for k, (y, z) in enumerate(rows):
-        rr = r * rng.uniform(0.95, 1.02)
-        n = 7
+    r = 0.12
+    rise = r * math.sqrt(4 - 1.02 ** 2)                  # top log sits in the groove of the two below
+    logs = [(-r * 1.02, r, 0.0, 0.74), (r * 1.02, r, -0.03, 0.72), (0.0, r + rise, 0.06, 0.7)]
+    ids = {0: 'Bark', 1: 'EndGrain', 2: 'Ring', 3: 'EndGrain', 4: 'Ring', 5: 'EndGrain'}
+    scales = [1.0, 0.88, 0.66, 0.57, 0.3, 0.2]
+    n = 8
+    for k, (y, z, xo, Lk) in enumerate(logs):
+        rr = r * rng.uniform(0.97, 1.0)
         poly = circle(rr, n, rng.uniform(0, 6.28))
-        xo = rng.uniform(-0.04, 0.04)
-        Lk = 0.68 * rng.uniform(0.94, 1.04)
         parts = ['Bark' if (i + k) % 2 == 0 else 'BarkDark' for i in range(n)]
         p.add(parts, g_prism(poly, Lk, caps=False), at(TO_X, (xo, y, z)))
-        end_grain(p, poly, [1.0, 0.84, 0.46, 0.38], ids, at(TO_X, (xo + Lk / 2, y, z)))
-        end_grain(p, poly, [1.0, 0.84, 0.46, 0.38], ids, at(TO_NX, (xo - Lk / 2, y, z)))
+        end_grain(p, poly, scales, ids, at(TO_X, (xo + Lk / 2, y, z)))
+        end_grain(p, poly, scales, ids, at(TO_NX, (xo - Lk / 2, y, z)))
     return p
 
 
 @register
 def campfire():
     p = Prop('Campfire', 'Fogón con piedras', 'camp',
-             notes='Llamas low-poly emisivas (Flame/FlameCore) y brasas; luz sugerida Point naranja con parpadeo, sin sombras.')
+             notes='Fogón PRP-01 / ENV-05: anillo de 8 piedras (Ø 1 m entre centros), tipi de 4 troncos de Ø 0,13-0,14 m '
+                   'que sobresalen de las piedras y llama emisiva de 3 capas de 0,95 m: lenguas amarillas #FFD23F hasta el '
+                   '55 % de la altura, cuerpo naranja #FF902A y puntas rojo anaranjado #E5482A; brasas. Luz sugerida Point '
+                   '#FF8A2A con parpadeo, sin sombras.')
     p.mat('Stone', C['rock'])
     p.mat('StoneDark', C['rock_dark'])
     p.mat('StoneTop', C['rock_light'])
     p.mat('Ash', C['charcoal'], roughness=1.0)
     p.mat('Bark', C['bark'])
-    p.mat('EndGrain', C['end_grain'])
+    p.mat('EndGrain', '#D9A566')
     p.mat('Char', '#2A201C', roughness=1.0)
-    p.mat('Flame', C['flame_orange'], emission=3.0, roughness=1.0)
-    p.mat('FlameCore', C['flame_yellow'], emission=3.5, roughness=1.0)
+    p.mat('FlameCore', '#FFD23F', emission=3.5, roughness=1.0)
+    p.mat('Flame', '#FF902A', emission=3.0, roughness=1.0)
+    p.mat('FlameTip', '#E5482A', emission=2.6, roughness=1.0)
     p.mat('Ember', C['ember'], emission=2.0, roughness=1.0)
     rng = p.rng
     for k in range(8):
@@ -1176,39 +1287,51 @@ def campfire():
         add_rock(p, (0.5 * math.cos(a), 0.5 * math.sin(a), 0), rng.uniform(0.17, 0.2), rng.uniform(0.14, 0.17),
                  rng.uniform(0.15, 0.19), math.degrees(a) + 90, 'Stone' if k % 2 else 'StoneDark', 'StoneTop', n=12,
                  flat_top=0.12)
-    p.add('Ash', g_cyl(0.4, 0.37, 0.025, n=10), M())
-    # teepee of chunky logs (PRP-01 campfire): outer end grain faces out, charred tips meet in the middle
-    for k in range(5):
-        a = 2 * math.pi * k / 5 + 0.3
-        o = (0.4 * math.cos(a), 0.4 * math.sin(a), 0.07)
-        i = (0.06 * math.cos(a + 0.45), 0.06 * math.sin(a + 0.45), 0.36)
-        p.add(['Bark'] * 6 + ['EndGrain', 'Char'], g_loft([o, i], [0.066, 0.056], n=6))
-    for k, a in enumerate((0.9, 3.9)):
+    p.add('Ash', g_cyl(0.36, 0.34, 0.025, n=10), M())
+    # tipi of 4 chunky logs (Ø 0.14 -> 0.128) resting on the stones: end grain sticks out past the ring,
+    # charred tips meet inside the flame
+    for k in range(4):
+        a = math.radians(10 + 90 * k)
+        o = (0.72 * math.cos(a), 0.72 * math.sin(a), 0.18)
+        i = (0.06 * math.cos(a + 0.5), 0.06 * math.sin(a + 0.5), 0.47)
+        p.add(['Bark'] * 6 + ['EndGrain', 'Char'], g_loft([o, i], [0.07, 0.064], n=6))
+    for a in (0.9, 3.9):
         c, s_ = math.cos(a), math.sin(a)
         p.add(['Bark'] * 6 + ['EndGrain', 'EndGrain'],
-              g_loft([(0.3 * c - 0.2 * s_, 0.3 * s_ + 0.2 * c, 0.05), (0.3 * c + 0.2 * s_, 0.3 * s_ - 0.2 * c, 0.05)],
-                     [0.05, 0.05], n=6))
+              g_loft([(0.26 * c - 0.2 * s_, 0.26 * s_ + 0.2 * c, 0.06), (0.26 * c + 0.2 * s_, 0.26 * s_ - 0.2 * c, 0.06)],
+                     [0.06, 0.06], n=6))
 
-    def flame(part, r0, a, H, radii, lean_k, z0=0.06):
+    def flame(parts, r0, a, H, radii, lean_k, z0):
+        """Twisted 5-sided tongue. parts: one part for the whole tongue or [body, tip] (tip = top band)."""
         base = Vector((r0 * math.cos(a), r0 * math.sin(a), z0))
         lean = Vector((-math.cos(a), -math.sin(a), 0)) * lean_k
-        pts = [base, base + Vector((0, 0, H * 0.35)) + lean * 0.3, base + Vector((0, 0, H * 0.7)) + lean * 0.8,
-               base + Vector((0, 0, H)) + lean * 1.3]
-        p.add(part, g_loft([tuple(q) for q in pts], radii, n=5, twist=0.35, phase=a))
-    # layered stylised fire (PRP-01): a wide yellow core owns the bottom, orange tongues start higher
-    # (inside the core) and lean out, so from any side it reads yellow below and orange tips above
-    for k in range(3):
-        a = 2 * math.pi * k / 3 + 0.5
-        flame('FlameCore', 0.05, a, rng.uniform(0.38, 0.46), [0.15, 0.135, 0.07, 0.0], 0.02, z0=0.05)
-    flame('Flame', 0.0, 0.0, 0.66, [0.08, 0.105, 0.065, 0.0], 0.0, z0=0.2)
+        pts = [base, base + Vector((0, 0, H * 0.3)) + lean * 0.3, base + Vector((0, 0, H * 0.62)) + lean * 0.8,
+               base + Vector((0, 0, H * 0.82)) + lean * 1.1, base + Vector((0, 0, H)) + lean * 1.4]
+        geom = g_loft([tuple(q) for q in pts], radii, n=5, twist=0.35, phase=a)
+        if isinstance(parts, str):
+            p.add(parts, geom)
+        else:
+            body, tip = parts
+            p.add([tip if 15 <= f < 20 else body for f in range(len(geom[1]))], geom)
+    # layer 1: yellow tongues own the bottom ring and reach 55 % of the height (0.52 m)
     for k in range(5):
-        a = 2 * math.pi * k / 5 + 0.3 + rng.uniform(-0.2, 0.2)
-        flame('Flame', 0.07, a, rng.uniform(0.4, 0.54), [0.06, 0.09, 0.056, 0.0], -0.06, z0=0.16)
+        a = 2 * math.pi * k / 5 + 0.2
+        flame('FlameCore', 0.14, a, rng.uniform(0.44, 0.48), [0.125, 0.115, 0.08, 0.04, 0.0], -0.06, z0=0.04)
+    # layer 2: orange body (central tongue + four side tongues starting higher), red-orange tips
+    flame(('Flame', 'FlameTip'), 0.0, 0.0, 0.83, [0.12, 0.14, 0.1, 0.06, 0.0], 0.0, z0=0.12)
+    for k in range(4):
+        a = 2 * math.pi * k / 4 + 0.6 + rng.uniform(-0.15, 0.15)
+        flame(('Flame', 'FlameTip'), 0.1, a, rng.uniform(0.55, 0.62), [0.09, 0.115, 0.08, 0.04, 0.0], -0.06, z0=0.18)
+    # layer 3: red-orange licks above the body
+    for k, a in enumerate((1.3, 4.2)):
+        flame('FlameTip', 0.05, a, 0.46 - 0.04 * k, [0.035, 0.045, 0.03, 0.015, 0.0], 0.03, z0=0.46)
     for k in range(7):
         a = rng.uniform(0, 2 * math.pi)
-        rr = rng.uniform(0.18, 0.32)
+        rr = rng.uniform(0.2, 0.32)
         p.add('Ember', g_ico(rng.uniform(0.02, 0.03), 1, scale=(1, 1, 0.6)), M((rr * math.cos(a), rr * math.sin(a), 0.03)))
-    p.anchor('light', (0, 0, 0.35), note='Point #FF8A2A con parpadeo, rango 6-8 m, sin sombras.')
+    p.anchor('light', (0, 0, 0.4), note='Point #FF8A2A con parpadeo, rango 6-8 m, sin sombras.')
+    p.extra['flame_layers'] = {'yellow_top_m': 0.52, 'total_height_m': 0.95, 'ring_diameter_m': 1.0,
+                               'colors_srgb': {'core': '#FFD23F', 'body': '#FF902A', 'tips': '#E5482A'}}
     return p
 
 
@@ -1275,9 +1398,30 @@ def flower_clump(p, n_blades, blade_len, blade_hw, flowers, head):
         head['fn'](p, top, d)
 
 
+def g_petal_head(n, r_tip, r_in, half_ang, shoulder=0.78, cup=0.2, thickness=0.003):
+    """Flower head facing +Z: n separate rounded petals (base, shoulder, tip, shoulder, base) fanned
+    from the centre, double-sided. half_ang in radians at the shoulders."""
+    top = [(0.0, 0.0, 0.0)]
+    faces = []
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        ring = [(r_in, a - half_ang * 0.55), (r_tip * shoulder, a - half_ang), (r_tip, a),
+                (r_tip * shoulder, a + half_ang), (r_in, a + half_ang * 0.55)]
+        idx = []
+        for rr, aa in ring:
+            top.append((rr * math.cos(aa), rr * math.sin(aa), cup * r_tip * (rr / r_tip) ** 2))
+            idx.append(len(top) - 1)
+        faces += [(0, idx[0], idx[1]), (0, idx[1], idx[2]), (0, idx[2], idx[3]), (0, idx[3], idx[4])]
+    nv = len(top)
+    under = [(x, y, z - thickness) for x, y, z in top]
+    return top + under, faces + [tuple(reversed([i + nv for i in f])) for f in faces]
+
+
 @register
 def flowers_white():
-    p = Prop('FlowersWhite', 'Flores blancas', 'nature')
+    p = Prop('FlowersWhite', 'Flores blancas', 'nature',
+             notes='Margaritas (PRP-02 / ENV-05): 7 cabezas de Ø 7,6 cm con 10 pétalos redondeados y centro amarillo, '
+                   '18 hojas basales.')
     p.mat('Blade', C['green'])
     p.mat('Stem', C['green_dark'])
     p.mat('Petal', C['white'], roughness=0.7)
@@ -1285,25 +1429,45 @@ def flowers_white():
 
     def head(p, top, d):
         m = look_matrix(top, d)
-        p.add('Petal', g_fan(6, 0.046, 0.017, cup=0.25, thickness=0.003), m)
-        p.add('Center', g_ico(0.014, 1, scale=(1, 1, 0.6)), m @ M((0, 0, 0.007)))
-    flower_clump(p, 9, (0.16, 0.26), [0.01, 0.014, 0.012, 0.007], 7, {'height': (0.2, 0.32), 'fn': head})
+        p.add('Petal', g_petal_head(10, 0.038, 0.011, math.radians(13), cup=0.22), m)
+        p.add('Center', g_ico(0.0135, 1, scale=(1, 1, 0.55)), m @ M((0, 0, 0.004)))
+    flower_clump(p, 18, (0.12, 0.2), [0.014, 0.02, 0.012], 7, {'height': (0.2, 0.32), 'fn': head})
     return p
 
 
 @register
 def flowers_yellow():
-    p = Prop('FlowersYellow', 'Flores amarillas', 'nature')
+    p = Prop('FlowersYellow', 'Flores amarillas', 'nature',
+             notes='Girasoles bajos tipo ENV-05: 3 cabezas de Ø 0,10-0,13 m con 13 pétalos y centro #5A3A1A, hojas anchas '
+                   'en el tallo y 16 hojas basales.')
     p.mat('Blade', C['green_light'])
     p.mat('Stem', C['green'])
+    p.mat('Leaf', C['green_dark'])
     p.mat('Petal', C['yellow'], roughness=0.7)
-    p.mat('Center', '#8A4B1E', roughness=0.8)
-
-    def head(p, top, d):
+    p.mat('Center', '#5A3A1A', roughness=0.85)
+    rng = p.rng
+    for i in range(16):
+        a = rng.uniform(0, 2 * math.pi)
+        r = rng.uniform(0.0, 0.06)
+        p.add('Blade', g_blade(rng.uniform(0.15, 0.24), [0.02, 0.028, 0.017], pitch=rng.uniform(40, 70),
+                               bend=rng.uniform(40, 70), fold=0.3, thickness=0.003),
+              M((r * math.cos(a), r * math.sin(a), 0.003), (0, 0, rng.uniform(0, 360))))
+    heads = [((0.0, 0.02), 0.5, 0.065, -0.2), ((0.1, -0.05), 0.4, 0.057, -0.9), ((-0.1, -0.04), 0.33, 0.05, 0.6)]
+    for (x, y), H, rt, a in heads:
+        b = Vector((x, y, 0.0))
+        out = Vector((math.sin(a), -math.cos(a), 0.0))          # heads lean toward the front (-Y) and sideways
+        top = b + out * 0.07 + Vector((0, 0, H))
+        mid = b.lerp(top, 0.5) + out * 0.015
+        p.add('Stem', g_loft([tuple(b), tuple(mid), tuple(top)], [0.008, 0.007, 0.0055], n=5))
+        for k, (t, side) in enumerate(((0.35, 1), (0.6, -1))):
+            q = b.lerp(top, t)
+            yaw = math.degrees(math.atan2(out.y, out.x)) - 90 + side * 70
+            p.add('Leaf', g_blade(0.13, [0.03, 0.04, 0.026], pitch=25, bend=45, fold=0.3, thickness=0.003),
+                  M(tuple(q), (0, 0, yaw)))
+        d = (out * 0.85 + Vector((0, 0, 0.55))).normalized()
         m = look_matrix(top, d)
-        p.add('Petal', g_fan(9, 0.05, 0.024, cup=0.12, thickness=0.003), m)
-        p.add('Center', g_cyl(0.019, 0.013, 0.013, n=8), m @ M((0, 0, 0.0)))
-    flower_clump(p, 8, (0.2, 0.3), [0.014, 0.02, 0.016, 0.009], 5, {'height': (0.26, 0.42), 'fn': head})
+        p.add('Petal', g_petal_head(13, rt, rt * 0.42, math.radians(10.5), shoulder=0.8, cup=0.12, thickness=0.004), m)
+        p.add('Center', g_cyl(rt * 0.47, rt * 0.36, 0.016, n=10), m @ M((0, 0, -0.002)))
     return p
 
 

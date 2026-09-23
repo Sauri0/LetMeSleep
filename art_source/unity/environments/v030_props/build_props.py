@@ -143,6 +143,58 @@ def anchor_entries(prop):
     return out
 
 
+def derive_menu_layout(entries):
+    """Bed.menu_layout -> positions of the whole UI-06 set (nightstand, lamp, clock, lights, camera) in bed-local
+    Blender metres plus Unity-local copies, so the Unity menu scene can reproduce vignette_menu.png."""
+    by = {e['name']: e for e in entries}
+    if not all(n in by for n in ('Bed', 'Nightstand', 'TableLamp', 'AlarmClock')) or 'menu_layout' not in by['Bed']:
+        return
+    lay = by['Bed']['menu_layout']
+    bd, nd = by['Bed']['dimensions_m'], by['Nightstand']['dimensions_m']
+
+    def anc(name, a):
+        return by[name]['anchors'][a]['blender_m']
+
+    def add(a, b):
+        return [a[i] + b[i] for i in range(3)]
+    y_wall = bd['y'] / 2 + lay['wall_gap_m']
+    ns = [bd['x'] / 2 + lay['nightstand_gap_m'] + nd['x'] / 2, y_wall - nd['y'] / 2 - 0.01, 0.0]
+    lamp = add(ns, anc('Nightstand', 'lamp'))
+    clock = add(ns, anc('Nightstand', 'clock'))
+    light = add(lamp, anc('TableLamp', 'light'))
+    head = anc('Bed', 'sleeper_head')
+    cam = lay['camera']
+    to_cam = [cam['location'][i] - clock[i] for i in range(3)]
+    yaw = math.degrees(math.atan2(to_cam[0], -to_cam[1]))
+    fill = add(add(head, [0.0, -0.035, 0.115]), lay['sleeper_fill']['offset_from_head_m'])
+    res = lay['resolution']
+    vfov = math.degrees(2 * math.atan(cam['sensor_width_mm'] / 2 * res[1] / res[0] / cam['lens_mm']))
+    hfov = math.degrees(2 * math.atan(cam['sensor_width_mm'] / 2 / cam['lens_mm']))
+    pts = {'back_wall_plane_y': y_wall, 'nightstand': ns, 'table_lamp': lamp, 'alarm_clock': clock,
+           'lamp_light': light, 'sleeper_head': head, 'sleeper_fill_light': fill,
+           'camera': cam['location'], 'camera_look_at': cam['look_at']}
+    lay['derived_blender_m'] = {k: (r4(v) if isinstance(v, float) else [r4(x) for x in v]) for k, v in pts.items()}
+    lay['derived_blender_m']['alarm_clock_yaw_deg'] = r4(yaw)
+    lay['unity'] = {
+        'note': 'Local de la cama en Unity (bed pivot = origen, cabecera hacia -Z de Unity porque el frente del FBX '
+                'mira a +Z): posición = (-x, z, -y) de Blender. Rotación del reloj alrededor de Y = -yaw de Blender. '
+                'Pared del fondo: plano z = -back_wall_z. Verificar una vez en Unity contra el FBX importado.',
+        'nightstand': to_unity(ns), 'table_lamp': to_unity(lamp), 'alarm_clock': to_unity(clock),
+        'alarm_clock_yaw_deg': r4(-yaw), 'lamp_light': to_unity(light), 'sleeper_head': to_unity(head),
+        'sleeper_fill_light': to_unity(fill), 'back_wall_z': r4(-y_wall),
+        'camera_position': to_unity(cam['location']), 'camera_look_at': to_unity(cam['look_at']),
+        'camera_vertical_fov_deg': r4(vfov), 'camera_horizontal_fov_deg': r4(hfov), 'aspect': '%d:%d' % (16, 9),
+        'moon_direction': to_unity(lay['moon']['direction']),
+        'lights': {
+            'lamp': 'Point #FFB347-ish (lineal %s), sin sombras; renderingLayerMask sin la capa del velador.'
+                    % lay['lamp']['color_rgb_linear'],
+            'moon': 'Directional %s baja (strength Blender %.1f), desde el frente-izquierda y arriba.'
+                    % (lay['moon']['color_srgb'], lay['moon']['strength']),
+            'sleeper_fill': 'Point cálido solo para la capa del personaje (Rendering Layers), sin sombras.',
+        },
+    }
+
+
 def export_fbx(ob, path):
     bpy.ops.object.select_all(action='DESELECT')
     ob.select_set(True)
@@ -215,6 +267,8 @@ def main():
             prop.name, tris, len(prop.order), dims[0], dims[1], dims[2], 'OK' if entry['passed'] else 'FAIL ' + str(
                 [k for k, v in checks.items() if not v])))
 
+    derive_menu_layout(entries)
+
     # layout on a grid by category (location only; meshes keep their pivots)
     built.sort(key=lambda b: (CATEGORY_ORDER.index(b[0].category) if b[0].category in CATEGORY_ORDER else 99))
     y = 0.0
@@ -254,7 +308,13 @@ def main():
             'decor_note': 'Solo decorativos: sin Collider/Rigidbody bajo MapRoot (ver docs/v030/MAPA-SISTEMAS.md, maps).',
         },
         'rules': ['Let me sleep (nunca Bite & Build)', 'sin armas', 'sin texto en carteles', 'low-poly facetado, color plano',
-                  'sin colliders', 'un FBX por prop'],
+                  'sin colliders', 'un FBX por prop', 'chaflán de 1 segmento (1-2 cm) en cantos de madera y cajas'],
+        'unity_verification_pending': [
+            'Conversión de anchors (-x, z, -y) contra un FBX importado (p. ej. Nightstand.lamp y AlarmClock.screen).',
+            'Emisión URP (_EMISSION + _EmissionColor = color_srgb x emission_strength) de los 6 props emisivos: '
+            'HandLantern, DockLampPost, TableLamp, AlarmClock, Window, Campfire.',
+            'Rendering Layer propio del velador (TableLamp) excluido de su luz.',
+        ],
         'color_note': 'color_srgb es la autoridad de paleta; base_color_linear es el valor que usa Blender.',
         'props': entries,
         'totals': {

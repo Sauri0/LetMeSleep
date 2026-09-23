@@ -100,6 +100,28 @@ def g_box(sx, sy, sz, chamfer=0.0):
     return bm_geom(bm)
 
 
+def g_bevel(geom, offset, min_angle=40.0):
+    """One-segment chamfer on the sharp edges (dihedral > min_angle degrees) of a closed
+    mesh - the 'brillo de canto' of PRP-01/PRP-02 wood. Used for prisms (arrow boards,
+    arched lids) that g_box(chamfer=) does not cover."""
+    verts, faces = geom[0], geom[1]
+    bm = bmesh.new()
+    vs = [bm.verts.new(v) for v in verts]
+    for f in faces:
+        try:
+            bm.faces.new([vs[i] for i in f])
+        except ValueError:
+            pass
+    bm.normal_update()
+    lim = math.radians(min_angle)
+    sharp = [e for e in bm.edges if len(e.link_faces) == 2 and e.calc_face_angle(0.0) > lim]
+    if sharp and offset > 0:
+        bmesh.ops.bevel(bm, geom=sharp, offset=offset, offset_type='OFFSET', segments=1, profile=0.5,
+                        affect='EDGES', clamp_overlap=True)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    return bm_geom(bm)
+
+
 def g_cyl(r1, r2, h, n=8, caps=(True, True), phase=None):
     """Cylinder/frustum/cone with base at z=0 and top at z=h (r2=0 gives an apex)."""
     if phase is None:

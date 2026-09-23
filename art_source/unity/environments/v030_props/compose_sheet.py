@@ -111,7 +111,7 @@ def lineups(renders):
         src = renders / (js.stem + '.png')
         im = Image.open(src).convert('RGB')
         W, H = im.size
-        band = 90
+        band = 120
         out = Image.new('RGB', (W, H + band + 70), BG)
         out.paste(im, (0, 70))
         d = ImageDraw.Draw(out)

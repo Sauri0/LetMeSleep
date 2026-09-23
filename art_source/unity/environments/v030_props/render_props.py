@@ -10,8 +10,11 @@ back-face culling on, like URP/Lit) and writes into --out:
                                by compose_sheet.py from the json)
   fbx_roundtrip.json           per FBX: object count/types, triangles, dimensions, pivot and
                                material names compared with the manifest
-  vignette_menu.png            night bedroom (UI-06): bed, nightstand, lamp + clock on their anchors,
-                               window, rug and plant, lit only by moonlight and the lamp
+  vignette_menu.png (+ .json)  night bedroom (UI-06) built from Bed.menu_layout: bed, nightstand, lamp +
+                               clock on their anchors, render-only sleeper head proxy, moonlight + lamp;
+                               the json holds composition thirds, wall/halo colours, digit contrast and
+                               the navy-wall fraction (mask pass vignette_menu_mask.png)
+  --vignette-only / --search-menu-camera   only the vignette (the search ignores menu_layout.camera)
 Nothing is written into the source folder.
 """
 import argparse
@@ -23,7 +26,7 @@ import time
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 from bpy_extras.object_utils import world_to_camera_view
 
 HERE = Path(__file__).resolve().parent
@@ -308,86 +311,447 @@ def anchor(e, name):
 
 
 def clock_text(clock, loc, yaw):
-    """Render-only '03:27' on the AlarmClock 'screen' anchor (shows Unity where the TMP text goes)."""
+    """Render-only '03:27' on the AlarmClock 'screen' anchor, sized like the Unity TMP text described in
+    the manifest (clock_text: digit height, colour, HDR intensity)."""
+    spec = clock.get('clock_text', {'text': '03:27', 'color_srgb': '#FF3B30', 'hdr_intensity': 2.5,
+                                    'digit_height_m': 0.046, 'max_width_m': 0.15})
     a = clock['anchors']['screen']
     n = Vector(a['normal_blender']).normalized()
     up = Vector((0, 0, 1)) - n * n.z
     up.normalize()
     right = up.cross(n)
-    from mathutils import Matrix
     rot = Matrix((right, up, n)).transposed().to_4x4()
     rz = Matrix.Rotation(math.radians(yaw), 4, 'Z')
     cu = bpy.data.curves.new('ClockText', 'FONT')
-    cu.body = '03:27'
-    cu.size = 0.042
+    cu.body = spec['text']
+    cu.size = 1.0
     cu.align_x = 'CENTER'
     cu.align_y = 'CENTER'
     cu.extrude = 0.0005
     ob = bpy.data.objects.new('ClockText', cu)
-    ob.matrix_world = Matrix.Translation(loc + rz @ (Vector(a['blender_m']) + n * 0.001)) @ rz @ rot
-    ob.data.materials.append(mat_simple('ClockDigits', '#FF3B30', 0.5, emission=1.25))
     bpy.context.scene.collection.objects.link(ob)
+    bpy.context.view_layer.update()
+    w1, h1 = ob.dimensions.x, ob.dimensions.y          # digit height of the built-in font at size 1
+    cu.size = spec['digit_height_m'] / h1
+    sx = min(1.0, spec['max_width_m'] / (w1 * cu.size))
+    pos = loc + rz @ (Vector(a['blender_m']) + n * spec.get('offset_along_normal_m', 0.001))
+    ob.matrix_world = Matrix.Translation(pos) @ rz @ rot @ Matrix.Diagonal((sx, 1.0, 1.0, 1.0))
+    ob.data.materials.append(mat_simple('ClockDigits', spec['color_srgb'], 0.5, emission=spec['hdr_intensity']))
+    bpy.context.view_layer.update()
     return ob
 
 
-def menu_vignette(src, out, by_name):
-    """UI-06 bedroom at night assembled from the library (anchors place lamp and clock)."""
-    need = ['Bed', 'Nightstand', 'TableLamp', 'AlarmClock', 'Window', 'RugRedStriped', 'PottedPlant']
-    if any(n not in by_name for n in need):
-        return
+MENU_NEED = ['Bed', 'Nightstand', 'TableLamp', 'AlarmClock', 'Window']
+MENU_DEFAULTS = {
+    'resolution': [1600, 900],                       # 16:9 like the game menu (UI-06 panel 1)
+    'wall_gap_m': 0.01,                              # back wall behind the headboard posts
+    'nightstand_gap_m': 0.16,                        # bed side -> nightstand top edge
+    'wainscot_height_m': 1.55,                       # the lamp halo stays on wood (no lavender on the navy wall)
+    'colors_srgb': {'wall': '#2A3560', 'wainscot': '#8B5A2B', 'wainscot_trim': '#A86F3A', 'floor': '#5A3A24',
+                    'world': '#101830'},
+    'window': {'x_m': -1.6, 'sill_z_m': 0.98},              # off-frame on the left: motivates the moonlight
+    # moonlight from the front-left, above: lights the quilt, the pillow and the sleeper's face
+    'moon': {'color_srgb': '#6A7BD0', 'strength': 2.0, 'direction': [0.45, 0.45, -0.77]},
+    'lamp': {'color_rgb_linear': [1.0, 0.8, 0.45], 'watts': 27.0, 'radius_m': 0.06},
+    # warm key on the sleeper only (Unity: Point light whose renderingLayerMask holds just the character layer),
+    # placed between the lamp and the head so the face reads warm as in UI-06 without over-lighting the wall
+    'sleeper_fill': {'color_rgb_linear': [1.0, 0.72, 0.42], 'watts': 9.0, 'offset_from_head_m': [0.3, -0.35, 0.25]},
+    'world_strength': 0.35,
+    'glare_strength': 0.3,
+}
+
+
+def _ld(layout, key):
+    return layout.get(key, MENU_DEFAULTS[key])
+
+
+def srgb_hex(c):
+    return '#%02X%02X%02X' % tuple(int(round(max(0.0, min(1.0, x)) * 255)) for x in c[:3])
+
+
+def rel_lum(c):
+    def ch(x):
+        return x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4
+    r, g, b = (ch(x) for x in c[:3])
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def build_menu_room(src, by_name, layout):
+    """Night bedroom in bed-local coordinates (bed pivot at the origin, headboard toward +Y)."""
     sc, cam, ground = setup_scene(768)
-    sc.render.resolution_x, sc.render.resolution_y = 1600, 1000
-    sc.world.node_tree.nodes['Background'].inputs['Color'].default_value = (*lin('#1B2442'), 1)
-    sc.world.node_tree.nodes['Background'].inputs['Strength'].default_value = 0.45
-    for name, col, energy in (('Key', (0.55, 0.66, 1.0), 0.55), ('Fill', (0.45, 0.55, 1.0), 0.2), ('Rim', (0.6, 0.7, 1.0), 0.35)):
-        o = bpy.data.objects[name]
-        o.data.color = col
-        o.data.energy = energy
-    ground.data.materials[0] = mat_simple('Floor', '#5A3A24', 0.9)
-    bed, ns, lamp, clock, win = (by_name[n] for n in need[:5])
-    bd = bed['dimensions_m']
-    y_wall = 1.6
-    bpy.ops.mesh.primitive_plane_add(size=1, location=(0, y_wall, 1.4), rotation=(math.radians(90), 0, 0))
-    wall = bpy.context.object
-    wall.scale = (8, 2.8, 1)
-    wall.data.materials.append(mat_simple('WallBack', '#2A3560', 0.95))
-    bpy.ops.mesh.primitive_plane_add(size=1, location=(0, y_wall - 0.004, 0.45), rotation=(math.radians(90), 0, 0))
-    wains = bpy.context.object
-    wains.scale = (8, 0.9, 1)
-    wains.data.materials.append(mat_simple('Wainscot', '#8B5A2B', 0.9))
-    y_bed = y_wall - bd['y'] / 2 - 0.01
-    placed = []
-    placed += place(src, bed, (0, y_bed, 0))
-    nd = ns['dimensions_m']
-    ns_loc = Vector((bd['x'] / 2 + 0.08 + nd['x'] / 2, y_wall - nd['y'] / 2 - 0.03, 0))
-    placed += place(src, ns, ns_loc)
+    res = _ld(layout, 'resolution')
+    sc.render.resolution_x, sc.render.resolution_y = res
+    cols = _ld(layout, 'colors_srgb')
+    world_bg = sc.world.node_tree.nodes['Background']
+    world_bg.inputs['Color'].default_value = (*lin(cols['world']), 1)
+    world_bg.inputs['Strength'].default_value = _ld(layout, 'world_strength')
+    for name in ('Fill', 'Rim'):
+        bpy.data.objects.remove(bpy.data.objects[name], do_unlink=True)
+    moon = bpy.data.objects['Key']
+    moon.name = 'Moon'
+    mcfg = _ld(layout, 'moon')
+    moon.data.color = lin(mcfg['color_srgb'])
+    moon.data.energy = mcfg['strength']
+    moon.data.angle = math.radians(3)
+    moon.rotation_euler = (-Vector(mcfg['direction'])).normalized().to_track_quat('Z', 'Y').to_euler()
+    ground.data.materials[0] = mat_simple('Floor', cols['floor'], 0.9)
+    if sc.compositing_node_group:
+        for nd_ in sc.compositing_node_group.nodes:
+            if nd_.bl_idname == 'CompositorNodeGlare':
+                nd_.inputs['Strength'].default_value = _ld(layout, 'glare_strength')
+    bed, ns, lamp, clock, win = (by_name[n] for n in MENU_NEED)
+    bd, nd = bed['dimensions_m'], ns['dimensions_m']
+    y_wall = bd['y'] / 2 + _ld(layout, 'wall_gap_m')
+    hw = _ld(layout, 'wainscot_height_m')
+    room = {}
+
+    def plane(name, color, x0, x1, z0, z1, y):
+        bpy.ops.mesh.primitive_plane_add(size=1, location=((x0 + x1) / 2, y, (z0 + z1) / 2), rotation=(math.radians(90), 0, 0))
+        o = bpy.context.object
+        o.name = name
+        o.scale = (x1 - x0, z1 - z0, 1)
+        o.data.materials.append(mat_simple(name, color, 0.95))
+        return o
+    room['wall'] = plane('WallNavy', cols['wall'], -4, 4, hw, 3.2, y_wall)
+    room['wainscot'] = plane('Wainscot', cols['wainscot'], -4, 4, 0.0, hw, y_wall - 0.002)
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, y_wall - 0.02, hw))
+    trim = bpy.context.object
+    trim.name = 'WainscotTrim'
+    trim.scale = (8, 0.04, 0.05)
+    trim.data.materials.append(mat_simple('WainscotTrim', cols['wainscot_trim'], 0.8))
+    placed = {'Bed': place(src, bed, (0, 0, 0))}
+    ns_loc = Vector((bd['x'] / 2 + _ld(layout, 'nightstand_gap_m') + nd['x'] / 2, y_wall - nd['y'] / 2 - 0.01, 0))
+    placed['Nightstand'] = place(src, ns, ns_loc)
     lamp_loc = ns_loc + anchor(ns, 'lamp')
-    placed += place(src, lamp, lamp_loc)
+    placed['TableLamp'] = place(src, lamp, lamp_loc)
     clock_loc = ns_loc + anchor(ns, 'clock')
-    placed += place(src, clock, clock_loc, yaw=-24)
-    clock_text(clock, clock_loc, -24)
-    wd = win['dimensions_m']
-    placed += place(src, win, (-0.55, y_wall - wd['y'] / 2 - 0.004, 1.2))
-    rug = by_name['RugRedStriped']
-    placed += place(src, rug, (0.1, y_bed - bd['y'] / 2 - 0.55, 0), yaw=4)
-    plant = by_name['PottedPlant']
-    placed += place(src, plant, (-bd['x'] / 2 - 0.55, y_wall - 0.3, 0))
+    wcfg = _ld(layout, 'window')
+    placed['Window'] = place(src, win, (wcfg['x_m'], y_wall - win['dimensions_m']['y'] / 2 - 0.004, wcfg['sill_z_m']))
+    head = anchor(bed, 'sleeper_head')
+    lcfg = _ld(layout, 'lamp')
     ld = bpy.data.lights.new('LampLight', 'POINT')
-    ld.color = (1.0, 0.7, 0.38)
-    ld.energy = 170.0
-    ld.shadow_soft_size = 0.08
-    ld.use_shadow = False      # the shade is a closed emissive mesh; Unity uses the same light without shadows
+    ld.color = lcfg['color_rgb_linear']
+    ld.energy = lcfg['watts']
+    ld.shadow_soft_size = lcfg['radius_m']
+    ld.use_shadow = False
     lo = bpy.data.objects.new('LampLight', ld)
     lo.location = lamp_loc + anchor(lamp, 'light')
     sc.collection.objects.link(lo)
+    # Unity: the lamp mesh sits on its own Rendering Layer that this light excludes. Blender: light linking.
+    excl = bpy.data.collections.new('LampSelfExclude')
+    for o in placed['TableLamp']:
+        excl.objects.link(o)
+    lo.light_linking.receiver_collection = excl
+    for item in excl.collection_objects:
+        item.light_linking.link_state = 'EXCLUDE'
+    return dict(sc=sc, cam=cam, placed=placed, room=room, y_wall=y_wall, ns_loc=ns_loc, lamp_loc=lamp_loc,
+                clock_loc=clock_loc, light=lo, head=head, bed=bed, clock=clock)
+
+
+def sleeper_proxy(ctx, layout):
+    """Render-only stand-in for the sleeping human on the sleeper_head anchor: skin head, red nightcap #C8322E
+    over the crown flopping toward the lamp, white pompom, lit by a warm sleeper-only fill (light linking =
+    Unity Rendering Layers). Never exported; the real character goes on the same anchor in Unity."""
+    sc, cam, head = ctx['sc'], ctx['cam'], ctx['head']
+    col = bpy.data.collections.new('SleeperProxy')
+    sc.collection.children.link(col)
+
+    def add(op, color, rough=0.85, **kw):
+        op(**kw)
+        o = bpy.context.object
+        o.data.materials.append(mat_simple('Sleeper_' + color, color, rough))
+        for c_ in list(o.users_collection):
+            c_.objects.unlink(o)
+        col.objects.link(o)
+        return o
+    c = head + Vector((0, -0.035, 0.115))
+    R = 0.12
+    add(bpy.ops.mesh.primitive_ico_sphere_add, '#C98B5A', subdivisions=2, radius=R, location=c, scale=(1.0, 1.05, 0.95))
+    base = c + Vector((0.02, 0.03, 0.075))                              # cap over the crown, as in UI-06
+    d = Vector((0.8, 0.25, 0.3)).normalized()
+    L = 0.3
+    add(bpy.ops.mesh.primitive_cone_add, '#C8322E', vertices=8, radius1=0.13, radius2=0.02, depth=L,
+        location=base + d * (L / 2), rotation=d.to_track_quat('Z', 'Y').to_euler())
+    add(bpy.ops.mesh.primitive_ico_sphere_add, '#F4F4F0', subdivisions=1, radius=0.045,
+        location=base + d * (L + 0.015) + Vector((0, 0, -0.04)))
+    fcfg = _ld(layout, 'sleeper_fill')
+    fd = bpy.data.lights.new('SleeperFill', 'POINT')
+    fd.color = fcfg['color_rgb_linear']
+    fd.energy = fcfg['watts']
+    fd.shadow_soft_size = 0.1
+    fd.use_shadow = False
+    fo = bpy.data.objects.new('SleeperFill', fd)
+    fo.location = c + Vector(fcfg['offset_from_head_m'])
+    sc.collection.objects.link(fo)
+    fo.light_linking.receiver_collection = col
+    for item in col.collection_objects:
+        item.light_linking.link_state = 'INCLUDE'
+    ctx['sleeper_fill'] = fo
+    return list(col.objects)
+
+
+def aim_camera(cam, loc, target, lens):
+    cam.data.type = 'PERSP'
+    cam.data.lens = lens
+    cam.data.sensor_fit = 'HORIZONTAL'
+    cam.data.sensor_width = 36.0
+    cam.location = Vector(loc)
+    d = (Vector(target) - Vector(loc)).normalized()
+    cam.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler()
+    cam.data.clip_start = 0.02
+    cam.data.clip_end = 60
+
+
+def group_points(objs):
+    return [c for c in world_corners([o for o in objs if o.type == 'MESH'])]
+
+
+def project_box(sc, cam, pts):
+    uv = [world_to_camera_view(sc, cam, p) for p in pts]
+    return dict(u_min=min(p.x for p in uv), u_max=max(p.x for p in uv), v_min=min(p.y for p in uv),
+                v_max=max(p.y for p in uv), behind=any(p.z <= 0 for p in uv))
+
+
+def menu_metrics_geometry(ctx):
+    sc, cam = ctx['sc'], ctx['cam']
     bpy.context.view_layer.update()
-    # frame the head of the bed, the nightstand group and the window (UI-06 composition)
-    focus = [o for o in placed if o.type == 'MESH' and not o.name.startswith(('Prop_RugRedStriped', 'Prop_PottedPlant'))]
-    corners = [c for c in world_corners(focus) if c.y > y_bed - 0.6]
-    cam.data.lens = 35
-    frame_camera(cam, corners, yaw=-30.0, elev=15.0, fill=0.9, aspect=sc.render.resolution_y / sc.render.resolution_x)
-    render(sc, out / 'vignette_menu.png')
-    print('LMS_VIGNETTE menu')
+    hp = world_to_camera_view(sc, cam, ctx['head'])
+    grp = group_points(ctx['placed']['Nightstand'] + ctx['placed']['TableLamp'] + ctx['placed']['AlarmClock'])
+    box = project_box(sc, cam, grp)
+    return {'sleeper_head_uv': [round(hp.x, 4), round(hp.y, 4)],
+            'nightstand_group_uv_box': {k: (round(v, 4) if isinstance(v, float) else v) for k, v in box.items()},
+            'nightstand_group_height_fraction': round(min(box['v_max'], 1.0) - max(box['v_min'], 0.0), 4),
+            'nightstand_group_u_centre': round((box['u_min'] + box['u_max']) / 2, 4)}
+
+
+def search_menu_camera(ctx, headboard_y):
+    """Grid search over camera placements for the UI-06 composition rules: camera at pillow height ~1.2 m
+    from the headboard, sleeper head in the central third, nightstand + lamp inside the right third with its
+    visible part >= 35 % of the frame height (the nightstand body may be cropped by the bottom edge, as in
+    UI-06; lamp and clock stay in frame). Violations are penalised so the best compromise is reported."""
+    sc, cam = ctx['sc'], ctx['cam']
+    head = ctx['head']
+    grp = group_points(ctx['placed']['Nightstand'] + ctx['placed']['TableLamp'])
+    clock_top = ctx['clock_loc'] + Vector((0, 0, 0.12))
+    gc = sum(grp, Vector()) / len(grp)
+    hb = Vector((0.0, headboard_y, head.z))
+    best = None
+    tested = 0
+    for dist in (1.15, 1.2, 1.25):
+        for az in range(0, 71, 5):
+            for cz in (0.86, 0.92, 0.98):
+                loc = hb + Vector((-dist * math.sin(math.radians(az)), -dist * math.cos(math.radians(az)), 0))
+                loc.z = cz
+                for t in (-0.2, -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.2):
+                    for tz in (0.55, 0.62, 0.7, 0.78, 0.86):
+                        target = head.lerp(gc, t)
+                        target.z = tz
+                        for lens in (18, 20, 22, 24, 26, 28, 30, 32):
+                            aim_camera(cam, loc, target, lens)
+                            bpy.context.view_layer.update()
+                            tested += 1
+                            hp = world_to_camera_view(sc, cam, head)
+                            box = project_box(sc, cam, grp)
+                            ck = world_to_camera_view(sc, cam, clock_top)
+                            if box['behind'] or hp.z <= 0:
+                                continue
+                            vis = min(box['v_max'], 1.0) - max(box['v_min'], 0.0)
+                            uc = (box['u_min'] + box['u_max']) / 2
+                            pen = ((max(0, 0.37 - hp.x) + max(0, hp.x - 0.63)) * 10
+                                   + (max(0, 0.3 - hp.y) + max(0, hp.y - 0.72)) * 5
+                                   + max(0, 0.675 - box['u_min']) * 10 + max(0, box['u_max'] - 0.985) * 10
+                                   + max(0, box['v_max'] - 0.97) * 10 + max(0, 0.37 - vis) * 10
+                                   + max(0, 0.06 - ck.y) * 10)
+                            score = (-pen + min(vis, 0.55) - 0.3 * abs(hp.x - 0.5) - abs(uc - 0.82)
+                                     - abs(dist - 1.2) - 0.5 * abs(hp.y - 0.5) - 0.01 * abs(lens - 28))
+                            if best is None or score > best[0]:
+                                best = (score, dict(location=[round(x, 4) for x in loc], look_at=[round(x, 4) for x in target],
+                                                    lens_mm=lens, headboard_distance_m=dist, azimuth_deg=az,
+                                                    head_uv=[round(hp.x, 4), round(hp.y, 4)],
+                                                    group_uv_box=[round(box[k], 4) for k in ('u_min', 'u_max', 'v_min', 'v_max')],
+                                                    group_visible_height_fraction=round(vis, 4), group_u_centre=round(uc, 4),
+                                                    penalty=round(pen, 4)))
+    print('LMS_MENU_CAMERA_TESTED', tested)
+    return best
+
+
+def sample_patch(px, W, H, u, v, r=4):
+    import numpy as np
+    x, y = int(u * W), int(v * H)
+    if not (r <= x < W - r and r <= y < H - r):
+        return None
+    patch = px[y - r:y + r + 1, x - r:x + r + 1, :3].reshape(-1, 3)
+    return [float(c) for c in np.median(patch, axis=0).tolist()]
+
+
+def menu_color_metrics(ctx, png):
+    """Wall colour 0.5 m from the lamp light, halo, digit contrast (all measured on the rendered PNG)."""
+    import numpy as np
+    sc, cam = ctx['sc'], ctx['cam']
+    img = bpy.data.images.load(str(png))
+    W, H = img.size
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(H, W, 4)
+    dg = bpy.context.evaluated_depsgraph_get()
+    light = ctx['light'].location.copy()
+    y_wall = ctx['y_wall'] - 0.003
+    dperp = abs(light.y - y_wall)
+
+    def wall_ring(dist):
+        out = []
+        rr = math.sqrt(max(0.0, dist * dist - dperp * dperp))
+        for k in range(24):
+            a = 2 * math.pi * k / 24
+            q = Vector((light.x + rr * math.cos(a), y_wall, light.z + rr * math.sin(a)))
+            if q.z <= 0.02:
+                continue
+            d = q - cam.location
+            hit, loc, *_ = sc.ray_cast(dg, cam.location, d.normalized(), distance=d.length + 0.01)
+            if not hit or (loc - q).length > 0.02:
+                continue
+            uv = world_to_camera_view(sc, cam, q)
+            if not (0 < uv.x < 1 and 0 < uv.y < 1):
+                continue
+            col = sample_patch(px, W, H, uv.x, uv.y)
+            if col:
+                out.append({'point_m': [round(x, 3) for x in q], 'uv': [round(uv.x, 4), round(uv.y, 4)],
+                            'srgb': srgb_hex(col), 'wood': q.z < _ld(ctx.get('layout', {}), 'wainscot_height_m')})
+        return out
+
+    def mean_hex(samples):
+        if not samples:
+            return None
+        cs = [[int(s['srgb'][i:i + 2], 16) for i in (1, 3, 5)] for s in samples]
+        return '#%02X%02X%02X' % tuple(int(round(sum(c[i] for c in cs) / len(cs))) for i in range(3))
+    wall05 = wall_ring(0.5)
+    halo = wall_ring(0.3)
+    # lamp base (jar shoulder): must not burn out now that the lamp mesh is excluded from its own light
+    jar = ctx['lamp_loc'] + Vector((0, 0, 0.13))
+    uvj = world_to_camera_view(sc, cam, jar)
+    dj = jar - cam.location
+    hitj, locj, *_ = sc.ray_cast(dg, cam.location, dj.normalized(), distance=dj.length + 0.05)
+    jar_srgb = None
+    if hitj and (locj - jar).length < 0.06:
+        cj = sample_patch(px, W, H, uvj.x, uvj.y, r=2)
+        jar_srgb = srgb_hex(cj) if cj else None
+    target = [0x8B, 0x5A, 0x2B]
+    m05 = mean_hex(wall05)
+    diff = None if not m05 else [int(m05[i:i + 2], 16) - target[k] for k, i in enumerate((1, 3, 5))]
+    # digit contrast inside the projected screen quad
+    a = ctx['clock']['anchors']['screen']
+    n = Vector(a['normal_blender']).normalized()
+    up = (Vector((0, 0, 1)) - n * n.z).normalized()
+    right = up.cross(n)
+    rz = Matrix.Rotation(math.radians(ctx['clock_yaw']), 4, 'Z')
+    c0 = ctx['clock_loc'] + rz @ Vector(a['blender_m'])
+    sw, sh = a['size_m']
+    corners = [c0 + rz @ (right * sx * sw / 2 + up * sy * sh / 2) for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+    uvs = [world_to_camera_view(sc, cam, q) for q in corners]
+    xs = [int(q.x * W) for q in uvs]
+    ys = [int(q.y * H) for q in uvs]
+    box = px[max(0, min(ys)):min(H, max(ys) + 1), max(0, min(xs)):min(W, max(xs) + 1), :3].reshape(-1, 3)
+    contrast = None
+    if len(box) > 20:
+        lums = np.array([rel_lum(c) for c in box])
+        order = np.argsort(lums)
+        lo = box[order[:max(1, len(order) * 3 // 10)]].mean(axis=0)
+        hi = box[order[-max(1, len(order) // 10):]].mean(axis=0)
+        hi, lo = [float(x) for x in hi.tolist()], [float(x) for x in lo.tolist()]
+        contrast = {'screen_px_box': [min(xs), min(ys), max(xs), max(ys)], 'pixels': int(len(box)),
+                    'digit_srgb': srgb_hex(hi), 'background_srgb': srgb_hex(lo),
+                    'ratio': round(float((rel_lum(hi) + 0.05) / (rel_lum(lo) + 0.05)), 2)}
+    bpy.data.images.remove(img)
+    return {'wall_0p5m_samples': wall05, 'wall_0p5m_mean_srgb': m05, 'wall_0p5m_target_srgb': '#8B5A2B',
+            'wall_0p5m_diff_rgb': diff, 'halo_0p3m_samples': halo, 'halo_0p3m_mean_srgb': mean_hex(halo),
+            'lamp_base_srgb': jar_srgb,
+            'clock_contrast': contrast}
+
+
+def navy_fraction(ctx, out_png):
+    """Mask pass: navy wall white, everything else black (same camera), fraction of the frame."""
+    import numpy as np
+    sc = ctx['sc']
+    white = bpy.data.materials.new('MaskWhite')
+    black = bpy.data.materials.new('MaskBlack')
+    for m, c in ((white, (1, 1, 1, 1)), (black, (0, 0, 0, 1))):
+        b = m.node_tree.nodes.get('Principled BSDF')
+        b.inputs['Base Color'].default_value = (0, 0, 0, 1)
+        b.inputs['Emission Color'].default_value = c
+        b.inputs['Emission Strength'].default_value = 1.0 if c[0] else 0.0
+        b.inputs['Roughness'].default_value = 1.0
+    for o in sc.objects:
+        if o.type in ('MESH', 'FONT'):
+            for slot in o.material_slots:
+                slot.link = 'OBJECT'
+                slot.material = white if o.name == 'WallNavy' else black
+    for o in sc.objects:
+        if o.type == 'LIGHT':
+            o.hide_render = True
+    sc.world.node_tree.nodes['Background'].inputs['Strength'].default_value = 0.0
+    sc.render.use_compositing = False
+    sc.eevee.taa_render_samples = 1
+    render(sc, out_png)
+    img = bpy.data.images.load(str(out_png))
+    W, H = img.size
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(H, W, 4)
+    frac = float((px[:, :, 0] > 0.5).mean())
+    bpy.data.images.remove(img)
+    return round(frac, 4)
+
+
+def menu_vignette(src, out, by_name, search=False):
+    """UI-06 bedroom at night assembled from the library, following Bed.menu_layout (camera, nightstand,
+    lights). Writes vignette_menu.png + vignette_menu.json (composition, colour and contrast metrics)."""
+    if any(n not in by_name for n in MENU_NEED):
+        return
+    bed = by_name['Bed']
+    layout = dict(bed.get('menu_layout') or {})
+    ctx = build_menu_room(src, by_name, layout)
+    ctx['layout'] = layout
+    sc, cam = ctx['sc'], ctx['cam']
+    headboard_y = bed['dimensions_m']['y'] / 2 - 0.05
+    if search or 'camera' not in layout:
+        best = search_menu_camera(ctx, headboard_y)
+        print('LMS_MENU_CAMERA_SEARCH', json.dumps(best[1] if best else None))
+        (out / 'vignette_menu_camera_search.json').write_text(json.dumps(best[1] if best else None, indent=1), encoding='utf-8')
+        if not best:
+            return
+        camcfg = best[1]
+    else:
+        camcfg = layout['camera']
+    aim_camera(cam, camcfg['location'], camcfg['look_at'], camcfg['lens_mm'])
+    # clock turned to face the camera (Unity: same yaw around the nightstand anchor)
+    to_cam = cam.location - ctx['clock_loc']
+    clock_yaw = layout.get('clock_yaw_deg', round(math.degrees(math.atan2(to_cam.x, -to_cam.y)), 1))
+    ctx['clock_yaw'] = clock_yaw
+    ctx['placed']['AlarmClock'] = place(src, by_name['AlarmClock'], ctx['clock_loc'], yaw=clock_yaw)
+    clock_text(by_name['AlarmClock'], ctx['clock_loc'], clock_yaw)
+    sleeper_proxy(ctx, layout)
+    bpy.context.view_layer.update()
+    png = out / 'vignette_menu.png'
+    render(sc, png)
+    metrics = {'layout_source': 'Bed.menu_layout' if 'camera' in layout else 'search', 'camera': camcfg,
+               'clock_yaw_deg': clock_yaw, 'resolution': list(_ld(layout, 'resolution')),
+               'horizontal_fov_deg': round(math.degrees(2 * math.atan(18.0 / cam.data.lens)), 3),
+               'vertical_fov_deg': round(math.degrees(2 * math.atan(18.0 * sc.render.resolution_y / sc.render.resolution_x
+                                                                   / cam.data.lens)), 3),
+               'nightstand_location_m': [round(x, 4) for x in ctx['ns_loc']],
+               'lamp_light_location_m': [round(x, 4) for x in ctx['light'].location],
+               'wall_y_m': round(ctx['y_wall'], 4), 'sleeper_proxy': 'render-only head + nightcap on sleeper_head',
+               'sleeper_fill_location_m': [round(x, 4) for x in ctx['sleeper_fill'].location]}
+    metrics.update(menu_metrics_geometry(ctx))
+    metrics.update(menu_color_metrics(ctx, png))
+    metrics['navy_wall_fraction'] = navy_fraction(ctx, out / 'vignette_menu_mask.png')
+    metrics['criteria'] = {
+        'sleeper_head_central_third': 1 / 3 <= metrics['sleeper_head_uv'][0] <= 2 / 3,
+        'nightstand_group_right_third': metrics['nightstand_group_uv_box']['u_min'] >= 2 / 3,
+        'nightstand_group_height_ge_35pct': metrics['nightstand_group_height_fraction'] >= 0.35,
+        'navy_wall_le_35pct': metrics['navy_wall_fraction'] <= 0.35,
+        'clock_contrast_ge_4': bool(metrics['clock_contrast'] and metrics['clock_contrast']['ratio'] >= 4.0),
+    }
+    (out / 'vignette_menu.json').write_text(json.dumps(metrics, indent=1, ensure_ascii=False), encoding='utf-8')
+    print('LMS_VIGNETTE menu', json.dumps(metrics['criteria']), 'wall05', metrics['wall_0p5m_mean_srgb'],
+          'halo', metrics['halo_0p3m_mean_srgb'], 'navy', metrics['navy_wall_fraction'],
+          'contrast', metrics['clock_contrast'] and metrics['clock_contrast']['ratio'])
 
 
 def render(sc, path):
@@ -404,12 +768,19 @@ def main():
     ap.add_argument('--only', default='')
     ap.add_argument('--manifest', default='manifest.json')
     ap.add_argument('--no-lineups', action='store_true')
+    ap.add_argument('--vignette-only', action='store_true', help='only the UI-06 menu vignette (+ metrics json)')
+    ap.add_argument('--search-menu-camera', action='store_true', help='grid-search the vignette camera (ignores menu_layout.camera)')
     args = ap.parse_args(argv)
     src, out = Path(args.src), Path(args.out)
+    out.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((src / args.manifest).read_text(encoding='utf-8'))
     only = [s for s in args.only.split(',') if s]
     entries = [e for e in manifest['props'] if not only or e['name'] in only]
     t0 = time.time()
+    if args.vignette_only or args.search_menu_camera:
+        menu_vignette(src, out, {e['name']: e for e in manifest['props']}, search=args.search_menu_camera)
+        print('LMS_RENDER_DONE vignette seconds=%.1f' % (time.time() - t0))
+        return
 
     sc, cam, ground = setup_scene(768)
     results = {}
@@ -452,7 +823,7 @@ def main():
             cam.data.type = 'ORTHO'
             yaw, elev = 12.0, 14.0
             d, fwd, right, up = cam_basis(yaw, elev)
-            focus_h = maxh if group != 'objetos' else 1.0
+            focus_h = maxh
             aspect = max(1.6, (width + 0.6) / (focus_h + 0.8))
             sc.render.resolution_x = 2400
             sc.render.resolution_y = int(2400 / aspect)
