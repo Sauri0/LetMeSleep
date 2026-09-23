@@ -9,17 +9,37 @@ namespace LetMeSleep.UI
 {
     /// <summary>
     /// Settings (UI-06 screen 10, UI-05): tabs GENERAL / AUDIO / VIDEO / CONTROLES / ACCESIBILIDAD with icons on the
-    /// left, one row per real option (label on the left, control and value on the right), RESTAURAR and APLICAR,
-    /// always green (at 50 % when there is nothing to apply). Content follows the sketch: GENERAL has the language,
-    /// the mouse sensitivity and the voice chat key; the volumes live only in AUDIO and full screen only in VIDEO;
-    /// ACCESIBILIDAD has the options this build really has. Controls of the same option edit the same draft and are
-    /// refreshed together. Push-to-talk rebinding keeps unapplied edits, shows one waiting text (on its row) and its
-    /// Esc no longer closes the screen (ui-presentation-audio-4). Options the game does not have (subtitles, colour
-    /// blindness, text size) are not shown: adding them needs a new preferences schema (see MAPA-SISTEMAS, ui).
+    /// left, one row per real option (label on the left, control and value in one right-hand column of 480 units),
+    /// rows separated by a 1-unit #3B5E9C line at 40 %, RESTAURAR and APLICAR (always the full green; with nothing to
+    /// apply only its label and check dim to 55 %). The content panel is as tall as its rows plus 24 units and the
+    /// card follows it (its top stays put when switching tabs), so no tab shows an empty band. Content follows the
+    /// sketch (stage 3): GENERAL has the language (a locked "‹ Español ›" selector: the game has one language), the
+    /// mouse sensitivity, the general / music / effects volumes and the voice chat key; AUDIO is the full audio page
+    /// with the same labels ("Volumen música", "Volumen efectos") plus voices and microphone; the sensitivity is not
+    /// repeated in CONTROLES, whose key reference uses a fixed 84-unit key column; ACCESIBILIDAD has the options this
+    /// build has plus the legend of the status icons. Controls of the same option edit the same draft and are
+    /// refreshed together. Push-to-talk
+    /// rebinding keeps unapplied edits, shows one waiting text (on its row), keeps the current tab highlighted and
+    /// its Esc no longer closes the screen (ui-presentation-audio-4). Options the game does not have (subtitles,
+    /// colour blindness, text size) are not shown: adding them needs a new preferences schema (see MAPA-SISTEMAS, ui).
     /// </summary>
     public sealed partial class AlfaUiController
     {
         private enum SettingsTab { General, Audio, Video, Controls, Accessibility }
+        private const float SettingsControlWidth = 480f;
+        private const float SettingsRowHeight = 58f;
+        private const float SettingsKeyColumn = 84f;
+        private const float SettingsCardWidth = 1440f;
+        private const float SettingsHeaderHeight = 100f;
+        private const float SettingsCardPadding = 28f;
+        private const float SettingsTabHeight = 64f;
+        private const float SettingsTabSpacing = 10f;
+        private const float SettingsBackHeight = 66f;
+        private const float SettingsFooterHeight = 72f;
+        private const float SettingsFooterGap = 24f;
+        private const float SettingsPagePadding = 12f;
+        // The card's top edge, above the canvas centre: the header stays in place whatever the tab's height.
+        private const float SettingsCardTop = 360f;
 
         private static readonly int[] FrameLimitOptions = { 0, 30, 60, 90, 120, 144, 165, 240 };
         private static readonly CultureInfo SettingsCulture = CultureInfo.GetCultureInfo("es-AR");
@@ -50,14 +70,19 @@ namespace LetMeSleep.UI
         private TextMeshProUGUI settingsApplyLabel;
         private UnityEngine.UI.Button settingsResetButton;
         private CanvasGroup settingsControlsGroup;
+        private RectTransform settingsCard;
+        private bool settingsLayoutDirty = true;
 
         private void BuildSettings()
         {
             var view = factory.View("SettingsView", transform, false);
             SetSceneScrim(view, 0.8f);
             screens[AlfaUiScreen.Settings] = view;
-            var panel = CenteredPanel(view.transform, "SettingsCard", 1440f, 860f);
+            var panel = CenteredPanel(view.transform, "SettingsCard", SettingsCardWidth, 860f);
             panel.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Night800;
+            // Top-anchored: LayoutSettingsCard sets the height from the selected tab's rows.
+            Anchor(panel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 1f), new Vector2(0f, SettingsCardTop), new Vector2(SettingsCardWidth, 860f));
+            settingsCard = panel;
             var header = factory.SectionHeader(panel, "Header", "AJUSTES", AlfaUiIconKind.Gear, AlfaUiTheme.Sky400);
             Anchor(header, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(30f, -24f), new Vector2(600f, 52f));
             header.Find("Label").GetComponent<TextMeshProUGUI>().fontSize = AlfaUiTheme.HeaderTitleSize;
@@ -67,36 +92,44 @@ namespace LetMeSleep.UI
             settingsControlsGroup = content.GetComponent<CanvasGroup>();
 
             var tabs = factory.Vertical(content, "Tabs", 10f);
-            Anchor(tabs, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(300f, 5 * 76f + 4 * 10f));
+            Anchor(tabs, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(300f, SettingsTabsHeight));
             SettingsTabButton(tabs, SettingsTab.General, "GENERAL", AlfaUiIconKind.Gear);
             SettingsTabButton(tabs, SettingsTab.Audio, "AUDIO", AlfaUiIconKind.Audio);
             SettingsTabButton(tabs, SettingsTab.Video, "VIDEO", AlfaUiIconKind.Video);
             SettingsTabButton(tabs, SettingsTab.Controls, "CONTROLES", AlfaUiIconKind.Controls);
             SettingsTabButton(tabs, SettingsTab.Accessibility, "ACCESIBILIDAD", AlfaUiIconKind.Accessibility);
-            var back = factory.Button(content, "SettingsBackButton", "VOLVER", CloseSettings, AlfaButtonStyle.Quiet, 66f, AlfaUiIconKind.Back);
-            Anchor((RectTransform)back.transform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), Vector2.zero, new Vector2(300f, 66f));
+            var back = factory.Button(content, "SettingsBackButton", "VOLVER", CloseSettings, AlfaButtonStyle.Quiet, SettingsBackHeight, AlfaUiIconKind.Back);
+            Anchor((RectTransform)back.transform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f), Vector2.zero, new Vector2(300f, SettingsBackHeight));
 
             var pages = factory.Inset(content, "Pages", -1f, AlfaUiTheme.PanelRadius);
-            AlfaUiFactory.Place(pages, Vector2.zero, Vector2.one, new Vector2(324f, 96f), Vector2.zero);
+            AlfaUiFactory.Place(pages, Vector2.zero, Vector2.one, new Vector2(324f, SettingsFooterHeight + SettingsFooterGap), Vector2.zero);
 
+            // GENERAL as UI-06: language, sensitivity, the three volumes and the voice chat key.
             var general = SettingsPage(pages, SettingsTab.General, "GeneralPanel");
-            ValueRow(general, "Idioma", "Language", "Español");
-            SliderRow(general, "Sensibilidad del mouse · humano", "GeneralHumanSensitivitySlider", draft => draft.HumanSensitivity, (draft, value) => draft.HumanSensitivity = value, 0.1f, 2f);
-            SliderRow(general, "Sensibilidad del mouse · mosquito", "GeneralMosquitoSensitivitySlider", draft => draft.MosquitoSensitivity, (draft, value) => draft.MosquitoSensitivity = value, 0.1f, 2f);
+            LockedCycleRow(general, "Idioma", "Language", "Español");
+            SliderRow(general, "Sensibilidad del mouse · humano", "HumanSensitivitySlider", draft => draft.HumanSensitivity, (draft, value) => draft.HumanSensitivity = value, 0.1f, 2f);
+            SliderRow(general, "Sensibilidad del mouse · mosquito", "MosquitoSensitivitySlider", draft => draft.MosquitoSensitivity, (draft, value) => draft.MosquitoSensitivity = value, 0.1f, 2f);
+            SliderRow(general, "Volumen general", "GeneralMasterVolumeSlider", draft => draft.MasterVolume, (draft, value) => draft.MasterVolume = value);
+            SliderRow(general, "Volumen música", "GeneralMusicVolumeSlider", draft => draft.MusicVolume, (draft, value) => draft.MusicVolume = value);
+            SliderRow(general, "Volumen efectos", "GeneralEffectsVolumeSlider", draft => draft.EffectsVolume, (draft, value) => draft.EffectsVolume = value);
             BuildPushToTalkRow(general);
 
             var audio = SettingsPage(pages, SettingsTab.Audio, "AudioPanel");
             SliderRow(audio, "Volumen general", "MasterVolumeSlider", draft => draft.MasterVolume, (draft, value) => draft.MasterVolume = value);
-            SliderRow(audio, "Música", "MusicVolumeSlider", draft => draft.MusicVolume, (draft, value) => draft.MusicVolume = value);
-            SliderRow(audio, "Efectos", "EffectsVolumeSlider", draft => draft.EffectsVolume, (draft, value) => draft.EffectsVolume = value);
-            SliderRow(audio, "Voces del chat", "VoiceVolumeSlider", draft => draft.VoiceVolume, (draft, value) => draft.VoiceVolume = value);
+            // The same labels as GENERAL ("Volumen música", "Volumen efectos").
+            SliderRow(audio, "Volumen música", "MusicVolumeSlider", draft => draft.MusicVolume, (draft, value) => draft.MusicVolume = value);
+            SliderRow(audio, "Volumen efectos", "EffectsVolumeSlider", draft => draft.EffectsVolume, (draft, value) => draft.EffectsVolume = value);
+            SliderRow(audio, "Volumen del chat de voz", "VoiceVolumeSlider", draft => draft.VoiceVolume, (draft, value) => draft.VoiceVolume = value);
             var micRow = SettingsRow(audio, "Micrófono", "VoiceDeviceRow");
             voiceDeviceDropdown = factory.Dropdown(micRow, "VoiceDeviceDropdown", new[] { "ELEGÍ UN MICRÓFONO" }, index =>
             {
                 string device = index > 0 && settingsState != null && index - 1 < settingsState.VoiceDevices.Count ? settingsState.VoiceDevices[index - 1] : string.Empty;
                 ChangeSetting(draft => draft.VoiceDevice = device);
             });
-            voiceDeviceDropdown.GetComponent<UnityEngine.UI.LayoutElement>().preferredWidth = 480f;
+            // Same right-hand column as every other control (it used to stretch and start 100 units earlier).
+            var dropdownLayout = voiceDeviceDropdown.GetComponent<UnityEngine.UI.LayoutElement>();
+            dropdownLayout.minWidth = dropdownLayout.preferredWidth = SettingsControlWidth;
+            dropdownLayout.flexibleWidth = 0f;
 
             var video = SettingsPage(pages, SettingsTab.Video, "VideoPanel");
             ToggleRow(video, "Pantalla completa", "FullScreen", draft => draft.FullScreen, (draft, value) => draft.FullScreen = value);
@@ -111,9 +144,8 @@ namespace LetMeSleep.UI
                 draft.FrameLimit = FrameLimitOptions[Cycle(index, delta, FrameLimitOptions.Length)];
             });
 
+            // The mouse sensitivity lives in GENERAL only (it used to be repeated here).
             var controls = SettingsPage(pages, SettingsTab.Controls, "ControlsPanel");
-            SliderRow(controls, "Sensibilidad del humano", "HumanSensitivitySlider", draft => draft.HumanSensitivity, (draft, value) => draft.HumanSensitivity = value, 0.1f, 2f);
-            SliderRow(controls, "Sensibilidad del mosquito", "MosquitoSensitivitySlider", draft => draft.MosquitoSensitivity, (draft, value) => draft.MosquitoSensitivity = value, 0.1f, 2f);
             ToggleRow(controls, "Invertir eje vertical", "InvertY", draft => draft.InvertY, (draft, value) => draft.InvertY = value);
             BuildKeyReference(controls);
 
@@ -124,7 +156,8 @@ namespace LetMeSleep.UI
                 "Esta versión todavía no tiene opciones de accesibilidad para este equipo.", AlfaUiTheme.BodySize, AlfaUiTheme.Moon200).gameObject;
             var accessInfo = factory.Text(access, "AccessibilityInfo",
                 "Los estados del juego nunca dependen sólo del color: cada uno lleva un icono o un texto.", AlfaUiTheme.NoteSize, AlfaUiTheme.Moon200);
-            accessInfo.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = 56f;
+            accessInfo.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = 40f;
+            BuildStatusLegend(access);
             reduceMotionRow.SetActive(false);
 
             var footer = factory.Horizontal(content, "Actions", 14f, TextAnchor.MiddleRight);
@@ -149,7 +182,7 @@ namespace LetMeSleep.UI
 
         private void SettingsTabButton(Transform parent, SettingsTab tab, string label, AlfaUiIconKind icon)
         {
-            var button = factory.Button(parent, "SettingsTab" + tab, label, () => SelectSettingsTab(tab, false), AlfaButtonStyle.Tab, 76f, icon);
+            var button = factory.Button(parent, "SettingsTab" + tab, label, () => SelectSettingsTab(tab, false), AlfaButtonStyle.Tab, SettingsTabHeight, icon);
             var text = button.transform.Find("Label").GetComponent<TextMeshProUGUI>();
             text.alignment = TextAlignmentOptions.MidlineLeft;
             factory.MakeDisplay(text, 26f);
@@ -158,23 +191,33 @@ namespace LetMeSleep.UI
 
         private RectTransform SettingsPage(Transform pages, SettingsTab tab, string name)
         {
-            var page = factory.Vertical(pages, name, 8f);
-            AlfaUiFactory.Fill(page, 30f, 30f, 22f, 22f);
+            var page = factory.Vertical(pages, name, 6f);
+            // 12 units above and below the rows: the panel is its rows + 24 (LayoutSettingsCard).
+            AlfaUiFactory.Fill(page, 30f, 30f, SettingsPagePadding, SettingsPagePadding);
             settingsPages[tab] = page.gameObject;
             return page;
         }
 
-        /// <summary>UI-06 settings row: sentence-case label on the left, the control (and its value) on the right.</summary>
+        /// <summary>
+        /// UI-06 settings row: sentence-case label on the left, the control (and its value) in the fixed right-hand
+        /// column, and a 1-unit #3B5E9C line at 40 % under the row.
+        /// </summary>
         private RectTransform SettingsRow(Transform page, string label, string name)
         {
             var row = factory.Horizontal(page, name, 18f, TextAnchor.MiddleLeft);
             var element = row.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            element.minHeight = element.preferredHeight = 60f;
+            element.minHeight = element.preferredHeight = SettingsRowHeight;
             var text = factory.Text(row, "Label", label, 23f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
             text.textWrappingMode = TextWrappingModes.NoWrap;
             var layout = text.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minWidth = 300f;
             layout.flexibleWidth = 1f;
+            var separator = AlfaUiFactory.Node("RowSeparator", row, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.LayoutElement));
+            separator.GetComponent<UnityEngine.UI.LayoutElement>().ignoreLayout = true;
+            var line = separator.GetComponent<UnityEngine.UI.Image>();
+            line.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.4f);
+            line.raycastTarget = false;
+            Anchor(line.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, -3f), new Vector2(0f, 1f));
             return row;
         }
 
@@ -185,7 +228,8 @@ namespace LetMeSleep.UI
             UnityEngine.UI.Slider slider = null;
             slider = factory.Slider(row, name, min, max, value => ChangeSetting(draft => write(draft, value)));
             var sliderLayout = slider.GetComponent<UnityEngine.UI.LayoutElement>();
-            sliderLayout.preferredWidth = sliderLayout.minWidth = 380f;
+            // Slider + gap + value = the 480-unit control column.
+            sliderLayout.preferredWidth = sliderLayout.minWidth = SettingsControlWidth - 18f - 84f;
             sliderLayout.flexibleWidth = 0f;
             var valueText = factory.Text(row, "Value", string.Empty, 23f, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineRight, true);
             valueText.textWrappingMode = TextWrappingModes.NoWrap;
@@ -209,7 +253,7 @@ namespace LetMeSleep.UI
             var row = SettingsRow(page, label, name + "Row");
             var cycle = factory.Horizontal(row, name + "Cycle", 8f, TextAnchor.MiddleLeft);
             var cycleLayout = cycle.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            cycleLayout.minWidth = cycleLayout.preferredWidth = 480f;
+            cycleLayout.minWidth = cycleLayout.preferredWidth = SettingsControlWidth;
             cycleLayout.flexibleWidth = 0f;
             CycleButton(cycle, name + "Previous", AlfaUiIconKind.ChevronLeft, () => ChangeSetting(draft => step(draft, -1)));
             var well = factory.Inset(cycle, name + "Well", 52f);
@@ -225,19 +269,24 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
-        /// Read-only value row (the game has a single language): the value in a well, no arrows, so it never
-        /// invites a change that does not exist.
+        /// A selector with a single value (the game has one language): the UI-06 "‹ Español ›" cycle with both arrows
+        /// disabled, so it reads as a setting that exists but cannot change yet (never a mute field).
         /// </summary>
-        private RectTransform ValueRow(Transform page, string label, string name, string value)
+        private RectTransform LockedCycleRow(Transform page, string label, string name, string value)
         {
             var row = SettingsRow(page, label, name + "Row");
-            var well = factory.Inset(row, name + "Well", 52f);
-            var layout = well.GetComponent<UnityEngine.UI.LayoutElement>();
-            layout.minWidth = layout.preferredWidth = 480f;
-            layout.flexibleWidth = 0f;
+            var cycle = factory.Horizontal(row, name + "Cycle", 8f, TextAnchor.MiddleLeft);
+            var cycleLayout = cycle.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+            cycleLayout.minWidth = cycleLayout.preferredWidth = SettingsControlWidth;
+            cycleLayout.flexibleWidth = 0f;
+            var previous = CycleButton(cycle, name + "Previous", AlfaUiIconKind.ChevronLeft, null);
+            var well = factory.Inset(cycle, name + "Well", 52f);
+            well.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 1f;
             var text = factory.Text(well, name + "Value", value, 25f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             text.textWrappingMode = TextWrappingModes.NoWrap;
             AlfaUiFactory.Fill(text.rectTransform, 10f, 10f, 4f, 4f);
+            var next = CycleButton(cycle, name + "Next", AlfaUiIconKind.ChevronRight, null);
+            previous.interactable = next.interactable = false;
             return row;
         }
 
@@ -256,7 +305,7 @@ namespace LetMeSleep.UI
             var row = SettingsRow(page, "Chat de voz · tecla para hablar", "PushToTalkRow");
             var group = factory.Horizontal(row, "PushToTalk", 12f, TextAnchor.MiddleLeft);
             var groupLayout = group.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
-            groupLayout.minWidth = groupLayout.preferredWidth = 480f;
+            groupLayout.minWidth = groupLayout.preferredWidth = SettingsControlWidth;
             groupLayout.flexibleWidth = 0f;
             var cap = factory.KeyCap(group, "PushToTalkKey", "V", 46f);
             pushToTalkBindingLabel = cap.Find("Key").GetComponent<TextMeshProUGUI>();
@@ -292,12 +341,49 @@ namespace LetMeSleep.UI
             {
                 var line = factory.Horizontal(column, "Key_" + key, 12f, TextAnchor.MiddleLeft);
                 line.gameObject.AddComponent<UnityEngine.UI.LayoutElement>().minHeight = 34f;
-                var cap = factory.KeyCap(line, "Cap", key, 32f);
+                // Fixed 84-unit key column: every label starts at the same x whatever the key's width.
+                var slot = factory.Horizontal(line, "KeySlot", 0f, TextAnchor.MiddleLeft);
+                var slotLayout = slot.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+                slotLayout.minWidth = slotLayout.preferredWidth = SettingsKeyColumn;
+                slotLayout.flexibleWidth = 0f;
+                var cap = factory.KeyCap(slot, "Cap", key, 32f, 12f);
                 var capLayout = cap.GetComponent<UnityEngine.UI.LayoutElement>();
-                capLayout.minWidth = capLayout.preferredWidth = Mathf.Max(capLayout.preferredWidth, 44f);
+                capLayout.minWidth = capLayout.preferredWidth = Mathf.Min(SettingsKeyColumn, Mathf.Max(capLayout.preferredWidth, 44f));
                 var text = factory.Text(line, "Label", label, AlfaUiTheme.MinTextSize, AlfaUiTheme.Moon200, TextAlignmentOptions.MidlineLeft);
                 text.textWrappingMode = TextWrappingModes.NoWrap;
             }
+        }
+
+        /// <summary>ACCESIBILIDAD: what each status icon means (the game never shows a state by colour alone).</summary>
+        private void BuildStatusLegend(Transform page)
+        {
+            factory.Divider(page, "LegendDivider", AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.4f), 1f);
+            factory.Caption(page, "StatusLegendTitle", "LEYENDA DE ICONOS DE ESTADO");
+            var grid = AlfaUiFactory.Node("StatusLegend", page, typeof(UnityEngine.UI.GridLayoutGroup), typeof(UnityEngine.UI.LayoutElement));
+            AlfaUiFactory.ConfigureGrid(grid.GetComponent<UnityEngine.UI.GridLayoutGroup>(), new Vector2(470f, 44f), new Vector2(18f, 6f), 2);
+            var entries = new (AlfaUiIconKind icon, Color color, string label)[]
+            {
+                (AlfaUiIconKind.Ready, AlfaUiTheme.StatusOk, "Listo para jugar"),
+                (AlfaUiIconKind.Close, AlfaUiTheme.StatusWarn, "No listo o silenciado"),
+                (AlfaUiIconKind.Microphone, AlfaUiTheme.StatusOk, "Hablando por el chat de voz"),
+                (AlfaUiIconKind.Audio, AlfaUiTheme.Sheet100, "Se escucha en el chat de voz"),
+                (AlfaUiIconKind.Warning, AlfaUiTheme.Lamp400, "Aviso o problema de conexión"),
+                (AlfaUiIconKind.Lock, AlfaUiTheme.Moon200, "Todavía no disponible"),
+                (AlfaUiIconKind.Crown, AlfaUiTheme.Lamp400, "Anfitrión de la sala"),
+                (AlfaUiIconKind.Heart, AlfaUiTheme.TeamMosquito, "Vidas o sangre a salvo")
+            };
+            foreach (var (icon, color, label) in entries)
+            {
+                var row = factory.Horizontal(grid.transform, "Legend_" + icon, 12f, TextAnchor.MiddleLeft);
+                var symbol = factory.Icon(row, "Icon", icon, color);
+                var symbolLayout = symbol.gameObject.AddComponent<UnityEngine.UI.LayoutElement>();
+                symbolLayout.minWidth = symbolLayout.preferredWidth = symbolLayout.minHeight = symbolLayout.preferredHeight = 28f;
+                var text = factory.Text(row, "Label", label, AlfaUiTheme.NoteSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.MidlineLeft);
+                text.textWrappingMode = TextWrappingModes.NoWrap;
+            }
+            var rows = Mathf.CeilToInt(entries.Length / 2f);
+            var layout = grid.GetComponent<UnityEngine.UI.LayoutElement>();
+            layout.minHeight = layout.preferredHeight = rows * 44f + (rows - 1) * 6f + 4f;
         }
 
         private void SelectSettingsTab(SettingsTab tab, bool focusControl)
@@ -306,7 +392,28 @@ namespace LetMeSleep.UI
             settingsTab = tab;
             foreach (var pair in settingsPages) pair.Value.SetActive(pair.Key == tab);
             foreach (var pair in settingsTabButtons) AlfaUiFactory.SetSelected(pair.Value, pair.Key == tab);
+            LayoutSettingsCard();
             if (focusControl) Focus(SettingsDefaultFocus());
+        }
+
+        private static float SettingsTabsHeight => 5f * SettingsTabHeight + 4f * SettingsTabSpacing;
+
+        /// <summary>
+        /// The content panel as tall as the selected tab's rows plus 24 units, the card around it (never shorter than
+        /// the tab column with VOLVER), top edge fixed. Re-run when rows appear or hide (push-to-talk note, reduce
+        /// motion) through <see cref="settingsLayoutDirty"/>.
+        /// </summary>
+        private void LayoutSettingsCard()
+        {
+            settingsLayoutDirty = false;
+            if (settingsCard == null || !settingsPages.TryGetValue(settingsTab, out var page) || page == null) return;
+            var rect = (RectTransform)page.transform;
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            var rows = UnityEngine.UI.LayoutUtility.GetPreferredHeight(rect);
+            var left = SettingsTabsHeight + 20f + SettingsBackHeight;
+            var right = rows + 2f * SettingsPagePadding + SettingsFooterGap + SettingsFooterHeight;
+            var height = SettingsHeaderHeight + Mathf.Max(left, right) + SettingsCardPadding;
+            settingsCard.sizeDelta = new Vector2(SettingsCardWidth, Mathf.Ceil(height));
         }
 
         private string SettingsDefaultFocus() => settingsFirstControl.TryGetValue(settingsTab, out var name) ? name : "SettingsTab" + settingsTab;
@@ -340,6 +447,7 @@ namespace LetMeSleep.UI
             if (!pttRebinding) settingsStatus.text = state.IsApplying ? "Aplicando ajustes…" : state.Message;
             RefreshSettingsControls();
             UpdatePushToTalkRow();
+            settingsLayoutDirty = true;
         }
 
         private void RefreshSettingsControls()
@@ -488,7 +596,15 @@ namespace LetMeSleep.UI
             pushToTalkNote.text = pttRebinding ? "Esc cancela" :
                 !supported ? "Esta versión no permite cambiarla." :
                 !inRoom ? "Se cambia dentro de una sala, con el chat de voz activo." : string.Empty;
-            pushToTalkNote.gameObject.SetActive(!string.IsNullOrEmpty(pushToTalkNote.text));
+            var noteShown = !string.IsNullOrEmpty(pushToTalkNote.text);
+            if (pushToTalkNote.gameObject.activeSelf != noteShown) settingsLayoutDirty = true;
+            pushToTalkNote.gameObject.SetActive(noteShown);
+        }
+
+        /// <summary>Per-frame upkeep while the settings are open: the card height after rows appeared or hid.</summary>
+        private void UpdateSettingsLayout()
+        {
+            if (settingsLayoutDirty) LayoutSettingsCard();
         }
 
         private static string BindingKeyLabel(string path)

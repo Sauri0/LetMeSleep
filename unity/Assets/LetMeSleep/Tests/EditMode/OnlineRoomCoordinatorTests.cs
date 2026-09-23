@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LetMeSleep.Bootstrap;
 using LetMeSleep.Core;
 using LetMeSleep.Online;
 using NUnit.Framework;
@@ -155,6 +156,86 @@ namespace LetMeSleep.Tests.EditMode
             network.Flush();
             Assert.That(host.Current.Revision, Is.EqualTo(revision));
             Assert.That(hostLink.Sent - before, Is.EqualTo(1), "One view back to the asking member, no room broadcast.");
+        }
+
+        private void DeliverNext(string from, string to)
+        {
+            var packet = network.InFlight.Dequeue();
+            Assert.That((packet.From, packet.To), Is.EqualTo((from, to)));
+            network.Links[packet.To].Receive(packet.From, packet.Channel, packet.Data);
+        }
+
+        // The host's answer as the coordinator frames it (kind 4 = Rejected, payload = RoomError).
+        private void DeliverRejectionToGuest(RoomError error)
+        {
+            foreach (var packet in new MessageFraming().Encode(4, new[] { (byte)error })) guestLink.Receive(HostId, 0, packet);
+        }
+
+        // The host dropped the guest while the guest kept its view (lobby membership blinked on the host side only).
+        private void HostForgetsTheGuest()
+        {
+            hostLobby.Members.Remove(GuestId); hostLobby.Raise();
+            Assert.That(host.Current.Members.Any(member => member.Id == GuestId), Is.False);
+            hostLobby.Members.Add(GuestId); hostLobby.Raise();
+            Assert.That(guest.Current.Members.Any(member => member.Id == GuestId), Is.True, "The guest still shows its old view.");
+        }
+
+        [Test]
+        public void UnknownMemberInsideTheRoomIsNotAnErrorAndTheNextHelloReadmitsTheGuest()
+        {
+            HostForgetsTheGuest();
+            int sent = guestLink.Sent;
+            DeliverRejectionToGuest(RoomError.UnknownMember);
+            Assert.That(guest.Error, Is.Empty, "Rejoining is not a settings change: nothing to show the player.");
+            Step(.5);
+            Assert.That(guestLink.Sent, Is.EqualTo(sent), "Never more than one Hello per second.");
+            Step(.6);
+            Assert.That(guestLink.Sent - sent, Is.EqualTo(1), "The Hello is due in a second, not after the slow resync.");
+            Assert.That(guest.Error, Is.Empty);
+            Assert.That(host.Current.Members.Select(member => member.Id), Is.EquivalentTo(new[] { HostId, GuestId }));
+            Assert.That(guest.Current.Revision, Is.EqualTo(host.Current.Revision), "The guest is back in the host's current view.");
+        }
+
+        [Test]
+        public void RepeatedUnknownMemberRejectionsCannotMakeTheGuestFloodHellos()
+        {
+            int sent = guestLink.Sent;
+            for (int i = 0; i < 20; i++) DeliverRejectionToGuest(RoomError.UnknownMember);
+            Step(1.1);
+            for (int i = 0; i < 20; i++) DeliverRejectionToGuest(RoomError.UnknownMember);
+            Step(.3);
+            Assert.That(guestLink.Sent - sent, Is.EqualTo(1));
+            Assert.That(guest.Error, Is.Empty);
+        }
+
+        [Test]
+        public void GuestWhoseSeatWasTakenIsToldTheRoomIsFullNotThatTheSettingsChanged()
+        {
+            HostForgetsTheGuest();
+            // Other players take every seat meanwhile (joined straight into the host's room).
+            for (int i = 1; host.HostAuthority.Snapshot().Members.Count < RoomRules.Capacity; i++)
+                Assert.That(host.HostAuthority.Join("filler-" + i, "Relleno " + i, RoomSession.Protocol), Is.EqualTo(RoomError.None));
+            Step(OnlineRoomCoordinator.ViewRefreshSeconds);
+            Assert.That(guest.Error, Is.EqualTo(nameof(RoomError.Full)), "The periodic Hello found the room full.");
+            Assert.That(guest.Current, Is.Not.Null);
+            Assert.That(RoomRejectionPolicy.Evaluate(guest.Error, guest.Current != null, out string message), Is.EqualTo(RoomRejectionResponse.LeaveRoom));
+            Assert.That(message, Does.Not.Contain("ajustes"));
+        }
+
+        [Test]
+        public void ReadyAfterTheHostChangedTheRulesStillAsksToMarkReadyAgain()
+        {
+            long seen = guest.Current.Revision;
+            Assert.That(host.SetRules(new RoomRules(roundSeconds: 240)), Is.EqualTo(RoomError.None));
+            network.InFlight.Clear(); // The guest has not seen the new rules yet.
+            Assert.That(guest.Current.Revision, Is.EqualTo(seen));
+            Assert.That(guest.SetReady(true), Is.EqualTo(RoomError.None));
+            // Deliver one packet at a time: the host answers with Rejected, then its current view (a later frame).
+            DeliverNext(GuestId, HostId);
+            DeliverNext(HostId, GuestId);
+            Assert.That(guest.Error, Is.EqualTo(nameof(RoomError.InvalidRules)));
+            Assert.That(RoomRejectionPolicy.Evaluate(guest.Error, true, out string message), Is.EqualTo(RoomRejectionResponse.ShowInRoom));
+            Assert.That(message, Is.EqualTo(RoomRejectionPolicy.RulesChanged));
         }
 
         [Test]
