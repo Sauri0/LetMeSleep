@@ -146,7 +146,11 @@ $result.quitConfirmed = $quit -match '^\s*(s|si|sí|y|yes)\s*$'
 $logText = if (Test-Path -LiteralPath $log) { Get-Content -LiteralPath $log } else { @() }
 $result.logPresent = $logText.Count -gt 0
 $exceptions = @($logText | Where-Object { $_ -match '^\s*[A-Za-z_][\w.]*Exception\b' })
-$markers = @($logText | Where-Object { $_ -match 'LMS_[A-Z_]*(FAILED|MISSING|INVALID|UNSUPPORTED)' })
+# Known since 0.2.0 (every smoke log has them): only the flyswatter has a held-tool prefab; the other pickups log a
+# warning once each. They are reported apart and do not fail the walkthrough; a missing flyswatter prefab still does.
+$knownWarning = '^LMS_TOOL_PREFAB_MISSING tool=(slipper|electric_racket|aerosol)(\s|$)'
+$markers = @($logText | Where-Object { $_ -match 'LMS_[A-Z_]*(FAILED|MISSING|INVALID|UNSUPPORTED)' -and $_ -notmatch $knownWarning })
+$result.logKnownWarnings = @($logText | Where-Object { $_ -match $knownWarning }).Count
 $result.logExceptions = $exceptions.Count
 $result.logFailureMarkers = $markers.Count
 $result.logFindings = @($exceptions + $markers | Select-Object -First 20)

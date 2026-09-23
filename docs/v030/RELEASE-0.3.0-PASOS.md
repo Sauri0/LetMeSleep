@@ -216,7 +216,9 @@ frente; tras Enter hay 5 s para volver al juego):
 En cada paso el operador confirma (s/n) lo que vio. `walkthrough.json` queda con
 `pass=true` sólo si el paquete verificó, las cinco capturas existen y pesan
 ≥ 100 KB, las seis confirmaciones son "s", el juego salió con código 0 y
-`player.log` no tiene excepciones ni marcas `LMS_*FAILED/MISSING/INVALID/UNSUPPORTED`.
+`player.log` no tiene excepciones ni marcas `LMS_*FAILED/MISSING/INVALID/UNSUPPORTED`
+(salvo los avisos conocidos desde la 0.2.0 `LMS_TOOL_PREFAB_MISSING` de
+`slipper`, `electric_racket` y `aerosol`, que se cuentan aparte en `logKnownWarnings`).
 Mirá las cinco PNG: un `pass` no prueba el aspecto. Si falla, no se publica:
 se corrige, se vuelve a compilar (paso 6) y se repite el recorrido. Esto no
 verifica online entre redes distintas ni con dos identidades reales.
