@@ -49,7 +49,12 @@ namespace LetMeSleep.Editor
             var result = new JObject { ["utc"] = DateTime.UtcNow.ToString("o"), ["unityVersion"] = Application.unityVersion };
             var maps = new JArray();
             foreach (var entry in catalog.Entries)
-                maps.Add(DumpMap(entry));
+            {
+                var map = DumpMap(entry);
+                map["allRenderers"] = AllRenderers(entry);
+                map["spawnClearance"] = SpawnClearance(entry);
+                maps.Add(map);
+            }
             result["maps"] = maps;
             result["lobby"] = DumpPrefab(LobbyPrefabPath, null);
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
@@ -140,6 +145,68 @@ namespace LetMeSleep.Editor
                 PrefabUtility.UnloadPrefabContents(root);
             }
         }
+
+        /// <summary>Every renderer of the map prefab: "path|materials|center|size" (invariant culture), for choosing overrides.</summary>
+        static JArray AllRenderers(HiggsfieldMapCatalog.Entry entry)
+        {
+            string path = AssetDatabase.GetAssetPath(entry.Prefab);
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                return new JArray(root.GetComponentsInChildren<Renderer>(true).Select(r =>
+                    PathOf(root.transform, r.transform) + "|" + string.Join(",", r.sharedMaterials.Select(m => m ? m.name : "null")) + "|" +
+                    Invariant(r.bounds.center) + "|" + Invariant(r.bounds.size) + "|" + (r.GetComponent<Collider>() ? "collider" : "")));
+            }
+            finally { PrefabUtility.UnloadPrefabContents(root); }
+        }
+
+        /// <summary>
+        /// v0.3.0 maps-r3 director #1/#9: free distance (metres, 30 = open) from each spawn's eye along 16 yaws
+        /// (0 = +Z, clockwise seen from above, the GameplayRuntime convention) against the map colliders, so spawn
+        /// facings can be chosen away from walls. Instantiates the prefab in the open (unsaved) scene and destroys it.
+        /// </summary>
+        static JArray SpawnClearance(HiggsfieldMapCatalog.Entry entry)
+        {
+            var result = new JArray();
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(entry.Prefab.gameObject);
+            try
+            {
+                Physics.SyncTransforms();
+                var definition = instance.GetComponent<EnvironmentMapDefinition>();
+                var samples = new List<(Transform point, bool human, int index, JArray free)>();
+                foreach (var (points, human) in new[] { (definition.HumanSpawnPoints, true), (definition.MosquitoSpawnPoints, false) })
+                    for (int i = 0; i < (points?.Length ?? 0); i++)
+                        if (points[i]) samples.Add((points[i], human, i, Rays(points[i].position + Vector3.up * (human ? 1.55f : 0f))));
+                // Second pass against every render mesh (pine canopies, grass and props have no collider but still fill the view).
+                foreach (var filter in instance.GetComponentsInChildren<MeshFilter>(true))
+                    if (filter.sharedMesh && !filter.GetComponent<Collider>() && filter.GetComponent<MeshRenderer>())
+                        filter.gameObject.AddComponent<MeshCollider>().sharedMesh = filter.sharedMesh;
+                Physics.SyncTransforms();
+                foreach (var s in samples)
+                    result.Add(new JObject
+                    {
+                        ["role"] = s.human ? "human" : "mosquito", ["index"] = s.index, ["name"] = s.point.name,
+                        ["position"] = Invariant(s.point.position), ["free16"] = s.free,
+                        ["visual16"] = Rays(s.point.position + Vector3.up * (s.human ? 1.55f : 0f))
+                    });
+            }
+            finally { UnityEngine.Object.DestroyImmediate(instance); }
+            return result;
+
+            JArray Rays(Vector3 eye)
+            {
+                var distances = new JArray();
+                for (int k = 0; k < 16; k++)
+                {
+                    Vector3 direction = Quaternion.AngleAxis(k * 22.5f, Vector3.up) * Vector3.forward;
+                    distances.Add(Physics.Raycast(eye, direction, out RaycastHit hit, 30f, ~0, QueryTriggerInteraction.Ignore)
+                        ? (float)Math.Round(hit.distance, 2) : 30f);
+                }
+                return distances;
+            }
+        }
+
+        static string Invariant(Vector3 v) => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:F3},{1:F3},{2:F3}", v.x, v.y, v.z);
 
         static JArray Spawns(Transform root, Transform[] points, Renderer[] renderers)
         {

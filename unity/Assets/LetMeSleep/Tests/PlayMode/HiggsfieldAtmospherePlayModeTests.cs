@@ -116,6 +116,19 @@ namespace LetMeSleep.Tests.PlayMode
                     if (item.Binding.IgnoreLocalLights) Assert.That(item.Renderer.renderingLayerMask & 1u, Is.EqualTo(0u), item.Binding.Path + " moon-only layer");
                 }
                 foreach (var pair in colliderEnabled) Assert.That(pair.Key.GetComponent<Collider>().enabled, Is.EqualTo(pair.Value), "colliders untouched");
+                // Round 4 (director corrections): several swaps per renderer, small shelter lanterns, shadow normal bias.
+                foreach (var item in overrides)
+                    foreach (var extra in item.Binding.ExtraSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>())
+                    {
+                        CollectionAssert.Contains(item.Renderer.sharedMaterials, extra.To, item.Binding.Path + " extra swap");
+                        CollectionAssert.DoesNotContain(item.Renderer.sharedMaterials, extra.From, item.Binding.Path + " extra swap source gone");
+                    }
+                var lanternProps = map.GetComponentsInChildren<Transform>(true).Where(x => x.name == "Higgsfield_Lantern").ToArray();
+                Assert.That(lanternProps.Length, Is.EqualTo(entry.LocalLights.Count(l => l.Settings.LanternSize > 0)), entry.MapId + " lantern props");
+                foreach (var prop in lanternProps)
+                    Assert.That(prop.GetComponentsInChildren<Collider>(true), Is.Empty, entry.MapId + " lantern props are not geometry");
+                Assert.That(locals.Count(l => Mathf.Approximately(l.shadowNormalBias, 1f)),
+                    Is.EqualTo(entry.LocalLights.Count(l => Mathf.Approximately(l.Settings.ShadowNormalBias, 1f))), entry.MapId + " shadow normal bias");
                 foreach (var swap in lighting.MaterialSwaps)
                     Assert.That(map.GetComponentsInChildren<Renderer>(true).Any(r => r.sharedMaterials.Contains(swap.From)), Is.False, entry.MapId + " swapped " + swap.From.name);
                 Assert.That(Shader.GetGlobalFloat("_LMS_InteriorCount"), Is.EqualTo(lighting.InteriorVolumes.Length), entry.MapId + " interiors");
@@ -154,7 +167,8 @@ namespace LetMeSleep.Tests.PlayMode
                 yield return null;
                 Assert.That(map.GetComponentsInChildren<Transform>(true).Count(x => x.name == HiggsfieldAtmosphereVisuals.HaloName ||
                     x.name == HiggsfieldAtmosphereVisuals.FlameName || x.name == HiggsfieldAtmosphereVisuals.BeamName ||
-                    x.name == HiggsfieldAtmosphereVisuals.GlintName || x.name == HiggsfieldAtmosphereVisuals.PoolName), Is.Zero,
+                    x.name == HiggsfieldAtmosphereVisuals.GlintName || x.name == HiggsfieldAtmosphereVisuals.PoolName ||
+                    x.name == "Higgsfield_Lantern"), Is.Zero,
                     entry.MapId + " visuals removed");
                 Assert.That(map.GetComponentsInChildren<Renderer>(true).Count(r => r.lightProbeUsage == UnityEngine.Rendering.LightProbeUsage.CustomProvided ||
                     r.HasPropertyBlock()), Is.Zero, entry.MapId + " probes and property blocks restored");

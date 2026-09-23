@@ -405,6 +405,7 @@ namespace LetMeSleep.Bootstrap
             game.LocalActorId = local.ActorId; game.LocalPrincipal = local.OwnerPuid;
             game.MouseSensitivity = .002f * (local.Role == PlayerRole.Human ? settings.HumanSensitivity : settings.MosquitoSensitivity);
             game.InvertY = settings.InvertY; game.BeginRound(config, roster);
+            FaceAuthoredSpawn(local);
             SyncVoiceContext();
             if (!training) RecordPlaytest("RoundStarted",state:game.LatestSnapshot,role:local.Role.ToString());
             MenuCamera.enabled = false; MenuCamera.GetComponent<AudioListener>().enabled = false;
@@ -419,6 +420,23 @@ namespace LetMeSleep.Bootstrap
             int human = 0, mosquito = 0;
             return view.Members.Select((m, i) => new SpawnActor((uint)i + 1, m.Id, m.Role,
                 SpawnPoint(m.Role == PlayerRole.Human, m.Role == PlayerRole.Human ? human++ : mosquito++))).ToArray();
+        }
+        // v0.3.0 (maps director #1/#9): the imported spawn EMPTYs carry no rotation, so the local view starts at the
+        // map catalog's authored facing for that spawn (e.g. the camp spawn looks at the fire, not at a tent wall).
+        private void FaceAuthoredSpawn(SpawnActor local)
+        {
+            var entry = HiggsfieldMaps && map ? HiggsfieldMaps.Entries.FirstOrDefault(e => e.MapId == map.MapId) : null;
+            if (entry == null) return;
+            bool human = local.Role == PlayerRole.Human;
+            var points = human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints;
+            for (int i = 0; i < (points?.Length ?? 0); i++)
+            {
+                if (!points[i]) continue;
+                var p = points[i].position;
+                if (Mathf.Abs(p.x - local.Position.X) > .01f || Mathf.Abs(p.y - local.Position.Y) > .01f || Mathf.Abs(p.z - local.Position.Z) > .01f) continue;
+                if (entry.TryGetSpawnYaw(human, i, out float yaw)) game.FaceLocalView(yaw * Mathf.Deg2Rad);
+                return;
+            }
         }
         private Float3 SpawnPoint(bool human, int index)
         { var points = human ? map.HumanSpawnPoints : map.MosquitoSpawnPoints; return points[index % points.Length].position.ToFloat(); }

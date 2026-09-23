@@ -4,12 +4,17 @@ Shader "LetMeSleep/Higgsfield/Beam"
     // uv.x = distance along the shaft) swept around the lighthouse by HiggsfieldBeamSweep. Brightest near the lens,
     // fading along its length and toward its silhouette edges so it reads as a faint beam of light (alpha ~0.15),
     // never as a solid cone. Color (sRGB, alpha = opacity) comes from a MaterialPropertyBlock. Faded by scene fog.
+    // v0.3.0 r4 (director #2): warm #FFD27A shaft that is gone at _FadeEnd (0.6) of its length, with a brighter warm core
+    // (_CoreBoost) for the first metres so the light reads as coming out of the lens instead of a lavender veil.
     Properties
     {
         _BeamColor("Beam color (alpha = opacity)", Color) = (1, 0.824, 0.478, 0.15)
         _BeamIntensity("Intensity", Float) = 1
         _EdgeSoftness("Edge softness", Range(0.2, 4)) = 1.4
         _LengthFalloff("Length falloff", Range(0.2, 4)) = 1.3
+        _FadeEnd("Fraction of the length where the shaft is gone", Range(0.1, 1)) = 1
+        _CoreBoost("Extra intensity near the lens", Range(0, 8)) = 0
+        _CoreLength("Core length (fraction)", Range(0.02, 0.6)) = 0.18
     }
     SubShader
     {
@@ -34,6 +39,9 @@ Shader "LetMeSleep/Higgsfield/Beam"
                 half _BeamIntensity;
                 half _EdgeSoftness;
                 half _LengthFalloff;
+                half _FadeEnd;
+                half _CoreBoost;
+                half _CoreLength;
             CBUFFER_END
             struct Attributes { float4 positionOS:POSITION; float3 normalOS:NORMAL; float2 uv:TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct Varyings { float4 positionCS:SV_POSITION; float3 positionWS:TEXCOORD0; float3 normalWS:TEXCOORD1; float along:TEXCOORD2; float fog:TEXCOORD3; UNITY_VERTEX_OUTPUT_STEREO };
@@ -58,8 +66,9 @@ Shader "LetMeSleep/Higgsfield/Beam"
                 // Faces seen head-on are the middle of the shaft; grazing faces are its edges.
                 half facing = pow(saturate(abs(dot(normalize(input.normalWS), view))), _EdgeSoftness);
                 half along = saturate(input.along);
-                half fade = pow(1.0 - along, _LengthFalloff) * smoothstep(0.0, 0.04, along);
-                half3 color = _BeamColor.rgb * (_BeamColor.a * _BeamIntensity * facing * fade);
+                half fade = pow(saturate(1.0 - along / max(_FadeEnd, 0.05)), _LengthFalloff) * smoothstep(0.0, 0.04, along);
+                half core = 1.0 + _CoreBoost * pow(saturate(1.0 - along / max(_CoreLength, 0.01)), 2.0);
+                half3 color = _BeamColor.rgb * (_BeamColor.a * _BeamIntensity * facing * fade * core);
                 color = MixFogColor(color, half3(0, 0, 0), input.fog);
                 return half4(color, 0);
             }

@@ -24,6 +24,7 @@ namespace LetMeSleep.Presentation
         private static readonly int HaloIntensityId = Shader.PropertyToID("_HaloIntensity");
         private static readonly int FlameSeedId = Shader.PropertyToID("_FlameSeed");
         private static readonly int HaloToleranceId = Shader.PropertyToID("_HaloDepthTolerance");
+        private static readonly int HaloCoreId = Shader.PropertyToID("_HaloCore");
         private static readonly int BeamColorId = Shader.PropertyToID("_BeamColor");
         private static readonly int GlintColorId = Shader.PropertyToID("_GlintColor");
         private static readonly int GlintSizeId = Shader.PropertyToID("_GlintSize");
@@ -34,8 +35,9 @@ namespace LetMeSleep.Presentation
         /// <param name="offset">World-axis offset from the parent position (imported anchors may be rotated).</param>
         /// <param name="color">sRGB color; alpha is the halo opacity (0..1).</param>
         /// <param name="depthTolerance">Metres the scene may sit in front of the halo center before it fades (0 = automatic).</param>
+        /// <param name="core">Bright round core boost (0 = the halo material's default).</param>
         public static GameObject CreateHalo(Transform parent, Vector3 offset, float size, Color color, float intensity, Material material,
-            float depthTolerance = 0f)
+            float depthTolerance = 0f, float core = 0f)
         {
             var go = NewUpright(HaloName, parent, offset);
             go.transform.localScale = Vector3.Scale(go.transform.localScale, Vector3.one * Mathf.Max(0.01f, size));
@@ -44,6 +46,7 @@ namespace LetMeSleep.Presentation
             block.SetColor(HaloColorId, color);
             block.SetFloat(HaloIntensityId, Mathf.Max(0f, intensity));
             block.SetFloat(HaloToleranceId, Mathf.Max(0f, depthTolerance));
+            if (core > 0f) block.SetFloat(HaloCoreId, core);
             renderer.SetPropertyBlock(block);
             return go;
         }
@@ -88,6 +91,31 @@ namespace LetMeSleep.Presentation
             block.SetVector(GlintSizeId, new Vector4(Mathf.Max(0.05f, width), Mathf.Max(0.1f, length), seed, 0f));
             renderer.SetPropertyBlock(block);
             return go;
+        }
+
+        /// <summary>
+        /// Small hanging lantern (v0.3.0 r4, director #1: the camp shelter gets "un farol chico propio"): warm glowing glass
+        /// box (kit bulb material) with a dark cap, base, corner posts and a short hanger, centered on the light. Visual only.
+        /// </summary>
+        public static GameObject CreateLantern(Transform parent, Vector3 offset, float size, HiggsfieldAtmosphereKit kit)
+        {
+            const string name = "Higgsfield_Lantern";
+            var root = NewUpright(name, parent, offset);
+            size = Mathf.Clamp(size, 0.05f, 1f);
+            void Piece(string piece, Vector3 center, Vector3 scale, Material material)
+            {
+                var go = NewPiece(piece, root.transform, center * size);
+                go.transform.localScale = scale * size;
+                Render(go, Box, material);
+            }
+            Piece("Glass", Vector3.zero, new Vector3(0.62f, 0.82f, 0.62f), kit.BulbMaterial);
+            Piece("Cap", new Vector3(0f, 0.5f, 0f), new Vector3(0.9f, 0.18f, 0.9f), kit.WireMaterial);
+            Piece("CapTop", new Vector3(0f, 0.64f, 0f), new Vector3(0.5f, 0.12f, 0.5f), kit.WireMaterial);
+            Piece("Base", new Vector3(0f, -0.48f, 0f), new Vector3(0.8f, 0.14f, 0.8f), kit.WireMaterial);
+            for (int i = 0; i < 4; i++)
+                Piece("Post", new Vector3((i & 1) == 0 ? -0.33f : 0.33f, 0f, (i & 2) == 0 ? -0.33f : 0.33f), new Vector3(0.07f, 0.9f, 0.07f), kit.WireMaterial);
+            Piece("Hanger", new Vector3(0f, 1.05f, 0f), new Vector3(0.04f, 0.8f, 0.04f), kit.WireMaterial);
+            return root;
         }
 
         /// <summary>Three nested flame layers; <paramref name="height"/> is the outer flame height in metres.</summary>

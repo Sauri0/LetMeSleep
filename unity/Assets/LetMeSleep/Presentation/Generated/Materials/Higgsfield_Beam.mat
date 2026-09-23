@@ -26,8 +26,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _BeamIntensity: 1
-    - _EdgeSoftness: 1.4
-    - _LengthFalloff: 1.3
+    - _CoreBoost: 5
+    - _CoreLength: 0.3
+    - _EdgeSoftness: 1.2
+    - _FadeEnd: 0.6
+    - _LengthFalloff: 1.5
     m_Colors:
     - _BeamColor: {r: 1, g: 0.824, b: 0.47799987, a: 0.15}
   m_BuildTextureStacks: []

@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Higgsfield_FireLog
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7b4938e56f046904f83a59222e744f19, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -17,8 +17,7 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Opaque
+  stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
@@ -88,6 +87,8 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BlockTilt: 0.35
+    - _BlockVariation: 0.14
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -97,28 +98,49 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _EmberPower: 3
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Horizon: 0.05
     - _Metallic: 0
+    - _MortarWidth: 0.018
+    - _NormalFlatten: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _Pattern: 2
+    - _PortholeScale: 0.92
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RingWidth: 0.2
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SplitByNormal: 0
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _ViewIntensity: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.3529, g: 0.2039, b: 0.1255, a: 1}
+    - _BlockSize: {r: 0.3, g: 0.2, b: 0, a: 0}
     - _Color: {r: 0.35289997, g: 0.20389995, b: 0.12549996, a: 1}
+    - _EmberColor: {r: 2.2, g: 0.43, b: 0.05, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlassBand: {r: 0.3, g: 0.72, b: 0.82, a: 0}
+    - _MortarColor: {r: 0.29999998, g: 0.27999997, b: 0.26999995, a: 1}
+    - _PaneMax: {r: 0, g: 0, b: 0, a: 0}
+    - _PaneMin: {r: 0, g: 0, b: 0, a: 0}
+    - _RimColor: {r: 0.69, g: 0.53999996, b: 0.22999996, a: 1}
+    - _SeaColor: {r: 0.18399996, g: 0.561, b: 0.816, a: 1}
+    - _SeaDeepColor: {r: 0.14999998, g: 0.4699999, b: 0.72, a: 1}
+    - _SideColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SkyColor: {r: 0.54899997, g: 0.784, b: 0.941, a: 1}
+    - _SkyTopColor: {r: 0.41999996, g: 0.7, b: 0.92, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

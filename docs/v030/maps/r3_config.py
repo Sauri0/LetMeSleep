@@ -1,6 +1,8 @@
 """v0.3.0 maps round 3 (maps-r3.md): rebuilds docs/v030/maps/atmosphere-v030.json from the round-2 config
 committed in git (base revision below) plus the round-3 deltas declared here, so every value stays reviewable
 and the result is reproducible:  python docs/v030/maps/r3_config.py
+Superseded as the entry point by r4_config.py (the art director's corrections on the r3 captures), which imports build()
+from here and adds its own deltas: regenerate the JSON with  python docs/v030/maps/r4_config.py
 HiggsfieldAtmosphereCorrection then applies the JSON inside Unity:
   Unity.exe -batchmode -quit -projectPath unity -executeMethod LetMeSleep.Editor.HiggsfieldAtmosphereCorrection.ApplyFromCommandLine
     -higgsfieldAtmosphereConfig <abs path to atmosphere-v030.json>"""

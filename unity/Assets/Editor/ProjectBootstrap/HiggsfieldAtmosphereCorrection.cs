@@ -130,7 +130,10 @@ namespace LetMeSleep.Editor
             public InteriorAmbientConfig interiorAmbient;
             public bool exteriorLightsSkipInteriors;
             public SkyFillConfig skyFill;
+            public SpawnFacingConfig[] spawnFacings = Array.Empty<SpawnFacingConfig>();
         }
+        /// <summary>v0.3.0 r4: initial view yaw of a spawn (degrees clockwise from +Z seen from above), written to the catalog entry.</summary>
+        public sealed class SpawnFacingConfig { public string role, note; public int index; public float yaw; }
         public sealed class SkyFillConfig { public float[] color, eulerDegrees; public float intensity; public int[] lightLayers; }
         public sealed class FillConfig { public float[] color; public float intensity; }
         public sealed class InteriorAmbientConfig { public float[] color; public float intensity, keep = 0.3f, minSize = 0.5f; }
@@ -143,11 +146,13 @@ namespace LetMeSleep.Editor
             public string swapTo;   // Material asset path.
             public int[] addLightLayers; // URP rendering layer indices added to the renderer (e.g. 4 = lantern pool).
             public int? expect;
+            public SwapPair[] swaps; // v0.3.0 r4: several slots of one renderer (first one becomes SwapFrom/SwapTo).
         }
+        public sealed class SwapPair { public string from, to; }
         public sealed class MaterialSwapRule { public string from, to, note; }
         public sealed class VolumeRule { public float[] center, size; public string note; }
         public sealed class RimConfig { public float[] color; public float intensity, spread; }
-        public sealed class HaloRule { public float size; public float[] color, offset; public float alpha = 0.35f, intensity = 1f, depthTolerance; }
+        public sealed class HaloRule { public float size; public float[] color, offset; public float alpha = 0.35f, intensity = 1f, depthTolerance, core; }
         public sealed class BeamRule { public float length, radius, speed, tilt, alpha = 0.15f; public int count = 2; public float[] color, offset; }
         public sealed class ReflectionRule { public float length, width, waterY, alpha = 0.5f; public float[] color; }
         public sealed class PoolRule { public float radius, alpha = 0.55f; public float[] color; }
@@ -176,7 +181,7 @@ namespace LetMeSleep.Editor
             // Exact AnchorPath, or a prefix ending in '*'. Rules apply in order; each must match at least one anchor.
             public string match;
             public float[] color;
-            public float? intensity, range, flicker;
+            public float? intensity, range, flicker, shadowNormalBias;
             public string shadows;
             public int? shadowTier;
             public float[] offset;
@@ -186,7 +191,9 @@ namespace LetMeSleep.Editor
             public BeamRule beam;
             public ReflectionRule reflection;
             public PoolRule pool;
+            public LanternRule lantern; // v0.3.0 r4: small visual lantern around the light.
         }
+        public sealed class LanternRule { public float size; }
         public sealed class MaterialEdit
         {
             public int index;
@@ -240,7 +247,7 @@ namespace LetMeSleep.Editor
 
             var receipt = new JObject
             {
-                ["tool"] = "HiggsfieldAtmosphereCorrection", ["utc"] = DateTime.UtcNow.ToString("o"), ["unityVersion"] = Application.unityVersion,
+                ["tool"] = "HiggsfieldAtmosphereCorrection", ["round"] = "v0.3.0 maps r4 (director corrections)", ["utc"] = DateTime.UtcNow.ToString("o"), ["unityVersion"] = Application.unityVersion,
                 ["configPath"] = configPath, ["configSha256"] = Hash(input), ["success"] = false
             };
             string receiptPath = Path.Combine(config.receiptDirectory, "atmosphere-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") + ".json");
@@ -367,6 +374,16 @@ namespace LetMeSleep.Editor
                         ? Quaternion.Euler(skyFill.eulerDegrees[0], skyFill.eulerDegrees[1], skyFill.eulerDegrees[2]) : Quaternion.Euler(30f, 150f, 0f);
                     lighting.SkyFillLightLayers = skyFill?.lightLayers != null ? RenderingLayerBits(skyFill.lightLayers) : 0;
                     entry.RendererOverrides = ResolveRendererRules(entry, mapConfig.mapId, mapConfig.renderers ?? Array.Empty<RendererRule>(), authored);
+                    var facingReport = new JArray();
+                    entry.SpawnFacings = (mapConfig.spawnFacings ?? Array.Empty<SpawnFacingConfig>()).Select(f =>
+                    {
+                        Need(f != null && (f.role == "human" || f.role == "mosquito") && Finite(f.yaw) && f.yaw >= -360 && f.yaw <= 360,
+                            "Spawn facing needs role human|mosquito and a yaw within +-360: " + mapConfig.mapId);
+                        var points = f.role == "human" ? entry.Prefab.HumanSpawnPoints : entry.Prefab.MosquitoSpawnPoints;
+                        Need(points != null && f.index >= 0 && f.index < points.Length && points[f.index], "Spawn facing index missing: " + mapConfig.mapId + " " + f.role + " " + f.index);
+                        facingReport.Add(f.role + "-" + f.index + " (" + points[f.index].name + ") yaw " + F(f.yaw) + (f.note != null ? " " + f.note : ""));
+                        return new HiggsfieldMapCatalog.SpawnFacing { Human = f.role == "human", Index = f.index, YawDegrees = f.yaw };
+                    }).ToArray();
                     entry.CameraFarPlane = mapConfig.cameraFarPlane;
                     float effectiveFar = mapConfig.cameraFarPlane > 0 ? mapConfig.cameraFarPlane : PresetFarPlane;
                     if (lighting.FogEnabled && lighting.FogMode == FogMode.Linear)
@@ -386,7 +403,8 @@ namespace LetMeSleep.Editor
                         ["flames"] = entry.LocalLights.Count(l => l.Settings.FlameHeight > 0),
                         ["rendererOverrides"] = new JArray(entry.RendererOverrides.Select(o => o.Path + (o.Hide ? " hide" : "") +
                             (o.CastShadowsOff ? " noShadows" : "") + (o.IgnoreLocalLights ? " moonOnly" : "") +
-                            (o.AddLightLayers != 0 ? " +layers" + o.AddLightLayers : "") + (o.SwapFrom ? " " + o.SwapFrom.name + "->" + o.SwapTo.name : ""))),
+                            (o.AddLightLayers != 0 ? " +layers" + o.AddLightLayers : "") + (o.SwapFrom ? " " + o.SwapFrom.name + "->" + o.SwapTo.name : "") +
+                            string.Concat((o.ExtraSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Select(x => " " + x.From.name + "->" + x.To.name)))),
                         ["materialSwaps"] = new JArray(lighting.MaterialSwaps.Select(s => s.From.name + "->" + s.To.name)),
                         ["interiorVolumes"] = new JArray(lighting.InteriorVolumes.Select(b => VectorText(b.center) + " / " + VectorText(b.size))),
                         ["characterRim"] = ColorText(lighting.CharacterRimColor) + " x" + F(lighting.CharacterRimIntensity) + " spread " + F(lighting.CharacterRimSpread),
@@ -395,6 +413,7 @@ namespace LetMeSleep.Editor
                             " keep " + F(lighting.InteriorAmbientKeep) + " min " + F(lighting.InteriorAmbientMinSize),
                         ["skyFill"] = ColorText(lighting.SkyFillColor) + " x" + F(lighting.SkyFillIntensity) + " euler " +
                             VectorText(lighting.SkyFillRotation.eulerAngles) + " layers " + lighting.SkyFillLightLayers,
+                        ["spawnFacings"] = facingReport,
                         ["beams"] = entry.LocalLights.Count(l => l.Settings.BeamLength > 0),
                         ["reflections"] = entry.LocalLights.Count(l => l.Settings.ReflectionLength > 0),
                         ["pools"] = entry.LocalLights.Count(l => l.Settings.PoolRadius > 0),
@@ -626,6 +645,7 @@ namespace LetMeSleep.Editor
                 s.BeamCount = 2; s.BeamOffset = Vector3.zero; s.BeamColor = new Color(1f, 0.824f, 0.478f, 0.15f);
                 s.ReflectionLength = 0; s.ReflectionWidth = 0; s.ReflectionWaterY = 0; s.ReflectionColor = new Color(1f, 0.702f, 0.278f, 0.5f);
                 s.PoolRadius = 0; s.PoolColor = new Color(0.45f, 0.31f, 0.18f, 0.55f);
+                s.HaloCore = 0; s.ShadowNormalBias = 0; s.LanternSize = 0;
             }
             foreach (var rule in rules)
             {
@@ -644,6 +664,7 @@ namespace LetMeSleep.Editor
                     if (rule.range.HasValue) s.Range = Range(rule.range.Value, 0.5f, 30);
                     if (rule.flicker.HasValue) s.Flicker = Range(rule.flicker.Value, 0, HiggsfieldLightFlicker.MaximumAmplitude);
                     if (rule.shadows != null) s.Shadows = (LightShadows)Enum.Parse(typeof(LightShadows), rule.shadows, false);
+                    if (rule.shadowNormalBias.HasValue) s.ShadowNormalBias = Range(rule.shadowNormalBias.Value, 0.01f, 3);
                     if (rule.shadowTier.HasValue)
                     {
                         Need(HiggsfieldMapLighting.ValidShadowTier(rule.shadowTier.Value), "Shadow tier 0..2.");
@@ -659,6 +680,7 @@ namespace LetMeSleep.Editor
                         s.HaloIntensity = Range(rule.halo.intensity, 0, 16);
                         s.HaloOffset = rule.halo.offset != null ? Vec3(rule.halo.offset, 3f) : Vector3.zero;
                         s.HaloDepthTolerance = Range(rule.halo.depthTolerance, 0, 8);
+                        s.HaloCore = Range(rule.halo.core, 0, 8);
                     }
                     if (rule.lightLayers != null) s.LightLayers = RenderingLayerBits(rule.lightLayers);
                     if (rule.beam != null)
@@ -690,6 +712,7 @@ namespace LetMeSleep.Editor
                         pool.a = Range(rule.pool.alpha, 0, 1);
                         s.PoolColor = pool;
                     }
+                    if (rule.lantern != null) s.LanternSize = Range(rule.lantern.size, 0.05f, 1f);
                     if (rule.flame != null)
                     {
                         s.FlameHeight = Range(rule.flame.height, 0, 4);
@@ -733,15 +756,22 @@ namespace LetMeSleep.Editor
                 Need(matched.Length > 0, "Renderer rule matched nothing: " + mapId + " " + rule.match);
                 if (rule.expect.HasValue) Need(matched.Length == rule.expect.Value, "Renderer rule count " + matched.Length + " != " +
                     rule.expect.Value + ": " + mapId + " " + rule.match);
-                Material from = rule.swapFrom != null ? MapMaterial(mapId, rule.swapFrom) : null;
-                Material to = rule.swapTo != null ? Authored(authored, rule.swapTo) : null;
-                Need((from == null) == (to == null), "Renderer swap needs swapFrom and swapTo: " + rule.match);
+                var pairs = new List<SwapPair>();
+                if (rule.swapFrom != null || rule.swapTo != null) pairs.Add(new SwapPair { from = rule.swapFrom, to = rule.swapTo });
+                pairs.AddRange(rule.swaps ?? Array.Empty<SwapPair>());
+                Need(pairs.All(p => p != null && p.from != null && p.to != null) && pairs.Select(p => p.from).Distinct().Count() == pairs.Count,
+                    "Renderer swaps need distinct from/to pairs: " + rule.match);
+                Material from = pairs.Count > 0 ? MapMaterial(mapId, pairs[0].from) : null;
+                Material to = pairs.Count > 0 ? Authored(authored, pairs[0].to) : null;
+                var extras = pairs.Skip(1).Select(p => new HiggsfieldMapLighting.MaterialSwap { From = MapMaterial(mapId, p.from), To = Authored(authored, p.to) }).ToArray();
                 int addLayers = rule.addLightLayers != null ? RenderingLayerBits(rule.addLightLayers) : 0;
                 Need(rule.hide || rule.castShadowsOff || rule.ignoreLocalLights || from || addLayers != 0, "Renderer rule does nothing: " + rule.match);
                 foreach (var item in matched)
                 {
                     Need(renderers.Count(r => r.Path == item.Path) == 1, "Ambiguous renderer path: " + item.Path);
-                    if (from) Need(item.Renderer.sharedMaterials.Contains(from), "Swap source not on renderer: " + item.Path + " " + rule.swapFrom);
+                    if (from) Need(item.Renderer.sharedMaterials.Contains(from), "Swap source not on renderer: " + item.Path + " " + pairs[0].from);
+                    foreach (var extra in extras)
+                        Need(item.Renderer.sharedMaterials.Contains(extra.From), "Swap source not on renderer: " + item.Path + " " + extra.From.name);
                     if (!result.TryGetValue(item.Path, out var binding))
                         result.Add(item.Path, binding = new HiggsfieldMapCatalog.RendererOverrideBinding { Path = item.Path });
                     binding.Hide |= rule.hide;
@@ -752,6 +782,7 @@ namespace LetMeSleep.Editor
                     {
                         Need(!binding.SwapFrom, "Two swaps on one renderer: " + item.Path);
                         binding.SwapFrom = from; binding.SwapTo = to;
+                        binding.ExtraSwaps = extras;
                     }
                 }
             }

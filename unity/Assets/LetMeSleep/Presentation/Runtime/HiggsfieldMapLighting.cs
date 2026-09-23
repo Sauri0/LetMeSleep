@@ -68,6 +68,13 @@ namespace LetMeSleep.Presentation
             // is the opacity at the center; the ground is found with a downward ray from 0.6 m below the light.
             public float PoolRadius;
             public Color PoolColor = new Color(0.45f, 0.31f, 0.18f, 0.55f);
+            // v0.3.0 r4: bright round core of the halo (0 = the halo material's default), e.g. the lighthouse lens.
+            public float HaloCore;
+            // v0.3.0 r4: shadow normal bias of a shadowed source (0 = Unity default 0.4); 1.0 removes the striped acne a
+            // soft point shadow leaves on thin baseboards and foundations next to it.
+            public float ShadowNormalBias;
+            // v0.3.0 r4: visual-only small hanging lantern around the light (edge size in metres, 0 = none).
+            public float LanternSize;
 
             /// <summary>Copy of every serialized value bound to an instance anchor (catalog assets never keep one).</summary>
             public LocalSource CloneFor(Transform anchor)
@@ -98,6 +105,8 @@ namespace LetMeSleep.Presentation
             // v0.3.0 r3: extra URP rendering layers (bit mask) for this renderer, e.g. the ground that receives a
             // lantern pool (LanternPoolRenderingLayer) while pines and rails do not.
             public int AddLightLayers;
+            // v0.3.0 r4: further material slots swapped on the same renderer (e.g. both stone swatches of a stairway).
+            public MaterialSwap[] ExtraSwaps = Array.Empty<MaterialSwap>();
         }
 
         /// <summary>URP rendering layer that only the moon/sun lights; map-local lights keep the default layer.</summary>
@@ -289,6 +298,12 @@ namespace LetMeSleep.Presentation
                 throw new ArgumentException("Pool radius 0..8 m and opacity 0..1 required.");
             if (source.PoolRadius > 0 && (!kit || !kit.PoolMaterial))
                 throw new ArgumentException("Ground pools need the kit's pool material.");
+            if (!Finite(source.HaloCore) || source.HaloCore < 0 || source.HaloCore > 8 || !Finite(source.ShadowNormalBias) ||
+                source.ShadowNormalBias < 0 || source.ShadowNormalBias > 3 || !Finite(source.LanternSize) || source.LanternSize < 0 ||
+                source.LanternSize > 1)
+                throw new ArgumentException("Halo core 0..8, shadow normal bias 0..3 and lantern size 0..1 m required.");
+            if (source.LanternSize > 0 && (!kit || !kit.IsComplete))
+                throw new ArgumentException("Lantern props need a complete HiggsfieldAtmosphereKit.");
         }
 
         public static void ValidateAtmosphere(Transform root, Configuration config)
@@ -313,6 +328,12 @@ namespace LetMeSleep.Presentation
                     throw new ArgumentException("Renderer material swap needs both From and a different To.");
                 if (item.SwapFrom && Array.IndexOf(item.Target.sharedMaterials, item.SwapFrom) < 0)
                     throw new ArgumentException("Renderer override swap source is not on the renderer: " + item.Target.name);
+                var extraSources = new HashSet<Material>();
+                if (item.SwapFrom) extraSources.Add(item.SwapFrom);
+                foreach (var extra in item.ExtraSwaps ?? Array.Empty<MaterialSwap>())
+                    if (!item.SwapFrom || extra == null || !extra.From || !extra.To || extra.From == extra.To || !extraSources.Add(extra.From) ||
+                        Array.IndexOf(item.Target.sharedMaterials, extra.From) < 0)
+                        throw new ArgumentException("Renderer override extra swaps need a first swap and distinct sources on the renderer: " + item.Target.name);
                 if ((item.AddLightLayers & ~AllowedLightLayers) != 0)
                     throw new ArgumentException("Renderer override adds a rendering layer that is not allowed: " + item.Target.name);
                 if (!item.Hide && !item.CastShadowsOff && !item.IgnoreLocalLights && !item.SwapFrom && item.AddLightLayers == 0)
@@ -413,6 +434,7 @@ namespace LetMeSleep.Presentation
                     light.type = source.Type; light.color = source.Color; light.intensity = source.UnityIntensity;
                     light.range = source.Range; light.spotAngle = source.SpotAngle; light.innerSpotAngle = source.InnerSpotAngle;
                     light.shadows = source.Shadows; light.cullingMask = config.CullingMask; light.bounceIntensity = 0;
+                    if (source.ShadowNormalBias > 0) light.shadowNormalBias = source.ShadowNormalBias;
                     if (source.LightLayers != 0) light.GetUniversalAdditionalLightData().renderingLayers = (uint)source.LightLayers;
                     go.transform.position = source.Anchor.position + root.rotation * source.LocalOffset;
                     light.enabled = true;
@@ -421,7 +443,7 @@ namespace LetMeSleep.Presentation
                         go.AddComponent<HiggsfieldLightFlicker>().Configure(source.Flicker, StableSeed(source.Anchor.name));
                     if (source.HaloSize > 0)
                         visuals.Add(HiggsfieldAtmosphereVisuals.CreateHalo(source.Anchor, root.rotation * source.HaloOffset, source.HaloSize,
-                            source.HaloColor, source.HaloIntensity, config.Kit.HaloMaterial, source.HaloDepthTolerance));
+                            source.HaloColor, source.HaloIntensity, config.Kit.HaloMaterial, source.HaloDepthTolerance, source.HaloCore));
                     if (source.BeamLength > 0)
                         visuals.Add(HiggsfieldAtmosphereVisuals.CreateBeam(source.Anchor, root.rotation * source.BeamOffset, source.BeamLength,
                             source.BeamRadius, source.BeamCount, source.BeamTilt, source.BeamSpeed, source.BeamColor, config.Kit.BeamMaterial,
@@ -440,6 +462,9 @@ namespace LetMeSleep.Presentation
                         visuals.Add(HiggsfieldAtmosphereVisuals.CreateGlint(source.Anchor, surface, source.ReflectionLength,
                             source.ReflectionWidth, source.ReflectionColor, config.Kit.GlintMaterial, StableSeed(source.Anchor.name)));
                     }
+                    if (source.LanternSize > 0)
+                        visuals.Add(HiggsfieldAtmosphereVisuals.CreateLantern(source.Anchor, root.rotation * source.LocalOffset, source.LanternSize,
+                            config.Kit));
                     if (source.FlameHeight > 0)
                         visuals.Add(HiggsfieldAtmosphereVisuals.CreateFlame(source.Anchor, root.rotation * source.FlameOffset, source.FlameHeight,
                             config.Kit, StableSeed(source.Anchor.name)));
@@ -477,6 +502,22 @@ namespace LetMeSleep.Presentation
 
         private void ApplyRendererAtmosphere(Transform root, Configuration config, Light sun)
         {
+            // v0.3.0 r4: per-renderer swaps win over map-wide swaps of the same swatch (they run first, so the map-wide swap
+            // no longer finds that slot), e.g. lantern glass keeps its own material where every window pane is swapped.
+            foreach (var item in config.RendererOverrides)
+            {
+                if (!item.SwapFrom) continue;
+                var renderer = item.Target;
+                var materials = renderer.sharedMaterials;
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    if (materials[i] == item.SwapFrom) { materials[i] = item.SwapTo; continue; }
+                    foreach (var extra in item.ExtraSwaps ?? Array.Empty<MaterialSwap>())
+                        if (materials[i] == extra.From) { materials[i] = extra.To; break; }
+                }
+                if (!originalMaterials.ContainsKey(renderer)) originalMaterials.Add(renderer, renderer.sharedMaterials);
+                renderer.sharedMaterials = materials;
+            }
             if (config.MaterialSwaps.Length > 0)
             {
                 var map = new Dictionary<Material, Material>();
@@ -495,13 +536,6 @@ namespace LetMeSleep.Presentation
             foreach (var item in config.RendererOverrides)
             {
                 var renderer = item.Target;
-                if (item.SwapFrom)
-                {
-                    var materials = renderer.sharedMaterials;
-                    for (int i = 0; i < materials.Length; i++) if (materials[i] == item.SwapFrom) materials[i] = item.SwapTo;
-                    if (!originalMaterials.ContainsKey(renderer)) originalMaterials.Add(renderer, renderer.sharedMaterials);
-                    renderer.sharedMaterials = materials;
-                }
                 if (item.Hide)
                 {
                     if (!originalEnabled.ContainsKey(renderer)) originalEnabled.Add(renderer, renderer.enabled);

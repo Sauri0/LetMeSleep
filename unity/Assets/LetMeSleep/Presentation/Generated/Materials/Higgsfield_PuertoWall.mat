@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Higgsfield_CasaShell
+  m_Name: Higgsfield_PuertoWall
   m_Shader: {fileID: 4800000, guid: d293334ad1df4fc3bc18951b892bb30c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,10 +38,10 @@ Material:
     - _Surface: 0
     - _TrimHeight: 0.16
     m_Colors:
-    - _BaseColor: {r: 0.7843, g: 0.5765, b: 0.3608, a: 1}
-    - _CeilingColor: {r: 0.8627, g: 0.7686, b: 0.6275, a: 1}
+    - _BaseColor: {r: 0.6902, g: 0.5765, b: 0.3765, a: 1}
+    - _CeilingColor: {r: 0.9098, g: 0.8627, b: 0.7725, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ExteriorFill: {r: 0, g: 0, b: 0, a: 0}
+    - _ExteriorFill: {r: 0.41, g: 0.385, b: 0.2, a: 0}
     - _InteriorColor: {r: 0.9098, g: 0.8627, b: 0.7725, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _TrimColor: {r: 0.5451, g: 0.3529, b: 0.1686, a: 1}

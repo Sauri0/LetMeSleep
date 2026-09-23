@@ -25,9 +25,10 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _BandFrequency: 2.4
+    - _BandFrequency: 7
     - _BandSpeed: 0.6
     - _GlintIntensity: 1.6
+    - _StrokeFill: 0.62
     m_Colors:
     - _GlintColor: {r: 1, g: 0.702, b: 0.27799997, a: 0.5}
     - _GlintSize: {r: 0.5, g: 5, b: 0, a: 0}

@@ -39,6 +39,21 @@ namespace LetMeSleep.Bootstrap
             public Material SwapTo;
             // v0.3.0 r3: extra URP rendering layers (e.g. lantern-pool receivers).
             public int AddLightLayers;
+            // v0.3.0 r4: further material slots of the same renderer (e.g. both stone swatches of one stairway mesh).
+            public HiggsfieldMapLighting.MaterialSwap[] ExtraSwaps = Array.Empty<HiggsfieldMapLighting.MaterialSwap>();
+        }
+
+        /// <summary>
+        /// v0.3.0 r4 (director #1/#9): authored initial view yaw of one spawn point, in degrees clockwise from +Z seen from
+        /// above (the GameplayRuntime yaw convention). The imported spawn EMPTYs carry no rotation, so without this every
+        /// player started looking along +Z, often at a wall or an empty meadow. Gameplay data, applied by AlfaApplication to
+        /// the local player's view when a round begins; spawn positions are untouched.
+        /// </summary>
+        [Serializable] public sealed class SpawnFacing
+        {
+            public bool Human;
+            public int Index;
+            public float YawDegrees;
         }
 
         [Serializable] public sealed class Entry
@@ -53,6 +68,16 @@ namespace LetMeSleep.Bootstrap
             public LocalLightBinding[] LocalLights = Array.Empty<LocalLightBinding>();
             public string[] SuppressLightPaths = Array.Empty<string>();
             public RendererOverrideBinding[] RendererOverrides = Array.Empty<RendererOverrideBinding>();
+            public SpawnFacing[] SpawnFacings = Array.Empty<SpawnFacing>();
+
+            /// <summary>Authored yaw (degrees) for the spawn point at <paramref name="index"/> of the role, if any.</summary>
+            public bool TryGetSpawnYaw(bool human, int index, out float yawDegrees)
+            {
+                foreach (var facing in SpawnFacings ?? Array.Empty<SpawnFacing>())
+                    if (facing != null && facing.Human == human && facing.Index == index) { yawDegrees = facing.YawDegrees; return true; }
+                yawDegrees = 0f;
+                return false;
+            }
         }
 
         [SerializeField] private Entry[] entries = Array.Empty<Entry>();
@@ -78,6 +103,20 @@ namespace LetMeSleep.Bootstrap
                 if (!Finite(entry.CameraFarPlane) || (entry.CameraFarPlane != 0 && (entry.CameraFarPlane < 10 || entry.CameraFarPlane > 1000)))
                     throw new InvalidOperationException("Camera far must be zero or 10..1000 metres: " + entry.MapId);
                 ResolveEntryLighting(entry, entry.Prefab.transform); // Validate paths and values without creating lights.
+                ValidateSpawnFacings(entry);
+            }
+        }
+
+        private static void ValidateSpawnFacings(Entry entry)
+        {
+            if (entry.SpawnFacings == null) throw new InvalidOperationException("Spawn facings must be initialized: " + entry.MapId);
+            var seen = new HashSet<(bool, int)>();
+            foreach (var facing in entry.SpawnFacings)
+            {
+                var points = facing == null ? null : facing.Human ? entry.Prefab.HumanSpawnPoints : entry.Prefab.MosquitoSpawnPoints;
+                if (facing == null || points == null || facing.Index < 0 || facing.Index >= points.Length || !points[facing.Index] ||
+                    !Finite(facing.YawDegrees) || facing.YawDegrees < -360f || facing.YawDegrees > 360f || !seen.Add((facing.Human, facing.Index)))
+                    throw new InvalidOperationException("Spawn facing needs an existing distinct spawn index and a yaw within +-360 degrees: " + entry.MapId);
             }
         }
 
@@ -171,7 +210,8 @@ namespace LetMeSleep.Bootstrap
                 if (found.Length != 1) throw new InvalidOperationException("Renderer override path must resolve one Renderer: " + binding.Path);
                 overrides[i] = new HiggsfieldMapLighting.RendererOverride { Target = found[0], Hide = binding.Hide,
                     CastShadowsOff = binding.CastShadowsOff, IgnoreLocalLights = binding.IgnoreLocalLights,
-                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo, AddLightLayers = binding.AddLightLayers };
+                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo, AddLightLayers = binding.AddLightLayers,
+                    ExtraSwaps = (HiggsfieldMapLighting.MaterialSwap[])(binding.ExtraSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Clone() };
             }
             resolved.RendererOverrides = overrides;
             resolved.MaterialSwaps = (HiggsfieldMapLighting.MaterialSwap[])(source.MaterialSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Clone();

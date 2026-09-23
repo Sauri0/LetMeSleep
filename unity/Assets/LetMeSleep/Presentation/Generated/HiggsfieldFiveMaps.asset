@@ -61,6 +61,10 @@ MonoBehaviour:
     LocalLights: []
     SuppressLightPaths: []
     RendererOverrides: []
+    SpawnFacings:
+    - Human: 1
+      Index: 3
+      YawDegrees: 180
   - MapId: hf-casa-del-patio-v1
     DisplayName: Casa del patio
     CameraFarPlane: 0
@@ -103,9 +107,9 @@ MonoBehaviour:
       CharacterRimColor: {r: 1, g: 0.3529, b: 0.2902, a: 1}
       CharacterRimIntensity: 2.2
       CharacterRimSpread: 1
-      CharacterFillColor: {r: 1, g: 0.93, b: 0.84, a: 1}
-      CharacterFillIntensity: 0.85
-      InteriorAmbientColor: {r: 0.55, g: 0.4, b: 0.24, a: 1}
+      CharacterFillColor: {r: 0.95, g: 0.97, b: 1, a: 1}
+      CharacterFillIntensity: 1.8
+      InteriorAmbientColor: {r: 0.55, g: 0.35, b: 0.12, a: 1}
       InteriorAmbientIntensity: 1
       InteriorAmbientKeep: 0.3
       InteriorAmbientMinSize: 0.5
@@ -149,6 +153,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Porch_Lamp_R_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -183,6 +190,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Rear_Lamp_L_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -217,6 +227,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Rear_Lamp_R_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -251,6 +264,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Shed_Lamp_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -285,6 +301,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -319,6 +338,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.001
       Settings:
         Anchor: {fileID: 0}
@@ -353,6 +375,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.002
       Settings:
         Anchor: {fileID: 0}
@@ -387,6 +412,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.003
       Settings:
         Anchor: {fileID: 0}
@@ -421,12 +449,15 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_Living_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.28, a: 1}
-        UnityIntensity: 0.55
+        Color: {r: 1, g: 0.6, b: 0.2, a: 1}
+        UnityIntensity: 0.45
         Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
@@ -455,6 +486,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_Kitchen_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -489,6 +523,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_Foyer_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -523,6 +560,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_HallRear_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -557,6 +597,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_BathGround_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -591,6 +634,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_BedroomOne_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -625,6 +671,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_BedroomTwo_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -659,6 +708,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_BathUpper_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -693,6 +745,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Interior_UpperLanding_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -727,6 +782,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Fireplace_Practical_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -744,8 +802,8 @@ MonoBehaviour:
         HaloOffset: {x: 0, y: 0, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
         HaloIntensity: 1
-        FlameHeight: 0.8
-        FlameOffset: {x: -0.07, y: -0.38, z: -0.28}
+        FlameHeight: 1.2
+        FlameOffset: {x: -0.07, y: -0.4, z: -0.28}
         LightLayers: 0
         HaloDepthTolerance: 0
         BeamLength: 0
@@ -761,6 +819,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Bedside_One_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -795,6 +856,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/CASA_Bedside_Two_Anchor
       Settings:
         Anchor: {fileID: 0}
@@ -829,6 +893,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     SuppressLightPaths: []
     RendererOverrides:
     - Path: Environment/CASA_Bedroom_One_BedsideLamp_Shade
@@ -838,6 +905,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ad250f95f12a68c4391906f2d969ff22, type: 2}
       SwapTo: {fileID: 2100000, guid: e1b00105947ac4e4b8b0e8556f9ad94e, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Bedroom_Two_BedsideLamp_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -845,6 +913,63 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ad250f95f12a68c4391906f2d969ff22, type: 2}
       SwapTo: {fileID: 2100000, guid: e1b00105947ac4e4b8b0e8556f9ad94e, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Pleat_0
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Pleat_0.001
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Pleat_0.002
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Pleat_0.003
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Pleat_0.004
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Pleat_0.005
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Curtain_Rod_0
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fire_FacetedFlame
       Hide: 1
       CastShadowsOff: 0
@@ -852,6 +977,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fire_FacetedFlame.001
       Hide: 1
       CastShadowsOff: 0
@@ -859,6 +985,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fire_FacetedFlame.002
       Hide: 1
       CastShadowsOff: 0
@@ -866,6 +993,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fire_FacetedFlame.003
       Hide: 1
       CastShadowsOff: 0
@@ -873,6 +1001,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fireplace_Back
       Hide: 0
       CastShadowsOff: 0
@@ -880,6 +1009,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 73d3fcd3b89faa34ba62be587b6204a1, type: 2}
       SwapTo: {fileID: 2100000, guid: 47f1660bb7b3b604082f5da22a35a0d7, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fireplace_ChimneyBreast
       Hide: 0
       CastShadowsOff: 0
@@ -887,6 +1017,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 9c3ed13eb2b467f42b552b946a996407, type: 2}
       SwapTo: {fileID: 2100000, guid: 84d061d7a42111b49bed47a5229911e6, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fireplace_Hearth
       Hide: 0
       CastShadowsOff: 0
@@ -894,6 +1025,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 348e0289ade595847921b0b65accbc73, type: 2}
       SwapTo: {fileID: 2100000, guid: 84d061d7a42111b49bed47a5229911e6, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fireplace_Pier
       Hide: 0
       CastShadowsOff: 0
@@ -901,6 +1033,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: d56b5b23f92b304479c7bf31c1d320cb, type: 2}
       SwapTo: {fileID: 2100000, guid: 84d061d7a42111b49bed47a5229911e6, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Fireplace_Pier.001
       Hide: 0
       CastShadowsOff: 0
@@ -908,6 +1041,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: d56b5b23f92b304479c7bf31c1d320cb, type: 2}
       SwapTo: {fileID: 2100000, guid: 84d061d7a42111b49bed47a5229911e6, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Garden_Lamp_Post
       Hide: 0
       CastShadowsOff: 0
@@ -915,6 +1049,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Garden_Lamp_Post.001
       Hide: 0
       CastShadowsOff: 0
@@ -922,6 +1057,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Garden_Lamp_Post.002
       Hide: 0
       CastShadowsOff: 0
@@ -929,6 +1065,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Garden_Lamp_Post.003
       Hide: 0
       CastShadowsOff: 0
@@ -936,6 +1073,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Hearth_Log
       Hide: 0
       CastShadowsOff: 0
@@ -943,6 +1081,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: c6c67047ac364314f89e56c00035cae1, type: 2}
       SwapTo: {fileID: 2100000, guid: 9ce5fb3e0cafc7f44b0613cdc65fe638, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Hearth_Log.001
       Hide: 0
       CastShadowsOff: 0
@@ -950,6 +1089,31 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: c6c67047ac364314f89e56c00035cae1, type: 2}
       SwapTo: {fileID: 2100000, guid: 9ce5fb3e0cafc7f44b0613cdc65fe638, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Opening_00_Jamb
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Opening_00_Jamb.001
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CASA_Opening_00_Lintel
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BathGround_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -957,6 +1121,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BathGround_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -964,6 +1129,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BathUpper_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -971,6 +1137,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BathUpper_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -978,6 +1145,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BedroomOne_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -985,6 +1153,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BedroomOne_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -992,6 +1161,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BedroomTwo_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -999,6 +1169,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_BedroomTwo_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -1006,6 +1177,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_Foyer_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -1013,6 +1185,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_Foyer_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -1020,6 +1193,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_HallRear_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -1027,6 +1201,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_HallRear_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -1034,6 +1209,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_Kitchen_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -1041,6 +1217,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_Kitchen_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -1048,6 +1225,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_Living_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -1055,6 +1233,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_Living_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -1062,6 +1241,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_UpperLanding_Bulb
       Hide: 0
       CastShadowsOff: 1
@@ -1069,6 +1249,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CASA_Pendant_UpperLanding_Shade
       Hide: 0
       CastShadowsOff: 1
@@ -1076,6 +1257,14 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
+    SpawnFacings:
+    - Human: 1
+      Index: 2
+      YawDegrees: 202.5
+    - Human: 1
+      Index: 3
+      YawDegrees: 180
   - MapId: hf-campamento-pinar-v2
     DisplayName: Campamento del pinar
     CameraFarPlane: 0
@@ -1105,17 +1294,19 @@ MonoBehaviour:
       SuppressLights: []
       Kit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
       MaterialSwaps: []
-      InteriorVolumes: []
+      InteriorVolumes:
+      - m_Center: {x: -24.5, y: 1.5, z: 5}
+        m_Extent: {x: 2.8, y: 1.5, z: 2.45}
       RendererOverrides: []
       CharacterRimColor: {r: 1, g: 0.3529, b: 0.2902, a: 1}
       CharacterRimIntensity: 2.2
       CharacterRimSpread: 1
-      CharacterFillColor: {r: 1, g: 0.93, b: 0.84, a: 1}
-      CharacterFillIntensity: 0.85
-      InteriorAmbientColor: {r: 0.55, g: 0.36, b: 0.2, a: 1}
-      InteriorAmbientIntensity: 0
-      InteriorAmbientKeep: 0.3
-      InteriorAmbientMinSize: 0.5
+      CharacterFillColor: {r: 0.92, g: 0.95, b: 1, a: 1}
+      CharacterFillIntensity: 1
+      InteriorAmbientColor: {r: 0.55, g: 0.38, b: 0.22, a: 1}
+      InteriorAmbientIntensity: 1.8
+      InteriorAmbientKeep: 0.5
+      InteriorAmbientMinSize: 0.3
       ExteriorLightsSkipInteriors: 0
       SkyFillColor: {r: 1, g: 1, b: 1, a: 1}
       SkyFillIntensity: 1.5
@@ -1156,6 +1347,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Fire_Outer
       Settings:
         Anchor: {fileID: 0}
@@ -1190,6 +1384,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_00
       Settings:
         Anchor: {fileID: 0}
@@ -1224,6 +1421,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_01
       Settings:
         Anchor: {fileID: 0}
@@ -1258,6 +1458,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_02
       Settings:
         Anchor: {fileID: 0}
@@ -1292,6 +1495,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_03
       Settings:
         Anchor: {fileID: 0}
@@ -1326,6 +1532,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_04
       Settings:
         Anchor: {fileID: 0}
@@ -1360,6 +1569,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_05
       Settings:
         Anchor: {fileID: 0}
@@ -1388,12 +1600,15 @@ MonoBehaviour:
         BeamCount: 2
         BeamOffset: {x: 0, y: 0, z: 0}
         BeamColor: {r: 1, g: 0.824, b: 0.478, a: 0.15}
-        ReflectionLength: 0
-        ReflectionWidth: 0
-        ReflectionWaterY: 0
-        ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
+        ReflectionLength: 3.5
+        ReflectionWidth: 0.55
+        ReflectionWaterY: -0.05
+        ReflectionColor: {r: 1, g: 0.702, b: 0.2784, a: 0.7}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_06
       Settings:
         Anchor: {fileID: 0}
@@ -1422,12 +1637,15 @@ MonoBehaviour:
         BeamCount: 2
         BeamOffset: {x: 0, y: 0, z: 0}
         BeamColor: {r: 1, g: 0.824, b: 0.478, a: 0.15}
-        ReflectionLength: 0
-        ReflectionWidth: 0
-        ReflectionWaterY: 0
-        ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
+        ReflectionLength: 3.5
+        ReflectionWidth: 0.55
+        ReflectionWaterY: -0.05
+        ReflectionColor: {r: 1, g: 0.702, b: 0.2784, a: 0.7}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_07
       Settings:
         Anchor: {fileID: 0}
@@ -1456,12 +1674,15 @@ MonoBehaviour:
         BeamCount: 2
         BeamOffset: {x: 0, y: 0, z: 0}
         BeamColor: {r: 1, g: 0.824, b: 0.478, a: 0.15}
-        ReflectionLength: 0
-        ReflectionWidth: 0
-        ReflectionWaterY: 0
-        ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
+        ReflectionLength: 3.5
+        ReflectionWidth: 0.55
+        ReflectionWaterY: -0.05
+        ReflectionColor: {r: 1, g: 0.702, b: 0.2784, a: 0.7}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_08
       Settings:
         Anchor: {fileID: 0}
@@ -1496,6 +1717,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Jetty_Lantern
       Settings:
         Anchor: {fileID: 0}
@@ -1524,12 +1748,15 @@ MonoBehaviour:
         BeamCount: 2
         BeamOffset: {x: 0, y: 0, z: 0}
         BeamColor: {r: 1, g: 0.824, b: 0.478, a: 0.15}
-        ReflectionLength: 6
+        ReflectionLength: 3.5
         ReflectionWidth: 0.55
-        ReflectionWaterY: -0.03
-        ReflectionColor: {r: 1, g: 0.55, b: 0.15, a: 0.6}
+        ReflectionWaterY: -0.05
+        ReflectionColor: {r: 1, g: 0.702, b: 0.2784, a: 0.7}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lookout_Ambient
       Settings:
         Anchor: {fileID: 0}
@@ -1564,6 +1791,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_09
       Settings:
         Anchor: {fileID: 0}
@@ -1598,6 +1828,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_Lantern_10
       Settings:
         Anchor: {fileID: 0}
@@ -1632,22 +1865,25 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 3
         PoolColor: {r: 0.4784, g: 0.2902, b: 0.1412, a: 0.9}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Shelter
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.34, a: 1}
-        UnityIntensity: 0.8
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
+        UnityIntensity: 3
+        Range: 6.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
         ShadowResolutionTier: 0
         Flicker: 0
-        LocalOffset: {x: 0, y: -0.35, z: 0}
-        HaloSize: 0
-        HaloOffset: {x: 0, y: 0, z: 0}
-        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        LocalOffset: {x: 0.8, y: -0.45, z: 0.8}
+        HaloSize: 0.6
+        HaloOffset: {x: 0.8, y: -0.45, z: 0.8}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
         HaloIntensity: 1
         FlameHeight: 0
         FlameOffset: {x: 0, y: 0, z: 0}
@@ -1666,6 +1902,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 1
+        LanternSize: 0.22
     - AnchorPath: Environment/LGT_CAMP_Washroom
       Settings:
         Anchor: {fileID: 0}
@@ -1700,19 +1939,22 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_01
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 1.4
-        Range: 3.2
+        Color: {r: 1, g: 0.62, b: 0.32, a: 1}
+        UnityIntensity: 1.3
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0
-        LocalOffset: {x: 0, y: 0, z: 0}
+        LocalOffset: {x: 1.397, y: 1, z: -1.288}
         HaloSize: 0.4
         HaloOffset: {x: 0, y: -0.1, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
@@ -1734,19 +1976,22 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_02
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 1.4
-        Range: 3.2
+        Color: {r: 1, g: 0.62, b: 0.32, a: 1}
+        UnityIntensity: 1.3
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0
-        LocalOffset: {x: 0, y: 0, z: 0}
+        LocalOffset: {x: 1.17, y: 1, z: -1.497}
         HaloSize: 0.4
         HaloOffset: {x: 0, y: -0.1, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
@@ -1768,19 +2013,22 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_03
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 1.4
-        Range: 3.2
+        Color: {r: 1, g: 0.62, b: 0.32, a: 1}
+        UnityIntensity: 1.3
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0
-        LocalOffset: {x: 0, y: 0, z: 0}
+        LocalOffset: {x: 1.299, y: 1, z: -1.387}
         HaloSize: 0.4
         HaloOffset: {x: 0, y: -0.1, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
@@ -1802,19 +2050,22 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_04
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 1.4
-        Range: 3.2
+        Color: {r: 1, g: 0.62, b: 0.32, a: 1}
+        UnityIntensity: 1.3
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0
-        LocalOffset: {x: 0, y: 0, z: 0}
+        LocalOffset: {x: -1.524, y: 1, z: 1.135}
         HaloSize: 0.4
         HaloOffset: {x: 0, y: -0.1, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
@@ -1836,19 +2087,22 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_05
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 1.4
-        Range: 3.2
+        Color: {r: 1, g: 0.62, b: 0.32, a: 1}
+        UnityIntensity: 1.3
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0
-        LocalOffset: {x: 0, y: 0, z: 0}
+        LocalOffset: {x: -1.741, y: 1, z: 0.762}
         HaloSize: 0.4
         HaloOffset: {x: 0, y: -0.1, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
@@ -1870,19 +2124,22 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/LGT_CAMP_Tent_06
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 1.4
-        Range: 3.2
+        Color: {r: 1, g: 0.62, b: 0.32, a: 1}
+        UnityIntensity: 1.3
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
         ShadowResolutionTier: 2
         Flicker: 0
-        LocalOffset: {x: 0, y: 0, z: 0}
+        LocalOffset: {x: -1.492, y: 1, z: 1.176}
         HaloSize: 0.4
         HaloOffset: {x: 0, y: -0.1, z: 0}
         HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
@@ -1904,8 +2161,475 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     SuppressLightPaths: []
     RendererOverrides:
+    - Path: Environment/CAMP_Bridge_01_Plank_00
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_01
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_02
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_03
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_04
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_05
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_06
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_07
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_08
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_09
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_10
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_11
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_12
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Plank_13
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost1_0
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost1_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost1_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost1_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost2_0
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost2_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost2_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_RailPost2_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Rail_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Rail_1.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Rail_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Rail_2.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Stringer1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_01_Stringer2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_00
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_01
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_02
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_03
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_04
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_05
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_06
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_07
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_08
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_09
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_10
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_11
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_12
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_13
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_14
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Plank_15
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost1_0
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost1_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost1_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost1_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost2_0
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost2_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost2_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_RailPost2_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Rail_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Rail_1.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Rail_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Rail_2.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Stringer1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Bridge_02_Stringer2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Fire_Flame_01
       Hide: 1
       CastShadowsOff: 0
@@ -1913,6 +2637,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Fire_Flame_02
       Hide: 1
       CastShadowsOff: 0
@@ -1920,6 +2645,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Fire_Flame_03
       Hide: 1
       CastShadowsOff: 0
@@ -1927,6 +2653,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Fire_Log_Vert
       Hide: 1
       CastShadowsOff: 0
@@ -1934,6 +2661,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Hill_NE
       Hide: 0
       CastShadowsOff: 0
@@ -1941,6 +2669,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Hill_NW
       Hide: 0
       CastShadowsOff: 0
@@ -1948,6 +2677,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Hill_SW
       Hide: 0
       CastShadowsOff: 0
@@ -1955,6 +2685,23 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_EndPost_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_EndPost_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Jetty_Lantern_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -1962,13 +2709,199 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Jetty_Lantern_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_00
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_01
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_02
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_03
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_04
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_05
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Plank_06
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_0
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_0.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_1.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_2.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Post_3.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Rail_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Rail_1.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Rail_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Rail_2.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: b8cf31562c5015a439b3a7a0e0ad536c, type: 2}
+      SwapTo: {fileID: 2100000, guid: d43c146096abe17418afc55825f837b3, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Shore_0
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Shore_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Shore_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
+    - Path: Environment/CAMP_Jetty_Shore_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_09_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -1976,6 +2909,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_09_Box
       Hide: 1
       CastShadowsOff: 0
@@ -1983,6 +2917,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_09_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -1990,6 +2925,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_09_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -1997,13 +2933,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_09_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_0_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2011,6 +2949,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_0_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2018,6 +2957,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_0_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2025,6 +2965,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_0_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2032,13 +2973,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_0_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_10_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2046,6 +2989,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_10_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2053,6 +2997,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_10_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2060,6 +3005,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_10_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2067,13 +3013,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_10_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_1_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2081,6 +3029,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_1_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2088,6 +3037,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_1_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2095,6 +3045,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_1_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2102,13 +3053,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_1_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_2_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2116,6 +3069,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_2_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2123,6 +3077,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_2_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2130,6 +3085,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_2_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2137,13 +3093,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_2_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_3_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2151,6 +3109,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_3_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2158,6 +3117,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_3_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2165,6 +3125,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_3_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2172,13 +3133,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_3_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_4_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2186,6 +3149,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_4_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2193,6 +3157,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_4_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2200,6 +3165,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_4_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2207,13 +3173,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_4_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_5_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2221,6 +3189,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_5_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2228,6 +3197,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_5_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2235,6 +3205,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_5_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2242,13 +3213,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_5_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_6_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2256,6 +3229,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_6_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2263,6 +3237,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_6_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2270,6 +3245,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_6_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2277,13 +3253,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_6_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_7_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2291,6 +3269,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_7_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2298,6 +3277,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_7_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2305,6 +3285,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_7_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2312,13 +3293,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_7_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_8_Arm
       Hide: 1
       CastShadowsOff: 0
@@ -2326,6 +3309,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_8_Box
       Hide: 1
       CastShadowsOff: 0
@@ -2333,6 +3317,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_8_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2340,6 +3325,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_8_Glass
       Hide: 1
       CastShadowsOff: 0
@@ -2347,13 +3333,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Lantern_8_Post
       Hide: 0
       CastShadowsOff: 0
-      IgnoreLocalLights: 1
-      SwapFrom: {fileID: 0}
-      SwapTo: {fileID: 0}
-      AddLightLayers: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: f55fa0b2fdb748049a0c0129b1cab24d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d96553ce2a774a649a7561b760230af5, type: 2}
+      AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_0_0
       Hide: 0
       CastShadowsOff: 0
@@ -2361,6 +3349,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_0_1
       Hide: 0
       CastShadowsOff: 0
@@ -2368,6 +3357,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_11_0
       Hide: 0
       CastShadowsOff: 0
@@ -2375,6 +3365,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_11_1
       Hide: 0
       CastShadowsOff: 0
@@ -2382,6 +3373,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_13_0
       Hide: 0
       CastShadowsOff: 0
@@ -2389,6 +3381,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_13_1
       Hide: 0
       CastShadowsOff: 0
@@ -2396,6 +3389,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_15_0
       Hide: 0
       CastShadowsOff: 0
@@ -2403,6 +3397,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_15_1
       Hide: 0
       CastShadowsOff: 0
@@ -2410,6 +3405,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_16_0
       Hide: 0
       CastShadowsOff: 0
@@ -2417,6 +3413,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_16_1
       Hide: 0
       CastShadowsOff: 0
@@ -2424,6 +3421,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_17_0
       Hide: 0
       CastShadowsOff: 0
@@ -2431,6 +3429,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_17_1
       Hide: 0
       CastShadowsOff: 0
@@ -2438,6 +3437,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_18_0
       Hide: 0
       CastShadowsOff: 0
@@ -2445,6 +3445,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_18_1
       Hide: 0
       CastShadowsOff: 0
@@ -2452,6 +3453,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_19_0
       Hide: 0
       CastShadowsOff: 0
@@ -2459,6 +3461,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_19_1
       Hide: 0
       CastShadowsOff: 0
@@ -2466,6 +3469,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_1_0
       Hide: 0
       CastShadowsOff: 0
@@ -2473,6 +3477,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_1_1
       Hide: 0
       CastShadowsOff: 0
@@ -2480,6 +3485,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_20_0
       Hide: 0
       CastShadowsOff: 0
@@ -2487,6 +3493,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_20_1
       Hide: 0
       CastShadowsOff: 0
@@ -2494,6 +3501,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_21_0
       Hide: 0
       CastShadowsOff: 0
@@ -2501,6 +3509,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_21_1
       Hide: 0
       CastShadowsOff: 0
@@ -2508,6 +3517,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_23_0
       Hide: 0
       CastShadowsOff: 0
@@ -2515,6 +3525,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_23_1
       Hide: 0
       CastShadowsOff: 0
@@ -2522,6 +3533,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_25_0
       Hide: 0
       CastShadowsOff: 0
@@ -2529,6 +3541,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_25_1
       Hide: 0
       CastShadowsOff: 0
@@ -2536,6 +3549,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_26_0
       Hide: 0
       CastShadowsOff: 0
@@ -2543,6 +3557,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_26_1
       Hide: 0
       CastShadowsOff: 0
@@ -2550,6 +3565,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_27_0
       Hide: 0
       CastShadowsOff: 0
@@ -2557,6 +3573,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_27_1
       Hide: 0
       CastShadowsOff: 0
@@ -2564,6 +3581,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_2_0
       Hide: 0
       CastShadowsOff: 0
@@ -2571,6 +3589,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_2_1
       Hide: 0
       CastShadowsOff: 0
@@ -2578,6 +3597,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_3_0
       Hide: 0
       CastShadowsOff: 0
@@ -2585,6 +3605,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_3_1
       Hide: 0
       CastShadowsOff: 0
@@ -2592,6 +3613,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_4_0
       Hide: 0
       CastShadowsOff: 0
@@ -2599,6 +3621,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_4_1
       Hide: 0
       CastShadowsOff: 0
@@ -2606,6 +3629,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_5_0
       Hide: 0
       CastShadowsOff: 0
@@ -2613,6 +3637,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_5_1
       Hide: 0
       CastShadowsOff: 0
@@ -2620,6 +3645,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_6_0
       Hide: 0
       CastShadowsOff: 0
@@ -2627,6 +3653,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_6_1
       Hide: 0
       CastShadowsOff: 0
@@ -2634,6 +3661,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_7_0
       Hide: 0
       CastShadowsOff: 0
@@ -2641,6 +3669,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_7_1
       Hide: 0
       CastShadowsOff: 0
@@ -2648,6 +3677,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_8_0
       Hide: 0
       CastShadowsOff: 0
@@ -2655,6 +3685,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_8_1
       Hide: 0
       CastShadowsOff: 0
@@ -2662,6 +3693,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_9_0
       Hide: 0
       CastShadowsOff: 0
@@ -2669,6 +3701,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_BankRock_9_1
       Hide: 0
       CastShadowsOff: 0
@@ -2676,6 +3709,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -2683,6 +3717,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2690,6 +3725,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -2697,6 +3733,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -2704,6 +3741,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -2711,6 +3749,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -2718,6 +3757,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -2725,6 +3765,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_00_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -2732,6 +3773,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -2739,6 +3781,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2746,6 +3789,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -2753,6 +3797,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -2760,6 +3805,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -2767,6 +3813,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -2774,6 +3821,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -2781,6 +3829,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_01_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -2788,6 +3837,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -2795,6 +3845,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2802,6 +3853,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -2809,6 +3861,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -2816,6 +3869,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -2823,6 +3877,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -2830,6 +3885,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -2837,6 +3893,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_02_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -2844,6 +3901,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -2851,6 +3909,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2858,6 +3917,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -2865,6 +3925,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -2872,6 +3933,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -2879,6 +3941,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -2886,6 +3949,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -2893,6 +3957,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_03_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -2900,6 +3965,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -2907,6 +3973,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2914,6 +3981,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -2921,6 +3989,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -2928,6 +3997,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -2935,6 +4005,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -2942,6 +4013,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -2949,6 +4021,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_04_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -2956,6 +4029,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -2963,6 +4037,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -2970,6 +4045,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -2977,6 +4053,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -2984,6 +4061,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -2991,6 +4069,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -2998,6 +4077,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3005,6 +4085,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_05_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3012,6 +4093,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -3019,6 +4101,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -3026,6 +4109,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -3033,6 +4117,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -3040,6 +4125,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -3047,6 +4133,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -3054,6 +4141,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3061,6 +4149,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_06_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3068,6 +4157,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -3075,6 +4165,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -3082,6 +4173,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -3089,6 +4181,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -3096,6 +4189,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -3103,6 +4197,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -3110,6 +4205,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3117,6 +4213,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_07_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3124,6 +4221,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -3131,6 +4229,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -3138,6 +4237,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -3145,6 +4245,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -3152,6 +4253,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -3159,6 +4261,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -3166,6 +4269,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3173,6 +4277,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_08_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3180,6 +4285,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -3187,6 +4293,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -3194,6 +4301,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -3201,6 +4309,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -3208,6 +4317,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -3215,6 +4325,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -3222,6 +4333,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3229,6 +4341,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_09_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3236,6 +4349,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -3243,6 +4357,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -3250,6 +4365,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -3257,6 +4373,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -3264,6 +4381,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -3271,6 +4389,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -3278,6 +4397,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3285,6 +4405,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_10_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3292,6 +4413,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_CageBase
       Hide: 0
       CastShadowsOff: 0
@@ -3299,6 +4421,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_Cap
       Hide: 0
       CastShadowsOff: 0
@@ -3306,6 +4429,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_HangingLoop
       Hide: 0
       CastShadowsOff: 0
@@ -3313,6 +4437,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_Rib0
       Hide: 0
       CastShadowsOff: 0
@@ -3320,6 +4445,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_Rib1
       Hide: 0
       CastShadowsOff: 0
@@ -3327,6 +4453,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_Rib2
       Hide: 0
       CastShadowsOff: 0
@@ -3334,6 +4461,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_Rib3
       Hide: 0
       CastShadowsOff: 0
@@ -3341,6 +4469,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Prod_Lantern_11_WarmGlass
       Hide: 0
       CastShadowsOff: 0
@@ -3348,6 +4477,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 6037b64657f4fe747b885bb8c856e4c4, type: 2}
       SwapTo: {fileID: 2100000, guid: 0f8c0afba9d50c743b67afb6c01b5a0f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_01
       Hide: 0
       CastShadowsOff: 0
@@ -3355,6 +4485,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_02
       Hide: 0
       CastShadowsOff: 0
@@ -3362,6 +4493,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_03
       Hide: 0
       CastShadowsOff: 0
@@ -3369,6 +4501,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_04
       Hide: 0
       CastShadowsOff: 0
@@ -3376,6 +4509,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_05
       Hide: 0
       CastShadowsOff: 0
@@ -3383,6 +4517,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_06
       Hide: 0
       CastShadowsOff: 0
@@ -3390,6 +4525,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_07
       Hide: 0
       CastShadowsOff: 0
@@ -3397,6 +4533,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_08
       Hide: 0
       CastShadowsOff: 0
@@ -3404,6 +4541,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_09
       Hide: 0
       CastShadowsOff: 0
@@ -3411,6 +4549,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_10
       Hide: 0
       CastShadowsOff: 0
@@ -3418,6 +4557,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_11
       Hide: 0
       CastShadowsOff: 0
@@ -3425,6 +4565,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_12
       Hide: 0
       CastShadowsOff: 0
@@ -3432,6 +4573,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_13
       Hide: 0
       CastShadowsOff: 0
@@ -3439,6 +4581,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_14
       Hide: 0
       CastShadowsOff: 0
@@ -3446,6 +4589,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_15
       Hide: 0
       CastShadowsOff: 0
@@ -3453,6 +4597,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_16
       Hide: 0
       CastShadowsOff: 0
@@ -3460,6 +4605,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_17
       Hide: 0
       CastShadowsOff: 0
@@ -3467,6 +4613,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_18
       Hide: 0
       CastShadowsOff: 0
@@ -3474,6 +4621,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_19
       Hide: 0
       CastShadowsOff: 0
@@ -3481,6 +4629,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_20
       Hide: 0
       CastShadowsOff: 0
@@ -3488,6 +4637,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_21
       Hide: 0
       CastShadowsOff: 0
@@ -3495,6 +4645,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_22
       Hide: 0
       CastShadowsOff: 0
@@ -3502,6 +4653,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_23
       Hide: 0
       CastShadowsOff: 0
@@ -3509,6 +4661,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_24
       Hide: 0
       CastShadowsOff: 0
@@ -3516,6 +4669,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_25
       Hide: 0
       CastShadowsOff: 0
@@ -3523,6 +4677,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_26
       Hide: 0
       CastShadowsOff: 0
@@ -3530,6 +4685,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_27
       Hide: 0
       CastShadowsOff: 0
@@ -3537,6 +4693,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_28
       Hide: 0
       CastShadowsOff: 0
@@ -3544,6 +4701,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_29
       Hide: 0
       CastShadowsOff: 0
@@ -3551,6 +4709,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_30
       Hide: 0
       CastShadowsOff: 0
@@ -3558,6 +4717,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_60
       Hide: 0
       CastShadowsOff: 0
@@ -3565,6 +4725,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_61
       Hide: 0
       CastShadowsOff: 0
@@ -3572,6 +4733,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_62
       Hide: 0
       CastShadowsOff: 0
@@ -3579,6 +4741,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_63
       Hide: 0
       CastShadowsOff: 0
@@ -3586,6 +4749,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Rock_64
       Hide: 0
       CastShadowsOff: 0
@@ -3593,6 +4757,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_0
       Hide: 0
       CastShadowsOff: 0
@@ -3600,6 +4765,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_0_Top
       Hide: 0
       CastShadowsOff: 0
@@ -3607,6 +4773,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_1
       Hide: 0
       CastShadowsOff: 0
@@ -3614,6 +4781,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_1_Top
       Hide: 0
       CastShadowsOff: 0
@@ -3621,6 +4789,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_2
       Hide: 0
       CastShadowsOff: 0
@@ -3628,6 +4797,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_2_Top
       Hide: 0
       CastShadowsOff: 0
@@ -3635,6 +4805,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_3
       Hide: 0
       CastShadowsOff: 0
@@ -3642,6 +4813,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Stump_3_Top
       Hide: 0
       CastShadowsOff: 0
@@ -3649,6 +4821,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Tent_01_Groundcloth
       Hide: 0
       CastShadowsOff: 0
@@ -3656,6 +4829,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Tent_02_Groundcloth
       Hide: 0
       CastShadowsOff: 0
@@ -3663,6 +4837,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Tent_03_Groundcloth
       Hide: 0
       CastShadowsOff: 0
@@ -3670,6 +4845,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Tent_04_Groundcloth
       Hide: 0
       CastShadowsOff: 0
@@ -3677,6 +4853,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Tent_05_Groundcloth
       Hide: 0
       CastShadowsOff: 0
@@ -3684,6 +4861,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Tent_06_Groundcloth
       Hide: 0
       CastShadowsOff: 0
@@ -3691,6 +4869,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Terrain_Grass
       Hide: 0
       CastShadowsOff: 0
@@ -3698,6 +4877,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Terrain_Paths
       Hide: 0
       CastShadowsOff: 0
@@ -3705,6 +4885,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Terrain_Plaza
       Hide: 0
       CastShadowsOff: 0
@@ -3712,6 +4893,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
     - Path: Environment/CAMP_Terrain_Rim
       Hide: 0
       CastShadowsOff: 0
@@ -3719,6 +4901,26 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 16
+      ExtraSwaps: []
+    SpawnFacings:
+    - Human: 1
+      Index: 0
+      YawDegrees: 152
+    - Human: 1
+      Index: 1
+      YawDegrees: 126
+    - Human: 1
+      Index: 2
+      YawDegrees: 290
+    - Human: 1
+      Index: 3
+      YawDegrees: 100
+    - Human: 1
+      Index: 4
+      YawDegrees: 242
+    - Human: 0
+      Index: 0
+      YawDegrees: 280
   - MapId: hf-yate-a-la-deriva-v3
     DisplayName: Yate a la deriva
     CameraFarPlane: 280
@@ -3799,6 +5001,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_Galley
       Settings:
         Anchor: {fileID: 0}
@@ -3833,6 +5038,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_CabinPort
       Settings:
         Anchor: {fileID: 0}
@@ -3867,6 +5075,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_CabinStarboard
       Settings:
         Anchor: {fileID: 0}
@@ -3901,6 +5112,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_LowerCorridor
       Settings:
         Anchor: {fileID: 0}
@@ -3935,6 +5149,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/YATE_Anchor_Practical_Bathroom
       Settings:
         Anchor: {fileID: 0}
@@ -3969,6 +5186,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     SuppressLightPaths: []
     RendererOverrides:
     - Path: Environment/YATE_Cabin_Port_NightstandLamp
@@ -3978,6 +5198,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 0d802ebca4809c742be9c617aebfb151, type: 2}
       SwapTo: {fileID: 2100000, guid: 89165fa4fc6049647a0616f591b4710d, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_Cabin_Starboard_NightstandLamp
       Hide: 0
       CastShadowsOff: 0
@@ -3985,6 +5206,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 0d802ebca4809c742be9c617aebfb151, type: 2}
       SwapTo: {fileID: 2100000, guid: 89165fa4fc6049647a0616f591b4710d, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_CeilingFixture_Bathroom
       Hide: 0
       CastShadowsOff: 1
@@ -3992,6 +5214,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_CeilingFixture_CabinPort
       Hide: 0
       CastShadowsOff: 1
@@ -3999,6 +5222,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_CeilingFixture_CabinStarboard
       Hide: 0
       CastShadowsOff: 1
@@ -4006,6 +5230,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_CeilingFixture_Galley
       Hide: 0
       CastShadowsOff: 1
@@ -4013,6 +5238,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_CeilingFixture_LowerCorridor
       Hide: 0
       CastShadowsOff: 1
@@ -4020,6 +5246,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_CeilingFixture_SalonAft
       Hide: 0
       CastShadowsOff: 1
@@ -4027,62 +5254,88 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/YATE_Porthole_-1_0
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_-1_1
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_-1_2
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_-1_3
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_1_0
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_1_1
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_1_2
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     - Path: Environment/YATE_Porthole_1_3
       Hide: 0
       CastShadowsOff: 0
       IgnoreLocalLights: 0
       SwapFrom: {fileID: 2100000, guid: 44bf8b0c589e2644ea4497442b4bfce7, type: 2}
-      SwapTo: {fileID: 2100000, guid: ef97126cfd105ac4aabd6b7ba8242072, type: 2}
+      SwapTo: {fileID: 2100000, guid: 199bba9d9d2622d49aeed486ecbed434, type: 2}
       AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
+        To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
+    SpawnFacings: []
   - MapId: hf-puerto-del-faro-v1
     DisplayName: Puerto del faro
     CameraFarPlane: 125
@@ -4125,8 +5378,8 @@ MonoBehaviour:
       CharacterRimColor: {r: 1, g: 0.3529, b: 0.2902, a: 1}
       CharacterRimIntensity: 2.2
       CharacterRimSpread: 1
-      CharacterFillColor: {r: 1, g: 0.93, b: 0.84, a: 1}
-      CharacterFillIntensity: 0.85
+      CharacterFillColor: {r: 0.95, g: 0.97, b: 1, a: 1}
+      CharacterFillIntensity: 1.8
       InteriorAmbientColor: {r: 0.55, g: 0.4, b: 0.24, a: 1}
       InteriorAmbientIntensity: 0.7
       InteriorAmbientKeep: 0.3
@@ -4150,27 +5403,30 @@ MonoBehaviour:
         ShadowResolutionTier: 2
         Flicker: 0
         LocalOffset: {x: 0, y: 0, z: 0}
-        HaloSize: 7.5
+        HaloSize: 6.8
         HaloOffset: {x: 0, y: -0.35, z: 0}
-        HaloColor: {r: 1, g: 0.72, b: 0.3, a: 0.45}
-        HaloIntensity: 1.3
+        HaloColor: {r: 1, g: 0.6902, b: 0.3765, a: 0.4}
+        HaloIntensity: 1.2
         FlameHeight: 0
         FlameOffset: {x: 0, y: 0, z: 0}
         LightLayers: 0
         HaloDepthTolerance: 3.6
-        BeamLength: 30
-        BeamRadius: 3.8
+        BeamLength: 26
+        BeamRadius: 2
         BeamSpeed: 28
         BeamTilt: 3
         BeamCount: 2
         BeamOffset: {x: 0, y: -0.35, z: 0}
-        BeamColor: {r: 1, g: 0.8235, b: 0.4784, a: 0.12}
+        BeamColor: {r: 1, g: 0.8235, b: 0.4784, a: 0.14}
         ReflectionLength: 0
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
@@ -4205,6 +5461,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
@@ -4237,8 +5496,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_InteriorFill
       Settings:
         Anchor: {fileID: 0}
@@ -4273,6 +5535,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 1
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
@@ -4307,6 +5572,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
@@ -4339,8 +5607,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_InteriorFill
       Settings:
         Anchor: {fileID: 0}
@@ -4375,6 +5646,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 1
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
@@ -4409,6 +5683,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
@@ -4441,8 +5718,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_InteriorFill
       Settings:
         Anchor: {fileID: 0}
@@ -4477,6 +5757,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 1
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Workshop_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
@@ -4511,6 +5794,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Workshop_BenchLamp
       Settings:
         Anchor: {fileID: 0}
@@ -4545,6 +5831,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Workshop_Interior
       Settings:
         Anchor: {fileID: 0}
@@ -4579,6 +5868,9 @@ MonoBehaviour:
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 1
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Pier_1_EndLantern
       Settings:
         Anchor: {fileID: 0}
@@ -4607,12 +5899,15 @@ MonoBehaviour:
         BeamCount: 2
         BeamOffset: {x: 0, y: 0, z: 0}
         BeamColor: {r: 1, g: 0.824, b: 0.478, a: 0.15}
-        ReflectionLength: 7
+        ReflectionLength: 3.5
         ReflectionWidth: 0.6
         ReflectionWaterY: 0.12
-        ReflectionColor: {r: 1, g: 0.55, b: 0.15, a: 0.6}
+        ReflectionColor: {r: 1, g: 0.702, b: 0.2784, a: 0.7}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_Pier_2_EndLantern
       Settings:
         Anchor: {fileID: 0}
@@ -4641,12 +5936,15 @@ MonoBehaviour:
         BeamCount: 2
         BeamOffset: {x: 0, y: 0, z: 0}
         BeamColor: {r: 1, g: 0.824, b: 0.478, a: 0.15}
-        ReflectionLength: 7
+        ReflectionLength: 3.5
         ReflectionWidth: 0.6
         ReflectionWaterY: 0.12
-        ReflectionColor: {r: 1, g: 0.55, b: 0.15, a: 0.6}
+        ReflectionColor: {r: 1, g: 0.702, b: 0.2784, a: 0.7}
         PoolRadius: 0
         PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_1
       Settings:
         Anchor: {fileID: 0}
@@ -4679,8 +5977,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_2
       Settings:
         Anchor: {fileID: 0}
@@ -4713,8 +6014,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_3
       Settings:
         Anchor: {fileID: 0}
@@ -4747,8 +6051,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_4
       Settings:
         Anchor: {fileID: 0}
@@ -4781,8 +6088,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_5
       Settings:
         Anchor: {fileID: 0}
@@ -4815,8 +6125,11 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     - AnchorPath: Environment/Anchor_LGT_PathLantern_6
       Settings:
         Anchor: {fileID: 0}
@@ -4849,10 +6162,29 @@ MonoBehaviour:
         ReflectionWidth: 0
         ReflectionWaterY: 0
         ReflectionColor: {r: 1, g: 0.702, b: 0.278, a: 0.5}
-        PoolRadius: 0
-        PoolColor: {r: 0.45, g: 0.31, b: 0.18, a: 0.55}
+        PoolRadius: 4
+        PoolColor: {r: 0.4784, g: 0.3216, b: 0.2039, a: 0.4}
+        HaloCore: 0
+        ShadowNormalBias: 0
+        LanternSize: 0
     SuppressLightPaths: []
     RendererOverrides:
+    - Path: Environment/BoatWorkshop_Back_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/BoatWorkshop_Back_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/BoatWorkshop_Back_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4860,6 +6192,23 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/BoatWorkshop_Front_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/BoatWorkshop_Front_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/BoatWorkshop_RoofPanel_-1
       Hide: 0
       CastShadowsOff: 0
@@ -4867,6 +6216,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/BoatWorkshop_RoofPanel_1
       Hide: 0
       CastShadowsOff: 0
@@ -4874,6 +6224,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/BoatWorkshop_Side-1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/BoatWorkshop_Side-1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4881,6 +6240,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/BoatWorkshop_Side1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/BoatWorkshop_Side1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4888,6 +6256,23 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_Back_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_Back_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_Back_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4895,6 +6280,39 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_BedsideLamp
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_ExteriorLantern
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_Front_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_Front_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_Front_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4902,6 +6320,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_RoofPanel_-1
       Hide: 0
       CastShadowsOff: 0
@@ -4909,6 +6328,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_RoofPanel_1
       Hide: 0
       CastShadowsOff: 0
@@ -4916,6 +6336,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_Side-1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_Side-1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4923,6 +6352,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_01_Side1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_01_Side1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4930,6 +6368,23 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_Back_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_Back_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_Back_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4937,6 +6392,39 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_BedsideLamp
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_ExteriorLantern
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_Front_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_Front_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_Front_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4944,6 +6432,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_RoofPanel_-1
       Hide: 0
       CastShadowsOff: 0
@@ -4951,6 +6440,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 3250bf7c0c67ab24eb548c98469dfef9, type: 2}
       SwapTo: {fileID: 2100000, guid: 64437815857d234489d6c96868dd928c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_RoofPanel_1
       Hide: 0
       CastShadowsOff: 0
@@ -4958,6 +6448,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 3250bf7c0c67ab24eb548c98469dfef9, type: 2}
       SwapTo: {fileID: 2100000, guid: 64437815857d234489d6c96868dd928c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_Side-1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_Side-1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4965,6 +6464,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_02_Side1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_02_Side1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4972,6 +6480,23 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Back_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Back_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_03_Back_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4979,6 +6504,39 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_BedsideLamp
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_ExteriorLantern
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Front_Gable
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 11eedff9cd5ba7c44ba5209721aeb5c5, type: 2}
+      SwapTo: {fileID: 2100000, guid: 30ca9b370f32de64c82bff63d9349127, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Front_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_03_Front_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -4986,6 +6544,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_03_RoofPanel_-1
       Hide: 0
       CastShadowsOff: 0
@@ -4993,6 +6552,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_03_RoofPanel_1
       Hide: 0
       CastShadowsOff: 0
@@ -5000,6 +6560,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: a035a75e9a7aa3c449e5d038ec8d3767, type: 2}
       SwapTo: {fileID: 2100000, guid: 1a0ecf961cd2f4a49b5d32d421a1325f, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Side-1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_03_Side-1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -5007,6 +6576,15 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Cottage_03_Side1_SealedWall
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 0e7095904fc0292428a3152039ddc8b7, type: 2}
+      SwapTo: {fileID: 2100000, guid: b751295c5289d594f8430b2c151309c9, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Cottage_03_Side1_WindowPanes
       Hide: 0
       CastShadowsOff: 0
@@ -5014,6 +6592,17 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Lighthouse_Approach_StoneStairway
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 402ab86861d0e1f419a77b80fd82e0cb, type: 2}
+      SwapTo: {fileID: 2100000, guid: 32355f11e3389d74a89da78226ca885a, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: b8a4b86e9d041584bab9f384a8a31dde, type: 2}
+        To: {fileID: 2100000, guid: 32355f11e3389d74a89da78226ca885a, type: 2}
     - Path: Environment/Lighthouse_LanternLens
       Hide: 0
       CastShadowsOff: 0
@@ -5021,6 +6610,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
       SwapTo: {fileID: 2100000, guid: da71b562a8f91bf41a04094d9e0b93bc, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Lighthouse_LanternMullions
       Hide: 0
       CastShadowsOff: 0
@@ -5028,6 +6618,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Lighthouse_RemovableLanternRoof
       Hide: 0
       CastShadowsOff: 0
@@ -5035,6 +6626,55 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/PathLantern_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/PathLantern_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/PathLantern_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/PathLantern_4
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/PathLantern_5
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/PathLantern_6
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/PathLantern_Post_1
       Hide: 0
       CastShadowsOff: 0
@@ -5042,6 +6682,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/PathLantern_Post_2
       Hide: 0
       CastShadowsOff: 0
@@ -5049,6 +6690,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/PathLantern_Post_3
       Hide: 0
       CastShadowsOff: 0
@@ -5056,6 +6698,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/PathLantern_Post_4
       Hide: 0
       CastShadowsOff: 0
@@ -5063,6 +6706,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/PathLantern_Post_5
       Hide: 0
       CastShadowsOff: 0
@@ -5070,6 +6714,7 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/PathLantern_Post_6
       Hide: 0
       CastShadowsOff: 0
@@ -5077,6 +6722,23 @@ MonoBehaviour:
       SwapFrom: {fileID: 0}
       SwapTo: {fileID: 0}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Pier_1_EndLantern
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Pier_2_EndLantern
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
     - Path: Environment/Plaza_ContinuousPaving
       Hide: 0
       CastShadowsOff: 0
@@ -5084,3 +6746,36 @@ MonoBehaviour:
       SwapFrom: {fileID: 2100000, guid: 47d4d0d9af1fab6409a0a5584293f1b0, type: 2}
       SwapTo: {fileID: 2100000, guid: 05bdb80b1ccfb6b459fd75fa035e9234, type: 2}
       AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Plaza_GroupedCobbles
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 8d7c022694a35254c8250d4a7c7ad69d, type: 2}
+      SwapTo: {fileID: 2100000, guid: d4e9508bc26c7b145b4a74cd1d92d152, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps:
+      - From: {fileID: 2100000, guid: 902858124b4d5f8478e6c0c18d3cb423, type: 2}
+        To: {fileID: 2100000, guid: dc24010b964941d4ca7cd8798b59614f, type: 2}
+      - From: {fileID: 2100000, guid: b8a4b86e9d041584bab9f384a8a31dde, type: 2}
+        To: {fileID: 2100000, guid: dc24010b964941d4ca7cd8798b59614f, type: 2}
+    - Path: Environment/Workshop_BenchLamp
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    - Path: Environment/Workshop_ExteriorLantern
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: 499f197e3ee10c24180485d71687513a, type: 2}
+      SwapTo: {fileID: 2100000, guid: a8b3cfd2003795341bc3f8c829018762, type: 2}
+      AddLightLayers: 0
+      ExtraSwaps: []
+    SpawnFacings:
+    - Human: 1
+      Index: 2
+      YawDegrees: 100

@@ -7,6 +7,8 @@ Shader "LetMeSleep/Higgsfield/InteriorLit"
     // (e.g. the facade seen from the yard). Lighting, shadows, SSAO, fog, light layers and the per-renderer indoor
     // ambient probe are exactly URP/Lit's (LitInput + LitForwardPass). The interior palette lives outside
     // UnityPerMaterial, so these few shells are drawn without the SRP Batcher.
+    // v0.3.0 r4 (director #7): _ExteriorFill (linear) adds albedo x fill on exterior faces only, the warm bounce of a lit
+    // village on plaster that the (shadowless, open-air only) sky fill must not reach; interior faces are unaffected.
     Properties
     {
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
@@ -16,6 +18,7 @@ Shader "LetMeSleep/Higgsfield/InteriorLit"
         _TrimColor("Baseboard color (sRGB)", Color) = (0.545, 0.353, 0.169, 1)
         _TrimHeight("Baseboard height above the room floor (m, 0 = none)", Range(0, 0.6)) = 0.14
         _InteriorFaceMargin("Face distance to interior (m)", Range(0, 1)) = 0.35
+        _ExteriorFill("Exterior warm fill (linear, x albedo)", Color) = (0, 0, 0, 0)
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0
         _Metallic("Metallic", Range(0.0, 1.0)) = 0
@@ -62,12 +65,14 @@ Shader "LetMeSleep/Higgsfield/InteriorLit"
             half4 _TrimColor;
             half _TrimHeight;
             half _InteriorFaceMargin;
+            half4 _ExteriorFill;
             float4 _LMS_InteriorMin[8];
             float4 _LMS_InteriorMax[8];
             float _LMS_InteriorCount;
 
-            half3 InteriorAlbedo(float3 positionWS, half3 normalWS, half3 exterior)
+            half3 InteriorAlbedo(float3 positionWS, half3 normalWS, half3 exterior, out bool outside)
             {
+                outside = false;
                 int count = (int)_LMS_InteriorCount;
                 [unroll] for (int i = 0; i < 8; i++)
                 {
@@ -78,11 +83,12 @@ Shader "LetMeSleep/Higgsfield/InteriorLit"
                     // Only faces looking back into the room; the outer skin of the same wall keeps the exterior color.
                     if (dot(normalWS, toCenter) <= 0.0) continue;
                     if (normalWS.y < -0.5) return _CeilingColor.rgb;
-                    if (normalWS.y > 0.5) return exterior; // Floors, sills and shelves keep their own color.
+                    if (normalWS.y > 0.5) return exterior; // Floors, sills and shelves keep their own color (not outside).
                     float aboveFloor = positionWS.y - lo.y;
                     if (_TrimHeight > 0.0 && aboveFloor > -0.05 && aboveFloor < _TrimHeight) return _TrimColor.rgb;
                     return _InteriorColor.rgb;
                 }
+                outside = true;
                 return exterior;
             }
 
@@ -96,7 +102,9 @@ Shader "LetMeSleep/Higgsfield/InteriorLit"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
                 SurfaceData surfaceData;
                 InitializeStandardLitSurfaceData(input.uv, surfaceData);
-                surfaceData.albedo = InteriorAlbedo(input.positionWS, normalize(input.normalWS.xyz), surfaceData.albedo);
+                bool outside;
+                surfaceData.albedo = InteriorAlbedo(input.positionWS, normalize(input.normalWS.xyz), surfaceData.albedo, outside);
+                if (outside) surfaceData.emission += surfaceData.albedo * _ExteriorFill.rgb;
                 InputData inputData;
                 InitializeInputData(input, surfaceData.normalTS, inputData);
                 InitializeBakedGIData(input, inputData);
