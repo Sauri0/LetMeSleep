@@ -24,7 +24,14 @@ namespace LetMeSleep.Online
         private readonly List<string> acceptNow = new List<string>(), closeNow = new List<string>();
         private bool membershipDirty = true;
         private bool disposed;
-        public event Action<string, byte, ArraySegment<byte>> PacketReceived;
+        private readonly PacketHandlerList packetHandlers = new PacketHandlerList();
+        private static readonly Action<Exception> LogHandlerFailure = error => UnityEngine.Debug.LogException(error);
+        // Each consumer runs isolated: one failing handler must not cut the drain for everyone else.
+        public event Action<string, byte, ArraySegment<byte>> PacketReceived
+        {
+            add => packetHandlers.Add(value);
+            remove => packetHandlers.Remove(value);
+        }
         public event Action<string, string> PeerStateChanged;
         /// <summary>Throttled diagnostics for SendPacket/AcceptConnection results other than Success.</summary>
         public event Action<string, string> DeliveryIssue;
@@ -90,7 +97,7 @@ namespace LetMeSleep.Online
                 if (result != Result.Success) break;
                 if (room.State != LobbyState.Connected || peer == null || sourceSocket.SocketName != socket.SocketName || !IsSupportedChannel(channel)) continue;
                 string member = peer.ToString();
-                if (room.Contains(member)) PacketReceived?.Invoke(member, channel, new ArraySegment<byte>(receiveBuffer, 0, (int)length));
+                if (room.Contains(member)) packetHandlers.Dispatch(member, channel, new ArraySegment<byte>(receiveBuffer, 0, (int)length), LogHandlerFailure);
             }
         }
 
@@ -174,7 +181,7 @@ namespace LetMeSleep.Online
             var close = new CloseConnectionsOptions { LocalUserId = connection.LocalUserId, SocketId = socket };
             p2p.CloseConnections(ref close);
             links.Clear();
-            PacketReceived = null; PeerStateChanged = null; DeliveryIssue = null;
+            packetHandlers.Clear(); PeerStateChanged = null; DeliveryIssue = null;
         }
     }
 }

@@ -155,7 +155,8 @@ namespace LetMeSleep.Bootstrap
             if (!string.IsNullOrEmpty(local.OwnerPuid))
             {
                 var connected = new HashSet<string>(view.Members.Where(member => member.Connected).Select(member => member.Id), StringComparer.Ordinal);
-                var routes = roster.Where(actor => actor.OwnerPuid != localMemberId && connected.Contains(actor.OwnerPuid))
+                // The host view can arrive before this client's EOS lobby notification: route only lobby members.
+                var routes = roster.Where(actor => actor.OwnerPuid != localMemberId && connected.Contains(actor.OwnerPuid) && lobby.Contains(actor.OwnerPuid))
                     .Select(actor => new VoicePeerRoute(actor.OwnerPuid, actor.ActorId, false, false, actor.Role == PlayerRole.Mosquito)).ToArray();
                 label = "RONDA · VOZ DE PROXIMIDAD";
                 key = ContextKey(config.SessionEpoch, config.RoundId, local.ActorId, routes);
@@ -176,8 +177,10 @@ namespace LetMeSleep.Bootstrap
             if (localIndex < 0) { key = string.Empty; return null; }
             uint localActor = checked((uint)localIndex + 1);
             bool initiallyAudible = label.StartsWith("ESPERA", StringComparison.Ordinal);
+            // Actor slots come from the full room view so they agree on every client; peers this client's
+            // lobby does not list yet are routed after its lobby notification (the key then changes).
             var peers = members.Select((member, index) => new { member, actor = checked((uint)index + 1) })
-                .Where(item => item.member != localMemberId)
+                .Where(item => item.member != localMemberId && lobby.Contains(item.member))
                 .Select(item => new VoicePeerRoute(item.member, item.actor, initiallyAudible, initiallyAudible, false)).ToArray();
             key = ContextKey(epoch, round, localActor, peers) + ":" + label;
             return new VoiceRoundContext(epoch, round, localActor, true, true, peers);
