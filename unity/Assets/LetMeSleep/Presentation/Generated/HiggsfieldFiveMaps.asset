@@ -65,6 +65,7 @@ MonoBehaviour:
     - Human: 1
       Index: 3
       YawDegrees: 180
+    Decor: {fileID: 6052659169120681741, guid: d079d33cf81c2fa45bf71f5718f3d94c, type: 3}
   - MapId: hf-casa-del-patio-v1
     DisplayName: Casa del patio
     CameraFarPlane: 0
@@ -1265,6 +1266,7 @@ MonoBehaviour:
     - Human: 1
       Index: 3
       YawDegrees: 180
+    Decor: {fileID: 5850038375857353931, guid: 3d17a80e3e4c23f47a85f2305e807e5d, type: 3}
   - MapId: hf-campamento-pinar-v2
     DisplayName: Campamento del pinar
     CameraFarPlane: 0
@@ -4921,6 +4923,7 @@ MonoBehaviour:
     - Human: 0
       Index: 0
       YawDegrees: 280
+    Decor: {fileID: 4136627894045402856, guid: 3486968df1d94ed45935a6c92d7ed157, type: 3}
   - MapId: hf-yate-a-la-deriva-v3
     DisplayName: Yate a la deriva
     CameraFarPlane: 280
@@ -5336,6 +5339,7 @@ MonoBehaviour:
       - From: {fileID: 2100000, guid: 6c044cbcbea359f4287b41a799b852f8, type: 2}
         To: {fileID: 2100000, guid: 1ca55532399910141a58f6721a9d53e2, type: 2}
     SpawnFacings: []
+    Decor: {fileID: 7789778567110002603, guid: b4e77a4c2944de44197a09cffbdf4d16, type: 3}
   - MapId: hf-puerto-del-faro-v1
     DisplayName: Puerto del faro
     CameraFarPlane: 125
@@ -6779,3 +6783,4 @@ MonoBehaviour:
     - Human: 1
       Index: 2
       YawDegrees: 100
+    Decor: {fileID: 7136378327366653657, guid: f32eb8937741d2844953f5136ed9fe33, type: 3}

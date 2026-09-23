@@ -71,6 +71,7 @@
     "combat_ids_modified": false,
     "artistic_approval": false
   },
+  "sleep_roll_sign": -1,
   "fixed_gaze_baked": false,
   "clips": [
     {
@@ -112,15 +113,35 @@
       "loop": false,
       "root_motion": false,
       "presentation_only": true
+    },
+    {
+      "name": "MenuSleep",
+      "start": 1,
+      "end": 301,
+      "fps": 30,
+      "duration_seconds": 10.0,
+      "loop": true,
+      "root_motion": false,
+      "presentation_only": true
+    },
+    {
+      "name": "MenuSleepSwat",
+      "start": 1,
+      "end": 49,
+      "fps": 30,
+      "duration_seconds": 1.6,
+      "loop": false,
+      "root_motion": false,
+      "presentation_only": true
     }
   ],
   "minimum_chain_reach_margin_m": 0.005545376313822736,
   "tool_grip_validated": false,
   "seat_skin_contact_validated": false,
   "visual_approval": false,
-  "base_blend_sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
-  "base_fbx_sha256": "7c34bf6315ac4463f46773fde96942023ef7f8d9ccbd30b2a5dd9fb88cc4c8ba",
-  "base_audit_sha256": "0bfd627377f858bb109c8b1d2d482b3326e1fae8787d0b1bd9d380d9d5a297dd",
+  "base_blend_sha256": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
+  "base_fbx_sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
+  "base_audit_sha256": "a06a1214accdaa65b32a42e372a352172543a14dbf499c67d032043e203609be",
   "bind_bones": [
     {
       "name": "Root",
@@ -1393,8 +1414,33 @@
   "actor_mapping": "(-source_x,source_z,-source_y)",
   "combat_clips_modified": false,
   "geometry_source_note": "Coherent generated crown-fixed base; geometry unchanged by menu authoring",
+  "sleep_fit": {
+    "root_bed_m": [
+      -0.1289,
+      -0.7703,
+      0.8354
+    ],
+    "head_centre_actor_m": [
+      -0.1496,
+      -0.1289,
+      1.4703
+    ],
+    "lowest_body_bed_z_m": 0.579,
+    "body_bounds_bed_m": [
+      [
+        -0.22496281564235687,
+        -0.6979151964187622,
+        0.5789923667907715
+      ],
+      [
+        0.31274574995040894,
+        0.9709400534629822,
+        1.200384259223938
+      ]
+    ]
+  },
   "files_sha256": {
-    "LMS_HumanMenu.blend": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
-    "LMS_HumanMenu.fbx": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca"
+    "LMS_HumanMenu.blend": "e1832719362967ca619ad4215e85ae2e9aaed5fbc2d74cf343d72871f92088f7",
+    "LMS_HumanMenu.fbx": "2f8c859391a443e5aa297bb8cfc338493e60a33eb4a75960945191cf199dfd96"
   }
 }

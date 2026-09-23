@@ -508,8 +508,9 @@ class Prop:
         self.order.append(part)
         return part
 
-    def anchor(self, name, center, normal=(0, 0, 1), size=None, note=''):
-        self.anchors[name] = dict(center=tuple(center), normal=tuple(normal), size=size, note=note)
+    def anchor(self, name, center, normal=(0, 0, 1), size=None, note='', up=None):
+        self.anchors[name] = dict(center=tuple(center), normal=tuple(normal), size=size, note=note,
+                                  up=tuple(up) if up is not None else None)
 
     def material_name(self, part):
         return 'Prop_%s_%s%s' % (self.name, part, '_Emissive' if self.mats[part]['emission'] > 0 else '')

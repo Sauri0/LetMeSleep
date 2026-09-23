@@ -1,0 +1,1735 @@
+{
+ "schema": "lms.decor.v030/1",
+ "generator": "docs/v030/maps/decor_config.py",
+ "outputRoot": "Assets/LetMeSleep/Content/Environment/HiggsfieldDecor",
+ "kit": "Assets/LetMeSleep/Presentation/Generated/HiggsfieldAtmosphereKit.asset",
+ "maps": [
+  {
+   "mapId": "hf-isla-del-laguito-v2",
+   "floorPattern": "^(Terrain_Island|Terrain_Banks_Submerged|Path_|Dock_|Cabin_Floor|Lookout_Terrace|Beach_)",
+   "pathPattern": "^Path_",
+   "waterPattern": "^Water_Lake$",
+   "waterY": 1.0,
+   "excludePattern": "^(Coast_Boulder|Pine_Tree|Shrub|Grove_Rock|Cabin_Roof|Lake_Shore_Rock)",
+   "maxLights": 0,
+   "items": [
+    {
+     "id": "lakedock-lamppost",
+     "prop": "DockLampPost",
+     "at": [
+      0.95,
+      -8.8
+     ],
+     "group": "Decor_Dock",
+     "yaw": 180,
+     "search": 0.6
+    },
+    {
+     "id": "lakedock-rowboat",
+     "prop": "Rowboat",
+     "at": [
+      2.9,
+      -9.6
+     ],
+     "group": "Decor_Dock",
+     "mount": "water",
+     "yaw": 8,
+     "waterOffset": -0.14,
+     "search": 1.5
+    },
+    {
+     "id": "lakedock-barrel-a",
+     "prop": "Barrel",
+     "at": [
+      1.9,
+      -15.0
+     ],
+     "group": "Decor_Dock",
+     "search": 1.4
+    },
+    {
+     "id": "lakedock-barrel-b",
+     "prop": "Barrel",
+     "at": [
+      -1.9,
+      -15.2
+     ],
+     "group": "Decor_Dock",
+     "search": 1.4
+    },
+    {
+     "id": "arrival-lamppost",
+     "prop": "DockLampPost",
+     "at": [
+      1.2,
+      -45.4
+     ],
+     "group": "Decor_Dock",
+     "yaw": 180,
+     "search": 0.8
+    },
+    {
+     "id": "arrival-crate-a",
+     "prop": "Crate",
+     "at": [
+      2.4,
+      -34.2
+     ],
+     "group": "Decor_Dock",
+     "yaw": 15,
+     "search": 1.4
+    },
+    {
+     "id": "arrival-crate-b",
+     "prop": "Crate",
+     "at": [
+      2.5,
+      -34.2
+     ],
+     "group": "Decor_Dock",
+     "mount": "on",
+     "on": "arrival-crate-a",
+     "yaw": 40,
+     "search": 0.2
+    },
+    {
+     "id": "arrival-barrel",
+     "prop": "Barrel",
+     "at": [
+      -2.6,
+      -34.6
+     ],
+     "group": "Decor_Dock",
+     "search": 1.4
+    },
+    {
+     "id": "arrival-signpost",
+     "prop": "Signpost",
+     "at": [
+      3.2,
+      -21.2
+     ],
+     "group": "Decor_PathEdges",
+     "yaw": 200,
+     "search": 1.6
+    },
+    {
+     "id": "cabin-mailbox",
+     "prop": "Mailbox",
+     "at": [
+      21.4,
+      -4.2
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 90,
+     "search": 1.6
+    },
+    {
+     "id": "cabin-crate",
+     "prop": "Crate",
+     "at": [
+      34.9,
+      2.5
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 20,
+     "search": 1.4
+    },
+    {
+     "id": "cabin-pot-a",
+     "prop": "PottedPlant",
+     "at": [
+      21.8,
+      -0.2
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.0
+    },
+    {
+     "id": "cabin-toolbox",
+     "prop": "Toolbox",
+     "at": [
+      34.6,
+      5.4
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 70,
+     "search": 1.4
+    },
+    {
+     "id": "cabin-painting",
+     "prop": "PaintingLandscape",
+     "at": [
+      28.79,
+      3.3,
+      7.72
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "height": 1.6,
+     "search": 0.6
+    },
+    {
+     "id": "cabin-pans",
+     "prop": "HangingPans",
+     "at": [
+      30.7,
+      3.3,
+      -0.15
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "height": 1.6,
+     "search": 0.6
+    },
+    {
+     "id": "cabin-plant-in",
+     "prop": "PottedPlant",
+     "at": [
+      33.34,
+      3.3,
+      3.87
+     ],
+     "group": "Decor_Interior",
+     "search": 0.5
+    },
+    {
+     "id": "cabin-chest",
+     "prop": "Chest",
+     "at": [
+      25.56,
+      3.3,
+      5.08
+     ],
+     "group": "Decor_Interior",
+     "yaw": 127,
+     "search": 0.5
+    },
+    {
+     "id": "picnic-ball",
+     "prop": "SoccerBall",
+     "at": [
+      19.6,
+      -20.6
+     ],
+     "group": "Decor_Picnic",
+     "search": 1.5
+    },
+    {
+     "id": "picnic-chair",
+     "prop": "FoldingChair",
+     "at": [
+      26.8,
+      -24.9
+     ],
+     "group": "Decor_Picnic",
+     "faceAt": [
+      23,
+      -23
+     ],
+     "search": 1.2
+    }
+   ],
+   "scatters": [
+    {
+     "id": "isla-path-edge",
+     "group": "Decor_PathEdges",
+     "props": {
+      "FlowersWhite": 3,
+      "FlowersYellow": 2,
+      "Fern": 2,
+      "Mushrooms": 1.2,
+      "RockCluster": 1,
+      "Bush": 1.2
+     },
+     "min": [
+      -46,
+      -34
+     ],
+     "max": [
+      46,
+      36
+     ],
+     "count": 95,
+     "near": "path",
+     "nearMin": 0.9,
+     "nearMax": 2.2,
+     "minSpacing": 1.8,
+     "seed": 13
+    },
+    {
+     "id": "isla-meadow",
+     "group": "Decor_Meadow",
+     "props": {
+      "FlowersWhite": 3,
+      "FlowersYellow": 3,
+      "Bush": 1.5,
+      "Fern": 1
+     },
+     "min": [
+      -40,
+      -30
+     ],
+     "max": [
+      40,
+      32
+     ],
+     "count": 25,
+     "minSpacing": 3.5,
+     "seed": 17
+    },
+    {
+     "id": "isla-lily",
+     "group": "Decor_Dock",
+     "props": {
+      "LilyPads": 1
+     },
+     "min": [
+      -12,
+      -6
+     ],
+     "max": [
+      12,
+      14
+     ],
+     "count": 8,
+     "mount": "water",
+     "waterOffset": 0.02,
+     "minSpacing": 2.0,
+     "scale": [
+      0.8,
+      1.3
+     ],
+     "seed": 19
+    }
+   ]
+  },
+  {
+   "mapId": "hf-casa-del-patio-v1",
+   "floorPattern": "^(CASA_Terrain_Dry_Property|CASA_Path_|CASA_Floorboard_|CASA_Floor_|CASA_Porch_(Front|Rear)_(Board|Support)|CASA_Shed_Floor)",
+   "pathPattern": "^CASA_Path_",
+   "excludePattern": "^(CASA_Roof|CASA_Pine|CASA_Shrub|CASA_GardenBed|CASA_Vegetable)",
+   "maxLights": 3,
+   "items": [
+    {
+     "id": "front-mailbox",
+     "prop": "Mailbox",
+     "at": [
+      1.6,
+      -17.6
+     ],
+     "group": "Decor_Garden",
+     "yaw": -90,
+     "search": 1.2
+    },
+    {
+     "id": "shed-crate-a",
+     "prop": "Crate",
+     "at": [
+      -12.9,
+      11.4
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 10,
+     "search": 1.2
+    },
+    {
+     "id": "shed-crate-b",
+     "prop": "Crate",
+     "at": [
+      -12.9,
+      11.4
+     ],
+     "group": "Decor_Buildings",
+     "mount": "on",
+     "on": "shed-crate-a",
+     "yaw": 35,
+     "search": 0.2
+    },
+    {
+     "id": "shed-barrel",
+     "prop": "Barrel",
+     "at": [
+      -17.4,
+      11.0
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.2
+    },
+    {
+     "id": "shed-toolbox",
+     "prop": "Toolbox",
+     "at": [
+      -15.0,
+      0.2,
+      12.6
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 15,
+     "search": 0.8
+    },
+    {
+     "id": "shed-lantern",
+     "prop": "HandLantern",
+     "at": [
+      -15.9,
+      10.0
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.2,
+     "light": {
+      "color": "#FFB347",
+      "intensity": 1.3,
+      "range": 3.4,
+      "anchor": "light",
+      "flicker": 0.08
+     },
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.55,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "garden-toolbox",
+     "prop": "Toolbox",
+     "at": [
+      -11.5,
+      7.4
+     ],
+     "group": "Decor_Garden",
+     "yaw": -20,
+     "search": 1.2
+    },
+    {
+     "id": "rear-chair",
+     "prop": "FoldingChair",
+     "at": [
+      -3.3,
+      6.5
+     ],
+     "group": "Decor_Garden",
+     "yaw": 180,
+     "search": 1.0
+    },
+    {
+     "id": "picnic-mug",
+     "prop": "Mug",
+     "at": [
+      -5.3,
+      13.1
+     ],
+     "group": "Decor_Garden",
+     "mount": "floor",
+     "surfacePattern": "^CASA_Picnic_Table_Top",
+     "search": 0.3
+    },
+    {
+     "id": "woodpile-crate",
+     "prop": "Crate",
+     "at": [
+      8.9,
+      8.9
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 5,
+     "search": 1.2
+    },
+    {
+     "id": "hall-rug",
+     "prop": "RugRedStriped",
+     "at": [
+      0.4,
+      0.3,
+      -3.2
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "scale": [
+      0.8
+     ],
+     "search": 0.6
+    },
+    {
+     "id": "kitchen-pans",
+     "prop": "HangingPans",
+     "at": [
+      5.2,
+      0.3,
+      -1.0
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      1,
+      0
+     ],
+     "height": 1.75,
+     "search": 0.8
+    },
+    {
+     "id": "kitchen-plant",
+     "prop": "PottedPlant",
+     "at": [
+      3.0,
+      0.3,
+      -4.2
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    },
+    {
+     "id": "living-plant",
+     "prop": "PottedPlant",
+     "at": [
+      -2.1,
+      0.3,
+      4.2
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    },
+    {
+     "id": "living-painting",
+     "prop": "PaintingLandscape",
+     "at": [
+      -6.2,
+      0.3,
+      -0.9
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      -1,
+      0
+     ],
+     "height": 1.45,
+     "search": 0.5
+    },
+    {
+     "id": "bed1-chest",
+     "prop": "Chest",
+     "at": [
+      -2.7,
+      3.2,
+      2.5
+     ],
+     "group": "Decor_Interior",
+     "yaw": -90,
+     "search": 0.8
+    },
+    {
+     "id": "bed1-painting",
+     "prop": "PaintingLandscape",
+     "at": [
+      -6.1,
+      3.2,
+      0.6
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      -1,
+      0
+     ],
+     "height": 1.5,
+     "search": 1.0
+    },
+    {
+     "id": "bed1-plant",
+     "prop": "PottedPlant",
+     "at": [
+      -6.2,
+      3.2,
+      -1.6
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    },
+    {
+     "id": "bed2-chest",
+     "prop": "Chest",
+     "at": [
+      2.9,
+      3.2,
+      -3.2
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "search": 0.8
+    },
+    {
+     "id": "bed2-painting",
+     "prop": "PaintingLandscape",
+     "at": [
+      6.2,
+      3.2,
+      -1.6
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      1,
+      0
+     ],
+     "height": 1.5,
+     "search": 1.0
+    },
+    {
+     "id": "bed2-plant",
+     "prop": "PottedPlant",
+     "at": [
+      6.3,
+      3.2,
+      -1.2
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    },
+    {
+     "id": "uphall-rug",
+     "prop": "RugBlue",
+     "at": [
+      -0.5,
+      3.2,
+      0.8
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "scale": [
+      0.6
+     ],
+     "search": 0.6
+    },
+    {
+     "id": "living-hanging-plant",
+     "prop": "HangingPlant",
+     "at": [
+      -2.2,
+      0.3,
+      -4.2
+     ],
+     "group": "Decor_Interior",
+     "mount": "ceiling",
+     "search": 0.8
+    },
+    {
+     "id": "kitchen-crate",
+     "prop": "Crate",
+     "at": [
+      6.2,
+      0.3,
+      1.3
+     ],
+     "group": "Decor_Interior",
+     "yaw": 10,
+     "scale": [
+      0.8
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "porch-lantern-l",
+     "prop": "HandLantern",
+     "at": [
+      -3.2,
+      0.2,
+      -5.6
+     ],
+     "group": "Decor_Garden",
+     "search": 0.6,
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.5,
+      "alpha": 0.3,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "porch-lantern-r",
+     "prop": "HandLantern",
+     "at": [
+      2.4,
+      0.2,
+      -5.6
+     ],
+     "group": "Decor_Garden",
+     "search": 0.6,
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.5,
+      "alpha": 0.3,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "garden-bush-a",
+     "prop": "Bush",
+     "at": [
+      -8.5,
+      -9.5
+     ],
+     "group": "Decor_Garden",
+     "search": 1.5
+    },
+    {
+     "id": "garden-bush-b",
+     "prop": "Bush",
+     "at": [
+      8.5,
+      -9.5
+     ],
+     "group": "Decor_Garden",
+     "search": 1.5
+    }
+   ],
+   "scatters": [
+    {
+     "id": "casa-path-edge",
+     "group": "Decor_PathEdges",
+     "props": {
+      "FlowersWhite": 3,
+      "FlowersYellow": 3,
+      "Bush": 1,
+      "Fern": 1,
+      "RockCluster": 0.6
+     },
+     "min": [
+      -20,
+      -19
+     ],
+     "max": [
+      20,
+      18
+     ],
+     "count": 45,
+     "near": "path",
+     "nearMin": 0.7,
+     "nearMax": 1.6,
+     "minSpacing": 1.5,
+     "seed": 29
+    },
+    {
+     "id": "casa-garden",
+     "group": "Decor_Garden",
+     "props": {
+      "FlowersWhite": 3,
+      "FlowersYellow": 3,
+      "Bush": 1.5,
+      "Fern": 1
+     },
+     "min": [
+      -20,
+      -19
+     ],
+     "max": [
+      20,
+      18
+     ],
+     "count": 20,
+     "minSpacing": 3.0,
+     "seed": 31
+    }
+   ]
+  },
+  {
+   "mapId": "hf-campamento-pinar-v2",
+   "floorPattern": "^(CAMP_Terrain_(Grass|Paths|Plaza)|CAMP_Jetty_(Plank|Shore)|CAMP_Hill_|CAMP_Washroom_Floor)",
+   "pathPattern": "^CAMP_Terrain_(Paths|Plaza)$",
+   "waterPattern": "^Water_(Lake|Creek)$",
+   "waterY": -0.12,
+   "excludePattern": "^(CAMP_Tent|CAMP_Shelter_Roof|CAMP_Pine)",
+   "maxLights": 4,
+   "items": [
+    {
+     "id": "fire-firewood-a",
+     "prop": "Firewood",
+     "at": [
+      4.6,
+      -3.9
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.4
+    },
+    {
+     "id": "fire-firewood-b",
+     "prop": "Firewood",
+     "at": [
+      -4.9,
+      3.6
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.4
+    },
+    {
+     "id": "fire-logbench",
+     "prop": "LogBench",
+     "at": [
+      -4.4,
+      -2.9
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.4
+    },
+    {
+     "id": "plaza-signpost",
+     "prop": "Signpost",
+     "at": [
+      -7.8,
+      -4.2
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.6
+    },
+    {
+     "id": "fire-logbench-b",
+     "prop": "LogBench",
+     "at": [
+      4.8,
+      3.6
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.6
+    },
+    {
+     "id": "shelter-firewood",
+     "prop": "Firewood",
+     "at": [
+      -19.6,
+      2.4
+     ],
+     "group": "Decor_Camp",
+     "yaw": 20,
+     "search": 1.4
+    },
+    {
+     "id": "tents-b-firewood",
+     "prop": "Firewood",
+     "at": [
+      16.2,
+      -4.2
+     ],
+     "group": "Decor_Camp",
+     "yaw": -30,
+     "search": 1.4
+    },
+    {
+     "id": "shelter-crate-a",
+     "prop": "Crate",
+     "at": [
+      -26.8,
+      7.9
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 12,
+     "search": 1.2
+    },
+    {
+     "id": "shelter-crate-b",
+     "prop": "Crate",
+     "at": [
+      -21.1,
+      7.2
+     ],
+     "group": "Decor_Buildings",
+     "yaw": -8,
+     "search": 1.2
+    },
+    {
+     "id": "shelter-lantern",
+     "prop": "HandLantern",
+     "at": [
+      -21.0,
+      3.4
+     ],
+     "group": "Decor_Buildings",
+     "mount": "on",
+     "on": "shelter-crate-a",
+     "search": 0.2,
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.6,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "shelter-barrel",
+     "prop": "Barrel",
+     "at": [
+      -27.8,
+      3.0
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.2
+    },
+    {
+     "id": "washroom-barrel",
+     "prop": "Barrel",
+     "at": [
+      -25.8,
+      18.2
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.2
+    },
+    {
+     "id": "washroom-crate",
+     "prop": "Crate",
+     "at": [
+      -30.2,
+      21.8
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 20,
+     "search": 1.2
+    },
+    {
+     "id": "tents-a-chair-b",
+     "prop": "FoldingChair",
+     "at": [
+      -8.3,
+      10.6
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.2
+    },
+    {
+     "id": "tents-a-crate",
+     "prop": "Crate",
+     "at": [
+      -15.8,
+      11.2
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 30,
+     "search": 1.2
+    },
+    {
+     "id": "tents-a-lantern",
+     "prop": "HandLantern",
+     "at": [
+      -12.8,
+      9.2
+     ],
+     "group": "Decor_Camp",
+     "search": 1.5,
+     "light": {
+      "color": "#FFB347",
+      "intensity": 1.4,
+      "range": 3.6,
+      "anchor": "light",
+      "flicker": 0.08
+     },
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.6,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "tents-b-chair",
+     "prop": "FoldingChair",
+     "at": [
+      9.0,
+      -3.3
+     ],
+     "group": "Decor_Camp",
+     "faceAt": [
+      0.0,
+      0.0
+     ],
+     "search": 1.2
+    },
+    {
+     "id": "tents-b-crate",
+     "prop": "Crate",
+     "at": [
+      15.6,
+      -8.6
+     ],
+     "group": "Decor_Buildings",
+     "yaw": -15,
+     "search": 1.2
+    },
+    {
+     "id": "tents-b-lantern",
+     "prop": "HandLantern",
+     "at": [
+      10.4,
+      -8.9
+     ],
+     "group": "Decor_Camp",
+     "search": 1.2,
+     "light": {
+      "color": "#FFB347",
+      "intensity": 1.4,
+      "range": 3.6,
+      "anchor": "light",
+      "flicker": 0.08
+     },
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.6,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "jetty-lamppost",
+     "prop": "DockLampPost",
+     "at": [
+      36.4,
+      -16.4
+     ],
+     "group": "Decor_Dock",
+     "yaw": 180,
+     "search": 2.0,
+     "light": {
+      "color": "#FFB347",
+      "intensity": 2.0,
+      "range": 5.0,
+      "anchor": "light",
+      "flicker": 0.06
+     },
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.8,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "jetty-rowboat",
+     "prop": "Rowboat",
+     "at": [
+      37.4,
+      -22.5
+     ],
+     "group": "Decor_Dock",
+     "mount": "water",
+     "yaw": 90,
+     "waterOffset": -0.14,
+     "search": 1.2
+    },
+    {
+     "id": "jetty-barrel-a",
+     "prop": "Barrel",
+     "at": [
+      38.2,
+      -15.6
+     ],
+     "group": "Decor_Dock",
+     "search": 2.0
+    },
+    {
+     "id": "jetty-barrel-b",
+     "prop": "Barrel",
+     "at": [
+      37.9,
+      -14.6
+     ],
+     "group": "Decor_Dock",
+     "search": 1.0
+    }
+   ],
+   "scatters": [
+    {
+     "id": "camp-path-edge",
+     "group": "Decor_PathEdges",
+     "props": {
+      "FlowersWhite": 3,
+      "FlowersYellow": 2,
+      "Fern": 2,
+      "Mushrooms": 1.2,
+      "RockCluster": 1,
+      "Bush": 1.2
+     },
+     "min": [
+      -40,
+      -32
+     ],
+     "max": [
+      30,
+      28
+     ],
+     "count": 85,
+     "near": "path",
+     "nearMin": 0.9,
+     "nearMax": 2.0,
+     "minSpacing": 1.7,
+     "seed": 3
+    },
+    {
+     "id": "camp-forest",
+     "group": "Decor_Forest",
+     "props": {
+      "Fern": 3,
+      "Mushrooms": 2,
+      "RockCluster": 1.2,
+      "TreeStump": 1,
+      "Bush": 1.5
+     },
+     "min": [
+      -45,
+      -38
+     ],
+     "max": [
+      46,
+      36
+     ],
+     "count": 26,
+     "minSpacing": 3.2,
+     "seed": 5
+    },
+    {
+     "id": "camp-lily",
+     "group": "Decor_Dock",
+     "props": {
+      "LilyPads": 1
+     },
+     "min": [
+      28,
+      -33
+     ],
+     "max": [
+      44,
+      -22
+     ],
+     "count": 7,
+     "mount": "water",
+     "waterOffset": 0.02,
+     "minSpacing": 2.0,
+     "scale": [
+      0.8,
+      1.3
+     ],
+     "seed": 7
+    },
+    {
+     "id": "camp-reeds",
+     "group": "Decor_Dock",
+     "props": {
+      "Reeds": 1
+     },
+     "min": [
+      22,
+      -37
+     ],
+     "max": [
+      47,
+      -13
+     ],
+     "count": 9,
+     "near": "water",
+     "nearMin": 0.6,
+     "nearMax": 1.6,
+     "minSpacing": 1.8,
+     "seed": 11
+    }
+   ]
+  },
+  {
+   "mapId": "hf-yate-a-la-deriva-v3",
+   "floorPattern": "^(YATE_Teak_|YATE_LowerCabinFloor|YATE_MainDeck_Continuous)",
+   "pathPattern": "^$",
+   "maxLights": 0,
+   "items": [
+    {
+     "id": "aft-chair-a",
+     "prop": "FoldingChair",
+     "at": [
+      2.9,
+      3.4,
+      -11.0
+     ],
+     "group": "Decor_Deck",
+     "faceAt": [
+      6,
+      -13
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "aft-chair-b",
+     "prop": "FoldingChair",
+     "at": [
+      -2.9,
+      3.4,
+      -9.6
+     ],
+     "group": "Decor_Deck",
+     "faceAt": [
+      -6,
+      -12
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "aft-lantern",
+     "prop": "HandLantern",
+     "at": [
+      -3.1,
+      3.4,
+      -12.6
+     ],
+     "group": "Decor_Deck",
+     "search": 0.8,
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.5,
+      "alpha": 0.3,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "aft-barrel",
+     "prop": "Barrel",
+     "at": [
+      -3.2,
+      3.4,
+      -11.5
+     ],
+     "group": "Decor_Deck",
+     "search": 0.8
+    },
+    {
+     "id": "aft-crate",
+     "prop": "Crate",
+     "at": [
+      3.2,
+      3.4,
+      -9.9
+     ],
+     "group": "Decor_Deck",
+     "yaw": 15,
+     "scale": [
+      0.8
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "fore-chair-a",
+     "prop": "FoldingChair",
+     "at": [
+      -2.3,
+      3.4,
+      8.2
+     ],
+     "group": "Decor_Deck",
+     "faceAt": [
+      -1,
+      14
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "fore-chair-b",
+     "prop": "FoldingChair",
+     "at": [
+      2.3,
+      3.4,
+      8.2
+     ],
+     "group": "Decor_Deck",
+     "faceAt": [
+      1,
+      14
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "fore-lantern",
+     "prop": "HandLantern",
+     "at": [
+      -2.6,
+      3.4,
+      11.8
+     ],
+     "group": "Decor_Deck",
+     "search": 0.8,
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.5,
+      "alpha": 0.3,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "fly-chair",
+     "prop": "FoldingChair",
+     "at": [
+      -0.8,
+      6.1,
+      -5.3
+     ],
+     "group": "Decor_Deck",
+     "faceAt": [
+      0,
+      -12
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "salon-rug",
+     "prop": "RugRedStriped",
+     "at": [
+      0.5,
+      3.4,
+      1.8
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "scale": [
+      0.7
+     ],
+     "search": 0.8
+    },
+    {
+     "id": "lower-rug",
+     "prop": "RugBlue",
+     "at": [
+      0.0,
+      0.8,
+      -1.5
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "scale": [
+      0.7
+     ],
+     "search": 1.0
+    },
+    {
+     "id": "salon-plant",
+     "prop": "PottedPlant",
+     "at": [
+      -2.9,
+      3.4,
+      0.6
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    }
+   ],
+   "scatters": []
+  },
+  {
+   "mapId": "hf-puerto-del-faro-v1",
+   "floorPattern": "^(Terrain_Playable|Path_|Plaza_|Cottage_\\d+_Floorboards|BoatWorkshop_Floorboards|Pier_\\d_GroupedDeckPlanks|Workshop_QuaysidePorch_Support|Footbridge_CamberedContinuousDeck)",
+   "pathPattern": "^(Path_|Plaza_)",
+   "waterPattern": "^Water_Ocean_Pueblo$",
+   "waterY": 0.0,
+   "excludePattern": "^(Rock_|Pine_|BackdropPine|Terrain_North)",
+   "maxLights": 3,
+   "items": [
+    {
+     "id": "pier2-lamppost",
+     "prop": "DockLampPost",
+     "at": [
+      15.2,
+      -27.9
+     ],
+     "group": "Decor_Dock",
+     "yaw": -90,
+     "search": 0.8,
+     "light": {
+      "color": "#FFB347",
+      "intensity": 2.0,
+      "range": 5.0,
+      "anchor": "light",
+      "flicker": 0.06
+     },
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.8,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "pier1-barrel-a",
+     "prop": "Barrel",
+     "at": [
+      -15.0,
+      -20.4
+     ],
+     "group": "Decor_Dock",
+     "search": 0.8
+    },
+    {
+     "id": "pier1-barrel-b",
+     "prop": "Barrel",
+     "at": [
+      -15.1,
+      -21.5
+     ],
+     "group": "Decor_Dock",
+     "search": 0.8
+    },
+    {
+     "id": "pier2-crate",
+     "prop": "Crate",
+     "at": [
+      12.9,
+      -20.6
+     ],
+     "group": "Decor_Dock",
+     "yaw": 10,
+     "search": 0.8
+    },
+    {
+     "id": "c1-plant",
+     "prop": "PottedPlant",
+     "at": [
+      -12.2,
+      -5.9
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.0
+    },
+    {
+     "id": "c2-mailbox",
+     "prop": "Mailbox",
+     "at": [
+      -10.3,
+      8.6
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 180,
+     "search": 1.2
+    },
+    {
+     "id": "c2-plant",
+     "prop": "PottedPlant",
+     "at": [
+      -11.6,
+      9.3
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.0
+    },
+    {
+     "id": "c2-lantern",
+     "prop": "HandLantern",
+     "at": [
+      -13.8,
+      9.2
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.0,
+     "light": {
+      "color": "#FFB347",
+      "intensity": 1.3,
+      "range": 3.4,
+      "anchor": "light",
+      "flicker": 0.08
+     },
+     "halo": {
+      "color": "#FFB347",
+      "size": 0.55,
+      "alpha": 0.35,
+      "anchor": "light"
+     }
+    },
+    {
+     "id": "c3-mailbox",
+     "prop": "Mailbox",
+     "at": [
+      4.3,
+      11.6
+     ],
+     "group": "Decor_Buildings",
+     "yaw": 180,
+     "search": 1.2
+    },
+    {
+     "id": "c3-plant",
+     "prop": "PottedPlant",
+     "at": [
+      0.3,
+      12.3
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.0
+    },
+    {
+     "id": "workshop-barrel",
+     "prop": "Barrel",
+     "at": [
+      11.0,
+      -10.7
+     ],
+     "group": "Decor_Buildings",
+     "search": 1.0
+    },
+    {
+     "id": "workshop-toolbox",
+     "prop": "Toolbox",
+     "at": [
+      18.4,
+      3.35,
+      -6.5
+     ],
+     "group": "Decor_Interior",
+     "search": 1.0
+    },
+    {
+     "id": "plaza-signpost",
+     "prop": "Signpost",
+     "at": [
+      8.6,
+      9.6
+     ],
+     "group": "Decor_PathEdges",
+     "faceAt": [
+      29,
+      26
+     ],
+     "search": 1.6
+    },
+    {
+     "id": "c1-rug",
+     "prop": "RugBlue",
+     "at": [
+      -13.2,
+      3.36,
+      -2.4
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "search": 0.6
+    },
+    {
+     "id": "c1-pans",
+     "prop": "HangingPans",
+     "at": [
+      -12.0,
+      3.36,
+      -1.0
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      1,
+      0
+     ],
+     "height": 1.6,
+     "search": 0.8
+    },
+    {
+     "id": "c1-plant-in",
+     "prop": "PottedPlant",
+     "at": [
+      -11.6,
+      3.36,
+      -0.2
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    },
+    {
+     "id": "c2-rug",
+     "prop": "RugRedStriped",
+     "at": [
+      -11.0,
+      3.36,
+      12.8
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "scale": [
+      0.8
+     ],
+     "search": 0.6
+    },
+    {
+     "id": "c2-painting",
+     "prop": "PaintingLandscape",
+     "at": [
+      -10.4,
+      3.36,
+      14.0
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      0,
+      1
+     ],
+     "height": 1.45,
+     "search": 0.8
+    },
+    {
+     "id": "c2-shelf",
+     "prop": "Bookshelf",
+     "at": [
+      -9.3,
+      3.36,
+      11.5
+     ],
+     "group": "Decor_Interior",
+     "yaw": -90,
+     "search": 0.8
+    },
+    {
+     "id": "c3-rug",
+     "prop": "RugBlue",
+     "at": [
+      3.0,
+      3.36,
+      15.9
+     ],
+     "group": "Decor_Interior",
+     "yaw": 90,
+     "search": 0.6
+    },
+    {
+     "id": "c3-painting",
+     "prop": "PaintingLandscape",
+     "at": [
+      3.6,
+      3.36,
+      17.0
+     ],
+     "group": "Decor_Interior",
+     "mount": "wall",
+     "dir": [
+      0,
+      1
+     ],
+     "height": 1.45,
+     "search": 0.8
+    },
+    {
+     "id": "c3-plant-in",
+     "prop": "PottedPlant",
+     "at": [
+      4.7,
+      3.36,
+      13.8
+     ],
+     "group": "Decor_Interior",
+     "search": 0.8
+    }
+   ],
+   "scatters": [
+    {
+     "id": "puerto-path-edge",
+     "group": "Decor_PathEdges",
+     "props": {
+      "FlowersWhite": 3,
+      "FlowersYellow": 2,
+      "Fern": 2,
+      "Mushrooms": 1.2,
+      "RockCluster": 1,
+      "Bush": 1.2
+     },
+     "min": [
+      -28,
+      -16
+     ],
+     "max": [
+      36,
+      30
+     ],
+     "count": 80,
+     "near": "path",
+     "nearMin": 0.8,
+     "nearMax": 2.0,
+     "minSpacing": 1.8,
+     "seed": 37
+    },
+    {
+     "id": "puerto-meadow",
+     "group": "Decor_Meadow",
+     "props": {
+      "FlowersWhite": 2,
+      "FlowersYellow": 2,
+      "Bush": 2,
+      "Fern": 1,
+      "RockCluster": 1
+     },
+     "min": [
+      -40,
+      -25
+     ],
+     "max": [
+      42,
+      38
+     ],
+     "count": 25,
+     "minSpacing": 3.5,
+     "seed": 41
+    },
+    {
+     "id": "puerto-lily",
+     "group": "Decor_Dock",
+     "props": {
+      "LilyPads": 1
+     },
+     "min": [
+      -9,
+      -19
+     ],
+     "max": [
+      9,
+      -15
+     ],
+     "count": 4,
+     "mount": "water",
+     "waterOffset": 0.05,
+     "minSpacing": 2.0,
+     "seed": 43
+    },
+    {
+     "id": "puerto-reeds",
+     "group": "Decor_Dock",
+     "props": {
+      "Reeds": 1
+     },
+     "min": [
+      -24,
+      -24
+     ],
+     "max": [
+      24,
+      -12
+     ],
+     "count": 8,
+     "near": "water",
+     "nearMin": 0.6,
+     "nearMax": 1.8,
+     "minSpacing": 1.8,
+     "seed": 47
+    }
+   ]
+  }
+ ]
+}

@@ -135,6 +135,9 @@ def anchor_entries(prop):
             'normal_blender': [r4(x) for x in n],
             'normal_unity': to_unity(n),
         }
+        if a.get('up'):
+            e['up_blender'] = [r4(x) for x in a['up']]
+            e['up_unity'] = to_unity(a['up'])
         if a.get('size'):
             e['size_m'] = [r4(x) for x in a['size']]
         if a.get('note'):

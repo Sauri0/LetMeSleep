@@ -1,16 +1,18 @@
 {
-  "status": "v0.3.0 sketch human (round 7, review corrections: the mouth cavity faces its own axis so back-face culling keeps it (an open mouth no longer shows the scene behind the head) and a ~110 mm shorter nightcap tail puts the pompom behind the ear at ear-lobe height (bottom z ~1.393, above the side jaw ring); round 6 (art-director corrections): rounded-box face with the chin 45 mm lower at 1.300 (mouth 1.40, Socket.Eye 1.53), vertical cheek walls to a jaw bevel and a flat 150 mm chin, skull ~15% narrower at the eyes (~302 mm, globes cover ~87%), 20 mm 3D wedge brows under a 12 mm lower cap band, block sideburns (no temple fringe strands), close-fitting sleeves (arm + 15 mm, 100% UpperArm) under a ~17 deg shoulder line, straight 8-sided arm prisms (-10%), +10% longer hands with a loose idle fist, thick closed slippers on a 20 mm #1E2440 sole, 23-24 cream #E6DCC8 45 mm dots per leg incl. back of thighs and seat) regenerated from art_source human base; native numeric gates passed; Unity import and artistic approval pending",
-  "selected_raw_directory": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu",
+  "status": "v0.3.0 scenes: + MenuSleep (10 s loop, slow breathing, one dream stir) and MenuSleepSwat (1.6 s clumsy, still-asleep slap) lying on the left side in Prop_BedSleeper (UI-06 screen 1); seated clips unchanged in authoring. Previous: v0.3.0 sketch human (round 7, review corrections: the mouth cavity faces its own axis so back-face culling keeps it (an open mouth no longer shows the scene behind the head) and a ~110 mm shorter nightcap tail puts the pompom behind the ear at ear-lobe height (bottom z ~1.393, above the side jaw ring); round 6 (art-director corrections): rounded-box face with the chin 45 mm lower at 1.300 (mouth 1.40, Socket.Eye 1.53), vertical cheek walls to a jaw bevel and a flat 150 mm chin, skull ~15% narrower at the eyes (~302 mm, globes cover ~87%), 20 mm 3D wedge brows under a 12 mm lower cap band, block sideburns (no temple fringe strands), close-fitting sleeves (arm + 15 mm, 100% UpperArm) under a ~17 deg shoulder line, straight 8-sided arm prisms (-10%), +10% longer hands with a loose idle fist, thick closed slippers on a 20 mm #1E2440 sole, 23-24 cream #E6DCC8 45 mm dots per leg incl. back of thighs and seat) regenerated from art_source human base; native numeric gates passed; Unity import and artistic approval pending",
+  "selected_raw_directory": "N:/LetMeSleep/Validation/V030/Scenes/menu-human/run6",
   "clips": {
     "MenuSeatedIdle": 8.0,
     "MenuLook": 4.0,
     "MenuSwat": 1.4,
-    "MenuReturn": 1.8
+    "MenuReturn": 1.8,
+    "MenuSleep": 10.0,
+    "MenuSleepSwat": 1.6
   },
   "numeric_gates_passed": true,
   "samples_both_formats": 920,
-  "max_source_fbx_bone_difference_m": 1.0848209096909342e-06,
-  "max_boundary_mesh_difference_m": 7.79431869424702e-07,
+  "max_source_fbx_bone_difference_m": 1.3574019336422494e-06,
+  "max_boundary_mesh_difference_m": 6.880400407680986e-07,
   "max_foot_error_m": 5.969069167437188e-07,
   "min_pelvis_cloth_height_m": 0.5890000462532043,
   "seat_top_height_m": 0.575,
@@ -131,45 +133,9 @@
     "No full moving sequence or Unity approval yet"
   ],
   "file_sha256": {
-    ".gitattributes": "eabc4994d9f65153b3268fc9e977ce2ab49647f55632a4bc0df8f7b3157b12ce",
-    "evidence/base-audit.json": "ce2a7f7f2d2d324e090bb6d3ef34fea039e83f401ff819940a747f96f5a11ff9",
-    "evidence/base-fbx_roundtrip.json": "f197ca3699e61c293ad65b36d110e3f30b639784e7ddf4b12218980e35a561a8",
-    "evidence/base-generate.err.log": "86ab97beed9a275aedef53f57fb00fd43bbeed772e9c1673e8448721e19ee3de",
-    "evidence/base-generate.log": "8319eba9e5042b00b766da7420a0c6b07347af1a0c9007e50ca37bca86c74e22",
-    "evidence/base-processes.json": "36486bd37ae540972501323633612c778bff87fa9797f5f36693d75e82581fb9",
-    "evidence/base-roundtrip.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "evidence/base-roundtrip.log": "d92a157ae99d17175d4770f28729827cbe18ea152f79d54a1d0ed2024c82101d",
-    "evidence/cleanup.json": "f45556603dbade4a33ef1a985d1c4c86f7c6f370e8728eb62258a45ea2d0a2ba",
-    "evidence/menu-adjusted-check-process.json": "0acf330aa90e13ffc4fc3b595945cc3b161b8b0fb4ae9679172f0bbe75fd8561",
-    "evidence/menu-adjusted-check.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "evidence/menu-adjusted-check.log": "93031064973d622b6676e08cbcc731454b3246035d2e119061b86ec96e062d44",
-    "evidence/menu-export-adjusted-process.json": "822a05c3c2a5d8ad0327c810b9287642f4324f6d48caf9adf3c26994e6066b9c",
-    "evidence/menu-export-adjusted.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "evidence/menu-export-adjusted.log": "77ec294cd7a4ddc8534af18c3dc0767ffe5ac2ec6e92ac1045e5627d17c0a7ec",
-    "evidence/menu-export-process.json": "66276d1bfefdcd16a9998825abd387efe88a1af7c85965ece03387f47b90294a",
-    "evidence/menu-export.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "evidence/menu-export.log": "67b9a2d69bdba7a27b186f2c8a4ae2ddf21690287ae5ca4065f91c79512d170d",
-    "evidence/menu-four-views-process.json": "d44705704824db002049a98ffd68df76ddf53ea65cd647537a36c45a5a642d5b",
-    "evidence/menu-four-views.err.log": "fb72e9725f5ad48942e9ca693770e78eb3dee572ae73411e31970c2e62cf7191",
-    "evidence/menu-four-views.log": "5393fc9c9463d251798f3295f7060d4bf87ba2935bd7d5e9fc6e5c7caae9de10",
-    "evidence/menu-full-frame-views-process.json": "29314c5a27ab08fb9b2a4957cae33f79ffbf2ecc5e08f9a2e7c04c6a3de28cc9",
-    "evidence/menu-full-frame-views.err.log": "2bc8869158e3be28f7a590b5b6fb7eefa9c77972ae22f04cb109b51df3a3b872",
-    "evidence/menu-full-frame-views.log": "b2f16457a4d47c0d67029bbadf04e954a3873fc1abbeb8c81bd82b024b87ecab",
-    "evidence/menu-roundtrip-motion-process.json": "c315281cfd0e07cbc60bbb504a7001ad8ef7134bb45a2d9013c6bc1ee33cbf37",
-    "evidence/menu-roundtrip-motion.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "evidence/menu-roundtrip-motion.log": "30a2b4d1101a2665363b72c32d535d7150126c61b1da3c0165a374ca0863485a",
-    "LMS_HumanMenu.blend": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
-    "LMS_HumanMenu.fbx": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca",
-    "menu_audit.json": "818aeb76866fd43fac6daf23de75193ef881d273b356222d350807d0eba50e1d",
-    "menu_motion_audit.json": "291a89a74b2ed6a08fa003ada34d53676b316bf3eca0c730de15043c9a13bc5f",
-    "review/reaction.json": "678cd4d3fc43b5cffffd371b1f7336b7739d98546122191ed459eba2a3b0a2ce",
-    "review/reaction.png": "7f0318ca4f141fcfd1a0d3785c34024727d3063d5a43a73605778b8a00072c05",
-    "review/seated_front.json": "a08acad9c7d01b5c91ce8b0eb0bf5fdebb220b6349f9c98c5bf07a80d81833ec",
-    "review/seated_front.png": "5ec3b162524f8c5add2a33541f43d32ca0c040fdf5d420b98315f2b0b5049d6e",
-    "review/seated_side.json": "7b825fe8ea73c24f996017101345611f51741e754786a1034a0b4eb54a53d4f6",
-    "review/seated_side.png": "ef62d27b63fe72feb5a8a694bc8db187c626a55713343068507887c970d99d4b",
-    "review/seated_three_quarter.json": "f95069f1c18892d0602b903005c309491b2e9f5b65a1066e99345ddaef2ed107",
-    "review/seated_three_quarter.png": "d22d42a898475a374c50be73093ca927539584ddb420abf2d92d191eef740abd"
+    "LMS_HumanMenu.blend": "e1832719362967ca619ad4215e85ae2e9aaed5fbc2d74cf343d72871f92088f7",
+    "LMS_HumanMenu.fbx": "2f8c859391a443e5aa297bb8cfc338493e60a33eb4a75960945191cf199dfd96",
+    "sleep_envelope.json": "38ca3f759256348841bbf6ba9ea08d1d95f58d2a1ca596c0eaca1d9f98c86081"
   },
   "v030_regeneration": {
     "round": "human-r7",
@@ -184,5 +150,19 @@
       "joint_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu\\joint_audit.json"
     },
     "legacy_evidence": "evidence/ and review/ images/logs describe the previous (pre-v0.3.0) pajama-jacket geometry and were not regenerated"
+  },
+  "v030_sleep": {
+    "contract": "human-menu-sleep-1",
+    "root_bed_m": [
+      -0.1289,
+      -0.7703,
+      0.8354
+    ],
+    "lowest_body_bed_z_m": 0.579,
+    "envelope": "menu/sleep_envelope.json feeds props_catalog.bed_sleeper (quilt clears the sleeper by QUILT_CLEARANCE)",
+    "eyes": "closed by the Unity menu scene (Blink blend shapes)",
+    "check_renders": "N:/LetMeSleep/Validation/V030/Scenes/menu-human/check7",
+    "visual_approval": false,
+    "lying_side": "left"
   }
 }

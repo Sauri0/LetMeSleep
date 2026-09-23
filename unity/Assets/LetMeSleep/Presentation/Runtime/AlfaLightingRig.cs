@@ -25,6 +25,9 @@ namespace LetMeSleep.Presentation
         private const string LobbyWindowCanvasPath = "Furnishings/Lobby_Domestic/Menu_FramedNightLake/Canvas";
         private const string LobbyWindowPrintPath = "Furnishings/Lobby_Domestic/Menu_FramedNightLake/NightLake_Print";
         private static readonly Color LobbyStringFillColor = new Color(1f, 0.66f, 0.36f);
+        public const string BulbHaloName = "Higgsfield_BulbHalo";
+        private const float LobbyBulbHaloSize = 0.25f;
+        private static readonly Color LobbyBulbHaloColor = new Color(1f, 0.78f, 0.45f, 0.3f);
 
         [SerializeField] private AlfaPresentationPreset preset = null;
         [SerializeField] private Light moon = null;
@@ -236,7 +239,13 @@ namespace LetMeSleep.Presentation
                 (new Vector3(6.75f, 2.95f, 5.4f), new Vector3(6.75f, 2.95f, -5.4f), 0.32f, 16)
             };
             foreach (var strand in strands)
-                HiggsfieldAtmosphereVisuals.CreateStringLights(garlands.transform, strand.Item1, strand.Item2, strand.Item3, strand.Item4, atmosphereKit, 0.034f);
+            {
+                var lights = HiggsfieldAtmosphereVisuals.CreateStringLights(garlands.transform, strand.Item1, strand.Item2, strand.Item3, strand.Item4, atmosphereKit, 0.034f);
+                // v0.3.0 scenes.md #5: every garland bulb gets its own small warm halo (0.25 m, alpha 0.3).
+                foreach (Transform piece in lights.transform)
+                    if (piece.name == "Bulb")
+                        HiggsfieldAtmosphereVisuals.CreateHalo(piece, Vector3.zero, LobbyBulbHaloSize, LobbyBulbHaloColor, 1f, atmosphereKit.HaloMaterial).name = BulbHaloName;
+            }
             var pools = new[]
             {
                 new Vector3(-4.2f, 2.45f, -5.2f), new Vector3(0f, 2.45f, -5.2f), new Vector3(4.2f, 2.45f, -5.2f),

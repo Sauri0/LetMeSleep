@@ -578,6 +578,14 @@ namespace LetMeSleep.Bootstrap
             LightingRig.UnbindHiggsfield();
             if (map) { map.gameObject.SetActive(false); Destroy(map.gameObject); }
             map = Instantiate(entry != null ? entry.Prefab.gameObject : house ? HousePrefab : LobbyPrefab).GetComponent<EnvironmentMapDefinition>();
+            // v0.3.0 visual-only decoration, child of the map (destroyed with it) and present before lighting binds so its
+            // renderers get the map's interior ambient and light layers. Validated by the catalog: never a collider.
+            if (entry != null && entry.Decor) InstantiateDecor(entry.Decor, "_LMS_Decor");
+            if (entry == null && !house)
+            {
+                if (LobbyDecorPrefab) InstantiateDecor(LobbyDecorPrefab, "_LMS_LobbyDecor");
+                if (MenuBedroomPrefab) InstantiateDecor(MenuBedroomPrefab, "_LMS_MenuBedroom");
+            }
             if (entry != null) LightingRig.BindHiggsfield(map.transform, HiggsfieldMaps.ResolveLighting(mapId, map));
             else LightingRig.BindMap(map.PresentationAnchors,house);
             MenuCamera.enabled = true; MenuCamera.GetComponent<AudioListener>().enabled = true;
@@ -593,6 +601,12 @@ namespace LetMeSleep.Bootstrap
                 CreateLivingMenu();
             }
             if (ui) OnUiScreenChanged(ui.CurrentScreen);
+        }
+        private GameObject InstantiateDecor(GameObject prefab, string name)
+        {
+            var decor = Instantiate(prefab, map.transform, false);
+            decor.name = name;
+            return decor;
         }
         private void OnUiScreenChanged(AlfaUiScreen screen)
         {

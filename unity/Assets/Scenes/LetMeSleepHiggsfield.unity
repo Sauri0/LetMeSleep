@@ -571,6 +571,11 @@ MonoBehaviour:
   MenuSwat: {fileID: 2540471617426251484, guid: 037d83dcdef3d204c96894ac2df9f658, type: 3}
   MenuReturn: {fileID: -1428263153942126663, guid: 037d83dcdef3d204c96894ac2df9f658, type: 3}
   MenuMosquitoFlight: {fileID: -1491716763371280848, guid: 483916dd41effed479826b9930069204, type: 3}
+  MenuBedroomPrefab: {fileID: 156026601902313938, guid: 4cee4cf12e90bed4f8f427d38df2c764, type: 3}
+  LobbyDecorPrefab: {fileID: 5862165782472451140, guid: d74d39bfbcac7c64abeba59aa5c2ce82, type: 3}
+  MenuSleep: {fileID: -3146868705865972672, guid: 037d83dcdef3d204c96894ac2df9f658, type: 3}
+  MenuSleepSwat: {fileID: -6842498521062075732, guid: 037d83dcdef3d204c96894ac2df9f658, type: 3}
+  ModularCustomizationProvider: {fileID: 0}
   HousePrefab: {fileID: 6303858240215231663, guid: db816c550ac380a4985a9355ca87416b, type: 3}
   LobbyPrefab: {fileID: 4966161366376445688, guid: 404d24d7c50ad1143bb1c5e9ec238ab8, type: 3}
   HumanPrefab: {fileID: 8410320189168980418, guid: 6c4acc1f866d9014ab97e5cf102f1036, type: 3}

@@ -69,6 +69,11 @@ namespace LetMeSleep.Bootstrap
             public string[] SuppressLightPaths = Array.Empty<string>();
             public RendererOverrideBinding[] RendererOverrides = Array.Empty<RendererOverrideBinding>();
             public SpawnFacing[] SpawnFacings = Array.Empty<SpawnFacing>();
+            /// <summary>
+            /// v0.3.0 visual-only decoration (props, lamp lights, halos) authored in map space and instantiated by
+            /// AlfaApplication.LoadMap as a child of the map instance before lighting is bound. Optional; see ValidateDecor.
+            /// </summary>
+            public GameObject Decor;
 
             /// <summary>Authored yaw (degrees) for the spawn point at <paramref name="index"/> of the role, if any.</summary>
             public bool TryGetSpawnYaw(bool human, int index, out float yawDegrees)
@@ -104,7 +109,63 @@ namespace LetMeSleep.Bootstrap
                     throw new InvalidOperationException("Camera far must be zero or 10..1000 metres: " + entry.MapId);
                 ResolveEntryLighting(entry, entry.Prefab.transform); // Validate paths and values without creating lights.
                 ValidateSpawnFacings(entry);
+                ValidateDecor(entry.Decor, entry.MapId);
             }
+        }
+
+        public const int MaximumDecorLights = 10;
+        public const int MaximumDecorRenderers = 480;
+        public const float MaximumDecorLightRange = 10f;
+        private const int PreviewLayer = 30;
+        // Components that would turn decoration into gameplay (IsWorldCollider treats any collider under MapRoot as world
+        // geometry) or into a second camera/listener. Resolved by name where Bootstrap does not reference the assembly.
+        private static readonly string[] ForbiddenDecorComponents =
+        {
+            "GameplaySurface", "GameplayDoor", "GameplayToolPickup", "GameplayRecoveryVolume", "GameplayObjectiveCatalog",
+            "EnvironmentMapDefinition", "HiggsfieldLowPolyWater", "HiggsfieldGpuWater", "HiggsfieldGpuWaterBinding",
+            "CharacterView", "Animator", "AudioSource", "ParticleSystem"
+        };
+        private static readonly string[] AllowedDecorBehaviours = { "HiggsfieldDecorDressing", "UniversalAdditionalLightData" };
+
+        /// <summary>
+        /// Map decoration contract (MAPA-SISTEMAS maps, extension point Decor): a prefab asset in map space (identity root)
+        /// made only of transforms, mesh renderers, Point/Spot lights without shadows and the decor dressing component. No
+        /// Collider, Rigidbody, Joint, Camera, AudioListener or gameplay component; at most <see cref="MaximumDecorLights"/>
+        /// lights (range up to <see cref="MaximumDecorLightRange"/> m, never on the preview layer) and
+        /// <see cref="MaximumDecorRenderers"/> renderers. Placement clearance (routes, portals, spawns, objectives) and surface
+        /// support are checked by the editor decor validator and the PlayMode decor tests.
+        /// </summary>
+        public static void ValidateDecor(GameObject decor, string mapId)
+        {
+            if (!decor) return;
+            if (decor.scene.IsValid()) throw new InvalidOperationException("Decor must be a prefab asset, not a scene object: " + mapId);
+            var root = decor.transform;
+            if (root.localPosition.sqrMagnitude > 1e-8f || Quaternion.Angle(root.localRotation, Quaternion.identity) > .01f ||
+                (root.localScale - Vector3.one).sqrMagnitude > 1e-8f)
+                throw new InvalidOperationException("Decor root must be an identity transform in map space: " + mapId);
+            int lights = 0, renderers = 0;
+            foreach (var component in decor.GetComponentsInChildren<Component>(true))
+            {
+                if (!component) throw new InvalidOperationException("Decor has a missing component/script: " + mapId);
+                string type = component.GetType().Name;
+                if (component is Collider || component is Rigidbody || component is Joint || component is Camera || component is AudioListener ||
+                    Array.IndexOf(ForbiddenDecorComponents, type) >= 0)
+                    throw new InvalidOperationException("Decor must stay visual only (" + type + " on " + component.name + "): " + mapId);
+                if (component is Renderer) renderers++;
+                if (component is Light light)
+                {
+                    lights++;
+                    if ((light.type != LightType.Point && light.type != LightType.Spot) || light.shadows != LightShadows.None ||
+                        (light.cullingMask & (1 << PreviewLayer)) != 0 || !Finite(light.intensity) || light.intensity < 0 ||
+                        !Finite(light.range) || light.range <= 0 || light.range > MaximumDecorLightRange)
+                        throw new InvalidOperationException("Decor lights must be shadowless Point/Spot, off the preview layer, range 0.." +
+                            MaximumDecorLightRange + " m (" + light.name + "): " + mapId);
+                }
+                if (component is MonoBehaviour && Array.IndexOf(AllowedDecorBehaviours, type) < 0)
+                    throw new InvalidOperationException("Decor script not allowed (" + type + "): " + mapId);
+            }
+            if (lights > MaximumDecorLights) throw new InvalidOperationException("Decor has " + lights + " lights (max " + MaximumDecorLights + "): " + mapId);
+            if (renderers > MaximumDecorRenderers) throw new InvalidOperationException("Decor has " + renderers + " renderers (max " + MaximumDecorRenderers + "): " + mapId);
         }
 
         private static void ValidateSpawnFacings(Entry entry)

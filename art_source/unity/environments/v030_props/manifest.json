@@ -3,9 +3,9 @@
   "project": "Let me sleep",
   "generator": "art_source/unity/environments/v030_props/build_props.py",
   "sources": {
-    "build_props.py": "3afdcd86cc6a7f06c95887ffcdb3d4869f19c3f1276134e999252bc60c207165",
-    "props_catalog.py": "d98152073c7f3f58345b31072b0d28d828758d2a20bba8c2589ba6d0f9775437",
-    "props_lib.py": "56b28950948b63d126fa883b098c12afa60553a1aa625afd0c3b0c4e1eccbce4"
+    "build_props.py": "0dffbca0fde6fd7aaaa335cb24c03e2ac100ea725cbd68eb5e89b692ad34de1c",
+    "props_catalog.py": "6d4eed21b3df92a8dd8e3883a9ed3beb3fc9eac7267496332b449053a7624db1",
+    "props_lib.py": "c362e1040b3678ef2e7e6e08b39b15e01259d855696efd7d4d0d694dbb5982cd"
   },
   "blender": "5.2.1 LTS",
   "units": "metres (1 Blender unit = 1 m)",
@@ -5160,12 +5160,366 @@
         "identity_transform": true
       },
       "passed": true
+    },
+    {
+      "name": "BedSleeper",
+      "asset": "Prop_BedSleeper",
+      "fbx": "Prop_BedSleeper.fbx",
+      "fbx_sha256": "d9729d773a1d070f99e5c51de15b8a83c3ad7d117be857612cea71a7accf2d56",
+      "display_name_es": "Cama con durmiente (acolchado alto)",
+      "category": "bedroom",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 0.89,
+        "y": 2.13,
+        "z": 1.1538
+      },
+      "unity_size_m": {
+        "x": 0.89,
+        "y": 1.1538,
+        "z": 2.13
+      },
+      "triangles": 1316,
+      "vertices": 736,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_BedSleeper_Wood",
+          "part": "Wood",
+          "color_srgb": "#8B5A2B",
+          "base_color_linear": [
+            0.2582,
+            0.1022,
+            0.0242
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_BedSleeper_WoodLight",
+          "part": "WoodLight",
+          "color_srgb": "#A86F3A",
+          "base_color_linear": [
+            0.3916,
+            0.159,
+            0.0423
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.8,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_BedSleeper_Mattress",
+          "part": "Mattress",
+          "color_srgb": "#E9E1D0",
+          "base_color_linear": [
+            0.8148,
+            0.7529,
+            0.6308
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_BedSleeper_Sheet",
+          "part": "Sheet",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 4,
+          "name": "Prop_BedSleeper_Quilt",
+          "part": "Quilt",
+          "color_srgb": "#6C86D6",
+          "base_color_linear": [
+            0.15,
+            0.2384,
+            0.6724
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 5,
+          "name": "Prop_BedSleeper_QuiltDark",
+          "part": "QuiltDark",
+          "color_srgb": "#4A63B5",
+          "base_color_linear": [
+            0.0685,
+            0.1248,
+            0.4621
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 6,
+          "name": "Prop_BedSleeper_QuiltBand",
+          "part": "QuiltBand",
+          "color_srgb": "#3F58A8",
+          "base_color_linear": [
+            0.0497,
+            0.0976,
+            0.3916
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        },
+        {
+          "slot": 7,
+          "name": "Prop_BedSleeper_Pillow",
+          "part": "Pillow",
+          "color_srgb": "#F2EEE6",
+          "base_color_linear": [
+            0.8879,
+            0.855,
+            0.7913
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.9,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Variante de la cama del menú (UI-06): mismo marco de una plaza que Bed, acolchado azul abullonado que cubre a un durmiente acostado de costado (cabeza sobre la almohada hacia +Y, mirando a -X, rodillas hacia -X) hasta los hombros, con la sábana doblada bajo el mentón. Anchors: \"sleeper_head\" (centro de la cabeza apoyada), \"quilt_edge\" (borde del acolchado bajo el mentón).",
+      "preview": {
+        "yaw": -60,
+        "elev": 22
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true,
+      "anchors": {
+        "sleeper_head": {
+          "blender_m": [
+            0.0,
+            0.7,
+            0.985
+          ],
+          "unity_local_m": [
+            -0.0,
+            0.985,
+            -0.7
+          ],
+          "normal_blender": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "normal_unity": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "note": "Centro de la cabeza del durmiente apoyada en la almohada; la cara mira a -X (Blender) / +X (Unity)."
+        },
+        "quilt_edge": {
+          "blender_m": [
+            0.0,
+            0.43,
+            1.1341
+          ],
+          "unity_local_m": [
+            -0.0,
+            1.1341,
+            -0.43
+          ],
+          "normal_blender": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "normal_unity": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "note": "Borde superior del acolchado bajo el mentón."
+        },
+        "sleeper_root": {
+          "blender_m": [
+            -0.1289,
+            -0.7703,
+            0.8354
+          ],
+          "unity_local_m": [
+            0.1289,
+            0.8354,
+            0.7703
+          ],
+          "normal_blender": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "normal_unity": [
+            -1.0,
+            0.0,
+            -0.0
+          ],
+          "up_blender": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "up_unity": [
+            -0.0,
+            0.0,
+            -1.0
+          ],
+          "note": "Raíz del humano de menú acostado (menu/sleep_envelope.json): la normal es el frente del actor y \"up\" su eje vertical de pie (hacia la cabecera). Rotación Unity = LookRotation(normal, up)."
+        }
+      },
+      "sleeper_mound": {
+        "envelope": "art_source/unity/characters/menu/sleep_envelope.json",
+        "envelope_contract": "human-menu-sleep-1",
+        "clearance_m": 0.035,
+        "mattress_top": 0.62,
+        "fold_y": 0.4,
+        "head": [
+          0.0,
+          0.7,
+          0.985
+        ]
+      }
+    },
+    {
+      "name": "RugStripedRedBlue",
+      "asset": "Prop_RugStripedRedBlue",
+      "fbx": "Prop_RugStripedRedBlue.fbx",
+      "fbx_sha256": "d8cf2bb2f797cf74ae9ba14bbe1ad5cee8de1e8edda627e4353482eb3d9b41b6",
+      "display_name_es": "Alfombra rayada roja y azul",
+      "category": "interior",
+      "mount": "floor",
+      "dimensions_m": {
+        "x": 3.0,
+        "y": 2.0,
+        "z": 0.015
+      },
+      "unity_size_m": {
+        "x": 3.0,
+        "y": 0.015,
+        "z": 2.0
+      },
+      "triangles": 140,
+      "vertices": 272,
+      "materials": [
+        {
+          "slot": 0,
+          "name": "Prop_RugStripedRedBlue_Red",
+          "part": "Red",
+          "color_srgb": "#8E2A2A",
+          "base_color_linear": [
+            0.2705,
+            0.0232,
+            0.0232
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 1,
+          "name": "Prop_RugStripedRedBlue_Blue",
+          "part": "Blue",
+          "color_srgb": "#2D4F9A",
+          "base_color_linear": [
+            0.0262,
+            0.0782,
+            0.3231
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 2,
+          "name": "Prop_RugStripedRedBlue_Line",
+          "part": "Line",
+          "color_srgb": "#EFE6D2",
+          "base_color_linear": [
+            0.8632,
+            0.7913,
+            0.6445
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        },
+        {
+          "slot": 3,
+          "name": "Prop_RugStripedRedBlue_Border",
+          "part": "Border",
+          "color_srgb": "#1E3570",
+          "base_color_linear": [
+            0.013,
+            0.0356,
+            0.162
+          ],
+          "emissive": false,
+          "emission_strength": 0.0,
+          "roughness": 0.95,
+          "metallic": 0.0
+        }
+      ],
+      "notes": "Alfombra grande de la sala (UI-06 / ENV-05): franjas anchas #8E2A2A y #2D4F9A a lo ancho, filete crema y borde azul marino. 3,0 x 2,0 m; se puede escalar en X/Z (es plana).",
+      "preview": {
+        "elev": 55
+      },
+      "validation": {
+        "triangles_in_budget": true,
+        "all_triangles": true,
+        "pivot_base_centered": true,
+        "flat_shaded": true,
+        "material_names": true,
+        "emissive_suffix_consistent": true,
+        "every_material_used": true,
+        "no_loose_vertices": true,
+        "no_degenerate_triangles": true,
+        "identity_transform": true
+      },
+      "passed": true
     }
   ],
   "totals": {
-    "props": 40,
-    "triangles": 22748,
-    "materials": 205,
+    "props": 42,
+    "triangles": 24204,
+    "materials": 217,
     "emissive_props": [
       "HandLantern",
       "TableLamp",
@@ -5175,5 +5529,10 @@
       "Campfire"
     ]
   },
-  "passed": true
+  "passed": true,
+  "partial_merges": [
+    "BedSleeper",
+    "RugStripedRedBlue"
+  ],
+  "blend_note": "v030_props.blend holds the props of the last full build; props listed in partial_merges were built with --only and merged by merge_partial.py (their source is props_catalog.py)."
 }

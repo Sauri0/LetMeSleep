@@ -6,7 +6,9 @@ re-centres the base anyway). Style references: PRP-01, PRP-02, ENV-01,
 ENV-03, ENV-04, ENV-05 and docs/v030/GUIA-ESTILO-BOCETOS.md. No weapons.
 """
 import copy
+import json
 import math
+from pathlib import Path
 from mathutils import Vector, Matrix
 from props_lib import (C, M, Prop, look_matrix, g_box, g_cyl, g_ico, g_hull, rock_points, boulder_points, g_loft,
                        g_prism, g_poly_rings, circle, g_blade, g_fan, g_revolve, g_sheet,
@@ -1601,4 +1603,212 @@ def tree_stump():
         p.add('Grass', g_blade(rng.uniform(0.14, 0.2), [0.012, 0.014, 0.008], pitch=rng.uniform(55, 75), bend=40, fold=0.25,
                                thickness=0.003),
               M((0.36 * math.cos(a), 0.36 * math.sin(a), 0.003), (0, 0, rng.uniform(0, 360))))
+    return p
+
+
+# =============================================================================
+# v0.3.0 scenes (menu bedroom and lobby "sala")
+# =============================================================================
+
+# Side-lying sleeper under the BedSleeper quilt (bed coordinates, metres; head toward +Y, the sleeper faces -X).
+# Height of the quilt mound above the mattress top along the bed, and its centre across it (knees forward, -X).
+SLEEPER_MOUND = [  # (y, height above mattress, centre x, half width)
+    (-0.95, 0.10, 0.02, 0.26), (-0.86, 0.19, 0.00, 0.27), (-0.72, 0.23, -0.02, 0.28), (-0.55, 0.25, -0.05, 0.29),
+    (-0.38, 0.28, -0.08, 0.30), (-0.22, 0.30, -0.06, 0.31), (-0.06, 0.35, -0.01, 0.31), (0.08, 0.36, 0.01, 0.31),
+    (0.20, 0.32, 0.02, 0.30), (0.32, 0.37, 0.02, 0.31), (0.42, 0.41, 0.02, 0.31), (0.50, 0.40, 0.02, 0.30),
+]
+SLEEPER_HEAD = (0.0, 0.70, 0.985)    # head centre resting on the pillow (bed coordinates)
+PILLOW_SLEEPER = (0.64, 0.44, 0.24)  # fluffier than Bed's pillow: the propped head of UI-06
+SLEEPER_FOLD_Y = 0.50                # quilt edge under the chin (turned-down sheet above it)
+QUILT_CLEARANCE = 0.035              # quilt above the posed sleeper's highest point in each cell
+SLEEP_ENVELOPE = Path(__file__).resolve().parents[2] / 'characters' / 'menu' / 'sleep_envelope.json'
+
+
+def load_sleep_envelope():
+    if not SLEEP_ENVELOPE.exists():
+        return None
+    data = json.loads(SLEEP_ENVELOPE.read_text(encoding='utf-8'))
+    assert data.get('schema') == 'lms.menu.sleep-envelope/1', 'unexpected sleep envelope'
+    return data
+
+
+@register
+def bed_sleeper():
+    p = Prop('BedSleeper', 'Cama con durmiente (acolchado alto)', 'bedroom', preview={'yaw': -60, 'elev': 22},
+             notes='Variante de la cama del menú (UI-06): mismo marco de una plaza que Bed, acolchado azul abullonado '
+                   'que cubre a un durmiente acostado de costado (cabeza sobre la almohada hacia +Y, mirando a -X, '
+                   'rodillas hacia -X) hasta los hombros, con la sábana doblada bajo el mentón. Anchors: "sleeper_head" '
+                   '(centro de la cabeza apoyada), "quilt_edge" (borde del acolchado bajo el mentón).')
+    p.mat('Wood', C['wood'])
+    p.mat('WoodLight', C['wood_light'])
+    p.mat('Mattress', '#E9E1D0', roughness=0.9)
+    p.mat('Sheet', C['cream'], roughness=0.9)
+    p.mat('Quilt', '#6C86D6', roughness=0.9)
+    p.mat('QuiltDark', '#4A63B5', roughness=0.9)
+    p.mat('QuiltBand', '#3F58A8', roughness=0.9)
+    p.mat('Pillow', '#F2EEE6', roughness=0.9)
+    rng = p.rng
+    W, L, post = BED_W, BED_L, 0.1
+    hx, hy = W / 2 - post / 2, L / 2 - post / 2
+    w_in = W - 2 * post
+    rail_z0, rail_z1 = 0.25, 0.43
+    foot_top = 0.60
+    m_z0, m_z1 = 0.33, 0.62
+    Wm, Lm = W - 0.14, L - 2 * post - 0.01
+    q_side = 0.58
+    for sx in (-1, 1):
+        p.add('Wood', g_box(post, post, 1.1, chamfer=0.015), M((sx * hx, hy, 0.55)))
+        p.add('WoodLight', g_box(post + 0.03, post + 0.03, 0.04, chamfer=0.012), M((sx * hx, hy, 1.12)))
+        p.add('Wood', g_box(post, post, 0.76, chamfer=0.015), M((sx * hx, -hy, 0.38)))
+        p.add('WoodLight', g_box(post + 0.03, post + 0.03, 0.04, chamfer=0.012), M((sx * hx, -hy, 0.78)))
+        p.add('Wood', g_box(0.06, L - 2 * post + 0.004, rail_z1 - rail_z0, chamfer=0.015),
+              M((sx * (W / 2 - 0.03), 0, (rail_z0 + rail_z1) / 2)))
+    p.add('Wood', g_box(w_in, 0.05, 0.5, chamfer=0.012), M((0, hy, 0.69)))
+    p.add('WoodLight', g_box(w_in, 0.07, 0.06, chamfer=0.012), M((0, hy, 0.47)))
+    xs = [w_in / 2 - w_in * i / 8 for i in range(9)]
+    arch = [(-w_in / 2, 0.9), (w_in / 2, 0.9)] + [(x, 0.98 + 0.07 * math.cos(math.pi * x / w_in)) for x in xs]
+    p.add('WoodLight', g_bevel(g_prism(arch, 0.08), 0.012), front((0, hy, 0)))
+    p.add('Wood', g_box(w_in, 0.05, 0.3, chamfer=0.012), M((0, -hy, 0.42)))
+    p.add('WoodLight', g_box(w_in + 0.004, 0.08, 0.06, chamfer=0.015), M((0, -hy, foot_top - 0.03)))
+    p.add('Mattress', g_box(Wm, Lm, m_z1 - m_z0, chamfer=0.03), M((0, 0, (m_z0 + m_z1) / 2)))
+
+    # quilt: a height field over the mattress. With menu/sleep_envelope.json (written by the menu human export) every
+    # vertex clears the posed sleeper by QUILT_CLEARANCE; without it the default SLEEPER_MOUND profile is used.
+    envelope = load_sleep_envelope()
+    fold_y = envelope['fold_bed_y_m'] if envelope else SLEEPER_FOLD_Y
+
+    def mound(y):
+        pts = SLEEPER_MOUND
+        if y <= pts[0][0]:
+            return pts[0][1:]
+        for (y0, h0, c0, w0), (y1, h1, c1, w1) in zip(pts, pts[1:]):
+            if y <= y1:
+                t = (y - y0) / (y1 - y0)
+                return h0 + (h1 - h0) * t, c0 + (c1 - c0) * t, w0 + (w1 - w0) * t
+        return pts[-1][1:]
+
+    def required(x, y):
+        if not envelope:
+            return None
+        best = None
+        for yy, row in zip(envelope['rows_y'], envelope['max_z']):
+            if abs(yy - y) > 0.085:
+                continue
+            for xx, z in zip(envelope['cols_x'], row):
+                if z is not None and abs(xx - x) <= 0.09 and (best is None or z > best):
+                    best = z
+        return None if best is None else best + QUILT_CLEARANCE
+
+    y_hem = -Lm / 2 - 0.012
+    body_rows = [round(-0.95 + 0.08 * k, 3) for k in range(int((fold_y + 0.95) / 0.08) + 1)]
+    rows = [y_hem] + body_rows + [fold_y + 0.03, fold_y + 0.06]
+    xq = [-(Wm / 2 + 0.012), -(Wm / 2 - 0.02), -0.28, -0.2, -0.12, -0.04, 0.04, 0.12, 0.2, 0.28, Wm / 2 - 0.02, Wm / 2 + 0.012]
+    cols, nrow = len(xq), len(rows)
+    heights = []
+    for i, y in enumerate(rows):
+        h, cx, hw = mound(min(y, fold_y))
+        row = []
+        for j, x in enumerate(xq):
+            edge = j in (0, cols - 1)
+            if i == 0:
+                z = 0.48 if edge else m_z1 + 0.06
+            elif edge:
+                z = q_side
+            else:
+                u = (x - cx) / hw
+                z = m_z1 + 0.035 + (0.0 if envelope else h * max(0.0, 1 - u * u) ** 0.55)
+                need = required(x, min(y, fold_y + 0.02))
+                if need is not None:
+                    z = max(z, need)
+                z += rng.uniform(-0.005, 0.005)
+            row.append(z)
+        heights.append(row)
+    # soften the lumps once (never below what the sleeper needs) so the quilt drapes instead of spiking
+    smooth_h = [r[:] for r in heights]
+    for i in range(1, nrow - 1):
+        for j in range(2, cols - 2):
+            avg = (heights[i][j] * 2 + heights[i - 1][j] + heights[i + 1][j] + heights[i][j - 1] + heights[i][j + 1]) / 6
+            need = required(xq[j], min(rows[i], fold_y + 0.02))
+            smooth_h[i][j] = max(avg, need if need is not None else 0.0)
+    # rows next to the rails fall toward the drape so the quilt reads soft at the sides
+    for i in range(1, nrow):
+        for j in (1, cols - 2):
+            smooth_h[i][j] = max(q_side + 0.04, min(smooth_h[i][j], smooth_h[i][j + (1 if j == 1 else -1)] - 0.05))
+    grid = []
+    for i, y in enumerate(rows):
+        row = []
+        for j, x in enumerate(xq):
+            z = smooth_h[i][j]
+            if i == nrow - 1 and 0 < j < cols - 1:
+                z -= 0.035          # the turned-down sheet lip under the chin
+            row.append((x, y, z))
+        grid.append(row)
+    verts = [pt for row in grid for pt in row]
+    faces, parts = [], []
+    for i in range(nrow - 1):
+        for j in range(cols - 1):
+            a = i * cols + j
+            faces.append((a, a + 1, a + cols + 1, a + cols))
+            if i >= nrow - 2:
+                parts.append('Sheet')
+            elif i == 1:
+                parts.append('QuiltBand')
+            elif i == 0 or j in (0, cols - 2):
+                parts.append('QuiltDark')
+            else:
+                parts.append('Quilt')
+    p.add(parts, (verts, faces))
+    # hem under the lip so the sheet edge is not a paper-thin plane
+    p.add('Sheet', ([(x, rows[-1], smooth_h[-1][j] - 0.035) for j, x in enumerate(xq)] +
+                    [(x, rows[-1], q_side) for x in xq],
+                    [(j, j + 1, cols + j + 1, cols + j) for j in range(cols - 1)]))
+    PW, PD, PH = PILLOW_SLEEPER
+    py = hy - 0.04 - PD / 2 - 0.005
+    pz = m_z1 + PH / 2 - 0.006
+    p.add('Pillow', g_cushion(PILLOW_SLEEPER), M((0, py, pz), (8, 0, 0)))
+    p.anchor('sleeper_head', SLEEPER_HEAD, normal=(-1, 0, 0),
+             note='Centro de la cabeza del durmiente apoyada en la almohada; la cara mira a -X (Blender) / +X (Unity).')
+    edge = max(grid[-2][j][2] for j in range(cols))
+    p.anchor('quilt_edge', (0.0, fold_y + 0.03, edge), normal=(0, 0, 1), note='Borde superior del acolchado bajo el mentón.')
+    if envelope:
+        p.anchor('sleeper_root', envelope['root_bed_m'], normal=envelope['forward_bed'], up=envelope['up_bed'],
+                 note='Raíz del humano de menú acostado (menu/sleep_envelope.json): la normal es el frente del actor y '
+                      '"up" su eje vertical de pie (hacia la cabecera). Rotación Unity = LookRotation(normal, up).')
+    p.extra['sleeper_mound'] = {'envelope': 'art_source/unity/characters/menu/sleep_envelope.json' if envelope else None,
+                                'envelope_contract': envelope['contract'] if envelope else None,
+                                'clearance_m': QUILT_CLEARANCE, 'mattress_top': m_z1, 'fold_y': fold_y,
+                                'head': envelope['head_centre_bed_m'] if envelope else SLEEPER_HEAD}
+    return p
+
+
+@register
+def rug_striped_red_blue():
+    p = Prop('RugStripedRedBlue', 'Alfombra rayada roja y azul', 'interior', preview={'elev': 55},
+             notes='Alfombra grande de la sala (UI-06 / ENV-05): franjas anchas #8E2A2A y #2D4F9A a lo ancho, filete '
+                   'crema y borde azul marino. 3,0 x 2,0 m; se puede escalar en X/Z (es plana).')
+    p.mat('Red', '#8E2A2A', roughness=0.95)
+    p.mat('Blue', '#2D4F9A', roughness=0.95)
+    p.mat('Line', C['cream'], roughness=0.95)
+    p.mat('Border', C['navy'], roughness=0.95)
+    W, H = 3.0, 2.0
+    border, line = 0.1, 0.03
+    inner = W / 2 - border - line
+    n = 9
+    band = 2 * inner / n
+    stripes = [-inner + band * k for k in range(n + 1)]
+
+    def part(x, y):
+        dx, dy = W / 2 - abs(x), H / 2 - abs(y)
+        m = min(dx, dy)
+        if m < border:
+            return 'Border'
+        if m < border + line:
+            return 'Line'
+        for k in range(n):
+            if stripes[k] <= x <= stripes[k + 1]:
+                return 'Red' if k % 2 == 0 else 'Blue'
+        return 'Red'
+    xc = [-W / 2, W / 2, -W / 2 + border, W / 2 - border] + stripes
+    yc = [-H / 2, H / 2, -H / 2 + border, H / 2 - border, -H / 2 + border + line, H / 2 - border - line]
+    rug(p, W, H, 0.015, xc, yc, part, 'Border')
     return p
