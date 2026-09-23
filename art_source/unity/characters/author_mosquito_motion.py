@@ -42,6 +42,12 @@ RECOVER_FRAMES = 13
 # Round 3: Fall is a visible comic tumble: 1.5 turns about the long axis in the first .5 s (a flinch is
 # folded into its first frames), then it lies belly up. Recover (0.4 s, the authority's Recovering window)
 # rolls onto the belly, pushes up on the six legs and shakes the wings before standing like PerchIdle.
+# Round 4 (director r4, item 3): the roll read as a 2-frame snap (a quintic ease packed it into ~0.1 s and
+# the runtime fade ate its start). The roll now spans RECOVER_ROLL of the clip at a nearly even rate (~5
+# frames at 30 fps, ~35-45 deg per frame, the legs reaching for the floor as the body turns) and the rest is
+# a visible push-up: ~7 frames with all six feet planted, the belly starting low and the legs unfolding.
+RECOVER_ROLL = .44
+RECOVER_PUSH_DEPTH = .048
 FALL_TUMBLE_SECONDS = .50
 FALL_EXTRA_TURNS = 1.0
 BITE_PUMPS_PER_LOOP = 2
@@ -334,13 +340,14 @@ def mosquito(c):
 
     sampled(c, 'Detach', 19, detach)
 
-    def settle_to_support():
-        # Mesh contact, not a guessed pelvis height; move Thorax, never Root.
+    def settle_to_support(bodies_only=False):
+        # Mesh contact, not a guessed pelvis height; move Thorax, never Root. bodies_only ignores the wings: a
+        # rolling body must not be held up in the air by the wing tip that points at the floor (round 4).
         p.update()
         graph = bpy.context.evaluated_depsgraph_get()
         lowest = math.inf
         for obj in bpy.context.scene.objects:
-            if obj.type != 'MESH':
+            if obj.type != 'MESH' or (bodies_only and obj.name.startswith('Wing')):
                 continue
             evaluated = obj.evaluated_get(graph)
             data = evaluated.to_mesh()
@@ -371,16 +378,17 @@ def mosquito(c):
         p.rig.pose.bones['Thorax'].matrix = turn @ p.rest['Thorax']
         p.update()
 
-    def knocked_out(u, t=0., wobble=0., spin=0., flail=0., lift=0.):
+    def knocked_out(u, t=0., wobble=0., spin=0., flail=0., lift=0., legs=None, bodies_only=False):
         """u=0 upright stance -> u=1 belly up; t/wobble drive the dizzy loop; spin adds whole turns of the
-        tumble, flail waves the legs and wings while falling, lift raises the body on its legs (get-up)."""
+        tumble, flail waves the legs and wings while falling, lift raises the body on its legs (get-up);
+        legs overrides how far the legs are tucked into the air (default .73-1 with u)."""
         stance()
         body_roll(KO_ROLL * min(u, 1.) + spin, KO_PITCH * u)
         p.rotate('Abdomen01', ((KO_ABDOMEN + .06 * wobble * math.sin(TAU * 2 * t)) * u, 0, 0))
         p.rotate('Abdomen02', (-.10 * u, 0, 0))
         p.rotate('Head', (.22 * wobble * math.sin(TAU * t) * u, .10 * wobble * math.sin(TAU * t + 1.1) * u,
                           .34 * wobble * math.sin(TAU * 2 * t + .6) * u))
-        legs_air(.73 + .27 * u)
+        legs_air(.73 + .27 * u if legs is None else legs)
         if wobble:
             for side, sign in (('L', 1), ('R', -1)):
                 for i in range(1, 4):
@@ -395,7 +403,7 @@ def mosquito(c):
                     knee.rotation_euler.x += .8 * flail * math.sin(TAU * (3 * u + .21 * i + (.5 if sign < 0 else 0)))
             twitch += .6 * flail * math.sin(TAU * 4 * u) ** 2
         wings(.12 + (KO_WING_FLAP - .12) * min(u, 1.) + twitch, .24 + (KO_WING_FOLD - .24) * min(u, 1.), 1 - min(u, 1.))
-        settle_to_support()
+        settle_to_support(bodies_only)
         if lift:
             thorax = p.rig.pose.bones['Thorax']
             thorax.location += p.rest['Thorax'].to_3x3().inverted() @ Vector((0, 0, lift))
@@ -412,30 +420,33 @@ def mosquito(c):
     sampled(c, 'Fall', 31, fall_pose)
 
     def recover(t):
-        # 0.4 s get-up (round 3): roll over onto the belly (0-.45), push up on the six legs with the head
-        # shaking (.45-.8), a wing shake, and end exactly on the PerchIdle pose.
+        # 0.4 s get-up (round 4): roll over onto the belly in the first RECOVER_ROLL of the clip (~5 frames, a
+        # nearly even turn: <= ~45 deg per 1/30 s) with the legs reaching down, then a push-up on the six planted
+        # feet (~7 frames): the belly starts on the floor with the legs folded and splayed, the body rises, the
+        # head shakes it off and the wings buzz, ending exactly on the PerchIdle pose.
         if t >= 1 - 1e-8:
             stance()
             return p.snapshot()
-        roll = 1 - smooth(min(1., t / .45))
-        if t < .45:
-            knocked_out(roll)
+        if t < RECOVER_ROLL:
+            a = t / RECOVER_ROLL
+            roll = 1 - (.55 * a + .45 * a * a * (3 - 2 * a))  # half linear: every frame turns visibly
+            knocked_out(roll, legs=.25 + .75 * roll, bodies_only=True)
             return p.snapshot()
-        v = (t - .45) / .55
+        v = (t - RECOVER_ROLL) / (1 - RECOVER_ROLL)
         stance()
-        # Legs start folded under the body (crouched on the floor) and extend; the head shakes it off.
-        crouch = 1 - smooth(v)
-        p.rotate('Thorax', (.10 * crouch, 0, .12 * math.sin(TAU * 2 * v) * crouch))
+        # Legs start folded under the lowered body (belly on the floor) and unfold; the head shakes it off.
+        crouch = 1 - smooth(min(1., v / .85))
+        p.rotate('Thorax', (.12 * crouch, 0, .10 * math.sin(TAU * 2 * v) * crouch))
         thorax = p.rig.pose.bones['Thorax']
-        thorax.location += p.rest['Thorax'].to_3x3().inverted() @ Vector((0, 0, -.024 * crouch))
-        p.rotate('Head', (0, .25 * math.sin(TAU * 2.5 * v) * crouch, .30 * math.sin(TAU * 2.5 * v + .5) * crouch))
-        p.rotate('Abdomen01', (-.20 * crouch, 0, 0))
+        thorax.location += p.rest['Thorax'].to_3x3().inverted() @ Vector((0, 0, -RECOVER_PUSH_DEPTH * crouch))
+        p.rotate('Head', (-.10 * crouch, .25 * math.sin(TAU * 2.5 * v) * crouch, .30 * math.sin(TAU * 2.5 * v + .5) * crouch))
+        p.rotate('Abdomen01', (-.24 * crouch, 0, 0))
         p.update()
-        # The six feet stay on their support spots while the lowered body pushes up (legs unfold).
+        # The six feet stay on (slightly splayed) support spots while the lowered body pushes up.
         for side, sign in (('L', 1), ('R', -1)):
             for i in range(1, 4):
-                target = rest[f'Leg{i}03.{side}']
-                pole = rest[f'Leg{i}02.{side}'] + Vector((sign * .03, -.02, .02))
+                target = rest[f'Leg{i}03.{side}'] + Vector((sign * .012 * crouch, 0, 0))
+                pole = rest[f'Leg{i}02.{side}'] + Vector((sign * .03, -.02, .02 + .02 * crouch))
                 p.chain(f'Leg{i}01.{side}', f'Leg{i}02.{side}', target, pole, f'Leg{i}03.{side}')
         wings(.12 + .45 * math.sin(math.pi * v) * abs(math.sin(TAU * 3 * v)), .24, 1.)
         return p.snapshot()

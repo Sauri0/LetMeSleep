@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 3731480269050756391}
   - component: {fileID: 7329421078306969587}
   - component: {fileID: 3535108475877258862}
-  - component: {fileID: 1275806963368566200}
+  - component: {fileID: 7601427355983925778}
   m_Layer: 0
   m_Name: LMS_HumanMenu
   m_TagString: Untagged
@@ -417,7 +417,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &1275806963368566200
+--- !u!114 &7601427355983925778
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

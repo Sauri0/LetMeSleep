@@ -338,8 +338,10 @@ namespace LetMeSleep.Tests.PlayMode
             binding.ApplySnapshot(MosquitoState(LifeState.Falling, new Vector3(0, .5f, z), new Vector3(0, -2, 0)), tick++);
             yield return new WaitForSecondsRealtime(.35f);
             binding.ApplySnapshot(MosquitoState(LifeState.Stunned, new Vector3(0, .06f, z), Vector3.zero), tick++);
-            // The 0.5 s tumble (Fall) finishes before the dizzy loop takes over.
-            yield return new WaitForSecondsRealtime(.2f);
+            // The 0.5 s tumble (Fall) finishes before the dizzy loop takes over (polled: a slow batch-mode frame may
+            // end the temporary a frame later).
+            float stunned = Time.realtimeSinceStartup;
+            while (binding.CurrentMotion != Ids.MosquitoStunnedLoop && Time.realtimeSinceStartup - stunned < .6f) yield return null;
             Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.MosquitoStunnedLoop), "Stunned is the dizzy loop, never the Hit pose.");
             yield return new WaitForSecondsRealtime(.6f);
             Assert.That(view.Animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Hit"), Is.False);
@@ -396,9 +398,20 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(VisualAttentionFactory.TryInstall(mosquito, true, out var mosquitoRig, out reason), Is.True, reason);
             Assert.That(mosquitoRig.SupportsLowerLids, Is.True);
             var lid = Find(mosquito.transform, "LidUpper.L"); var pupil = Find(mosquito.transform, "Pupil.L");
+            var lowerLid = Find(mosquito.transform, "LidLower.L");
             mosquitoRig.SetMood(FacialMood.Neutral);
             Settle(mosquitoRig);
-            Quaternion lidNeutral = lid.localRotation; Vector3 pupilNeutral = pupil.localScale;
+            Quaternion lidNeutral = lid.localRotation, lowerNeutral = lowerLid.localRotation; Vector3 pupilNeutral = pupil.localScale;
+            mosquitoRig.PrepareForAnimation();
+            // Director r4 (4): the lower shutter rests behind the white and only shows past a full blink; Happy
+            // (feeding) raises it over the lower half of the pupil, Excited shows a smiling lower rim.
+            mosquitoRig.SetMood(FacialMood.Happy);
+            Settle(mosquitoRig);
+            Assert.That(Quaternion.Angle(lowerLid.localRotation, lowerNeutral), Is.GreaterThan(95f), "Happy crescent eyes: the lower lid rises past the middle.");
+            mosquitoRig.PrepareForAnimation();
+            mosquitoRig.SetMood(FacialMood.Excited);
+            Settle(mosquitoRig);
+            Assert.That(Quaternion.Angle(lowerLid.localRotation, lowerNeutral), Is.InRange(84f, 95f), "Excited shows a smiling lower rim.");
             mosquitoRig.PrepareForAnimation();
             mosquitoRig.SetMood(FacialMood.Angry);
             Settle(mosquitoRig);
@@ -522,7 +535,8 @@ namespace LetMeSleep.Tests.PlayMode
                     if (settled)
                     {
                         highest = Mathf.Max(highest, feet[i].position.y - view.transform.position.y);
-                        if (crouched) jump = Mathf.Max(jump, Mathf.Abs(knee - previous[i]));
+                        // Degrees per second: a batch-mode hitch (40+ ms frames) is not a discontinuity.
+                        if (crouched && Time.deltaTime > 0) jump = Mathf.Max(jump, Mathf.Abs(knee - previous[i]) / Mathf.Max(Time.deltaTime, 1f / 60f));
                     }
                     previous[i] = knee;
                 }
@@ -531,7 +545,9 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(binding.UsingLocomotion, Is.True, "The crouched body keeps walking on the gait graph.");
             // Ankle rest height .12 m + the larger of swing lift (.07) and heel peel (.09) + 2 cm.
             Assert.That(highest, Is.LessThan(.23f), "No crouch-walk frame lifts a foot toward the hip.");
-            Assert.That(jump, Is.LessThan(25f), "The knee angle changes continuously frame to frame.");
+            // The authored sneak peaks at ~670 deg/s (the forward knee unfolding in mid-swing); a flipped knee jumps
+            // 90+ deg within one frame (> 2700 deg/s at 30 fps); rendered-distance catch-ups on slow frames add margin.
+            Assert.That(jump, Is.LessThan(1600f), "The knee angle changes continuously frame to frame (deg/s).");
             Object.Destroy(fixture);
         }
 
@@ -647,6 +663,33 @@ namespace LetMeSleep.Tests.PlayMode
             Object.Destroy(fixture);
         }
 
+        /// <summary>Director r4 (6): at rest the held flyswatter points forward and out beside the thigh, not across
+        /// the crotch.</summary>
+        [UnityTest]
+        public IEnumerator HeldFlyswatterRestsBesideTheThigh()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            var tool = MountFlyswatter(view, binding);
+            var toolView = tool.GetComponent<ToolView>();
+            var grip = Find(view.Animator.transform, "Socket.Grip.R");
+            uint tick = 1;
+            float start = Time.realtimeSinceStartup;
+            float worstGrip = 0;
+            while (Time.realtimeSinceStartup - start < .6f)
+            {
+                binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true, tool: GameplayTools.Flyswatter), tick++);
+                yield return null;
+                worstGrip = Mathf.Max(worstGrip, Vector3.Distance(toolView.Grip.position, grip.position));
+            }
+            Vector3 net = view.transform.InverseTransformPoint(toolView.Impact.position);
+            Assert.That(binding.LastToolCarryDegrees, Is.GreaterThan(10f), "The forearm twists the idle swatter outward.");
+            // The right thigh spans ~0.06-0.20 m to the right of the centre line: the net centre stays outside it.
+            Assert.That(net.x, Is.GreaterThan(.30f), $"The net sits outside the right thigh, not across the crotch (right {net.x:F2}, forward {net.z:F2}, up {net.y:F2} m).");
+            Assert.That(worstGrip, Is.LessThan(.01f), "The carried swatter stays in the hand.");
+            Object.Destroy(tool);
+            Object.Destroy(fixture);
+        }
+
         /// <summary>
         /// anim-r3 (2): a comic slap, not a straight-arm push. The hand cocks above the shoulder during the windup,
         /// the elbow never opens past 120 deg, the torso leans forward (never back) into the impact, and the
@@ -712,6 +755,12 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(spike.Blend, Is.LessThan(.35), "The blend toward the trot stays small.");
             for (int i = 0; i < 30; i++) { z += 1.55 * dt; clock.Advance(0, z, dt, frame++, true); }
             Assert.That(clock.GaitSpeed, Is.EqualTo(1.55).Within(.05), "The smoothed speed settles back.");
+            // Round 4: a start whose first moving frame measures a trot-like catch-up still begins with a walk stride.
+            clock.Suspend(); frame += 10; z = 0;
+            clock.Advance(0, z, dt, frame++, true);
+            z += 3.6 * dt; var first = clock.Advance(0, z, dt, frame++, true);
+            Assert.That(first.LowerProfile, Is.LessThanOrEqualTo(1), "A start never opens with a trot or run stride.");
+            Assert.That(clock.GaitSpeed, Is.LessThanOrEqualTo(1.55 + 1e-6));
         }
 
         [Test]
@@ -728,7 +777,8 @@ namespace LetMeSleep.Tests.PlayMode
         }
 
         /// <summary>anim-r3 (10): the crouched first-person eye goes back to ~0.88 m (the authority aims from
-        /// 0.89 m), well inside the 1.0 m crouched capsule with the 0.04 m near clip, standing or sneaking.</summary>
+        /// 0.89 m), well inside the 1.0 m crouched capsule with the 0.04 m near clip, standing or sneaking.
+        /// Director r4 (1): measured on every frame after the spawn, including the start of the sneak.</summary>
         [UnityTest]
         public IEnumerator CrouchedEyeStaysWellInsideTheCrouchedCapsule()
         {
@@ -747,7 +797,7 @@ namespace LetMeSleep.Tests.PlayMode
                 binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), moving ? new Vector3(0, 0, 1.55f) : Vector3.zero, true, 1), tick++);
                 yield return null;
                 view.RefreshAnchors();
-                if ((t > .9f && t < 1.2f) || t > 1.7f)
+                if (t > .3f)
                 {
                     float height = eye.position.y - view.transform.position.y;
                     highest = Mathf.Max(highest, height); lowest = Mathf.Min(lowest, height);
@@ -755,6 +805,55 @@ namespace LetMeSleep.Tests.PlayMode
             }
             Assert.That(highest, Is.LessThanOrEqualTo(.92f), "The crouched eye stays >= 8 cm under the 1.0 m capsule top.");
             Assert.That(lowest, Is.GreaterThan(.78f), "The crouched eye stays near the authority's 0.89 m aim eye.");
+            Object.Destroy(fixture);
+        }
+
+        /// <summary>
+        /// Director r4 (1): stopping or starting a sneak never stands the body up. The local first-person human
+        /// holds crouch (1.0, as under a low ceiling) while still, sneaking, stopping, sneaking again and stopping;
+        /// its camera eye rides on the animated head and stays at or under 0.92 m on every frame, including the
+        /// gait-to-controller hand-offs (the old static Crouch replayed its stand-to-crouch ramp from t = 0).
+        /// </summary>
+        [UnityTest]
+        public IEnumerator LocalCrouchedStopsAndStartsNeverRaiseTheEye()
+        {
+            var fixture = Human(true, out var proxy, out var view, out var binding);
+            Assert.That(HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait), Is.True);
+            binding.BindLocomotion(gait);
+            var eye = view.GetAnchor("CameraEye");
+            Assert.That(eye, Is.Not.Null);
+            bool Moving(float t) => (t > .8f && t < 1.9f) || (t > 2.8f && t < 3.4f);
+            uint tick = 1; float z = 0, highest = 0, lowest = float.MaxValue, highestAt = 0;
+            int starts = 0, stops = 0; bool wasMoving = false, sneaked = false, heldStill = false;
+            float start = Time.realtimeSinceStartup, nextSend = start;
+            while (Time.realtimeSinceStartup - start < 4.4f)
+            {
+                float t = Time.realtimeSinceStartup - start;
+                if (Time.realtimeSinceStartup >= nextSend)
+                {
+                    bool moving = Moving(t);
+                    if (moving) z += 1.55f / 30f;
+                    if (moving != wasMoving) { if (moving) starts++; else stops++; wasMoving = moving; }
+                    binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), moving ? new Vector3(0, 0, 1.55f) : Vector3.zero, true, 1), tick++);
+                    nextSend += 1f / 30f;
+                }
+                yield return null;
+                view.RefreshAnchors();
+                if (binding.UsingLocomotion) sneaked = true;
+                if (t > 2.3f && t < 2.7f && binding.CurrentMotion == Ids.HumanCrouch && !binding.UsingLocomotion) heldStill = true;
+                if (t > .3f)
+                {
+                    float height = eye.position.y - view.transform.position.y;
+                    if (height > highest) { highest = height; highestAt = t; }
+                    lowest = Mathf.Min(lowest, height);
+                }
+            }
+            Assert.That(starts, Is.EqualTo(2)); Assert.That(stops, Is.EqualTo(2));
+            Assert.That(sneaked, Is.True, "The crouched body sneaks on the gait graph.");
+            Assert.That(heldStill, Is.True, "Standing still crouched holds the static crouch.");
+            Assert.That(highest, Is.LessThanOrEqualTo(.92f), $"The crouched eye never rises toward standing (highest at t={highestAt:F2} s).");
+            Assert.That(lowest, Is.GreaterThan(.78f), "The crouched eye stays near the authority's 0.89 m aim eye.");
+            Assert.That(binding.VisualCrouch, Is.EqualTo(1f).Within(.01f));
             Object.Destroy(fixture);
         }
 
@@ -820,6 +919,32 @@ namespace LetMeSleep.Tests.PlayMode
             float normalized = view.Animator.GetNextAnimatorStateInfo(0).normalizedTime;
             if (!view.Animator.IsInTransition(0)) normalized = view.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             Assert.That(normalized, Is.LessThan(.25f), "Recover starts from its beginning (the belly-up roll), not its tail.");
+        }
+
+        /// <summary>Director r4 (9): a cheer that interrupts a yawn cuts straight to the grin (no frame of drooping
+        /// lids and O mouth), and a cheering face never blinks one lid half shut.</summary>
+        [Test]
+        public void VictoryCutsTheYawnAndCheersWithOpenEyes()
+        {
+            var human = Track(Object.Instantiate(Load(HumanPrefab)));
+            Assert.That(VisualAttentionFactory.TryInstall(human, true, out var rig, out var reason), Is.True, reason);
+            rig.SetMood(FacialMood.Yawning, 1, .35f);
+            Settle(rig);
+            Assert.That(rig.MoodShape.MouthOpen, Is.GreaterThan(.95f));
+            rig.PrepareForAnimation();
+            rig.SetMood(FacialMood.Excited);
+            rig.EvaluateAfterAnimation(1f / 30f);
+            Assert.That(rig.MoodShape.MouthOpen, Is.LessThan(.01f), "No yawn O on the first cheering frame.");
+            Assert.That(rig.MoodShape.Upper, Is.LessThan(.01f), "No drooping yawn lids on the first cheering frame.");
+            Assert.That(rig.MoodShape.Smile, Is.GreaterThan(.95f));
+            float closed = 0;
+            for (int i = 0; i < 300; i++) { rig.PrepareForAnimation(); rig.EvaluateAfterAnimation(1f / 30f); closed = Mathf.Max(closed, rig.LastLidClosure); }
+            Assert.That(closed, Is.LessThan(.01f), "Ten seconds of cheering without a spontaneous blink.");
+            rig.PrepareForAnimation();
+            rig.SetMood(FacialMood.Neutral);
+            for (int i = 0; i < 300; i++) { rig.PrepareForAnimation(); rig.EvaluateAfterAnimation(1f / 30f); closed = Mathf.Max(closed, rig.LastLidClosure); }
+            Assert.That(closed, Is.GreaterThan(.9f), "Other moods still blink.");
+            rig.PrepareForAnimation();
         }
 
         [Test]
@@ -967,7 +1092,11 @@ namespace LetMeSleep.Tests.PlayMode
 
         private static void Settle(VisualAttentionRig rig)
         {
-            for (int i = 0; i < 12; i++) { rig.PrepareForAnimation(); rig.EvaluateAfterAnimation(.1f); }
+            // 1.2 s toward the mood, then past any spontaneous blink still in progress (a blink lasts 0.22 s, the
+            // first one comes 2.2-4 s in, so a later assertion never samples half-closed lids by chance).
+            float open = float.MaxValue;
+            for (int i = 0; i < 12; i++) { rig.PrepareForAnimation(); rig.EvaluateAfterAnimation(.1f); open = Mathf.Min(open, rig.LastLidClosure); }
+            for (int i = 0; i < 10 && rig.LastLidClosure > open + .01f; i++) { rig.PrepareForAnimation(); rig.EvaluateAfterAnimation(.1f); }
         }
 
         private static void AssertMotion(CharacterView view, int id, string state, bool loop)

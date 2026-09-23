@@ -138,14 +138,20 @@ namespace LetMeSleep.Presentation
         public float LastPupilLift { get; private set; } = 1;
         /// <summary>Degrees of mood head pose (pitch/roll/dizzy sway) applied on the last evaluation.</summary>
         public float LastMoodHeadDegrees { get; private set; }
-        /// <summary>Sets the expression target; channels ease toward it over blendSeconds.</summary>
+        /// <summary>
+        /// Sets the expression target; channels ease toward it over blendSeconds. A blend of 0 or less cuts to the
+        /// target on the next evaluation, and so does a cheer (Excited/Happy) that interrupts a yawn (director r4:
+        /// the victory face never drags the yawn's drooping lids and O mouth through its first frames).
+        /// </summary>
         public void SetMood(FacialMood value,float weight=1,float blendSeconds=.12f)
         {
             if(float.IsNaN(weight) || float.IsInfinity(weight)) weight=0;
             if(float.IsNaN(blendSeconds) || float.IsInfinity(blendSeconds)) blendSeconds=.12f;
+            bool cut=blendSeconds<=0 || (mood==FacialMood.Yawning && (value==FacialMood.Excited || value==FacialMood.Happy));
             mood=value;
             moodTarget=FacialMoodShape.Lerp(FacialMoodShape.Neutral,FacialMoodShape.For(value,leftLids.Length>0),Mathf.Clamp01(weight));
             moodBlendSeconds=Mathf.Max(.01f,blendSeconds);
+            if(cut) moodCurrent=moodTarget;
         }
         // Contact owners observe the completed facial pose, including eyes and lids.
         public event Action AfterEvaluation;
@@ -292,6 +298,8 @@ namespace LetMeSleep.Presentation
             return scale;
         }
         private float leftClosure,rightClosure;
+        /// <summary>Largest upper-lid closure (blink or mood) written on the last evaluation, 0..1.</summary>
+        public float LastLidClosure=>Mathf.Max(leftClosure,rightClosure);
         private void ApplyMouthShapes()
         {
             if(!binding.Eyelids || !SupportsMouthShapes) return;
@@ -406,6 +414,9 @@ namespace LetMeSleep.Presentation
             if(clock>nextBlink+.25) nextBlink=clock+3.2+random.NextDouble()*2.6;
             float closureLeft=Blink((float)(clock-nextBlink))*.01f;
             float closureRight=Blink((float)(clock-nextBlink)-.012f)*.01f;
+            // Director r4 (9): a cheering (Excited) face keeps both eyes wide open; no spontaneous blink catches
+            // one lid half closed in the victory loop.
+            if(mood==FacialMood.Excited) closureLeft=closureRight=0;
             float blinkLeft=closureLeft,blinkRight=closureRight;
             float moodUpper=MoodUpperLid(moodCurrent.Upper);
             closureLeft=Mathf.Max(closureLeft,moodUpper);
@@ -427,7 +438,7 @@ namespace LetMeSleep.Presentation
                 }
                 blinkWritten=true;
             }
-            float lower=Mathf.Clamp01(moodCurrent.Lower);
+            float lower=Mathf.Clamp(moodCurrent.Lower,0,FacialMoodShape.MaximumLowerLid);
             foreach(var lid in leftLids) lid.Apply(lid.lower ? Mathf.Max(blinkLeft,lower) : closureLeft,moodCurrent.Tilt);
             foreach(var lid in rightLids) lid.Apply(lid.lower ? Mathf.Max(blinkRight,lower) : closureRight,moodCurrent.Tilt);
             leftClosure=closureLeft; rightClosure=closureRight;

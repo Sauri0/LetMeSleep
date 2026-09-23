@@ -20,6 +20,11 @@ namespace LetMeSleep.Presentation.Gameplay
         public const float CockedWristDegrees = -35f;
         /// <summary>Wrist lead of a held tool at the end of the follow-through, in degrees.</summary>
         public const float FollowWristDegrees = 30f;
+        /// <summary>Arc bulge per metre of sweep, up and out to the striking side: the bare hand whips over and
+        /// around the head; the flyswatter head swings a little wider to the striking side.</summary>
+        public const float HandBulgeUp = .14f, HandBulgeOut = .22f, ToolBulgeUp = .10f, ToolBulgeOut = .28f;
+        /// <summary>Director r4 (6): peak forearm roll (supination) of a held flyswatter mid-sweep, in degrees.</summary>
+        public const float ToolRollDegrees = 80f;
 
         /// <summary>IK weight from elapsed seconds (the authority's PoseWeight, but continuous in time).</summary>
         public static float Weight(float elapsed)
@@ -61,6 +66,19 @@ namespace LetMeSleep.Presentation.Gameplay
                 return u * u * cocked + 2f * u * f * control + f * f * target;
             }
             return Vector3.LerpUnclamped(target, followThrough, Follow(elapsed));
+        }
+
+        /// <summary>
+        /// Director r4 (6): the forearm rolls the flyswatter about its handle mid-sweep, so the net passes the
+        /// head edge-on instead of as a disc across the eyes (the target is in front of the chest and the net must
+        /// cross in front of the head from the cocked pose, whatever the arc), and rolls back flat for the impact.
+        /// </summary>
+        public static float ToolRoll(float elapsed)
+        {
+            if (elapsed <= Trajectory.SweepStart || elapsed >= ImpactSeconds) return 0f;
+            float f = Sweep(elapsed);
+            float u = Mathf.Clamp01((f - .3f) / .65f);
+            return ToolRollDegrees * Mathf.Sin(Mathf.PI * u);
         }
 
         /// <summary>Wrist snap of a held tool about the sweep axis: trailing while cocked and during the whip,

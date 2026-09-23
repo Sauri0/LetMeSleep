@@ -10,8 +10,11 @@ namespace LetMeSleep.Presentation
     {
         /// <summary>Upper lid closure 0..1 (blink still closes fully on top).</summary>
         public float Upper;
-        /// <summary>Lower lid closure 0..1 (mosquito lid bones only).</summary>
+        /// <summary>Lower lid closure 0..MaximumLowerLid (mosquito lid bones only). Above 1 the lower shutter rises
+        /// past the middle of the eye: the crescent "smiling" eyes of PER-07 (director r4).</summary>
         public float Lower;
+        /// <summary>Largest lower-lid closure: the shutter edge a little above the pupil's centre.</summary>
+        public const float MaximumLowerLid = 1.12f;
         /// <summary>Upper lid tilt in degrees, positive = inner corners down (angry), negative = worried/droopy.</summary>
         public float Tilt;
         /// <summary>Pupil size multiplier across the look axis (1 = authored); mosquito discs and human decals.</summary>
@@ -68,20 +71,23 @@ namespace LetMeSleep.Presentation
         /// <summary>
         /// Mosquito preset (lid bones with a tilt, pupil discs, no brows or mouth). v0.3.0 round 3 (PER-03/PER-07):
         /// angry V lids clearly closed and tilted, focused narrowed eyes, alert small pupils under level lids,
-        /// excited huge pupils with smiling lower lids, happy crescent eyes.
+        /// excited huge pupils with smiling lower lids, happy crescent eyes. Round 4 (director): the lower shutter
+        /// rests behind the bottom of the white and only shows above ~0.9, so Happy (feeding) pushes it past the
+        /// middle of the eye (1.08: the lower half of the pupil hidden, a crescent) and Excited shows a smiling rim
+        /// under its huge pupils (0.96).
         /// </summary>
         private static FacialMoodShape Mosquito(FacialMood mood)
         {
             switch (mood)
             {
-                case FacialMood.Happy: return new FacialMoodShape { Upper = .22f, Lower = .72f, Tilt = -18, Pupil = 1.15f, HeadPitch = -3, HeadRoll = 9 };
+                case FacialMood.Happy: return new FacialMoodShape { Upper = .22f, Lower = 1.08f, Tilt = -18, Pupil = 1.15f, HeadPitch = -3, HeadRoll = 9 };
                 case FacialMood.Angry: return new FacialMoodShape { Upper = .56f, Lower = .16f, Tilt = 40, Pupil = .74f, HeadPitch = 9 };
                 case FacialMood.Alert: return new FacialMoodShape { Upper = .16f, Lower = .16f, Tilt = 0, Pupil = .62f, HeadPitch = 6 };
                 case FacialMood.Sleepy: return new FacialMoodShape { Upper = .66f, Lower = .22f, Tilt = -14, Pupil = 1f, HeadPitch = 10, HeadRoll = 9 };
                 case FacialMood.Surprised: return new FacialMoodShape { Upper = 0, Lower = 0, Tilt = -22, Pupil = .45f, HeadPitch = -13 };
                 case FacialMood.Focused: return new FacialMoodShape { Upper = .42f, Lower = .42f, Tilt = 16, Pupil = .86f, HeadPitch = 5 };
                 case FacialMood.Dizzy: return new FacialMoodShape { Upper = .34f, Lower = .12f, Tilt = -6, Pupil = .95f, Dizzy = 1 };
-                case FacialMood.Excited: return new FacialMoodShape { Upper = 0, Lower = .45f, Tilt = -24, Pupil = 1.38f, HeadPitch = -6, HeadRoll = -8 };
+                case FacialMood.Excited: return new FacialMoodShape { Upper = 0, Lower = .96f, Tilt = -24, Pupil = 1.38f, HeadPitch = -6, HeadRoll = -8 };
                 case FacialMood.Yawning: return new FacialMoodShape { Upper = .88f, Lower = .30f, Tilt = -6, Pupil = 1f, HeadPitch = -6 };
                 case FacialMood.Unconscious: return new FacialMoodShape { Upper = 1f, Lower = .4f, Pupil = 1f };
                 default: return Neutral;

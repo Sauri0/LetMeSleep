@@ -60,9 +60,10 @@ def author(rig):
                 # Pose.chain clamps unreachable targets; reject BEFORE that clamp.
                 assert abs(.34 - .32) + .02 < reach <= .34 + .32 - .02, (profile['clip'], phase, side, reach)
                 p.chain('UpperLeg.' + side, 'LowerLeg.' + side, target,
-                        (sign * (profile['track'] + KNEE_OUT), -.6, .42), 'Foot.' + side)
+                        (sign * (profile['track'] + profile.get('knee_out', KNEE_OUT)), -.6, .42), 'Foot.' + side)
             low, high = profile['elbow_deg']
-            gait_arms(p, phase, profile['arm_swing_deg'], low, high)
+            gait_arms(p, phase, profile['arm_swing_deg'], low, high, profile.get('arm_abduction_deg', 8.),
+                      profile.get('arm_abduction_forward_deg'), profile.get('arm_forward_scale', 1.), twist)
             pose = p.snapshot()
             # Replace whole transform dictionaries: never mix stale Euler and quaternion fields.
             pose.update(cached[profile['reference']][i])

@@ -14,19 +14,27 @@ SOURCE_DURATION = (END_FRAME - 1) / FPS
 # a pumping trot/run), shoulders counter-twist by 'twist' rad, and the feet track 'track' metres off the
 # centre line (hips at .125) with the knees aimed a little further out, so the legs never read crossed
 # in three-quarter views. Trot and run lean further forward.
+# Round 4 (director r4, item 2): the forward half of the arm swing is shorter (arm_forward_scale), the arm opens
+# to arm_abduction_forward_deg as it comes forward and the swing plane ignores the chest's counter-twist, so the
+# walking hand passes in front of its thigh (not the crotch) in three-quarter views; the walks aim the knees
+# less far out (knee_out) so the stride no longer reads bow-legged.
 PROFILES = [
     dict(clip='Human_WalkSlow', reference='Human_Walk', speed=1., contacts=2.4,
          duty=.60, hip=.695, rise=.025, lift=.09, ramp=.22, lean=.03,
-         arm_swing_deg=24., elbow_deg=(18., 30.), twist=.06, track=.14),
+         arm_swing_deg=26., elbow_deg=(18., 28.), twist=.06, track=.135,
+         arm_forward_scale=.8, arm_abduction_deg=8., arm_abduction_forward_deg=15., knee_out=.015),
     dict(clip='Human_Walk', reference='Human_Walk', speed=1.55, contacts=3.2,
          duty=.56, hip=.685, rise=.035, lift=.10, ramp=.22, lean=.05,
-         arm_swing_deg=30., elbow_deg=(20., 35.), twist=.08, track=.14),
+         arm_swing_deg=32., elbow_deg=(20., 30.), twist=.08, track=.135,
+         arm_forward_scale=.8, arm_abduction_deg=8., arm_abduction_forward_deg=16., knee_out=.015),
     dict(clip='Human_Trot', reference='Human_Run', speed=3.1, contacts=4.,
          duty=.32, hip=.69, compression=.030, lift=.15, ramp=.18, lean=.12,
-         arm_swing_deg=40., elbow_deg=(40., 65.), twist=.12, track=.135),
+         arm_swing_deg=42., elbow_deg=(40., 68.), twist=.12, track=.135,
+         arm_forward_scale=.9, arm_abduction_deg=9., arm_abduction_forward_deg=15., knee_out=.04),
     dict(clip='Human_Run', reference='Human_Run', speed=5., contacts=4.6,
          duty=.24, hip=.68, compression=.035, lift=.20, ramp=.16, lean=.14,
-         arm_swing_deg=45., elbow_deg=(55., 85.), twist=.14, track=.135),
+         arm_swing_deg=46., elbow_deg=(55., 88.), twist=.14, track=.135,
+         arm_forward_scale=.9, arm_abduction_deg=9., arm_abduction_forward_deg=15., knee_out=.05),
 ]
 KNEE_OUT = .05
 REPLACED = frozenset(('Human_Walk', 'Human_Run'))

@@ -80,6 +80,17 @@ namespace LetMeSleep.Presentation.Gameplay
         private Transform chestBone, spineBone;
         private bool opponentNear;
         private float nextOpponentCheck;
+        // v0.3.0 round 4 (director 1): Human_Crouch is a crouch-amount axis (normalized time = crouch 0..1,
+        // author_motion crouch()), scrubbed from the authoritative CrouchFraction instead of being replayed
+        // from standing each time the static crouch is (re)entered.
+        private const float VisualCrouchRate = 6f;
+        private float visualCrouch = -1f;
+        /// <summary>Crouch amount the static crouch pose shows (the authoritative CrouchFraction, eased).</summary>
+        public float VisualCrouch => Mathf.Max(0f, visualCrouch);
+        // A held flyswatter points forward and out beside the thigh (not across the crotch) while it is not swinging.
+        private const float ToolCarryDegrees = 75f;
+        /// <summary>Degrees the idle wrist turned the held tool outward on the last frame (review).</summary>
+        public float LastToolCarryDegrees { get; private set; }
         public float LastArmReachResidualMeters { get; private set; }
         public float LastElbowInnerDegrees { get; private set; } = 180f;
         /// <summary>Reach assists used by the last strike frame (clavicle, chest), for review.</summary>
@@ -180,6 +191,7 @@ namespace LetMeSleep.Presentation.Gameplay
             if (state == null || proxy == null || state.ActorId != proxy.ActorId)
                 return;
 
+            if (visualCrouch < 0f) UpdateVisualCrouch(state.CrouchFraction); // a spawn never ramps
             bool discontinuity = current == null || ShouldCut(current, state);
             if (current != null && !current.Grounded && state.Grounded) landedFrame = Time.frameCount;
             ObserveTransition(current, state);
@@ -343,6 +355,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 locomotionDiscontinuity = true;
                 localGaitInterpolation = interpolateLocal;
             }
+            float crouchTarget = current.CrouchFraction;
             if (localActor && !interpolateLocal)
             {
                 SetWorldPose(current.Position.ToUnity(), current.BodyRotation.ToUnity());
@@ -355,6 +368,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 if (elapsed <= snapshotInterval)
                 {
                     float t = snapshotInterval <= 0f ? 1f : elapsed / snapshotInterval;
+                    if (!localActor) crouchTarget = Mathf.Lerp(previous.CrouchFraction, current.CrouchFraction, t);
                     position = Vector3.Lerp(previous.Position.ToUnity(), current.Position.ToUnity(), t);
                     rotation = Quaternion.Slerp(previous.BodyRotation.ToUnity(), current.BodyRotation.ToUnity(), t);
                 }
@@ -366,6 +380,7 @@ namespace LetMeSleep.Presentation.Gameplay
                 }
                 SetWorldPose(position, rotation);
             }
+            UpdateVisualCrouch(crouchTarget);
 
             if (HasLocomotion)
             {
@@ -399,7 +414,9 @@ namespace LetMeSleep.Presentation.Gameplay
                 lastOwnerLocomotion = usingLocomotion; pendingCrossfade = false;
                 crossfade.Apply(Time.deltaTime);
             }
+            ScrubCrouchPose();
             ApplySecondary();
+            ApplyToolCarry();
             ApplyAuthoritativeHands();
             ApplyMood();
             view.RefreshAnchors();
@@ -519,8 +536,25 @@ namespace LetMeSleep.Presentation.Gameplay
             }
             if (IsRecover(motion) && view.Animator != null && TryGetMotion(motion, out CharacterView.MotionBinding recoverBinding))
             {
-                view.PlayMotion(motion, .14f);
-                view.Animator.CrossFadeInFixedTime(recoverBinding.StateName, .14f, 0, recoverStart * MotionDuration(motion));
+                // The mosquito's 0.4 s Recover starts on the knocked-out belly-up pose: a short fade keeps its roll
+                // (director r4: a .14 s fade swallowed most of it and the roll read as a 2-frame snap).
+                float recoverFade = proxy.Role == PlayerRole.Mosquito ? .05f : .14f;
+                view.PlayMotion(motion, recoverFade);
+                view.Animator.CrossFadeInFixedTime(recoverBinding.StateName, recoverFade, 0, recoverStart * MotionDuration(motion));
+                return;
+            }
+            if (IsStaticCrouch(motion) && view.Animator != null && TryGetMotion(motion, out CharacterView.MotionBinding crouchBinding))
+            {
+                // Enter the crouch axis at the crouch the body already has (1 when stopping a sneak): never replay
+                // the stand-to-crouch ramp, which popped the body (and the first-person eye) upright for ~0.5 s.
+                // Coming off the gait graph the restored controller sits on its default (standing Idle) state: an
+                // Animator crossfade from there would lift the body for its duration, so the crouch is played at
+                // once and the frozen-pose crossfade blends from the last rendered (sneaking) pose instead.
+                bool atOnce = immediate || previousMotion < 0;
+                float crouchFade = atOnce ? 0f : CrossFadeSeconds(state);
+                view.PlayMotion(motion, crouchFade);
+                view.Animator.CrossFadeInFixedTime(crouchBinding.StateName, crouchFade, 0, CrouchPoseTime() * MotionDuration(motion));
+                if (atOnce) pendingCrossfade = true;
                 return;
             }
             if (IsSurfaceWalk(motion) && view.Animator != null &&
@@ -563,6 +597,72 @@ namespace LetMeSleep.Presentation.Gameplay
             remaining = Mathf.Clamp(remaining, .1f, length);
             recoverPlayback = Mathf.Clamp(length / remaining, 1f, 3f);
             recoverStart = Mathf.Clamp01(1f - remaining * recoverPlayback / Mathf.Max(.001f, length));
+        }
+
+        private bool IsStaticCrouch(int motion) => proxy != null && proxy.Role == PlayerRole.Human && motion == Ids.HumanCrouch;
+
+        /// <summary>Normalized time of the crouch axis clip for the crouch the body shows now.</summary>
+        private float CrouchPoseTime() => Mathf.Clamp01(VisualCrouch);
+
+        private void UpdateVisualCrouch(float target)
+        {
+            if (float.IsNaN(target) || float.IsInfinity(target)) target = 0f;
+            target = Mathf.Clamp01(target);
+            // The authority ramps crouching at 5/s in 30 Hz steps; the pose follows a little faster, smoothly.
+            visualCrouch = visualCrouch < 0f || float.IsNaN(visualCrouch) ? target
+                : Mathf.MoveTowards(visualCrouch, target, Time.deltaTime * VisualCrouchRate);
+        }
+
+        /// <summary>
+        /// Holds the static crouch on the crouch axis: the Animator plays the state at normal speed (so its
+        /// crossfades run), and whenever it is settled on it the time is set back to the crouch amount, so a
+        /// crouched body stays crouched however long it stands still and follows crouching down or up.
+        /// </summary>
+        private void ScrubCrouchPose()
+        {
+            if (!IsStaticCrouch(currentMotion) || temporaryMotion >= 0 || usingLocomotion || view.Animator == null ||
+                !view.Animator.isActiveAndEnabled || view.Animator.runtimeAnimatorController == null ||
+                view.Animator.IsInTransition(0) || !TryGetMotion(currentMotion, out CharacterView.MotionBinding binding))
+                return;
+            AnimatorStateInfo info = view.Animator.GetCurrentAnimatorStateInfo(0);
+            if (!info.IsName(binding.StateName)) return;
+            float wanted = CrouchPoseTime();
+            if (Mathf.Abs(Mathf.Min(1f, info.normalizedTime) - wanted) > .002f)
+                view.Animator.Play(binding.StateName, 0, wanted);
+        }
+
+        /// <summary>
+        /// Director r4 (6): while it is not swinging, the held flyswatter sticks out of the fist (thumb side, up and
+        /// forward) across the front of the crotch. With the arm hanging, the forearm twists (a roll about its own
+        /// axis, up to 75 deg, a natural pronation/supination range) so the handle points forward and out and the
+        /// net sits in front of and outside the thigh. The twist fades as the swat's pose weight rises (the arm
+        /// solve then owns the hand) and when a clip raises the forearm. The tool stays rigidly in the hand (it
+        /// follows the hand's grip socket).
+        /// </summary>
+        private void ApplyToolCarry()
+        {
+            LastToolCarryDegrees = 0f;
+            if (proxy.Role != PlayerRole.Human || rightArm == null || !rightArm.IsValid || !strikeTool ||
+                !strikeTool.gameObject.activeInHierarchy || !strikeTool.Grip || !strikeTool.Impact)
+                return;
+            float swing = current.StrikeState.Phase != GameplayModel.StrikePhase.None ? StrikeSwingPath.Weight(StrikeElapsed()) : 0f;
+            float weight = 1f - swing;
+            if (weight <= .001f) return;
+            Vector3 forearm = rightArm.Hand.position - rightArm.Lower.position;
+            if (!Finite(forearm) || forearm.sqrMagnitude < 1e-6f) return;
+            forearm.Normalize();
+            float hanging = Mathf.Clamp01((Vector3.Dot(forearm, -transform.up) - .55f) / .3f);
+            if (hanging <= .001f) return;
+            view.RefreshAnchors();
+            Vector3 along = strikeTool.Impact.position - strikeTool.Grip.position;
+            if (!Finite(along) || along.sqrMagnitude < 1e-6f) return;
+            Vector3 wanted = transform.forward * .55f + transform.right * .85f;
+            Vector3 from = Vector3.ProjectOnPlane(along, forearm), to = Vector3.ProjectOnPlane(wanted, forearm);
+            if (from.sqrMagnitude < 1e-6f || to.sqrMagnitude < 1e-6f) return;
+            float degrees = Mathf.Clamp(Vector3.SignedAngle(from, to, forearm), -ToolCarryDegrees, ToolCarryDegrees) * weight * hanging;
+            if (Mathf.Abs(degrees) < .01f) return;
+            rightArm.Hand.rotation = Quaternion.AngleAxis(degrees, forearm) * rightArm.Hand.rotation;
+            LastToolCarryDegrees = Mathf.Abs(degrees);
         }
 
         private void SynchronizeLoopPhase(GameplayModel.ActorSnapshot state, int motion)
@@ -830,6 +930,7 @@ namespace LetMeSleep.Presentation.Gameplay
             if (attention) attention.AfterEvaluation -= MeasureBiteResidual;
             attention = null;
             hasSurfaceHeading = false;
+            visualCrouch = -1f;
             secondary?.Reset();
             crossfade?.Cancel();
         }
@@ -901,8 +1002,11 @@ namespace LetMeSleep.Presentation.Gameplay
                 ? shoulder - up * .50f - outward * .40f + forward * .45f
                 : shoulder - up * .55f - outward * .32f + forward * .28f;
             // The hand cocks at crown height and the arc bulges up and well out to the striking side, so the whip
-            // comes over and around the head instead of dragging across the eyes.
-            Vector3 path = StrikeSwingPath.Evaluate(elapsed, cocked, target, follow, up * (hasTool ? .10f : .14f) + outward * .22f);
+            // comes over and around the head instead of dragging across the eyes. Director r4 (6): the flyswatter
+            // swings a little wider and its net rolls edge-on while it passes the head (StrikeSwingPath.ToolRoll).
+            Vector3 bulge = hasTool ? up * StrikeSwingPath.ToolBulgeUp + outward * StrikeSwingPath.ToolBulgeOut
+                : up * StrikeSwingPath.HandBulgeUp + outward * StrikeSwingPath.HandBulgeOut;
+            Vector3 path = StrikeSwingPath.Evaluate(elapsed, cocked, target, follow, bulge);
             Vector3 goal = Vector3.Lerp(rest, path, weight);
             Vector3 sweepAxis = Vector3.Cross(cocked - shoulder, target - shoulder);
             sweepAxis = sweepAxis.sqrMagnitude > 1e-8f ? sweepAxis.normalized : outward;
@@ -929,6 +1033,17 @@ namespace LetMeSleep.Presentation.Gameplay
             AssistReach(arm, weight, goal, Residual);
             Residual();
             if (!solvable) return;
+            if (hasTool)
+            {
+                // Forearm roll about the handle, once, after the solve: the tool keeps its direction and stays in the
+                // hand, the net turns edge-on mid-sweep (its centre leaves the arc by up to ~15 cm there; the roll is
+                // 0 at the impact, where the net is on the authoritative target).
+                float roll = StrikeSwingPath.ToolRoll(elapsed) * weight;
+                view.RefreshAnchors();
+                Vector3 handle = strikeTool.Impact.position - strikeTool.Grip.position;
+                if (Mathf.Abs(roll) > .01f && handle.sqrMagnitude > 1e-6f)
+                    arm.Hand.rotation = Quaternion.AngleAxis(roll * side, handle.normalized) * arm.Hand.rotation;
+            }
             LastElbowInnerDegrees = TwoBoneSolver.InnerAngle(arm.Upper.position, arm.Lower.position, arm.Hand.position);
             LastStrikeSolveFrame = Time.frameCount;
             view.RefreshAnchors();

@@ -2955,8 +2955,8 @@
       "bytes": 19367
     },
     "author_human_locomotion.py": {
-      "sha256": "fedad58fa081b049990ea5a988c02df2a31cc84860ac217a06dcfa4d44af9b1e",
-      "bytes": 4003
+      "sha256": "d152a848856919957a1574f68f112a72d6866a4d1fb1bab3426536ef24b3f8c4",
+      "bytes": 4099
     },
     "author_human_menu_motion.py": {
       "sha256": "2a16740eb02adaea80fe08e3186a2213615c2a2309e7628207ed597e83cd7cb7",
@@ -2971,12 +2971,12 @@
       "bytes": 43234
     },
     "author_mosquito_motion.py": {
-      "sha256": "43dd3d362a937ffdec6d6a4bb264d248767b2fbb4181ca8812ae5437318413cf",
-      "bytes": 23408
+      "sha256": "5392ff8011d51b75b7a130d0ff3a0b542ff982b479b6711e41fd19cb5ae6e70a",
+      "bytes": 24285
     },
     "author_motion.py": {
-      "sha256": "a4b6bd04ba1171735d06847c4eb3409646c4daffbad70d8990879fcefd4fd305",
-      "bytes": 38899
+      "sha256": "5b21a97a45b586b595c4408f48ffbc4af598af4212ed018b89f615cc26389a39",
+      "bytes": 40594
     },
     "build_characters.py": {
       "sha256": "905eb715a9401e6452d18b8771d868a597f6bd26a78741c5c5ca9507bb7e6785",
@@ -3023,8 +3023,8 @@
       "bytes": 3915
     },
     "human_locomotion_contract.py": {
-      "sha256": "ee862e37beb77d04a966bfc57f0d6f01009e4b3bd2fbfc72d454c9adfae3a77e",
-      "bytes": 5008
+      "sha256": "f4c99908d54b1dc2e2c738e9fab081251c89fca9bdecb92c2afb5fec795d9cc8",
+      "bytes": 5707
     },
     "human_menu_contract.py": {
       "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
@@ -3099,12 +3099,12 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "728d25a318cdd4a967d329f1990b7d7340453bedc2d89085ef50bb0f585139b8",
-      "bytes": 2084428
+      "sha256": "e90780e2578df17aa31f7d89dd0bf4216e606e4c469d486f9b453eaec218a50f",
+      "bytes": 2092317
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "0571bf1139129b243df9aa3493de69b6840da0c515c2674992abb1a8e71dc6d8",
-      "bytes": 13299372
+      "sha256": "2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6",
+      "bytes": 13300588
     },
     "menu/LMS_HumanMenu.blend": {
       "sha256": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
@@ -3115,11 +3115,11 @@
       "bytes": 4207468
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
-      "sha256": "abc11a4fa434721a9c3feb9cafcd4a1d036565052278075eecc7a6a427940f64",
-      "bytes": 883422
+      "sha256": "38d13880fbb85a4f0199b342fa0514117049098e4ee4e1c40d1932966a9c60db",
+      "bytes": 883779
     },
     "mosquito/LMS_Mosquito_alpha.fbx": {
-      "sha256": "bcc7a1cc129f5e2147858d58e0dd2303b4443f611b21540f60dd32a8d4099c0f",
+      "sha256": "178083ae85128f3d4784d7046dba2a67c0ed244ede3537de80384ae746b32602",
       "bytes": 4744700
     },
     "diagnostics/gameplay-e9d15e7/gait_feasibility.py": {
@@ -3329,6 +3329,74 @@
     "candidates/human-blink-winding1/source-snapshot/repair_human_lid_winding.py": {
       "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
       "bytes": 6097
+    },
+    ".validation/v030-anim-r4a/base/LMS_Human_alpha.blend": {
+      "sha256": "431c5d63b0b4d0e32b88803b4ffd020e87cb9f84d919f8cf995c79a69e47d7cd",
+      "bytes": 1783638
+    },
+    ".validation/v030-anim-r4a/base/LMS_Human_alpha.fbx": {
+      "sha256": "2b740d8755adf054c93a18cc63a058ba9769d4fdba775c385bf1264fa1f93ec9",
+      "bytes": 11833324
+    },
+    ".validation/v030-anim-r4a/gait/LMS_Human_alpha.blend": {
+      "sha256": "e90780e2578df17aa31f7d89dd0bf4216e606e4c469d486f9b453eaec218a50f",
+      "bytes": 2092317
+    },
+    ".validation/v030-anim-r4a/gait/LMS_Human_alpha.fbx": {
+      "sha256": "2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6",
+      "bytes": 13300588
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "1a2897c7e641c24f471a41c8506561673eb36d7b685c0828ba88e6b29c4ec6c9",
+      "bytes": 17071
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/author_human_facial.py": {
+      "sha256": "183e13f25d82e6d0f245abe749aeb273be6f5de3e8ba3d35316ca28b3f7d73e7",
+      "bytes": 12433
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/author_human_locomotion.py": {
+      "sha256": "d152a848856919957a1574f68f112a72d6866a4d1fb1bab3426536ef24b3f8c4",
+      "bytes": 4099
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/author_motion.py": {
+      "sha256": "5b21a97a45b586b595c4408f48ffbc4af598af4212ed018b89f615cc26389a39",
+      "bytes": 40594
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/build_characters.py": {
+      "sha256": "905eb715a9401e6452d18b8771d868a597f6bd26a78741c5c5ca9507bb7e6785",
+      "bytes": 26436
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/export_human_locomotion.py": {
+      "sha256": "0c4b67e8e526f61e936f26872ba3b1fdb9d83a80b8455f1a4ea2da0e965cce36",
+      "bytes": 7143
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "f4c99908d54b1dc2e2c738e9fab081251c89fca9bdecb92c2afb5fec795d9cc8",
+      "bytes": 5707
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-anim-r4a/gait/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
     },
     ".validation/v030-anim-r3d/base/LMS_Human_alpha.blend": {
       "sha256": "15ce8386a77d191e15489cb459b35955e477cf67865da2ec9c061cc19a7c9344",

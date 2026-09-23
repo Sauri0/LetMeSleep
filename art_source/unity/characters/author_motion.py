@@ -41,13 +41,21 @@ VICTORY_FIST_ANGLES=(1.25,1.15,.95)
 # higher (knees ~75-95 deg instead of a 50 deg squat), the feet stay on tiptoe with a wider track and
 # outward knees (no knee up at the chest, the rear shin never touches the floor), and the arms are held
 # bent close to the body with the hands up in front of the chest like paws.
-CROUCH=dict(clip='Human_CrouchWalk',speed=1.55,contacts=3.2,duty=.56,hip=.42,rise=.010,lift=.04,ramp=.22)
-CROUCH_SPINE,CROUCH_CHEST,CROUCH_NECK,CROUCH_HEAD=.62,.78,-.66,-.42
+# Round 4 (director r4, item 5): at the end of the stride the rear shin lay almost flat a few cm off the floor
+# (a kneeling read). The sneak now takes shorter steps behind the hips: a 52% stance duty and the foot path
+# shifted CROUCH_STANCE_SHIFT forward (the leaning torso carries the weight ahead of the hips), the hips 2.5 cm
+# higher, and the knees aimed further out and up, so the rear knee stays >= ~20 cm off the floor, above its
+# ankle, with both knees reading bent near a right angle. The torso leans a little further so the crouched
+# eye stays ~0.90 m.
+CROUCH=dict(clip='Human_CrouchWalk',speed=1.55,contacts=3.2,duty=.52,hip=.445,rise=.010,lift=.04,ramp=.22)
+CROUCH_SPINE,CROUCH_CHEST,CROUCH_NECK,CROUCH_HEAD=.70,.80,-.70,-.44
 CROUCH_HIPS_BACK=.08
-CROUCH_HEEL=.06
+CROUCH_HEEL=.04
 CROUCH_TIPTOE=.035
 CROUCH_TRACK=.16
-CROUCH_KNEE_OUT=.32
+CROUCH_KNEE_OUT=.36
+CROUCH_POLE_Z=.50
+CROUCH_STANCE_SHIFT=.10
 
 def smooth(t):
     t=max(0,min(1,t)); return t*t*t*(t*(t*6-15)+10)
@@ -218,18 +226,31 @@ def arm_twist_for(s,upper,lower,upper_roll_deg,palm,near=0.):
     angle=math.degrees(math.atan2(base.cross(want).dot(d),base.dot(want)))
     return angle+360*round((near-angle)/360)
 
-def gait_arms(p,phase,swing_deg,elbow_back_deg,elbow_front_deg,abduction_deg=8.):
+def gait_arms(p,phase,swing_deg,elbow_back_deg,elbow_front_deg,abduction_deg=8.,forward_abduction_deg=None,
+              forward_scale=1.,twist=0.):
     """v0.3.0 round 3 (anim-r3): arms swing opposite to the legs, the right arm fully forward at phase 0
     (left heel strike) and back at .5, by +-swing_deg from the shoulder; the elbow bends elbow_back_deg
     with the arm behind and elbow_front_deg in front (a relaxed walk 20-35 deg, a pumping trot more). The
-    palms keep facing the thighs and the arms hang 8 deg out so the hands clear the hips."""
+    palms keep facing the thighs and the arms hang 8 deg out so the hands clear the hips.
+    Round 4 (director r4, item 2): the forward swing reached 0.44 m ahead of the hip at hip height and, seen in
+    three-quarter view, the hand passed in front of the crotch. The forward half of the swing is now scaled by
+    forward_scale, the arm opens to forward_abduction_deg as it comes forward (the forearm keeps the upper
+    arm's abduction instead of half of it), and the swing plane is carried against the chest's counter-twist
+    ('twist' rad, the same value the clip gives the Chest at this phase), so each hand passes in front of its
+    own thigh, symmetric left and right."""
+    forward_abduction_deg=abduction_deg if forward_abduction_deg is None else forward_abduction_deg
     for side,s,offset in (('L',1,.5),('R',-1,0.)):
         w=math.cos(2*math.pi*(phase+offset))
-        swing=math.radians(swing_deg)*w
+        forward=max(0.,w)
+        swing=math.radians(swing_deg)*w*(forward_scale if w>0 else 1.)
         flex=math.radians(elbow_back_deg+(elbow_front_deg-elbow_back_deg)*(w+1)/2)
-        upper=swing_about_x(Vector((s*math.sin(math.radians(abduction_deg)),0,-1)).normalized(),swing)
-        lower=swing_about_x(Vector((s*math.sin(math.radians(abduction_deg*.5)),0,-1)).normalized(),swing+flex)
-        pose_arm(p,side,s,upper,lower,HANG_PALM(s),swing_about_x(HANG_NORMAL(s),swing))
+        abduction=math.radians(abduction_deg+(forward_abduction_deg-abduction_deg)*forward)
+        # The chest yaws by 'twist' (right shoulder forward at phase 0); turning the arm directions back by it
+        # keeps the swing in the body's sagittal plane instead of carrying the forward hand toward the midline.
+        unturn=Matrix.Rotation(-twist,3,'Z')
+        upper=unturn@swing_about_x(Vector((s*math.sin(abduction),0,-1)).normalized(),swing)
+        lower=unturn@swing_about_x(Vector((s*math.sin(abduction),0,-1)).normalized(),swing+flex)
+        pose_arm(p,side,s,upper,lower,unturn@HANG_PALM(s),unturn@swing_about_x(HANG_NORMAL(s),swing))
 
 def human(c):
     p=Pose(c)
@@ -299,7 +320,8 @@ def human(c):
         base(feet=feet,lean=.08 if run else .025)
         # Round 3: these two clips are the hand/finger reference of the four gaits (GRIP_BONES): relaxed
         # half-open hands while walking, a loose fist for the trot and run (the open palms read as A-pose).
-        gait_arms(p,t,38 if run else 28,40 if run else 20,62 if run else 34)
+        gait_arms(p,t,38 if run else 30,40 if run else 20,62 if run else 30,8. if run else 8.,14. if run else 16.,
+                  .9 if run else .8)
         for side in ('L','R'):relaxed_fingers(side,1.9 if run else 1.0)
         return p.snapshot()
     sampled(c,'Walk',41,lambda t:gait(t,False));sampled(c,'Run',25,lambda t:gait(t,True))
@@ -334,10 +356,14 @@ def human(c):
         toes by the same rise, the knee aimed outward so it passes beside the leaning torso."""
         roll=Matrix.Rotation(math.atan2(rise,.225),4,'X')@p.rest['Foot.'+side]
         track=.125+(CROUCH_TRACK-.125)*u
-        p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*track,-forward,.12+rise),(s*(.125+(CROUCH_KNEE_OUT-.125)*u),-.6,.42),
-                'Foot.'+side,roll,swing_roll=swing_roll)
+        p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*track,-forward,.12+rise),
+                (s*(.125+(CROUCH_KNEE_OUT-.125)*u),-.6,.42+(CROUCH_POLE_Z-.42)*u),'Foot.'+side,roll,swing_roll=swing_roll)
+    # Round 4 (director r4, item 1): Human_Crouch is a crouch-AMOUNT axis, u = normalized time (0 standing, 1 the
+    # full sneak crouch). ActorVisualBinding scrubs it from the authoritative CrouchFraction and holds it, so
+    # stopping a sneak (or striking while crouched) never replays a stand-to-crouch ramp from t = 0: the old
+    # clip started standing and took 0.6 s to crouch, popping the body and the first-person eye upright.
     def crouch(t):
-        u=smooth(min(1,t/.6))
+        u=t
         p.reset();p.translate('Hips',(0,CROUCH_HIPS_BACK*u,(CROUCH['hip']-.78)*u-STAND_DROP*(1-u)));p.update()
         crouch_torso(u)
         crouch_arms(u)
@@ -523,6 +549,7 @@ def human(c):
         crouch_torso(1,.015*math.sin(TAU*2*t),-.05*w)
         for side,s,offset in [('L',1,0.),('R',-1,.5)]:
             forward,z,_=gait_foot(t+offset,CROUCH)
+            forward+=CROUCH_STANCE_SHIFT
             # On tiptoe; the trailing heel peels further (toes stay down) so the rear knee never drops onto
             # the floor; continuous in 'forward' across the stance/swing boundary. The peel and the swing
             # lift do not stack: the ankle rises by the larger of the two.

@@ -106,7 +106,10 @@ namespace LetMeSleep.Presentation.Gameplay
                 Current = new Sample(phase, 0, Current.Blend, Current.LowerProfile, Current.UpperProfile, profiles);
                 return Current;
             }
-            if (!hasGaitSpeed) { gaitSpeed = speed; hasGaitSpeed = true; }
+            // Round 4: the first measured frame of a start never exceeds the walk profile (a snapshot catch-up on
+            // the first moving frame kicked the first stride into a trot/run swing with pumping arms); the smoothed
+            // speed then climbs to the real one within ~0.2 s.
+            if (!hasGaitSpeed) { gaitSpeed = Math.Min(speed, profiles[Math.Min(1, profiles.Length - 1)].Speed); hasGaitSpeed = true; }
             else gaitSpeed += (speed - gaitSpeed) * (1 - Math.Exp(-deltaSeconds / SpeedSmoothingSeconds));
 
             int lower = 0;
