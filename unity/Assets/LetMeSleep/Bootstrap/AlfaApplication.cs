@@ -42,7 +42,7 @@ namespace LetMeSleep.Bootstrap
         private GameObject menuCharacters;
         private GameObject customizationBackdrop;
         private bool customizationBackdropWasActive;
-        private string playerName = "Jugador", joinCode, lastError = "";
+        private string playerName = "Jugador", joinCode, lastError = "", lastRoomError = "";
         private bool pendingOnline, createOnline, training, showingResults;
         private string closingError = "";
         private bool intentionalLeave;
@@ -114,12 +114,27 @@ namespace LetMeSleep.Bootstrap
             { pendingOnline = false; ShowOnlineError("No pudimos iniciar la conexión. " + connection.FailureCode); }
             if (lobby?.State == LobbyState.Failed && lobby.ErrorCode != lastError)
             { lastError = lobby.ErrorCode; ShowOnlineError("No pudimos entrar a la sala. " + lobby.ErrorCode); }
-            if (room != null && !string.IsNullOrEmpty(room.Error) && lastError != room.Error)
-            { lastError = room.Error; if (room.Current == null) { closingError = "No se pudo entrar: " + room.Error; ShowOnlineError(closingError); lobby.Leave(); } else PresentRoom(room.Current, "Los ajustes cambiaron. Volvé a marcar Listo."); }
+            // Tracked apart from lobby errors and re-armed when the room clears its error, so the same rejection is
+            // reported again the next time it happens (a second settings change under a Ready, for example).
+            string roomError = room?.Error ?? "";
+            if (roomError != lastRoomError) { lastRoomError = roomError; OnRoomRejected(roomError); }
             if (game != null && !training && gameNetwork != null) game.AutomaticTick = gameNetwork.Ready && game.IsHost;
             if (game?.LatestSnapshot != null && now >= hudAt && !showingResults)
             { hudAt = now + .1; PresentGame(game.LatestSnapshot); }
             ApplyPreviewColors(); TickAppearance(now); SyncMenuAudioContext();
+        }
+        private void OnRoomRejected(string errorCode)
+        {
+            switch (RoomRejectionPolicy.Evaluate(errorCode, room?.Current != null, out string message))
+            {
+                case RoomRejectionResponse.LeaveRoom:
+                    // Leaving through the lobby lets OnLobbyChanged tear the room down and show this reason.
+                    closingError = message; ShowOnlineError(message); lobby?.Leave();
+                    break;
+                case RoomRejectionResponse.ShowInRoom:
+                    PresentRoom(room.Current, message);
+                    break;
+            }
         }
         public void CreateRoom(string name) => BeginOnline(name, null);
         public void JoinRoom(string name, string code) => BeginOnline(name, code);

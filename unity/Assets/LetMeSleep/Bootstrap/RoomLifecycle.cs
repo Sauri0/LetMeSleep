@@ -1,4 +1,5 @@
 using System;
+using LetMeSleep.Core;
 using LetMeSleep.Online;
 
 namespace LetMeSleep.Bootstrap
@@ -36,6 +37,57 @@ namespace LetMeSleep.Bootstrap
             => pendingOnline || lobby == LobbyState.Connected ? OnlineEntryDecision.IgnoreDuplicate
                 : lobby == LobbyState.Leaving ? OnlineEntryDecision.WaitForPreviousRoom
                 : OnlineEntryDecision.Proceed;
+    }
+
+    public enum RoomRejectionResponse { Ignore, ShowInRoom, LeaveRoom }
+
+    public static class RoomRejectionPolicy
+    {
+        public const string RulesChanged = "Los ajustes cambiaron. Volvé a marcar Listo.";
+
+        /// <summary>
+        /// How a guest answers a room error (OnlineRoomCoordinator.Error: a RoomError the host rejected with, or
+        /// RoomHandshakeTimedOut). Before the first view the guest never got in, so it leaves with the reason; the
+        /// raw code stays in the text because IncompatibleVersion selects its own screen. Inside the room only
+        /// InvalidRules means the settings changed under a Ready; losing the place (Full) or the room (Closed)
+        /// leaves with that reason, and a phase race is corrected by the next view without bothering the player.
+        /// </summary>
+        public static RoomRejectionResponse Evaluate(string errorCode, bool hasRoomView, out string message)
+        {
+            message = "";
+            if (string.IsNullOrEmpty(errorCode)) return RoomRejectionResponse.Ignore;
+            if (!hasRoomView)
+            {
+                message = "No se pudo entrar: " + (errorCode == nameof(RoomError.Full) ? "la sala está llena (Full)."
+                    : errorCode == nameof(RoomError.Closed) ? "la sala ya se cerró (Closed)."
+                    : errorCode == "RoomHandshakeTimedOut" ? "el anfitrión no respondió (RoomHandshakeTimedOut)."
+                    : errorCode);
+                return RoomRejectionResponse.LeaveRoom;
+            }
+            switch (errorCode)
+            {
+                case nameof(RoomError.InvalidRules):
+                    message = RulesChanged;
+                    return RoomRejectionResponse.ShowInRoom;
+                case nameof(RoomError.UnknownMember):
+                case nameof(RoomError.WrongPhase):
+                case nameof(RoomError.DuplicateMember):
+                    return RoomRejectionResponse.Ignore;
+                case nameof(RoomError.Full):
+                    message = "Perdiste tu lugar en la sala: se llenó mientras te reconectabas.";
+                    return RoomRejectionResponse.LeaveRoom;
+                case nameof(RoomError.Closed):
+                    message = "La sala se cerró.";
+                    return RoomRejectionResponse.LeaveRoom;
+                case nameof(RoomError.IncompatibleVersion):
+                case nameof(RoomError.InvalidMember):
+                    message = "No se pudo volver a entrar a la sala (" + errorCode + ").";
+                    return RoomRejectionResponse.LeaveRoom;
+                default:
+                    message = "La sala no aceptó el cambio (" + errorCode + "). Probá de nuevo.";
+                    return RoomRejectionResponse.ShowInRoom;
+            }
+        }
     }
 
     public static class RoomTeardownPolicy
