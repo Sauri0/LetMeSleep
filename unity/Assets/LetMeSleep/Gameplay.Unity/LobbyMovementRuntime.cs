@@ -83,7 +83,8 @@ namespace LetMeSleep.Gameplay.Unity
         private readonly List<LobbySnapshot> history = new List<LobbySnapshot>();
         private UnityGameplayWorld world;
         private uint tick, sequence;
-        private float accumulator, publication, yaw, pitch = .15f, receivedAt, cameraLength;
+        private readonly FixedStepClock stepClock = new FixedStepClock(Dt);
+        private float publication, yaw, pitch = .15f, receivedAt, cameraLength;
         private Vector2 move;
         private bool focus = true;
         private const float Dt = 1f / 30;
@@ -93,7 +94,7 @@ namespace LetMeSleep.Gameplay.Unity
         {
             if (epoch == 0 || rosterRevision == 0 || !ValidId(localPlayerId)) throw new ArgumentException("Invalid lobby binding.");
             if (!world) Awake();
-            Unbind(); SessionEpoch = epoch; LocalPlayerId = localPlayerId; IsHost = isHost; tick = sequence = 0; accumulator = publication = 0; yaw = 0; pitch = .15f; cameraLength = 0; IsBound = true;
+            Unbind(); SessionEpoch = epoch; LocalPlayerId = localPlayerId; IsHost = isHost; tick = sequence = 0; stepClock.Reset(); publication = 0; yaw = 0; pitch = .15f; cameraLength = 0; IsBound = true;
             SetRoster(roster, rosterRevision);
             if (members.TryGetValue(LocalPlayerId, out var local)) yaw = local.Yaw;
             SetInputBlocked(false);
@@ -164,8 +165,9 @@ namespace LetMeSleep.Gameplay.Unity
             if (CaptureLocalInput) Poll();
             if (AutomaticTick)
             {
-                accumulator += Time.unscaledDeltaTime; int steps = 0;
-                while (accumulator >= Dt && steps++ < 8) { StepLocalAndHost(); accumulator -= Dt; }
+                // Bounded debt: a stall must not replay seconds of waiting-room movement in bursts.
+                int steps = stepClock.Advance(Time.unscaledDeltaTime, out _);
+                for (int step = 0; step < steps; step++) StepLocalAndHost();
             }
             RenderRemotes();
         }

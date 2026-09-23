@@ -66,7 +66,11 @@ namespace LetMeSleep.Gameplay.Unity
 #endif
         private readonly Dictionary<uint, BotController> bots = new Dictionary<uint, BotController>();
         private readonly ReplicaStateGate replicaGate = new ReplicaStateGate();
-        private float accumulator, yaw, pitch, sendAccumulator, snapshotAccumulator;
+        private float yaw, pitch, sendAccumulator, snapshotAccumulator;
+        // Bounded 30 Hz time debt: a stall pauses simulated time instead of fast-forwarding it for everyone.
+        private readonly FixedStepClock hostClock = new FixedStepClock();
+        private int droppedSinceReport;
+        private float nextDebtReport;
         private uint inputSequence, actionSequence, knownViewRevision;
         private bool biteNeedsRelease, wasAttached, focus = true, finishedSent;
         private bool controlsNeedRelease;
@@ -83,7 +87,7 @@ namespace LetMeSleep.Gameplay.Unity
         public void BeginRound(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster)
         {
             if (!World) Awake();
-            roundConfig = config; accumulator = sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
+            roundConfig = config; hostClock.Reset(); sendAccumulator = snapshotAccumulator = 0; inputSequence = actionSequence = knownViewRevision = 0; yaw = pitch = 0; cameraDistance = 0; finishedSent = false;
             LatestSnapshot = null; LocalPrivate = null; held = default;
             replicaGate.Reset(config);
             queuedActions.Clear(); bots.Clear(); localThrow = null; biteNeedsRelease = true; wasAttached = false; controlsNeedRelease = false; mosquitoLookReady = false;
@@ -123,16 +127,24 @@ namespace LetMeSleep.Gameplay.Unity
             if (CaptureLocalInput) PollInput();
             if (IsHost && AutomaticTick)
             {
-                accumulator += Time.unscaledDeltaTime;
-                int steps = 0;
-                while (accumulator >= 1f / 30 && steps++ < 8) { TickHost(); accumulator -= 1f / 30; }
-                // Retain time debt; do not silently shorten the round on a slow frame.
+                // Round length stays in ticks; debt beyond the clock's bound is dropped rather than replayed.
+                int steps = hostClock.Advance(Time.unscaledDeltaTime, out int dropped);
+                for (int step = 0; step < steps; step++) TickHost();
+                ReportDroppedTicks(dropped);
             }
             else if (!IsHost && CaptureLocalInput)
             {
                 sendAccumulator += Time.unscaledDeltaTime;
                 if (sendAccumulator >= 1f / 30) { sendAccumulator %= 1f / 30; SendLocal(); }
             }
+        }
+        private void ReportDroppedTicks(int dropped)
+        {
+            if (dropped <= 0) return;
+            droppedSinceReport += dropped;
+            if (Time.unscaledTime < nextDebtReport) return;
+            Debug.LogWarning("LMS_TICK_DEBT_DROPPED ticks=" + droppedSinceReport);
+            droppedSinceReport = 0; nextDebtReport = Time.unscaledTime + 5;
         }
         private void PollInput()
         {
