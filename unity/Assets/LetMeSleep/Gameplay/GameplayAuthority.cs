@@ -53,6 +53,7 @@ namespace LetMeSleep.Gameplay
             internal SurfaceAttachment? Surface;
             internal Float3 SurfaceNormal, SurfaceForward;
             internal int SurfaceTransitionTicks, SurfaceApproachTicks;
+            internal int FallingTicks;
             internal BiteAttachment? Bite;
             internal StrikePlan Plan;
             internal StrikeState Strike;
@@ -412,7 +413,7 @@ namespace LetMeSleep.Gameplay
             var moved = a.Spawn.Role == PlayerRole.Human ? world.MoveHuman(query) : world.MoveMosquito(query);
             a.Position = moved.Position; a.Velocity = moved.Velocity; a.Grounded = moved.Grounded; a.Crouch = moved.CrouchFraction;
             a.Motion += (a.Position - old).Length / (a.Spawn.Role == PlayerRole.Human ? 1.2f : .3f); a.PoseRevision++;
-            if (a.State == LifeState.Falling && a.Grounded)
+            if (a.State == LifeState.Falling && (a.Grounded || WedgedFall(a)))
             {
                 a.Recovery = config.Balance.RecoveryBaseSeconds; a.Velocity = default;
                 SetState(a, a.Spawn.Role == PlayerRole.Human ? LifeState.Fainted : LifeState.Stunned); Emit(GameplayEventKind.RecoveryStarted, a);
@@ -624,13 +625,18 @@ namespace LetMeSleep.Gameplay
             }
         }
         private void EmitDoor(Door door, uint source) => events.Add(new GameplayEvent(config.SessionEpoch, config.RoundId, ++eventId, tick, GameplayEventKind.DoorChanged, source, 0, door.Revision, door.Definition.HingePosition, Float3.Up, door.Snapshot));
+        // A fall that never reports ground (e.g. a V-shaped crease of steep faces) must not incapacitate forever:
+        // after 3 s of falling while barely moving the actor lands where it is and starts the normal recovery.
+        private const int WedgedFallTicks = 90;
+        private const float WedgedSpeedSquared = .25f;
+        private static bool WedgedFall(Actor a) => ++a.FallingTicks >= WedgedFallTicks && a.Velocity.LengthSquared < WedgedSpeedSquared;
         private static bool CanAct(Actor a) => a.State != LifeState.Eliminated && a.State != LifeState.Falling && a.State != LifeState.Stunned && a.State != LifeState.Fainted && a.State != LifeState.Recovering;
         private static void ClearHeld(Actor a) { a.Input = default; a.Jump = false; a.BiteArmed = false; a.ThrowCharge.Cancel(); a.SwapOffer = null; }
         private static void SetState(Actor a, LifeState state)
         {
             if (a.State == state) return;
             bool wasControllable = CanAct(a);
-            a.State = state; a.Revision++; a.SurfaceApproachTicks = 0;
+            a.State = state; a.Revision++; a.SurfaceApproachTicks = 0; a.FallingTicks = 0;
             if (a.Spawn.Role == PlayerRole.Mosquito && state == LifeState.Recovering)
                 a.MosquitoBody = Rotation.Look(MathEx.Aim(a.Yaw, 0), Float3.Up);
             if (!CanAct(a) || !wasControllable) ClearHeld(a);

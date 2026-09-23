@@ -13,13 +13,14 @@ namespace LetMeSleep.Tests.EditMode
         {
             public bool Available = true, Work = true, Respawn = true, Valid = true, FreeRecovery = true, Bite = false, Surface = false;
             public bool Assignable = true;
+            public bool WedgedMosquito;
             public Float3? HumanPosition;
             public uint Hit = 2;
             public int MosquitoMoves, StrikePlans, StrikeSweeps;
             public void BeginRound(IReadOnlyList<SpawnActor> a, IReadOnlyList<DoorDefinition> d) { }
             public void SynchronizeActors(IReadOnlyList<ActorSnapshot> a) { }
             public MotorResult MoveHuman(in MotorQuery q) => new MotorResult(HumanPosition ?? q.Position, default, true, Float3.Up, 0);
-            public MotorResult MoveMosquito(in MotorQuery q) { MosquitoMoves++; return new MotorResult(q.Position, default, true, Float3.Up, 0); }
+            public MotorResult MoveMosquito(in MotorQuery q) { MosquitoMoves++; return new MotorResult(q.Position, default, !WedgedMosquito, Float3.Up, 0); }
             public bool TrySurface(in SurfaceQuery q, out SurfaceContact c) { c = new SurfaceContact(new SurfaceAttachment(1, 1, Float3.Zero, -Float3.Forward, Float3.Up), Float3.Zero, -Float3.Forward); return Surface; }
             public bool ResolveSurface(in SurfaceAttachment a, out SurfaceContact c) { c = new SurfaceContact(a, Float3.Zero, -Float3.Forward); return Surface; }
             public bool TryBiteContact(in BiteQuery q, out BiteContact c) { c = new BiteContact(new BiteAttachment(1, 1, Float3.Zero, Float3.Up, 1), Float3.Forward * .3f, Float3.Up); return Bite; }
@@ -429,6 +430,18 @@ namespace LetMeSleep.Tests.EditMode
             a.SetActorConnected(4, false); Assert.That(a.CapturePrivate(4).HelpTargetId, Is.Zero);
             Step(a, 35); Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
             Assert.That(a.DrainEvents().Count(e => e.Kind == GameplayEventKind.HelpEnded && e.SourceActorId == 4), Is.EqualTo(1));
+        }
+        [Test] public void WedgedFallLandsAndRecoversInsteadOfIncapacitatingForever()
+        {
+            var w = new World { WedgedMosquito = true }; var a = Start(w, GameModes.Blood); Strike(a);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Falling), "Knocked down, the motor never reports ground.");
+            Step(a, 80);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Falling), "Short falls keep waiting for ground.");
+            Step(a, 20);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Stunned));
+            Assert.That(a.DrainEvents().Count(e => e.Kind == GameplayEventKind.RecoveryStarted && e.SourceActorId == 2), Is.EqualTo(1));
+            Step(a, 60);
+            Assert.That(Actor(a).LifeState, Is.EqualTo(LifeState.Flying), "The normal recovery completes.");
         }
         // 30 s, cadence 300, deadline 240: three task slots per human.
         [Test] public void DepartedHumanNoLongerCountsTowardTheCollectiveGoal()
