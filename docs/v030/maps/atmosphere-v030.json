@@ -1,0 +1,1500 @@
+{
+  "schema_version": 1,
+  "receiptDirectory": "N:/LetMeSleep/Validation/V030/Maps/receipts",
+  "graphics": {
+    "customFogStripping": true,
+    "keepLinear": true,
+    "keepExp": true,
+    "keepExp2": true
+  },
+  "menuCamera": {
+    "renderPostProcessing": true,
+    "antialiasing": "SubpixelMorphologicalAntiAliasing",
+    "antialiasingQuality": "High",
+    "dithering": true
+  },
+  "profiles": [
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/AlfaGlobalVolume.asset",
+      "tonemapping": "Neutral",
+      "bloom": {
+        "threshold": 1.0,
+        "intensity": 0.8,
+        "scatter": 0.7,
+        "tint": [1, 0.96, 0.9],
+        "highQuality": true
+      },
+      "color": {
+        "postExposure": -0.15,
+        "contrast": 10,
+        "saturation": 10,
+        "colorFilter": [1, 1, 1]
+      },
+      "shadows": [0.8, 0.92, 1.3, -0.05],
+      "midtones": [1, 1, 1, 0],
+      "highlights": [1.08, 1.0, 0.9, 0],
+      "vignette": {
+        "intensity": 0.28,
+        "smoothness": 0.45,
+        "color": [0.03, 0.05, 0.12]
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-isla-del-laguito-v2-Volume.asset",
+      "tonemapping": "Neutral",
+      "bloom": {
+        "threshold": 1.1,
+        "intensity": 0.3,
+        "scatter": 0.65,
+        "tint": [1, 1, 1],
+        "highQuality": true
+      },
+      "color": {
+        "postExposure": 0.1,
+        "contrast": 10,
+        "saturation": 20,
+        "colorFilter": [1, 1, 1]
+      },
+      "shadows": [0.9, 0.97, 1.14, 0],
+      "midtones": [1, 1, 1, 0],
+      "highlights": [1.05, 1.02, 0.95, 0],
+      "vignette": {
+        "intensity": 0.18,
+        "smoothness": 0.4,
+        "color": [0.05, 0.08, 0.15]
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-casa-del-patio-v1-Volume.asset",
+      "tonemapping": "Neutral",
+      "bloom": {
+        "threshold": 1.0,
+        "intensity": 0.8,
+        "scatter": 0.7,
+        "tint": [1, 0.96, 0.9],
+        "highQuality": true
+      },
+      "color": {
+        "postExposure": 0.0,
+        "contrast": 12,
+        "saturation": 14,
+        "colorFilter": [1, 1, 1]
+      },
+      "shadows": [0.86, 0.95, 1.2, -0.02],
+      "midtones": [1, 1, 1, 0],
+      "highlights": [1.1, 1.0, 0.88, 0],
+      "vignette": {
+        "intensity": 0.24,
+        "smoothness": 0.45,
+        "color": [0.02, 0.03, 0.09]
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-campamento-pinar-v2-Volume.asset",
+      "tonemapping": "Neutral",
+      "bloom": {
+        "threshold": 1.0,
+        "intensity": 0.8,
+        "scatter": 0.7,
+        "tint": [1, 0.96, 0.9],
+        "highQuality": true
+      },
+      "color": {
+        "postExposure": 0.0,
+        "contrast": 12,
+        "saturation": 14,
+        "colorFilter": [1, 1, 1]
+      },
+      "shadows": [0.86, 0.95, 1.2, -0.02],
+      "midtones": [1, 1, 1, 0],
+      "highlights": [1.1, 1.0, 0.88, 0],
+      "vignette": {
+        "intensity": 0.24,
+        "smoothness": 0.45,
+        "color": [0.02, 0.03, 0.09]
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-yate-a-la-deriva-v3-Volume.asset",
+      "tonemapping": "Neutral",
+      "bloom": {
+        "threshold": 1.1,
+        "intensity": 0.3,
+        "scatter": 0.65,
+        "tint": [1, 1, 1],
+        "highQuality": true
+      },
+      "color": {
+        "postExposure": 0.1,
+        "contrast": 10,
+        "saturation": 20,
+        "colorFilter": [1, 1, 1]
+      },
+      "shadows": [0.9, 0.97, 1.14, 0],
+      "midtones": [1, 1, 1, 0],
+      "highlights": [1.05, 1.02, 0.95, 0],
+      "vignette": {
+        "intensity": 0.18,
+        "smoothness": 0.4,
+        "color": [0.05, 0.08, 0.15]
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-puerto-del-faro-v1-Volume.asset",
+      "tonemapping": "Neutral",
+      "bloom": {
+        "threshold": 1.0,
+        "intensity": 0.8,
+        "scatter": 0.7,
+        "tint": [1, 0.96, 0.9],
+        "highQuality": true
+      },
+      "color": {
+        "postExposure": 0.0,
+        "contrast": 12,
+        "saturation": 14,
+        "colorFilter": [1, 1, 1]
+      },
+      "shadows": [0.86, 0.95, 1.2, -0.02],
+      "midtones": [1, 1, 1, 0],
+      "highlights": [1.1, 1.0, 0.88, 0],
+      "vignette": {
+        "intensity": 0.24,
+        "smoothness": 0.45,
+        "color": [0.02, 0.03, 0.09]
+      }
+    }
+  ],
+  "maps": [
+    {
+      "mapId": "hf-isla-del-laguito-v2",
+      "note": "Dia de vacaciones saturado (A25 A, ENV-04 Lake & Dock): cielo #3F8FE0 a #8CC4F0, nubes blancas estilizadas, bruma lejana >= 60 m.",
+      "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-isla-del-laguito-v2-Volume.asset",
+      "volumeWeight": 1,
+      "cameraFarPlane": 260,
+      "sky": {
+        "horizon": [0.62, 0.82, 0.96],
+        "zenith": [0.15, 0.46, 0.88],
+        "exponent": 0.65,
+        "glow": [0.45, 0.4, 0.3],
+        "glowTightness": 24,
+        "disc": [1.0, 0.97, 0.9],
+        "discSize": 1.6,
+        "starDensity": 0,
+        "haloRadius": 3,
+        "haloAlpha": 0.3,
+        "halo": [1.0, 0.98, 0.92],
+        "clouds": {
+          "coverage": 0.36,
+          "scale": 2.2,
+          "speed": 0.004,
+          "opacity": 0.96,
+          "color": [1, 1, 1],
+          "shade": [0.86, 0.9, 0.97]
+        }
+      },
+      "sun": {
+        "color": [1.0, 0.95, 0.84],
+        "intensity": 1.25
+      },
+      "ambient": {
+        "sky": [0.58, 0.72, 0.9],
+        "equator": [0.56, 0.62, 0.62],
+        "ground": [0.36, 0.34, 0.26],
+        "intensity": 1,
+        "reflection": 0.6
+      },
+      "fog": {
+        "enabled": true,
+        "mode": "Linear",
+        "start": 65,
+        "end": 250,
+        "density": 0.01
+      },
+      "lightRules": [],
+      "materials": [
+        {
+          "index": 4,
+          "name": "ISLA_Grass",
+          "saturation": 1.1,
+          "hueShift": 6
+        },
+        {
+          "index": 5,
+          "name": "ISLA_GrassDark",
+          "saturation": 1.1,
+          "hueShift": 6
+        },
+        {
+          "index": 6,
+          "name": "ISLA_GrassLight",
+          "saturation": 1.1,
+          "hueShift": 6
+        },
+        {
+          "index": 7,
+          "name": "ISLA_Lake",
+          "hueShift": 8
+        },
+        {
+          "index": 8,
+          "name": "ISLA_LakeDeep",
+          "hueShift": 8
+        },
+        {
+          "index": 9,
+          "name": "ISLA_LakeLight",
+          "hueShift": 8
+        },
+        {
+          "index": 10,
+          "name": "ISLA_Lamp",
+          "emission": [1.4, 0.85, 0.35]
+        },
+        {
+          "index": 13,
+          "name": "ISLA_Ocean",
+          "hueShift": 6
+        },
+        {
+          "index": 14,
+          "name": "ISLA_OceanDeep",
+          "hueShift": 6
+        },
+        {
+          "index": 15,
+          "name": "ISLA_OceanLight",
+          "hueShift": 6
+        },
+        {
+          "index": 16,
+          "name": "ISLA_OceanShallow",
+          "hueShift": 6
+        }
+      ]
+    },
+    {
+      "mapId": "hf-casa-del-patio-v1",
+      "note": "Noche azul marino (A23 C, ENV-03): exterior oscuro con charcos de luz calida, ventanas HDR 1.8 que desde adentro muestran la noche, chimenea de 3 capas, claroscuro interior.",
+      "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-casa-del-patio-v1-Volume.asset",
+      "volumeWeight": 1,
+      "cameraFarPlane": 0,
+      "sky": {
+        "horizon": [0.13, 0.19, 0.38],
+        "zenith": [0.055, 0.09, 0.24],
+        "ground": [0.07, 0.09, 0.16],
+        "groundBlend": 0.5,
+        "exponent": 0.7,
+        "glow": [0, 0, 0],
+        "glowTightness": 90,
+        "disc": [1.25, 1.19, 1.03],
+        "discSize": 1.6,
+        "starDensity": 0.28,
+        "star": [1.2, 1.2, 1.3],
+        "celestialDirection": [-0.35, 0.5, 0.8],
+        "moonPhase": 0.5,
+        "halo": [0.62, 0.7, 0.95],
+        "haloAlpha": 0.22,
+        "haloRadius": 3
+      },
+      "sun": {
+        "color": [0.6, 0.72, 1.0],
+        "intensity": 0.085,
+        "eulerDegrees": [35, 20, 0]
+      },
+      "ambient": {
+        "sky": [0.0936, 0.1296, 0.2448],
+        "equator": [0.072, 0.0864, 0.144],
+        "ground": [0.0432, 0.0396, 0.054],
+        "intensity": 1,
+        "reflection": 0.4
+      },
+      "fog": {
+        "enabled": true,
+        "mode": "Linear",
+        "start": 18,
+        "end": 90,
+        "density": 0.01
+      },
+      "lightRules": [
+        {
+          "match": "Environment/CASA_Porch_Lamp_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 3.6,
+          "range": 7.0,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, -0.01, 0.21]
+          }
+        },
+        {
+          "match": "Environment/CASA_Rear_Lamp_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 3.6,
+          "range": 7.0,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, -0.01, 0.21]
+          }
+        },
+        {
+          "match": "Environment/CASA_Shed_Lamp_Light_Anchor",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 3.6,
+          "range": 7.0,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, -0.01, 0.21]
+          }
+        },
+        {
+          "match": "Environment/CASA_Path_Lantern_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 4.0,
+          "range": 7.5,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, -0.01, 0.21]
+          }
+        },
+        {
+          "match": "Environment/CASA_Interior_*",
+          "color": [1.0, 0.72, 0.45],
+          "intensity": 1.5,
+          "range": 4.5,
+          "shadows": "None",
+          "offset": [0, 0.0, 0]
+        },
+        {
+          "match": "Environment/CASA_Interior_Living_Anchor",
+          "shadows": "Soft",
+          "shadowTier": 1
+        },
+        {
+          "match": "Environment/CASA_Interior_Foyer_Anchor",
+          "shadows": "Soft",
+          "shadowTier": 1
+        },
+        {
+          "match": "Environment/CASA_Fireplace_Practical_Anchor",
+          "color": [1.0, 0.6039, 0.2902],
+          "intensity": 3.2,
+          "range": 7.0,
+          "flicker": 0.3,
+          "offset": [0, 0.1, 0.3],
+          "flame": {
+            "height": 0.62,
+            "offset": [-0.07, -0.38, -0.28]
+          }
+        },
+        {
+          "match": "Environment/CASA_Bedside_*",
+          "color": [1.0, 0.64, 0.32],
+          "intensity": 2.4,
+          "range": 5.0,
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, 0.04, 0]
+          }
+        }
+      ],
+      "materials": [
+        {
+          "index": 8,
+          "name": "CASA_Grass",
+          "saturation": 1.1,
+          "value": 0.8,
+          "hueShift": 14
+        },
+        {
+          "index": 9,
+          "name": "CASA_GrassLight",
+          "saturation": 1.1,
+          "value": 0.8,
+          "hueShift": 14
+        },
+        {
+          "index": 10,
+          "name": "CASA_LampGlass",
+          "emission": [3.07, 0.56, 0.06]
+        },
+        {
+          "index": 14,
+          "name": "CASA_Pine",
+          "saturation": 1.1
+        },
+        {
+          "index": 15,
+          "name": "CASA_PineLight",
+          "saturation": 1.15
+        },
+        {
+          "index": 24,
+          "name": "CASA_Stone",
+          "value": 0.78
+        },
+        {
+          "index": 25,
+          "name": "CASA_StoneLight",
+          "value": 0.78
+        },
+        {
+          "index": 27,
+          "name": "CASA_WindowAmber",
+          "saturation": 1.15,
+          "value": 0.6,
+          "emission": [1.6, 0.6, 0.1]
+        }
+      ],
+      "renderers": [
+        {
+          "match": "Environment/CASA_Fire_FacetedFlame*",
+          "hide": true,
+          "expect": 4,
+          "note": "Yellow crystals replaced by the 3-layer flame."
+        },
+        {
+          "match": "Environment/CASA_Pendant_*_Shade",
+          "castShadowsOff": true,
+          "expect": 9,
+          "note": "Shades cast black wedges on the ceiling."
+        },
+        {
+          "match": "Environment/CASA_Pendant_*_Bulb",
+          "castShadowsOff": true,
+          "note": "Bulb sits between the light and the ceiling."
+        },
+        {
+          "match": "Environment/CASA_Bedroom_*_BedsideLamp_Shade",
+          "swapFrom": "Color_011",
+          "swapTo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_LampShadeGlow.mat",
+          "castShadowsOff": true,
+          "expect": 2,
+          "note": "Bedroom table lamp shade glows #FFB347."
+        },
+        {
+          "match": "Environment/CASA_Garden_Lamp_Post*",
+          "ignoreLocalLights": true,
+          "note": "No hot vertical stripe on garden lamp posts."
+        }
+      ],
+      "materialSwaps": [
+        {
+          "from": "Color_027",
+          "to": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_NightWindow_Casa.mat",
+          "note": "CASA_WindowAmber panes."
+        }
+      ],
+      "interiorVolumes": [
+        {
+          "center": [0, 2.98, 0],
+          "size": [13.48, 5.96, 9.52],
+          "note": "House interior (inner wall faces)."
+        }
+      ],
+      "characterRim": {
+        "color": [1.0, 0.4157, 0.4157],
+        "intensity": 1.2
+      }
+    },
+    {
+      "mapId": "hf-campamento-pinar-v2",
+      "note": "Bosque azul oscuro con fogon central de 3 capas (A27 A, ENV-04 Campsite): faroles con halo y charcos de luz, exterior ~40% mas oscuro.",
+      "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-campamento-pinar-v2-Volume.asset",
+      "volumeWeight": 1,
+      "cameraFarPlane": 0,
+      "sky": {
+        "horizon": [0.12, 0.2, 0.38],
+        "zenith": [0.06, 0.1, 0.25],
+        "ground": [0.07, 0.11, 0.18],
+        "groundBlend": 0.5,
+        "exponent": 0.7,
+        "glow": [0, 0, 0],
+        "glowTightness": 90,
+        "disc": [1.25, 1.19, 1.03],
+        "discSize": 1.6,
+        "starDensity": 0.32,
+        "star": [1.2, 1.2, 1.3],
+        "celestialDirection": [0.3, 0.42, 0.86],
+        "moonPhase": 0.5,
+        "halo": [0.62, 0.7, 0.95],
+        "haloAlpha": 0.22,
+        "haloRadius": 3
+      },
+      "sun": {
+        "color": [0.6, 0.72, 1.0],
+        "intensity": 0.07,
+        "eulerDegrees": [35, -15, 0]
+      },
+      "ambient": {
+        "sky": [0.0672, 0.1008, 0.1904],
+        "equator": [0.0504, 0.0672, 0.112],
+        "ground": [0.028, 0.0336, 0.0448],
+        "intensity": 1,
+        "reflection": 0.4
+      },
+      "fog": {
+        "enabled": true,
+        "mode": "Linear",
+        "start": 12,
+        "end": 78,
+        "density": 0.01
+      },
+      "lightRules": [
+        {
+          "match": "Environment/LGT_Fire",
+          "color": [1.0, 0.6039, 0.2902],
+          "intensity": 3.4,
+          "range": 8,
+          "shadows": "Soft",
+          "shadowTier": 1,
+          "flicker": 0.32,
+          "offset": [0, 0.35, 0],
+          "flame": {
+            "height": 1.35,
+            "offset": [0, -1.1, 0]
+          }
+        },
+        {
+          "match": "Environment/LGT_Fire_Outer",
+          "color": [1.0, 0.6039, 0.2902],
+          "intensity": 2.0,
+          "range": 12,
+          "shadows": "None",
+          "flicker": 0.22
+        },
+        {
+          "match": "Environment/LGT_Lantern_*",
+          "color": [1.0, 0.64, 0.3],
+          "intensity": 6.0,
+          "range": 8,
+          "shadows": "None",
+          "offset": [0.25, -0.12, 0],
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35
+          }
+        },
+        {
+          "match": "Environment/LGT_Jetty_Lantern",
+          "color": [1.0, 0.64, 0.3],
+          "intensity": 6.0,
+          "range": 8,
+          "shadows": "None",
+          "offset": [0, 0.05, 0],
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35
+          }
+        },
+        {
+          "match": "Environment/LGT_Lookout_Ambient",
+          "color": [0.5, 0.62, 0.95],
+          "intensity": 1.2,
+          "range": 6
+        },
+        {
+          "match": "Environment/LGT_CAMP_Shelter",
+          "color": [1.0, 0.66, 0.34],
+          "intensity": 3.0,
+          "range": 7,
+          "shadows": "Soft",
+          "shadowTier": 0
+        },
+        {
+          "match": "Environment/LGT_CAMP_Washroom",
+          "intensity": 1.5,
+          "range": 3,
+          "shadows": "None"
+        },
+        {
+          "match": "Environment/LGT_CAMP_Tent_*",
+          "color": [1.0, 0.64, 0.31],
+          "intensity": 1.4,
+          "range": 3.2,
+          "shadows": "None",
+          "halo": {
+            "size": 0.4,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.25,
+            "offset": [0, -0.1, 0]
+          }
+        }
+      ],
+      "materials": [
+        {
+          "index": 4,
+          "name": "CAMP_Mat_Dirt",
+          "saturation": 0.6,
+          "value": 0.74
+        },
+        {
+          "index": 5,
+          "name": "CAMP_Mat_DirtDark",
+          "saturation": 0.6,
+          "value": 0.74
+        },
+        {
+          "index": 6,
+          "name": "CAMP_Mat_Ember",
+          "emission": [1.2, 0.22, 0.03]
+        },
+        {
+          "index": 8,
+          "name": "CAMP_Mat_Grass",
+          "saturation": 1.1,
+          "value": 0.64,
+          "hueShift": 0
+        },
+        {
+          "index": 9,
+          "name": "CAMP_Mat_GrassDark",
+          "saturation": 1.1,
+          "value": 0.64,
+          "hueShift": 0
+        },
+        {
+          "index": 12,
+          "name": "CAMP_Mat_Lake",
+          "saturation": 1.2
+        },
+        {
+          "index": 13,
+          "name": "CAMP_Mat_LanternGlass",
+          "emission": [3.07, 0.56, 0.06]
+        },
+        {
+          "index": 16,
+          "name": "CAMP_Mat_Pine",
+          "saturation": 1.3
+        },
+        {
+          "index": 17,
+          "name": "CAMP_Mat_PineDark",
+          "saturation": 1.3
+        },
+        {
+          "index": 18,
+          "name": "CAMP_Mat_PineLight",
+          "saturation": 1.3
+        },
+        {
+          "index": 20,
+          "name": "CAMP_Mat_Stone",
+          "value": 0.72
+        },
+        {
+          "index": 23,
+          "name": "CAMP_Mat_WaterDeep",
+          "saturation": 1.2
+        },
+        {
+          "index": 24,
+          "name": "CAMP_Mat_WaterMid",
+          "saturation": 1.2
+        },
+        {
+          "index": 25,
+          "name": "CAMP_Mat_WaterTurq",
+          "saturation": 1.2
+        },
+        {
+          "index": 28,
+          "name": "CAMP_Mat_WoodLight",
+          "value": 0.82,
+          "saturation": 1.1
+        },
+        {
+          "index": 32,
+          "name": "CAMP_Prod_FlameAmber",
+          "emission": [2.6, 0.75, 0.06]
+        },
+        {
+          "index": 33,
+          "name": "CAMP_Prod_FlameGold",
+          "emission": [2.4, 0.95, 0.12]
+        },
+        {
+          "index": 34,
+          "name": "CAMP_Prod_FlameHeart",
+          "emission": [2.6, 1.5, 0.35]
+        },
+        {
+          "index": 35,
+          "name": "CAMP_Prod_ForestSoil_0",
+          "saturation": 1.5
+        },
+        {
+          "index": 36,
+          "name": "CAMP_Prod_ForestSoil_1",
+          "saturation": 1.5
+        },
+        {
+          "index": 37,
+          "name": "CAMP_Prod_ForestSoil_2",
+          "saturation": 1.5
+        }
+      ],
+      "renderers": [
+        {
+          "match": "Environment/CAMP_Fire_Flame_0*",
+          "hide": true,
+          "expect": 3,
+          "note": "Single yellow cone replaced by the 3-layer flame."
+        },
+        {
+          "match": "Environment/CAMP_Fire_Log_Vert",
+          "hide": true,
+          "expect": 1,
+          "note": "Dark block crossing the flame (collider kept)."
+        },
+        {
+          "match": "Environment/CAMP_Lantern_*_Box",
+          "hide": true,
+          "note": "Opaque box enclosing the lantern glass (collider kept)."
+        },
+        {
+          "match": "Environment/CAMP_Lantern_*_Glass",
+          "hide": true,
+          "note": "Outer glass hides the caged warm glass of the production lantern."
+        },
+        {
+          "match": "Environment/CAMP_Jetty_Lantern_Glass",
+          "hide": true,
+          "expect": 1,
+          "note": "Same, jetty lantern."
+        },
+        {
+          "match": "Environment/CAMP_Lantern_*_Post",
+          "ignoreLocalLights": true,
+          "note": "No hot vertical stripe: posts take moon/ambient only."
+        },
+        {
+          "match": "Environment/CAMP_Jetty_Lantern_Post",
+          "ignoreLocalLights": true,
+          "expect": 1
+        }
+      ],
+      "characterRim": {
+        "color": [1.0, 0.4157, 0.4157],
+        "intensity": 1.2
+      }
+    },
+    {
+      "mapId": "hf-yate-a-la-deriva-v3",
+      "note": "Dia vacacional saturado (A28 A, ENV-04): cielo #3F8FE0 a #8CC4F0, nubes, sombras azuladas en blancos, techo de cocina blanco calido.",
+      "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-yate-a-la-deriva-v3-Volume.asset",
+      "volumeWeight": 1,
+      "cameraFarPlane": 280,
+      "sky": {
+        "horizon": [0.62, 0.82, 0.96],
+        "zenith": [0.15, 0.46, 0.88],
+        "exponent": 0.65,
+        "glow": [0.4, 0.36, 0.28],
+        "glowTightness": 24,
+        "disc": [1.0, 0.97, 0.9],
+        "discSize": 1.6,
+        "starDensity": 0,
+        "haloRadius": 3,
+        "haloAlpha": 0.3,
+        "halo": [1.0, 0.98, 0.92],
+        "clouds": {
+          "coverage": 0.36,
+          "scale": 2.2,
+          "speed": 0.004,
+          "opacity": 0.96,
+          "color": [1, 1, 1],
+          "shade": [0.86, 0.9, 0.97]
+        }
+      },
+      "sun": {
+        "color": [1.0, 0.93, 0.8],
+        "intensity": 1.2
+      },
+      "ambient": {
+        "sky": [0.52, 0.68, 0.95],
+        "equator": [0.56, 0.68, 0.9],
+        "ground": [0.92, 0.86, 0.76],
+        "intensity": 1,
+        "reflection": 0.6
+      },
+      "fog": {
+        "enabled": true,
+        "mode": "Linear",
+        "start": 70,
+        "end": 270,
+        "density": 0.01
+      },
+      "lightRules": [
+        {
+          "match": "Environment/YATE_Anchor_Practical_*",
+          "color": [1.0, 0.82, 0.6],
+          "intensity": 1.3,
+          "range": 5.5,
+          "shadows": "None",
+          "offset": [0, -0.12, 0]
+        },
+        {
+          "match": "Environment/YATE_Anchor_Practical_SalonAft",
+          "intensity": 2.2,
+          "shadows": "Soft",
+          "shadowTier": 1
+        },
+        {
+          "match": "Environment/YATE_Anchor_Practical_Galley",
+          "intensity": 2.4,
+          "shadows": "Soft",
+          "shadowTier": 1
+        }
+      ],
+      "materials": [
+        {
+          "index": 9,
+          "name": "YATE_OceanPatch_00",
+          "saturation": 1.1,
+          "hueShift": 10
+        },
+        {
+          "index": 10,
+          "name": "YATE_OceanPatch_01",
+          "saturation": 1.1,
+          "hueShift": 10
+        },
+        {
+          "index": 11,
+          "name": "YATE_OceanPatch_02",
+          "saturation": 1.1,
+          "hueShift": 10
+        },
+        {
+          "index": 12,
+          "name": "YATE_OceanPatch_03",
+          "saturation": 1.1,
+          "hueShift": 10
+        },
+        {
+          "index": 13,
+          "name": "YATE_OceanPatch_04",
+          "saturation": 1.1,
+          "hueShift": 10
+        },
+        {
+          "index": 14,
+          "name": "YATE_OceanPatch_05",
+          "saturation": 1.1,
+          "hueShift": 10
+        },
+        {
+          "index": 17,
+          "name": "YATE_Teak",
+          "saturation": 1.1
+        },
+        {
+          "index": 18,
+          "name": "YATE_TeakDark",
+          "saturation": 1.1
+        },
+        {
+          "index": 19,
+          "name": "YATE_TeakLight",
+          "saturation": 1.1
+        }
+      ],
+      "renderers": [
+        {
+          "match": "Environment/YATE_CeilingFixture_*",
+          "castShadowsOff": true,
+          "note": "Fixtures sit just above the practical lights."
+        }
+      ]
+    },
+    {
+      "mapId": "hf-puerto-del-faro-v1",
+      "note": "Noche azul marino (direccion de arte #7: cielo #13265D a #1A2A6A, niebla oscura #2A3570; reemplaza el crepusculo lavanda de A24 A conservando luces calidas), faro #FFD27A HDR 6 con halo.",
+      "profile": "Assets/LetMeSleep/Presentation/Generated/Profiles/hf-puerto-del-faro-v1-Volume.asset",
+      "volumeWeight": 1,
+      "cameraFarPlane": 125,
+      "sky": {
+        "horizon": [0.165, 0.208, 0.439],
+        "zenith": [0.075, 0.14, 0.36],
+        "ground": [0.08, 0.1, 0.2],
+        "groundBlend": 0.5,
+        "exponent": 0.6,
+        "glow": [0, 0, 0],
+        "glowTightness": 8,
+        "disc": [1.25, 1.19, 1.03],
+        "discSize": 1.6,
+        "moonPhase": 0.5,
+        "halo": [0.62, 0.7, 0.95],
+        "haloAlpha": 0.22,
+        "haloRadius": 3,
+        "starDensity": 0.3,
+        "star": [1.2, 1.2, 1.3],
+        "celestialDirection": [0.3, 0.45, 0.84]
+      },
+      "sun": {
+        "color": [0.62, 0.72, 1.0],
+        "intensity": 0.06,
+        "eulerDegrees": [32, 200, 0]
+      },
+      "ambient": {
+        "sky": [0.084, 0.108, 0.216],
+        "equator": [0.066, 0.072, 0.132],
+        "ground": [0.036, 0.036, 0.054],
+        "intensity": 1,
+        "reflection": 0.4
+      },
+      "fog": {
+        "enabled": true,
+        "mode": "Linear",
+        "start": 30,
+        "end": 118,
+        "density": 0.01
+      },
+      "lightRules": [
+        {
+          "match": "Environment/Anchor_LGT_Pueblo_LighthouseLens",
+          "color": [1.0, 0.8235, 0.4784],
+          "intensity": 7.0,
+          "range": 18,
+          "shadows": "None",
+          "halo": {
+            "size": 3.6,
+            "color": [1.0, 0.8235, 0.4784],
+            "alpha": 0.45,
+            "offset": [0, -0.35, 0]
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 4.0,
+          "range": 7.5,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, 0.05, 0]
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_01_InteriorFill",
+          "color": [1.0, 0.72, 0.42],
+          "intensity": 2.2,
+          "range": 6.0,
+          "shadows": "Soft",
+          "shadowTier": 0,
+          "halo": {
+            "size": 0
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_02_InteriorFill",
+          "color": [1.0, 0.72, 0.42],
+          "intensity": 2.2,
+          "range": 6.0,
+          "shadows": "Soft",
+          "shadowTier": 0,
+          "halo": {
+            "size": 0
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_03_InteriorFill",
+          "color": [1.0, 0.72, 0.42],
+          "intensity": 2.2,
+          "range": 6.0,
+          "shadows": "Soft",
+          "shadowTier": 0,
+          "halo": {
+            "size": 0
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_01_BedsideLamp",
+          "color": [1.0, 0.62, 0.3],
+          "intensity": 2.2,
+          "range": 4.5
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_02_BedsideLamp",
+          "color": [1.0, 0.62, 0.3],
+          "intensity": 2.2,
+          "range": 4.5
+        },
+        {
+          "match": "Environment/Anchor_LGT_Cottage_03_BedsideLamp",
+          "color": [1.0, 0.62, 0.3],
+          "intensity": 2.2,
+          "range": 4.5
+        },
+        {
+          "match": "Environment/Anchor_LGT_Workshop_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 4.0,
+          "range": 7.5,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, 0.05, 0]
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Workshop_Interior",
+          "color": [1.0, 0.72, 0.42],
+          "intensity": 2.2,
+          "range": 6.0,
+          "shadows": "Soft",
+          "shadowTier": 0,
+          "halo": {
+            "size": 0
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_Workshop_BenchLamp",
+          "color": [1.0, 0.62, 0.3],
+          "intensity": 2.2,
+          "range": 4.5
+        },
+        {
+          "match": "Environment/Anchor_LGT_Pier_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 4.5,
+          "range": 8,
+          "shadows": "None",
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, 0.05, 0]
+          }
+        },
+        {
+          "match": "Environment/Anchor_LGT_PathLantern_*",
+          "color": [1.0, 0.62, 0.28],
+          "intensity": 4.2,
+          "range": 8,
+          "shadows": "None",
+          "offset": [0.12, -0.05, 0],
+          "halo": {
+            "size": 0.6,
+            "color": [1.0, 0.702, 0.2784],
+            "alpha": 0.35,
+            "offset": [0, 0.05, 0]
+          }
+        }
+      ],
+      "materials": [
+        {
+          "index": 0,
+          "name": "PDF05_Amber",
+          "emission": [3.07, 0.56, 0.06]
+        },
+        {
+          "index": 2,
+          "name": "PDF05_Cobble",
+          "value": 0.68
+        },
+        {
+          "index": 3,
+          "name": "PDF05_CobbleLight",
+          "value": 0.68
+        },
+        {
+          "index": 6,
+          "name": "PDF05_Grass",
+          "saturation": 1.35,
+          "value": 0.68
+        },
+        {
+          "index": 7,
+          "name": "PDF05_GrassLight",
+          "saturation": 1.35,
+          "value": 0.68
+        },
+        {
+          "index": 8,
+          "name": "PDF05_Ground",
+          "saturation": 1.3,
+          "value": 0.68
+        },
+        {
+          "index": 9,
+          "name": "PDF05_GroundLight",
+          "saturation": 1.3,
+          "value": 0.68
+        },
+        {
+          "index": 15,
+          "name": "PDF05_Ocean",
+          "hueShift": 8,
+          "value": 0.85
+        },
+        {
+          "index": 16,
+          "name": "PDF05_OceanBlue",
+          "hueShift": 8,
+          "value": 0.85
+        },
+        {
+          "index": 17,
+          "name": "PDF05_OceanLight",
+          "hueShift": 8,
+          "value": 0.85
+        },
+        {
+          "index": 18,
+          "name": "PDF05_OceanTeal",
+          "hueShift": 8,
+          "value": 0.85
+        },
+        {
+          "index": 19,
+          "name": "PDF05_Path",
+          "value": 0.68
+        },
+        {
+          "index": 21,
+          "name": "PDF05_Pine",
+          "saturation": 1.1
+        },
+        {
+          "index": 22,
+          "name": "PDF05_PineDark",
+          "saturation": 1.1
+        },
+        {
+          "index": 23,
+          "name": "PDF05_PineLight",
+          "saturation": 1.1
+        }
+      ],
+      "renderers": [
+        {
+          "match": "Environment/*_WindowPanes",
+          "swapFrom": "Color_000",
+          "swapTo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_NightWindow_Puerto.mat",
+          "expect": 15,
+          "note": "Window panes share PDF05_Amber with the lanterns."
+        },
+        {
+          "match": "Environment/Lighthouse_LanternLens",
+          "swapFrom": "Color_000",
+          "swapTo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_LighthouseLens.mat",
+          "expect": 1
+        },
+        {
+          "match": "Environment/PathLantern_Post_*",
+          "ignoreLocalLights": true,
+          "note": "No hot vertical stripe on path lantern posts."
+        },
+        {
+          "match": "Environment/Lighthouse_RemovableLanternRoof",
+          "ignoreLocalLights": true,
+          "expect": 1,
+          "note": "Blue roof turned green under the beacon."
+        }
+      ],
+      "interiorVolumes": [
+        {
+          "center": [-14.0, 5.6, -2.0],
+          "size": [6.74, 4.6, 5.74],
+          "note": "Cottage_01"
+        },
+        {
+          "center": [-12.0, 5.6, 13.0],
+          "size": [6.74, 4.6, 5.74],
+          "note": "Cottage_02"
+        },
+        {
+          "center": [2.0, 5.6, 16.0],
+          "size": [6.74, 4.6, 5.74],
+          "note": "Cottage_03"
+        },
+        {
+          "center": [15.0, 5.6, -4.0],
+          "size": [8.74, 4.6, 7.74],
+          "note": "BoatWorkshop"
+        }
+      ],
+      "characterRim": {
+        "color": [1.0, 0.4157, 0.4157],
+        "intensity": 0.96
+      }
+    }
+  ],
+  "menuMaterials": [
+    {
+      "path": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Materials/Lobby_LanternGlow.mat",
+      "emission": [3.07, 0.56, 0.06]
+    },
+    {
+      "path": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Materials/Quality_LampBulb.mat",
+      "emission": [3.07, 0.56, 0.06]
+    },
+    {
+      "path": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Materials/Quality_LampShade.mat",
+      "emission": [0.9, 0.42, 0.1]
+    },
+    {
+      "path": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Materials/Quality_LampShadeInner.mat",
+      "emission": [0.8, 0.4, 0.1]
+    },
+    {
+      "path": "Assets/LetMeSleep/Content/Environment/AlfaMaps/Materials/Menu_Shade.mat",
+      "emission": [0.45, 0.22, 0.06]
+    }
+  ],
+  "authoredMaterials": [
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_Halo.mat",
+      "shader": "LetMeSleep/Higgsfield/Halo",
+      "note": "Camera-facing lantern/sconce halo (additive).",
+      "colors": {
+        "_HaloColor": [1.0, 0.702, 0.2784, 0.35]
+      },
+      "floats": {
+        "_HaloIntensity": 1,
+        "_HaloPull": 0.3,
+        "_HaloFalloff": 1.25,
+        "_HaloCore": 0.5
+      },
+      "renderQueue": 3020
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_FlameOuter.mat",
+      "shader": "LetMeSleep/Higgsfield/Flame",
+      "note": "Outer flame: displays #E5482A after Neutral tonemapping (HDR 1.9, above the bloom threshold).",
+      "colors": {
+        "_FlameColor": [1.0, 0.213, 0.119]
+      },
+      "floats": {
+        "_FlameIntensity": 1.9,
+        "_SwayAmplitude": 0.07,
+        "_SwaySpeed": 3.0,
+        "_Flicker": 0.12,
+        "_FacetShade": 0.35
+      },
+      "renderQueue": 3000
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_FlameMiddle.mat",
+      "shader": "LetMeSleep/Higgsfield/Flame",
+      "note": "Middle flame: displays ~#FF8A1F (HDR 3.0).",
+      "colors": {
+        "_FlameColor": [1.0, 0.329, 0.054]
+      },
+      "floats": {
+        "_FlameIntensity": 3.0,
+        "_SwayAmplitude": 0.06,
+        "_SwaySpeed": 3.6,
+        "_Flicker": 0.14,
+        "_FacetShade": 0.3
+      },
+      "renderQueue": 3001
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_FlameCore.mat",
+      "shader": "LetMeSleep/Higgsfield/Flame",
+      "note": "Core flame: displays ~#FFE27A (HDR 3.4).",
+      "colors": {
+        "_FlameColor": [1.0, 0.732, 0.279]
+      },
+      "floats": {
+        "_FlameIntensity": 3.4,
+        "_SwayAmplitude": 0.045,
+        "_SwaySpeed": 4.2,
+        "_Flicker": 0.16,
+        "_FacetShade": 0.25
+      },
+      "renderQueue": 3002
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_GarlandBulb.mat",
+      "shader": "Universal Render Pipeline/Lit",
+      "note": "Lobby garland bulb, #FFB347 HDR 4.",
+      "colors": {
+        "_BaseColor": [1.0, 0.86, 0.62, 1.0]
+      },
+      "vectors": {
+        "_EmissionColor": [3.07, 0.56, 0.06, 1]
+      },
+      "floats": {
+        "_Smoothness": 0.2,
+        "_Metallic": 0
+      },
+      "keywords": [
+        "_EMISSION"
+      ]
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_GarlandWire.mat",
+      "shader": "Universal Render Pipeline/Lit",
+      "note": "Lobby garland wire.",
+      "colors": {
+        "_BaseColor": [0.09, 0.075, 0.07, 1.0]
+      },
+      "floats": {
+        "_Smoothness": 0.1,
+        "_Metallic": 0
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_NightWindow_Menu.mat",
+      "shader": "LetMeSleep/Higgsfield/NightWindow",
+      "note": "Menu/lobby window: night sky #1A2A6A, stars, moon.",
+      "colors": {
+        "_SkyHorizon": [0.102, 0.1647, 0.4157],
+        "_SkyZenith": [0.0549, 0.0941, 0.2745],
+        "_HillColor": [0.0431, 0.0706, 0.1882],
+        "_MoonColor": [1.0, 0.9529, 0.8196],
+        "_OutsideColor": [1.0, 0.7216, 0.3608],
+        "_MuntinColor": [0.2275, 0.1412, 0.0784]
+      },
+      "vectors": {
+        "_MoonDirection": [3.3, 0.72, 5.57, 0],
+        "_StarColor": [1.3, 1.3, 1.4, 1]
+      },
+      "floats": {
+        "_ForceNight": 1,
+        "_StarDensity": 0.6,
+        "_MoonSize": 0.8,
+        "_MoonIntensity": 1.15,
+        "_MoonPhase": 0.5,
+        "_MoonGlow": 0.25,
+        "_OutsideIntensity": 1.8,
+        "_Muntins": 0.0
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_NightWindow_Casa.mat",
+      "shader": "LetMeSleep/Higgsfield/NightWindow",
+      "note": "Casa windows: warm HDR 1.8 outside, night sky inside.",
+      "colors": {
+        "_OutsideColor": [1.0, 0.58, 0.28],
+        "_SkyHorizon": [0.102, 0.1647, 0.4157],
+        "_SkyZenith": [0.0549, 0.0941, 0.2745],
+        "_HillColor": [0.0431, 0.0706, 0.1882],
+        "_MoonColor": [1.0, 0.9529, 0.8196]
+      },
+      "vectors": {
+        "_MoonDirection": [-0.35, 0.5, 0.8, 0],
+        "_StarColor": [1.3, 1.3, 1.4, 1]
+      },
+      "floats": {
+        "_ForceNight": 0,
+        "_OutsideIntensity": 2.0,
+        "_OutsideGradient": 0.3,
+        "_StarDensity": 0.55,
+        "_MoonSize": 1.6,
+        "_MoonIntensity": 1.1,
+        "_MoonPhase": 0.5,
+        "_MoonGlow": 0.25,
+        "_InteriorMargin": 0.45
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_NightWindow_Puerto.mat",
+      "shader": "LetMeSleep/Higgsfield/NightWindow",
+      "note": "Puerto windows: warm HDR 1.8 outside, night sky inside.",
+      "colors": {
+        "_OutsideColor": [1.0, 0.58, 0.28],
+        "_SkyHorizon": [0.102, 0.1647, 0.4157],
+        "_SkyZenith": [0.0549, 0.0941, 0.2745],
+        "_HillColor": [0.0431, 0.0706, 0.1882],
+        "_MoonColor": [1.0, 0.9529, 0.8196]
+      },
+      "vectors": {
+        "_MoonDirection": [0.3, 0.45, 0.84, 0],
+        "_StarColor": [1.3, 1.3, 1.4, 1]
+      },
+      "floats": {
+        "_ForceNight": 0,
+        "_OutsideIntensity": 2.0,
+        "_OutsideGradient": 0.3,
+        "_StarDensity": 0.55,
+        "_MoonSize": 1.6,
+        "_MoonIntensity": 1.1,
+        "_MoonPhase": 0.5,
+        "_MoonGlow": 0.25,
+        "_InteriorMargin": 0.45
+      }
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_LampShadeGlow.mat",
+      "shader": "Universal Render Pipeline/Lit",
+      "note": "Casa bedside lamp shade glowing #FFB347 HDR 4.",
+      "colors": {
+        "_BaseColor": [0.98, 0.88, 0.7, 1.0]
+      },
+      "vectors": {
+        "_EmissionColor": [2.6095, 0.476, 0.051, 1]
+      },
+      "floats": {
+        "_Smoothness": 0,
+        "_Metallic": 0
+      },
+      "keywords": [
+        "_EMISSION"
+      ]
+    },
+    {
+      "path": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_LighthouseLens.mat",
+      "shader": "Universal Render Pipeline/Lit",
+      "note": "Puerto lighthouse lantern #FFD27A at HDR 6 (reads as a hot beacon with a wide bloom).",
+      "colors": {
+        "_BaseColor": [1.0, 0.9, 0.62, 1.0]
+      },
+      "vectors": {
+        "_EmissionColor": [6.0, 2.04, 0.375, 1]
+      },
+      "floats": {
+        "_Smoothness": 0,
+        "_Metallic": 0
+      },
+      "keywords": [
+        "_EMISSION"
+      ]
+    }
+  ],
+  "kit": {
+    "path": "Assets/LetMeSleep/Presentation/Generated/HiggsfieldAtmosphereKit.asset",
+    "halo": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_Halo.mat",
+    "flameOuter": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_FlameOuter.mat",
+    "flameMiddle": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_FlameMiddle.mat",
+    "flameCore": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_FlameCore.mat",
+    "bulb": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_GarlandBulb.mat",
+    "wire": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_GarlandWire.mat",
+    "menuWindow": "Assets/LetMeSleep/Presentation/Generated/Materials/Higgsfield_NightWindow_Menu.mat"
+  },
+  "textureAssignments": [
+    {
+      "material": "Assets/LetMeSleep/Presentation/Generated/Materials/ImpactParticle.mat",
+      "property": "_BaseMap",
+      "texture": "Assets/LetMeSleep/Presentation/Generated/Textures/Higgsfield_SoftDot.png",
+      "note": "Impact/bite burst particles were untextured square quads (the pixelated yellow squares next to the mosquito)."
+    }
+  ],
+  "rig": {
+    "prefabPath": "Assets/LetMeSleep/Presentation/Generated/Prefabs/LMS_AlfaLightingRoot.prefab"
+  }
+}

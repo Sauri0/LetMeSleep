@@ -198,6 +198,7 @@ MonoBehaviour:
   nightSkybox: {fileID: 2100000, guid: 302732057118b8544ab918cb111b6c24, type: 2}
   mapLightLowTemplate: {fileID: 602868523788108250}
   mapLightMediumTemplate: {fileID: 8955403439079511561}
+  atmosphereKit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
 --- !u!1 &4275896204858393053
 GameObject:
   m_ObjectHideFlags: 0

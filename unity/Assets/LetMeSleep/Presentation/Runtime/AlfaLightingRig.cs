@@ -12,6 +12,19 @@ namespace LetMeSleep.Presentation
         private const int PreviewLayer = 30;
         private const int MaximumShadowedLocalLights = 4;
         private const int MaximumShadowedLocalLightsPerZone = 2;
+        // v0.3.0 menu/lobby ("sala") mood, UI-06 screens 1 and 3: navy night room, cool moon fill and
+        // warm lamp pools that the AlfaGlobalVolume bloom turns into halos.
+        private const float LobbyMoonScale = 0.3f;
+        private static readonly Color LobbyFillColor = new Color(0.5f, 0.62f, 1f);
+        private const float LobbyFillIntensity = 0.22f;
+        // v0.3.0 art direction (UI-06 #1/#3): warm #FFB347 halo of about 1.5 m around each wall lantern, a night
+        // window with moon instead of the framed print, and warm string lights with fill pools over the front
+        // half of the room so the lobby's back views are no longer flat navy.
+        private static readonly Color LobbyHaloColor = new Color(1f, 0.702f, 0.278f, 0.35f);
+        private const float LobbyHaloSize = 1.5f;
+        private const string LobbyWindowCanvasPath = "Furnishings/Lobby_Domestic/Menu_FramedNightLake/Canvas";
+        private const string LobbyWindowPrintPath = "Furnishings/Lobby_Domestic/Menu_FramedNightLake/NightLake_Print";
+        private static readonly Color LobbyStringFillColor = new Color(1f, 0.66f, 0.36f);
 
         [SerializeField] private AlfaPresentationPreset preset = null;
         [SerializeField] private Light moon = null;
@@ -20,8 +33,12 @@ namespace LetMeSleep.Presentation
         [SerializeField] private Material nightSkybox = null;
         [SerializeField] private Light mapLightLowTemplate = null;
         [SerializeField] private Light mapLightMediumTemplate = null;
+        [SerializeField] private HiggsfieldAtmosphereKit atmosphereKit = null;
 
         private readonly List<Light> mapLights = new List<Light>();
+        private readonly List<GameObject> lobbyAtmosphere = new List<GameObject>();
+        private readonly List<KeyValuePair<Renderer, Material[]>> lobbyMaterials = new List<KeyValuePair<Renderer, Material[]>>();
+        private readonly List<Renderer> lobbyHidden = new List<Renderer>();
         private Transform boundAnchors;
         private HiggsfieldMapLighting higgsfieldLighting;
 
@@ -33,7 +50,8 @@ namespace LetMeSleep.Presentation
             if (!higgsfieldLighting) higgsfieldLighting = gameObject.AddComponent<HiggsfieldMapLighting>();
             var previousLights = new List<Light>(mapLights);
             if (lobbyFill) previousLights.Add(lobbyFill);
-            higgsfieldLighting.Bind(mapRoot, moon, globalVolume, configuration, previousLights);
+            higgsfieldLighting.Bind(mapRoot, moon, globalVolume, configuration, previousLights,
+                mapLightLowTemplate, mapLightMediumTemplate);
         }
 
         public void UnbindHiggsfield()
@@ -46,6 +64,8 @@ namespace LetMeSleep.Presentation
         public Volume GlobalVolume => globalVolume;
         public Transform BoundAnchors => boundAnchors;
         public int MapLightCount => mapLights.Count;
+        public HiggsfieldAtmosphereKit AtmosphereKit => atmosphereKit;
+        public int LobbyAtmosphereCount => lobbyAtmosphere.Count;
 
         private void Awake()
         {
@@ -71,8 +91,8 @@ namespace LetMeSleep.Presentation
             if (lobbyFill != null)
             {
                 lobbyFill.type = LightType.Directional;
-                lobbyFill.color = new Color(0.76f, 0.84f, 1f);
-                lobbyFill.intensity = 0.55f;
+                lobbyFill.color = LobbyFillColor;
+                lobbyFill.intensity = LobbyFillIntensity;
                 lobbyFill.shadows = LightShadows.None;
                 lobbyFill.bounceIntensity = 0f;
                 lobbyFill.cullingMask &= ~(1 << PreviewLayer);
@@ -97,6 +117,8 @@ namespace LetMeSleep.Presentation
             ApplyPreset();
             ApplyAmbientProfile(house);
             moon.shadowStrength = house ? 0.72f : 0.48f;
+            if (!house)
+                moon.intensity = preset.MoonIntensityLux * LobbyMoonScale;
             if (lobbyFill != null)
                 lobbyFill.enabled = !house;
 
@@ -129,7 +151,10 @@ namespace LetMeSleep.Presentation
             }
 
             if (!house)
+            {
                 AddLobbyCameraFill(presentationAnchors);
+                AddLobbyAtmosphere(presentationAnchors);
+            }
 
             if (anchorCount == 0)
             {
@@ -163,7 +188,80 @@ namespace LetMeSleep.Presentation
             }
 
             mapLights.Clear();
+            foreach (var item in lobbyAtmosphere)
+                if (item) { item.SetActive(false); if (Application.isPlaying) Destroy(item); else DestroyImmediate(item); }
+            lobbyAtmosphere.Clear();
+            foreach (var item in lobbyMaterials) if (item.Key) item.Key.sharedMaterials = item.Value;
+            lobbyMaterials.Clear();
+            foreach (var item in lobbyHidden) if (item) item.enabled = true;
+            lobbyHidden.Clear();
             boundAnchors = null;
+        }
+
+        private void AddLobbyAtmosphere(Transform presentationAnchors)
+        {
+            if (atmosphereKit == null || !atmosphereKit.IsComplete)
+                return; // Older rigs keep the v0.2.0 lobby; the atmosphere kit is optional here.
+            Transform lobby = presentationAnchors.parent != null ? presentationAnchors.parent : presentationAnchors;
+            foreach (Transform anchor in presentationAnchors.GetComponentsInChildren<Transform>(true))
+            {
+                if (!anchor.name.StartsWith(LightAnchorPrefix + "Lobby_Lantern", StringComparison.OrdinalIgnoreCase))
+                    continue;
+                // Anchors sit 0.19 m in front of the lantern bodies on the back wall.
+                lobbyAtmosphere.Add(HiggsfieldAtmosphereVisuals.CreateHalo(anchor, anchor.rotation * new Vector3(0f, 0f, 0.17f), LobbyHaloSize,
+                    LobbyHaloColor, 1f, atmosphereKit.HaloMaterial));
+            }
+
+            Renderer canvas = FindRenderer(lobby, LobbyWindowCanvasPath);
+            if (canvas != null)
+            {
+                lobbyMaterials.Add(new KeyValuePair<Renderer, Material[]>(canvas, canvas.sharedMaterials));
+                var materials = canvas.sharedMaterials;
+                for (int i = 0; i < materials.Length; i++) materials[i] = atmosphereKit.MenuWindowMaterial;
+                canvas.sharedMaterials = materials;
+                Renderer print = FindRenderer(lobby, LobbyWindowPrintPath);
+                if (print != null && print.enabled) { print.enabled = false; lobbyHidden.Add(print); }
+            }
+
+            // Front half of the room (behind the menu camera): garlands under the ceiling plus warm pools.
+            var garlands = new GameObject("Higgsfield_LobbyGarlands");
+            garlands.transform.SetParent(lobby, false);
+            lobbyAtmosphere.Add(garlands);
+            var strands = new[]
+            {
+                (new Vector3(-6.6f, 2.95f, -5.75f), new Vector3(6.6f, 2.95f, -5.75f), 0.34f, 20),
+                (new Vector3(-6.6f, 2.95f, -5.75f), new Vector3(0f, 3.05f, -0.6f), 0.30f, 11),
+                (new Vector3(6.6f, 2.95f, -5.75f), new Vector3(0f, 3.05f, -0.6f), 0.30f, 11),
+                (new Vector3(-6.75f, 2.95f, 5.4f), new Vector3(-6.75f, 2.95f, -5.4f), 0.32f, 16),
+                (new Vector3(6.75f, 2.95f, 5.4f), new Vector3(6.75f, 2.95f, -5.4f), 0.32f, 16)
+            };
+            foreach (var strand in strands)
+                HiggsfieldAtmosphereVisuals.CreateStringLights(garlands.transform, strand.Item1, strand.Item2, strand.Item3, strand.Item4, atmosphereKit, 0.034f);
+            var pools = new[]
+            {
+                new Vector3(-4.2f, 2.45f, -5.2f), new Vector3(0f, 2.45f, -5.2f), new Vector3(4.2f, 2.45f, -5.2f),
+                new Vector3(-6.2f, 2.45f, 0f), new Vector3(6.2f, 2.45f, 0f)
+            };
+            foreach (var position in pools)
+            {
+                var item = new GameObject("LMS_LobbyGarlandFill");
+                item.transform.SetParent(garlands.transform, false);
+                item.transform.localPosition = position;
+                var light = item.AddComponent<Light>();
+                light.type = LightType.Point;
+                light.color = LobbyStringFillColor;
+                light.intensity = 1.5f;
+                light.range = 5.2f;
+                light.shadows = LightShadows.None;
+                light.bounceIntensity = 0f;
+                light.cullingMask &= ~(1 << PreviewLayer);
+            }
+        }
+
+        private static Renderer FindRenderer(Transform root, string path)
+        {
+            Transform found = root.Find(path);
+            return found != null ? found.GetComponent<Renderer>() : null;
         }
 
         private Light CreateMapLight(
@@ -217,8 +315,8 @@ namespace LetMeSleep.Presentation
             // menu camera axis preserves their graphic shading without leaving half of a
             // face unlit when the cool directional key hits from the side.
             LocalLightProfile profile = new LocalLightProfile(
-                new Color(0.90f, 0.86f, 0.80f),
-                0.72f,
+                new Color(0.95f, 0.84f, 0.72f),
+                0.55f,
                 8.5f,
                 false,
                 LocalShadowTier.Low,
@@ -253,13 +351,13 @@ namespace LetMeSleep.Presentation
             RenderSettings.ambientMode = AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = house
                 ? new Color(0.30f, 0.36f, 0.48f)
-                : new Color(0.23f, 0.26f, 0.34f);
+                : new Color(0.09f, 0.13f, 0.30f);
             RenderSettings.ambientEquatorColor = house
                 ? new Color(0.22f, 0.23f, 0.30f)
-                : new Color(0.15f, 0.15f, 0.18f);
+                : new Color(0.07f, 0.10f, 0.25f);
             RenderSettings.ambientGroundColor = house
                 ? new Color(0.15f, 0.14f, 0.19f)
-                : new Color(0.075f, 0.07f, 0.085f);
+                : new Color(0.04f, 0.045f, 0.08f);
             RenderSettings.ambientIntensity = house ? 1f : 1.08f;
             RenderSettings.reflectionIntensity = house ? 0.42f : 0.52f;
             RenderSettings.subtractiveShadowColor = new Color(0.018f, 0.025f, 0.045f);
@@ -276,7 +374,7 @@ namespace LetMeSleep.Presentation
             if (Contains(anchorName, "Patio"))
                 return new LocalLightProfile(new Color(0.42f, 0.58f, 0.92f), 0.42f, 5.5f, false, LocalShadowTier.Low, LightType.Point);
             if (Contains(anchorName, "Lobby"))
-                return new LocalLightProfile(new Color(1f, 0.62f, 0.30f), 0.48f, 3.6f, false, LocalShadowTier.Low);
+                return new LocalLightProfile(new Color(1f, 0.60f, 0.28f), 3.2f, 6.5f, false, LocalShadowTier.Low);
             if (Contains(anchorName, "Bedroom"))
                 return new LocalLightProfile(new Color(1f, 0.58f, 0.32f), 0.90f, 3.7f, true, LocalShadowTier.Low);
             if (Contains(anchorName, "Living"))

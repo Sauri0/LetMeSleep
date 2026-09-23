@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: hf-campamento-pinar-v2-GradientSky
+  m_Shader: {fileID: 4800000, guid: af2a1719ac544d829911779dd38e737a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _CloudCoverage: 0
+    - _CloudOpacity: 0.95
+    - _CloudScale: 0.6
+    - _CloudSpeed: 0.01
+    - _DiscSize: 1.6
+    - _GlowTightness: 90
+    - _GroundBlend: 0.5
+    - _HaloRadius: 3
+    - _HorizonExponent: 0.7
+    - _MoonPhase: 0.5
+    - _StarDensity: 0.32
+    m_Colors:
+    - _CelestialDirection: {r: 0.29910403, g: 0.41874564, b: 0.8574316, a: 1}
+    - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudShade: {r: 0.78, g: 0.85, b: 0.95, a: 1}
+    - _DiscColor: {r: 1.25, g: 1.19, b: 1.03, a: 1}
+    - _GlowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GroundColor: {r: 0.07, g: 0.11, b: 0.18, a: 1}
+    - _HaloColor: {r: 0.62, g: 0.7, b: 0.95, a: 0.22}
+    - _HorizonColor: {r: 0.12, g: 0.2, b: 0.38, a: 1}
+    - _StarColor: {r: 1.2, g: 1.2, b: 1.3, a: 1}
+    - _ZenithColor: {r: 0.06, g: 0.1, b: 0.25, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

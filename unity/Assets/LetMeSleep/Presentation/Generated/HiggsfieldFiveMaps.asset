@@ -15,457 +15,985 @@ MonoBehaviour:
   entries:
   - MapId: hf-isla-del-laguito-v2
     DisplayName: Isla del laguito
+    CameraFarPlane: 260
     Prefab: {fileID: 1099540524772273299, guid: 795ff893e2d34f94bab5c9abb1233ed9, type: 3}
     Lighting:
       MapId: 0
-      Skybox: {fileID: 2100000, guid: a9cf3ab4ea4e26444a7e3f400a8c8e8f, type: 2}
+      Skybox: {fileID: 2100000, guid: 4752afb77574391489b635f0c519bbd1, type: 2}
       SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
-      SunColor: {r: 1, g: 0.94, b: 0.82, a: 1}
-      SunUnityIntensity: 1.05
+      SunColor: {r: 1, g: 0.95, b: 0.84, a: 1}
+      SunUnityIntensity: 1.25
       SunShadows: 2
-      AmbientSky: {r: 0.6, g: 0.72, b: 0.85, a: 1}
-      AmbientEquator: {r: 0.45, g: 0.5, b: 0.55, a: 1}
-      AmbientGround: {r: 0.28, g: 0.3, b: 0.26, a: 1}
+      AmbientSky: {r: 0.58, g: 0.72, b: 0.9, a: 1}
+      AmbientEquator: {r: 0.56, g: 0.62, b: 0.62, a: 1}
+      AmbientGround: {r: 0.36, g: 0.34, b: 0.26, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.6
+      FogEnabled: 1
+      FogColor: {r: 0.62, g: 0.82, b: 0.96, a: 1}
+      FogMode: 1
+      FogStart: 65
+      FogEnd: 250
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: 7a49b0d1b96d7d043aae709c430c9297, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
       SuppressLights: []
+      Kit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
+      MaterialSwaps: []
+      InteriorVolumes: []
+      RendererOverrides: []
+      CharacterRimColor: {r: 1, g: 0.416, b: 0.416, a: 1}
+      CharacterRimIntensity: 0
     LocalLights: []
     SuppressLightPaths: []
+    RendererOverrides: []
   - MapId: hf-casa-del-patio-v1
     DisplayName: Casa del patio
+    CameraFarPlane: 0
     Prefab: {fileID: 1212557850719198287, guid: e9dd8500e4fe1f047b262251ac1ec315, type: 3}
     Lighting:
       MapId: 1
-      Skybox: {fileID: 2100000, guid: fcb5d519da824e244b45e54ea32149d6, type: 2}
-      SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
-      SunColor: {r: 0.5, g: 0.65, b: 1, a: 1}
-      SunUnityIntensity: 0.1
+      Skybox: {fileID: 2100000, guid: 5c88d0c9d7545424ea80bfb686dbf227, type: 2}
+      SunWorldRotation: {x: 0.2961374, y: 0.16561121, z: -0.052217014, w: 0.9392278}
+      SunColor: {r: 0.6, g: 0.72, b: 1, a: 1}
+      SunUnityIntensity: 0.085
       SunShadows: 2
-      AmbientSky: {r: 0.05, g: 0.08, b: 0.14, a: 1}
-      AmbientEquator: {r: 0.03, g: 0.045, b: 0.075, a: 1}
-      AmbientGround: {r: 0.015, g: 0.02, b: 0.035, a: 1}
+      AmbientSky: {r: 0.0936, g: 0.1296, b: 0.2448, a: 1}
+      AmbientEquator: {r: 0.072, g: 0.0864, b: 0.144, a: 1}
+      AmbientGround: {r: 0.0432, g: 0.0396, b: 0.054, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.4
+      FogEnabled: 1
+      FogColor: {r: 0.13, g: 0.19, b: 0.38, a: 1}
+      FogMode: 1
+      FogStart: 18
+      FogEnd: 90
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: 435999e8a162654478085d5bdc2e6d65, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
       SuppressLights: []
+      Kit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
+      MaterialSwaps:
+      - From: {fileID: 2100000, guid: 6b8105ef961419b438b89fe51a89ee81, type: 2}
+        To: {fileID: 2100000, guid: 13eed14f6188e224085146bbcb4bcb15, type: 2}
+      InteriorVolumes:
+      - m_Center: {x: 0, y: 2.98, z: 0}
+        m_Extent: {x: 6.74, y: 2.98, z: 4.76}
+      RendererOverrides: []
+      CharacterRimColor: {r: 1, g: 0.4157, b: 0.4157, a: 1}
+      CharacterRimIntensity: 1.2
     LocalLights:
     - AnchorPath: Environment/CASA_Porch_Lamp_L_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Porch_Lamp_R_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Rear_Lamp_L_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Rear_Lamp_R_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Shed_Lamp_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 3.6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.001
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.002
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Path_Lantern_Light_Anchor.003
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.49, b: 0.17, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: -0.01, z: 0.21}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_Living_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_Kitchen_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_Foyer_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_HallRear_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_BathGround_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_BedroomOne_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_BedroomTwo_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_BathUpper_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Interior_UpperLanding_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.66, b: 0.35, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.45, a: 1}
+        UnityIntensity: 1.5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Fireplace_Practical_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.28, b: 0.055, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.6039, b: 0.2902, a: 1}
+        UnityIntensity: 3.2
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0.3
+        LocalOffset: {x: 0, y: 0.1, z: 0.3}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0.62
+        FlameOffset: {x: -0.07, y: -0.38, z: -0.28}
     - AnchorPath: Environment/CASA_Bedside_One_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
-        UnityIntensity: 2.2
+        Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+        UnityIntensity: 2.4
         Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.04, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/CASA_Bedside_Two_Anchor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
-        UnityIntensity: 2.2
+        Color: {r: 1, g: 0.64, b: 0.32, a: 1}
+        UnityIntensity: 2.4
         Range: 5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.04, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     SuppressLightPaths: []
+    RendererOverrides:
+    - Path: Environment/CASA_Bedroom_One_BedsideLamp_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ad250f95f12a68c4391906f2d969ff22, type: 2}
+      SwapTo: {fileID: 2100000, guid: e1b00105947ac4e4b8b0e8556f9ad94e, type: 2}
+    - Path: Environment/CASA_Bedroom_Two_BedsideLamp_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ad250f95f12a68c4391906f2d969ff22, type: 2}
+      SwapTo: {fileID: 2100000, guid: e1b00105947ac4e4b8b0e8556f9ad94e, type: 2}
+    - Path: Environment/CASA_Fire_FacetedFlame
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Fire_FacetedFlame.001
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Fire_FacetedFlame.002
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Fire_FacetedFlame.003
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Garden_Lamp_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Garden_Lamp_Post.001
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Garden_Lamp_Post.002
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Garden_Lamp_Post.003
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BathGround_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BathGround_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BathUpper_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BathUpper_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BedroomOne_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BedroomOne_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BedroomTwo_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_BedroomTwo_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_Foyer_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_Foyer_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_HallRear_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_HallRear_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_Kitchen_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_Kitchen_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_Living_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_Living_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_UpperLanding_Bulb
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CASA_Pendant_UpperLanding_Shade
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
   - MapId: hf-campamento-pinar-v2
     DisplayName: Campamento del pinar
+    CameraFarPlane: 0
     Prefab: {fileID: 1010624027987843496, guid: e24d5cb6631d382429bc0b92cc0e76f3, type: 3}
     Lighting:
       MapId: 2
-      Skybox: {fileID: 2100000, guid: a1b0563c10797514f85dba6de16a42fc, type: 2}
-      SunWorldRotation: {x: 0.38791162, y: -0.2747084, z: 0.12230806, w: 0.87126374}
-      SunColor: {r: 0.55, g: 0.7, b: 1, a: 1}
-      SunUnityIntensity: 0.08
+      Skybox: {fileID: 2100000, guid: 911ea3393013d014b99fbe9ec396f5df, type: 2}
+      SunWorldRotation: {x: 0.29813322, y: -0.124485046, z: 0.039249983, w: 0.9455578}
+      SunColor: {r: 0.6, g: 0.72, b: 1, a: 1}
+      SunUnityIntensity: 0.07
       SunShadows: 2
-      AmbientSky: {r: 0.05, g: 0.08, b: 0.14, a: 1}
-      AmbientEquator: {r: 0.03, g: 0.045, b: 0.075, a: 1}
-      AmbientGround: {r: 0.015, g: 0.02, b: 0.035, a: 1}
+      AmbientSky: {r: 0.0672, g: 0.1008, b: 0.1904, a: 1}
+      AmbientEquator: {r: 0.0504, g: 0.0672, b: 0.112, a: 1}
+      AmbientGround: {r: 0.028, g: 0.0336, b: 0.0448, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.4
+      FogEnabled: 1
+      FogColor: {r: 0.12, g: 0.2, b: 0.38, a: 1}
+      FogMode: 1
+      FogStart: 12
+      FogEnd: 78
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: eb82900fdb93b824b9c0a728ba17e9bc, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
       SuppressLights: []
+      Kit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
+      MaterialSwaps: []
+      InteriorVolumes: []
+      RendererOverrides: []
+      CharacterRimColor: {r: 1, g: 0.4157, b: 0.4157, a: 1}
+      CharacterRimIntensity: 1.2
     LocalLights:
     - AnchorPath: Environment/LGT_Fire
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.38, b: 0.08, a: 1}
-        UnityIntensity: 5
+        Color: {r: 1, g: 0.6039, b: 0.2902, a: 1}
+        UnityIntensity: 3.4
         Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0.32
+        LocalOffset: {x: 0, y: 0.35, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 1.35
+        FlameOffset: {x: 0, y: -1.1, z: 0}
     - AnchorPath: Environment/LGT_Fire_Outer
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.24, a: 1}
-        UnityIntensity: 1.5
-        Range: 10
+        Color: {r: 1, g: 0.6039, b: 0.2902, a: 1}
+        UnityIntensity: 2
+        Range: 12
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0.22
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_00
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_01
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_02
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_03
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_04
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_05
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_06
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_07
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_08
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Jetty_Lantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lookout_Ambient
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 0.5, g: 0.62, b: 0.95, a: 1}
-        UnityIntensity: 2.5
+        UnityIntensity: 1.2
         Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_09
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_Lantern_10
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.59, b: 0.25, a: 1}
-        UnityIntensity: 2.5
-        Range: 6
+        Color: {r: 1, g: 0.64, b: 0.3, a: 1}
+        UnityIntensity: 6
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.25, y: -0.12, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Shelter
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.64, b: 0.31, a: 1}
+        Color: {r: 1, g: 0.66, b: 0.34, a: 1}
         UnityIntensity: 3
-        Range: 6
+        Range: 7
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Washroom
       Settings:
         Anchor: {fileID: 0}
@@ -475,391 +1003,1130 @@ MonoBehaviour:
         Range: 3
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Tent_01
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.4
+        Range: 3.2
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.4
+        HaloOffset: {x: 0, y: -0.1, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Tent_02
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.4
+        Range: 3.2
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.4
+        HaloOffset: {x: 0, y: -0.1, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Tent_03
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.4
+        Range: 3.2
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.4
+        HaloOffset: {x: 0, y: -0.1, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Tent_04
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.4
+        Range: 3.2
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.4
+        HaloOffset: {x: 0, y: -0.1, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Tent_05
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.4
+        Range: 3.2
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.4
+        HaloOffset: {x: 0, y: -0.1, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/LGT_CAMP_Tent_06
       Settings:
         Anchor: {fileID: 0}
         Type: 2
         Color: {r: 1, g: 0.64, b: 0.31, a: 1}
-        UnityIntensity: 0.8
-        Range: 2
+        UnityIntensity: 1.4
+        Range: 3.2
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.4
+        HaloOffset: {x: 0, y: -0.1, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.25}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     SuppressLightPaths: []
+    RendererOverrides:
+    - Path: Environment/CAMP_Fire_Flame_01
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Fire_Flame_02
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Fire_Flame_03
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Fire_Log_Vert
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Jetty_Lantern_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Jetty_Lantern_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_09_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_09_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_09_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_0_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_0_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_0_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_10_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_10_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_10_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_1_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_1_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_1_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_2_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_2_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_2_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_3_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_3_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_3_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_4_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_4_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_4_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_5_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_5_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_5_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_6_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_6_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_6_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_7_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_7_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_7_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_8_Box
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_8_Glass
+      Hide: 1
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/CAMP_Lantern_8_Post
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
   - MapId: hf-yate-a-la-deriva-v3
     DisplayName: Yate a la deriva
+    CameraFarPlane: 280
     Prefab: {fileID: 9175423909353019758, guid: 7f33a3894da9bf64eacffe5122892362, type: 3}
     Lighting:
       MapId: 3
-      Skybox: {fileID: 2100000, guid: b01f4d703ee5b6d4d93871fa4830235a, type: 2}
+      Skybox: {fileID: 2100000, guid: 715009b037d2c3f469fb8d5f28f51982, type: 2}
       SunWorldRotation: {x: 0.3633556, y: 0.3964268, z: -0.17463778, w: 0.82481515}
-      SunColor: {r: 1, g: 0.84, b: 0.62, a: 1}
-      SunUnityIntensity: 1.05
+      SunColor: {r: 1, g: 0.93, b: 0.8, a: 1}
+      SunUnityIntensity: 1.2
       SunShadows: 2
-      AmbientSky: {r: 0.6, g: 0.72, b: 0.85, a: 1}
-      AmbientEquator: {r: 0.45, g: 0.5, b: 0.55, a: 1}
-      AmbientGround: {r: 0.28, g: 0.3, b: 0.26, a: 1}
+      AmbientSky: {r: 0.52, g: 0.68, b: 0.95, a: 1}
+      AmbientEquator: {r: 0.56, g: 0.68, b: 0.9, a: 1}
+      AmbientGround: {r: 0.92, g: 0.86, b: 0.76, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.6
+      FogEnabled: 1
+      FogColor: {r: 0.62, g: 0.82, b: 0.96, a: 1}
+      FogMode: 1
+      FogStart: 70
+      FogEnd: 270
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: eb6f90ab63abb0249b6a5c03418c589a, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
       SuppressLights: []
+      Kit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
+      MaterialSwaps: []
+      InteriorVolumes: []
+      RendererOverrides: []
+      CharacterRimColor: {r: 1, g: 0.416, b: 0.416, a: 1}
+      CharacterRimIntensity: 0
     LocalLights:
     - AnchorPath: Environment/YATE_Anchor_Practical_SalonAft
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.82, b: 0.6, a: 1}
+        UnityIntensity: 2.2
+        Range: 5.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
+        LocalOffset: {x: 0, y: -0.12, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/YATE_Anchor_Practical_Galley
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.82, b: 0.6, a: 1}
+        UnityIntensity: 2.4
+        Range: 5.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 1
+        Flicker: 0
+        LocalOffset: {x: 0, y: -0.12, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/YATE_Anchor_Practical_CabinPort
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.82, b: 0.6, a: 1}
+        UnityIntensity: 1.3
+        Range: 5.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: -0.12, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/YATE_Anchor_Practical_CabinStarboard
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.82, b: 0.6, a: 1}
+        UnityIntensity: 1.3
+        Range: 5.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: -0.12, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/YATE_Anchor_Practical_LowerCorridor
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.82, b: 0.6, a: 1}
+        UnityIntensity: 1.3
+        Range: 5.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: -0.12, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/YATE_Anchor_Practical_Bathroom
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.83, b: 0.6, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.82, b: 0.6, a: 1}
+        UnityIntensity: 1.3
+        Range: 5.5
         SpotAngle: 90
         InnerSpotAngle: 60
-        Shadows: 2
+        Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: -0.12, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     SuppressLightPaths: []
+    RendererOverrides:
+    - Path: Environment/YATE_CeilingFixture_Bathroom
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/YATE_CeilingFixture_CabinPort
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/YATE_CeilingFixture_CabinStarboard
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/YATE_CeilingFixture_Galley
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/YATE_CeilingFixture_LowerCorridor
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/YATE_CeilingFixture_SalonAft
+      Hide: 0
+      CastShadowsOff: 1
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
   - MapId: hf-puerto-del-faro-v1
     DisplayName: Puerto del faro
+    CameraFarPlane: 125
     Prefab: {fileID: 2844855311516430381, guid: f2b8e858ac929674b81713bc4b8ae578, type: 3}
     Lighting:
       MapId: 4
-      Skybox: {fileID: 2100000, guid: 281f35eb01e5c9248b51d29764683247, type: 2}
-      SunWorldRotation: {x: 0.35349724, y: 0.5461676, z: -0.27234113, w: 0.70892245}
-      SunColor: {r: 0.56, g: 0.7, b: 1, a: 1}
-      SunUnityIntensity: 0.8
+      Skybox: {fileID: 2100000, guid: a26a74c04bc89714a897f565dcf0b882, type: 2}
+      SunWorldRotation: {x: -0.04786393, y: 0.94665796, z: -0.2714498, w: -0.16692136}
+      SunColor: {r: 0.62, g: 0.72, b: 1, a: 1}
+      SunUnityIntensity: 0.06
       SunShadows: 2
-      AmbientSky: {r: 0.16, g: 0.23, b: 0.38, a: 1}
-      AmbientEquator: {r: 0.12, g: 0.16, b: 0.23, a: 1}
-      AmbientGround: {r: 0.06, g: 0.08, b: 0.13, a: 1}
+      AmbientSky: {r: 0.084, g: 0.108, b: 0.216, a: 1}
+      AmbientEquator: {r: 0.066, g: 0.072, b: 0.132, a: 1}
+      AmbientGround: {r: 0.036, g: 0.036, b: 0.054, a: 1}
       AmbientIntensity: 1
-      ReflectionIntensity: 1
-      FogEnabled: 0
-      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-      FogMode: 3
-      FogStart: 0
-      FogEnd: 300
+      ReflectionIntensity: 0.4
+      FogEnabled: 1
+      FogColor: {r: 0.165, g: 0.208, b: 0.439, a: 1}
+      FogMode: 1
+      FogStart: 30
+      FogEnd: 118
       FogDensity: 0.01
-      VolumeProfile: {fileID: 0}
+      VolumeProfile: {fileID: 11400000, guid: 77957607a1ae8d34baaf89329d89d3f0, type: 2}
       VolumeWeight: 1
       CullingMask: -1073741825
       LocalLights: []
       SuppressLights: []
+      Kit: {fileID: 11400000, guid: daba8f3906a057345a25dec35ee06259, type: 2}
+      MaterialSwaps: []
+      InteriorVolumes:
+      - m_Center: {x: -14, y: 5.6, z: -2}
+        m_Extent: {x: 3.37, y: 2.3, z: 2.87}
+      - m_Center: {x: -12, y: 5.6, z: 13}
+        m_Extent: {x: 3.37, y: 2.3, z: 2.87}
+      - m_Center: {x: 2, y: 5.6, z: 16}
+        m_Extent: {x: 3.37, y: 2.3, z: 2.87}
+      - m_Center: {x: 15, y: 5.6, z: -4}
+        m_Extent: {x: 4.37, y: 2.3, z: 3.87}
+      RendererOverrides: []
+      CharacterRimColor: {r: 1, g: 0.4157, b: 0.4157, a: 1}
+      CharacterRimIntensity: 0.96
     LocalLights:
     - AnchorPath: Environment/Anchor_LGT_Pueblo_LighthouseLens
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.6, b: 0.25, a: 1}
-        UnityIntensity: 3.5
-        Range: 12
+        Color: {r: 1, g: 0.8235, b: 0.4784, a: 1}
+        UnityIntensity: 7
+        Range: 18
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 3.6
+        HaloOffset: {x: 0, y: -0.35, z: 0}
+        HaloColor: {r: 1, g: 0.8235, b: 0.4784, a: 0.45}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
         UnityIntensity: 2.2
-        Range: 5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_01_InteriorFill
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.7, b: 0.4, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.2
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
         UnityIntensity: 2.2
-        Range: 5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_02_InteriorFill
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.7, b: 0.4, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.2
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_BedsideLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
         UnityIntensity: 2.2
-        Range: 5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Cottage_03_InteriorFill
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.7, b: 0.4, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.2
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Workshop_ExteriorLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4
+        Range: 7.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Workshop_BenchLamp
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
+        Color: {r: 1, g: 0.62, b: 0.3, a: 1}
         UnityIntensity: 2.2
-        Range: 5
+        Range: 4.5
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Workshop_Interior
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.65, b: 0.32, a: 1}
-        UnityIntensity: 3.5
-        Range: 7
+        Color: {r: 1, g: 0.72, b: 0.42, a: 1}
+        UnityIntensity: 2.2
+        Range: 6
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 2
+        ShadowResolutionTier: 0
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0
+        HaloOffset: {x: 0, y: 0, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.278, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Pier_1_EndLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.5
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_Pier_2_EndLantern
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.5
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0, y: 0, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_PathLantern_1
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.2
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.12, y: -0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_PathLantern_2
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.2
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.12, y: -0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_PathLantern_3
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.2
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.12, y: -0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_PathLantern_4
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.2
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.12, y: -0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_PathLantern_5
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.2
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.12, y: -0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     - AnchorPath: Environment/Anchor_LGT_PathLantern_6
       Settings:
         Anchor: {fileID: 0}
         Type: 2
-        Color: {r: 1, g: 0.5, b: 0.2, a: 1}
-        UnityIntensity: 2.2
-        Range: 5
+        Color: {r: 1, g: 0.62, b: 0.28, a: 1}
+        UnityIntensity: 4.2
+        Range: 8
         SpotAngle: 90
         InnerSpotAngle: 60
         Shadows: 0
+        ShadowResolutionTier: 2
+        Flicker: 0
+        LocalOffset: {x: 0.12, y: -0.05, z: 0}
+        HaloSize: 0.6
+        HaloOffset: {x: 0, y: 0.05, z: 0}
+        HaloColor: {r: 1, g: 0.702, b: 0.2784, a: 0.35}
+        HaloIntensity: 1
+        FlameHeight: 0
+        FlameOffset: {x: 0, y: 0, z: 0}
     SuppressLightPaths: []
+    RendererOverrides:
+    - Path: Environment/BoatWorkshop_Back_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/BoatWorkshop_Side-1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/BoatWorkshop_Side1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_01_Back_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_01_Front_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_01_Side-1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_01_Side1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_02_Back_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_02_Front_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_02_Side-1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_02_Side1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_03_Back_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_03_Front_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_03_Side-1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Cottage_03_Side1_WindowPanes
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: 781b32cfe128bf04887c513b09c38e1c, type: 2}
+    - Path: Environment/Lighthouse_LanternLens
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 0
+      SwapFrom: {fileID: 2100000, guid: ee72659d731c1e74984fc52f277716ed, type: 2}
+      SwapTo: {fileID: 2100000, guid: da71b562a8f91bf41a04094d9e0b93bc, type: 2}
+    - Path: Environment/Lighthouse_RemovableLanternRoof
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/PathLantern_Post_1
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/PathLantern_Post_2
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/PathLantern_Post_3
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/PathLantern_Post_4
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/PathLantern_Post_5
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}
+    - Path: Environment/PathLantern_Post_6
+      Hide: 0
+      CastShadowsOff: 0
+      IgnoreLocalLights: 1
+      SwapFrom: {fileID: 0}
+      SwapTo: {fileID: 0}

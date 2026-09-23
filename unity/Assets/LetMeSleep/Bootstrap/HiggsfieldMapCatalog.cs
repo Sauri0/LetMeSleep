@@ -25,6 +25,20 @@ namespace LetMeSleep.Bootstrap
             public HiggsfieldMapLighting.LocalSource Settings = new HiggsfieldMapLighting.LocalSource();
         }
 
+        /// <summary>
+        /// v0.3.0 visual-only override of one renderer of the map (hide, stop casting shadows or swap one material),
+        /// resolved on the instance by exact relative path. Never touches colliders or the prefab asset.
+        /// </summary>
+        [Serializable] public sealed class RendererOverrideBinding
+        {
+            public string Path;
+            public bool Hide;
+            public bool CastShadowsOff;
+            public bool IgnoreLocalLights;
+            public Material SwapFrom;
+            public Material SwapTo;
+        }
+
         [Serializable] public sealed class Entry
         {
             public string MapId;
@@ -36,6 +50,7 @@ namespace LetMeSleep.Bootstrap
             public HiggsfieldMapLighting.Configuration Lighting = new HiggsfieldMapLighting.Configuration();
             public LocalLightBinding[] LocalLights = Array.Empty<LocalLightBinding>();
             public string[] SuppressLightPaths = Array.Empty<string>();
+            public RendererOverrideBinding[] RendererOverrides = Array.Empty<RendererOverrideBinding>();
         }
 
         [SerializeField] private Entry[] entries = Array.Empty<Entry>();
@@ -93,7 +108,8 @@ namespace LetMeSleep.Bootstrap
             var source = entry.Lighting;
             if (source == null || source.LocalLights == null || source.LocalLights.Length != 0 ||
                 source.SuppressLights == null || source.SuppressLights.Length != 0 ||
-                entry.LocalLights == null || entry.SuppressLightPaths == null)
+                source.RendererOverrides == null || source.RendererOverrides.Length != 0 ||
+                entry.LocalLights == null || entry.SuppressLightPaths == null || entry.RendererOverrides == null)
                 throw new InvalidOperationException("Use initialized relative bindings, not direct light/anchor references: " + entry.MapId);
             HiggsfieldMapLighting.PeriodFor(source.MapId);
             Nonnegative(source.SunUnityIntensity); Nonnegative(source.AmbientIntensity); Nonnegative(source.ReflectionIntensity);
@@ -121,9 +137,18 @@ namespace LetMeSleep.Bootstrap
                     light.SpotAngle <= 0 || light.SpotAngle >= 180 || light.InnerSpotAngle < 0 || light.InnerSpotAngle > light.SpotAngle ||
                     !Enum.IsDefined(typeof(LightShadows), light.Shadows))
                     throw new InvalidOperationException("Invalid local light range/angles/shadows.");
+                if (!HiggsfieldMapLighting.ValidShadowTier(light.ShadowResolutionTier) || !Finite(light.Flicker) ||
+                    light.Flicker < 0 || light.Flicker > HiggsfieldLightFlicker.MaximumAmplitude)
+                    throw new InvalidOperationException("Invalid local light shadow tier or flicker: " + entry.MapId);
+                try { HiggsfieldMapLighting.ValidateVisual(light, source.Kit); }
+                catch (ArgumentException error) { throw new InvalidOperationException(entry.MapId + " " + binding.AnchorPath + ": " + error.Message); }
                 locals[i] = new HiggsfieldMapLighting.LocalSource { Anchor = anchor, Type = light.Type,
                     Color = light.Color, UnityIntensity = light.UnityIntensity, Range = light.Range,
-                    SpotAngle = light.SpotAngle, InnerSpotAngle = light.InnerSpotAngle, Shadows = light.Shadows };
+                    SpotAngle = light.SpotAngle, InnerSpotAngle = light.InnerSpotAngle, Shadows = light.Shadows,
+                    ShadowResolutionTier = light.ShadowResolutionTier, Flicker = light.Flicker,
+                    LocalOffset = light.LocalOffset, HaloSize = light.HaloSize, HaloOffset = light.HaloOffset,
+                    HaloColor = light.HaloColor, HaloIntensity = light.HaloIntensity,
+                    FlameHeight = light.FlameHeight, FlameOffset = light.FlameOffset };
             }
             var suppressed = new Light[entry.SuppressLightPaths.Length];
             var lights = new HashSet<Light>();
@@ -141,6 +166,22 @@ namespace LetMeSleep.Bootstrap
                 field.SetValue(resolved, field.GetValue(source));
             resolved.LocalLights = locals;
             resolved.SuppressLights = suppressed;
+            var overrides = new HiggsfieldMapLighting.RendererOverride[entry.RendererOverrides.Length];
+            for (int i = 0; i < overrides.Length; i++)
+            {
+                var binding = entry.RendererOverrides[i];
+                if (binding == null) throw new InvalidOperationException("Null renderer override: " + entry.MapId);
+                var found = ResolvePath(root, binding.Path).GetComponents<Renderer>();
+                if (found.Length != 1) throw new InvalidOperationException("Renderer override path must resolve one Renderer: " + binding.Path);
+                overrides[i] = new HiggsfieldMapLighting.RendererOverride { Target = found[0], Hide = binding.Hide,
+                    CastShadowsOff = binding.CastShadowsOff, IgnoreLocalLights = binding.IgnoreLocalLights,
+                    SwapFrom = binding.SwapFrom, SwapTo = binding.SwapTo };
+            }
+            resolved.RendererOverrides = overrides;
+            resolved.MaterialSwaps = (HiggsfieldMapLighting.MaterialSwap[])(source.MaterialSwaps ?? Array.Empty<HiggsfieldMapLighting.MaterialSwap>()).Clone();
+            resolved.InteriorVolumes = (Bounds[])(source.InteriorVolumes ?? Array.Empty<Bounds>()).Clone();
+            try { HiggsfieldMapLighting.ValidateAtmosphere(root, resolved); }
+            catch (ArgumentException error) { throw new InvalidOperationException(entry.MapId + ": " + error.Message); }
             return resolved;
         }
         private static Transform ResolvePath(Transform root, string path)

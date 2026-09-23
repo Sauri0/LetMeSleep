@@ -71,27 +71,29 @@ namespace LetMeSleep.Presentation.Editor
         {
             const string path = PresentationRoot + "/Profiles/AlfaGlobalVolume.asset";
             VolumeProfile profile = CreateOrLoad<VolumeProfile>(path);
+            // Earlier builds left {fileID: 0} entries (components never saved as sub-assets).
+            profile.components.RemoveAll(component => component == null);
+            // Since v0.3.0 the menu/lobby grading is owned by HiggsfieldAtmosphereCorrection
+            // (docs/v030/maps/atmosphere-v030.json). Keep a configured profile untouched; only seed an empty one.
+            if (profile.components.Count > 0)
+                return profile;
 
             Tonemapping tonemapping = GetOrAdd<Tonemapping>(profile);
-            tonemapping.mode.Override(TonemappingMode.ACES);
+            tonemapping.mode.Override(TonemappingMode.Neutral);
 
             ColorAdjustments color = GetOrAdd<ColorAdjustments>(profile);
-            color.postExposure.Override(0f);
-            color.contrast.Override(4f);
-            color.saturation.Override(-3f);
-
-            WhiteBalance whiteBalance = GetOrAdd<WhiteBalance>(profile);
-            whiteBalance.temperature.Override(-5f);
-            whiteBalance.tint.Override(0f);
+            color.postExposure.Override(0.2f);
+            color.contrast.Override(10f);
+            color.saturation.Override(10f);
 
             Bloom bloom = GetOrAdd<Bloom>(profile);
-            bloom.intensity.Override(0.025f);
-            bloom.threshold.Override(1.35f);
-            bloom.scatter.Override(0.35f);
+            bloom.intensity.Override(0.55f);
+            bloom.threshold.Override(0.9f);
+            bloom.scatter.Override(0.72f);
 
             Vignette vignette = GetOrAdd<Vignette>(profile);
-            vignette.intensity.Override(0.10f);
-            vignette.smoothness.Override(0.30f);
+            vignette.intensity.Override(0.28f);
+            vignette.smoothness.Override(0.45f);
 
             EditorUtility.SetDirty(profile);
             return profile;
@@ -227,6 +229,12 @@ namespace LetMeSleep.Presentation.Editor
                 Assign(rig, "nightSkybox", nightSkybox);
                 Assign(rig, "mapLightLowTemplate", mapLightLowTemplate);
                 Assign(rig, "mapLightMediumTemplate", mapLightMediumTemplate);
+                // v0.3.0: keep the atmosphere kit (lobby halos, night window, garlands) authored by
+                // HiggsfieldAtmosphereCorrection when the lighting prefab is rebuilt.
+                var atmosphereKit = AssetDatabase.LoadAssetAtPath<HiggsfieldAtmosphereKit>(
+                    PresentationRoot + "/HiggsfieldAtmosphereKit.asset");
+                if (atmosphereKit != null)
+                    Assign(rig, "atmosphereKit", atmosphereKit);
                 rig.ApplyPreset();
                 moon.lightmapBakeType = LightmapBakeType.Mixed;
 
@@ -603,7 +611,13 @@ namespace LetMeSleep.Presentation.Editor
         {
             if (profile.TryGet(out T component))
                 return component;
-            return profile.Add<T>(true);
+            component = profile.Add<T>(true);
+            component.name = typeof(T).Name;
+            component.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+            // Without this the override lives only in memory and the asset serializes {fileID: 0}.
+            if (AssetDatabase.Contains(profile))
+                AssetDatabase.AddObjectToAsset(component, profile);
+            return component;
         }
 
         private static T CreateOrLoad<T>(string path) where T : ScriptableObject

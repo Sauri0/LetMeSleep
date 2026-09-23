@@ -129,6 +129,7 @@ namespace LetMeSleep.Presentation
             controlledCamera.fieldOfView = preset.MosquitoVerticalFov;
             controlledCamera.nearClipPlane = preset.MosquitoNearPlane;
             controlledCamera.farClipPlane = preset.FarPlane;
+            CameraPostProcessingPolicy.ApplyGameplay(controlledCamera);
         }
 
         public void BindAnchors(Transform anchor, Transform cameraPivot)

@@ -32,6 +32,8 @@ namespace LetMeSleep.Presentation
         Parameters parameters;
         readonly List<MonoBehaviour> componentScratch = new List<MonoBehaviour>();
         public bool IsBound => target != null;
+        /// <summary>Parameters currently applied (meaningful only while bound).</summary>
+        public Parameters CurrentParameters => parameters;
 
         /// <param name="water">Only the renderer of explicitly selected, non-solid water.</param>
         /// <param name="shader">Supply a referenced shader asset; no Shader.Find or automatic inclusion.</param>
