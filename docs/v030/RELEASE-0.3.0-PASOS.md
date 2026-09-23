@@ -69,13 +69,13 @@ revisarlo y commitearlo antes de compilar; no compilar con el árbol sucio.
 
 ```powershell
 & $unity -batchmode -quit -projectPath $proj -executeMethod LetMeSleep.Editor.WindowsAlfaBuild.BuildV030 -logFile "$V/build.log"
-$out = (Select-String "$V/build.log" -Pattern '^LMS_ALFA_BUILD Succeeded release (.+)$').Matches[0].Groups[1].Value
+$out = (Select-String "$V/build.log" -Pattern '^LMS_ALFA_BUILD Succeeded (.+)$').Matches[0].Groups[1].Value
 Get-Content "$out/build-receipt.json"
 ```
 
 Esperado: `result=Succeeded`, `errors=0`, `version=0.3.0`, `profile=release`,
 `developmentBuild=false`, `releaseProblems=[]`, `sourceDirty=false`,
-`sourceCommit` = `git rev-parse HEAD`. Sale en `N:/LetMeSleep/Artifacts/0.3.0-<UTC>`.
+`sourceCommit` = `git rev-parse HEAD`. Sale en `N:/LetMeSleep/Artifacts/0.3.0-<UTC>` (el log dice además `LMS_BUILD_PROFILE release`).
 El build usa `BuildOptions.None`: sin Development Build, profiler ni
 PlayerConnection, sin depuración de scripts, sin IP en `boot.config`. Si detecta
 contenido de desarrollo lanza excepción y lo anota en `releaseProblems`. Las
@@ -88,7 +88,7 @@ La sonda `--lms-probe-output` no existe en el build de release. Para el smoke:
 
 ```powershell
 & $unity -batchmode -quit -projectPath $proj -executeMethod LetMeSleep.Editor.WindowsAlfaBuild.BuildV030Diagnostics -logFile "$V/build-diag.log"
-$diag = (Select-String "$V/build-diag.log" -Pattern '^LMS_ALFA_BUILD Succeeded development (.+)$').Matches[0].Groups[1].Value
+$diag = (Select-String "$V/build-diag.log" -Pattern '^LMS_ALFA_BUILD Succeeded (.+)$').Matches[0].Groups[1].Value
 pwsh -File "$wt/work/smoke-v030.ps1" -BuildDirectory $diag -ReleaseBuildDirectory $out -OutputRoot "$V/Smoke01"          # casa/sangre
 pwsh -File "$wt/work/smoke-v030.ps1" -BuildDirectory $diag -ReleaseBuildDirectory $out -OutputRoot "$V/SmokeMatrix01" -Matrix  # 5 mapas x 3 modos
 ```

@@ -120,7 +120,9 @@ namespace LetMeSleep.Editor
                 errors = report.summary.totalErrors, unity = Application.unityVersion, outputBytes = report.summary.totalSize,
                 utc = DateTime.UtcNow.ToString("O"), sourceCommit = sourceCommit, sourceDirty = SourceDirty(), version = PlayerSettings.bundleVersion,
                 profile = release ? "release" : "development", developmentBuild = !release, releaseProblems = releaseProblems }, true));
-            Debug.Log("LMS_ALFA_BUILD " + report.summary.result + " " + (release ? "release" : "development") + " " + LastOutput);
+            // Same line format as earlier candidates (runbooks parse it); the profile goes on its own line.
+            Debug.Log("LMS_BUILD_PROFILE " + (release ? "release" : "development"));
+            Debug.Log("LMS_ALFA_BUILD " + report.summary.result + " " + LastOutput);
             if (!succeeded)
                 throw new InvalidOperationException("Windows candidate build failed: " + report.summary.result);
             if (releaseProblems.Length != 0)
