@@ -126,8 +126,8 @@ namespace LetMeSleep.Editor
                 utc = DateTime.UtcNow.ToString("O"), sourceCommit = sourceCommit,
                 // BuildCandidate refuses a dirty tree before building, so the input is exactly sourceCommit.
                 // Unity rewrites dynamic font atlases and URP prefilter flags while building; list them separately.
-                sourceDirty = false, modifiedByBuild = Git("diff --name-only").Split(new[] { '
-' }, StringSplitOptions.RemoveEmptyEntries), version = PlayerSettings.bundleVersion,
+                sourceDirty = false, modifiedByBuild = Git("diff --name-only").Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries),
+                version = PlayerSettings.bundleVersion,
                 profile = release ? "release" : "development", developmentBuild = !release, releaseProblems = releaseProblems }, true));
             // Same line format as earlier candidates (runbooks parse it); the profile goes on its own line.
             Debug.Log("LMS_BUILD_PROFILE " + (release ? "release" : "development"));
