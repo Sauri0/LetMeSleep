@@ -42,6 +42,7 @@ namespace LetMeSleep.UI
         private const float HudChipTextSize = 22f;
         private const float SelectionToastSeconds = 2.5f;
         private const string BittenChipText = "¡TE ESTÁN PICANDO!";
+        private const float BittenVignetteAlpha = 0.3f;
         private static readonly Color ObjectiveBadge = AlfaUiTheme.Lamp400;
         private static readonly Regex KeyToken = new Regex(@"^(?:(Mantené|Mantener)\s+)?([A-ZÑ0-9]{1,3}|Tab|TAB|Clic|CLIC|Espacio|ESPACIO)$");
 
@@ -112,10 +113,11 @@ namespace LetMeSleep.UI
             screens[AlfaUiScreen.Gameplay] = view;
             hudView = (RectTransform)view.transform;
 
-            // Being bitten: red edges, behind everything else of the HUD.
+            // Being bitten: red edges (#E0393E at 30 % on the screen edge, down to 0 % at 35 % of the radius), behind
+            // everything else of the HUD.
             var vignette = AlfaUiFactory.Node("BittenVignette", view.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-            vignette.sprite = AlfaUiFactory.RadialVignetteSprite();
-            vignette.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.TeamMosquito, 0.25f);
+            vignette.sprite = AlfaUiFactory.EdgeVignetteSprite();
+            vignette.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.TeamMosquito, BittenVignetteAlpha);
             vignette.raycastTarget = false;
             AlfaUiFactory.Fill(vignette.rectTransform);
             hudBittenVignette = vignette.gameObject;
@@ -474,7 +476,9 @@ namespace LetMeSleep.UI
                 hint = string.Join(" · ", hint.Split(new[] { " · " }, StringSplitOptions.RemoveEmptyEntries).Where(part => part.Trim() != "Mantené E"));
             var legendVisible = !human && !state.IsSpectator;
             hudLegend.SetActive(legendVisible);
-            hudLegendStatus.text = legendVisible ? hint : string.Empty;
+            // The header breaks at each " · " so no line ends with a dangling dot ("Interrumpiendo al humano" /
+            // "Soltá E para despegar").
+            hudLegendStatus.text = legendVisible ? string.Join("\n", hint.Split(new[] { " · " }, StringSplitOptions.RemoveEmptyEntries).Select(part => part.Trim())) : string.Empty;
             hudLegendHeader.SetActive(legendVisible && !string.IsNullOrWhiteSpace(hint));
             hudHint.text = legendVisible ? string.Empty : hint;
 
@@ -499,6 +503,7 @@ namespace LetMeSleep.UI
             if (swap.Length > 0) text = swap;
             var parts = ParsePrompt(text);
             if (legendVisible && parts.Exists(part => part.key == "E")) parts.Clear();
+            // The chip always has the panel border (#3B5E9C); red is only for "¡TE ESTÁN PICANDO!".
             for (var i = 0; i < 2; i++)
             {
                 var used = i < parts.Count;
@@ -513,7 +518,7 @@ namespace LetMeSleep.UI
                 hudPromptLabels[i].gameObject.SetActive(used);
                 hudPromptLabels[i].text = used ? parts[i].label : string.Empty;
             }
-            AlfaUiFactory.SetFrame(hudPromptRect, swap.Length > 0 ? AlfaUiTheme.TeamMosquito : AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.95f));
+            AlfaUiFactory.SetFrame(hudPromptRect, AlfaUiTheme.Border);
             hudPromptPanel.SetActive(parts.Count > 0);
         }
 
@@ -660,28 +665,37 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
-        /// The objective badge shows the player's own character face (rendered once per role through the preview
-        /// rig) on #FFC93C; without a rig (tests, headless) the role pictogram stands in, in ink on the same disc.
+        /// The objective badge shows the character's face on the 84-unit #FFC93C disc: a crop of the rendered v0.3
+        /// character (Resources/AlfaUiPortraits: the human's head with the red nightcap and its pompom and the big
+        /// eyes; the mosquito's eyes and head), else a head shot rendered once through the preview rig; without either
+        /// (tests, headless) the role pictogram stands in, in ink on the same disc.
         /// </summary>
         private void PresentHudFace(AlfaRole role)
         {
             if (!hudFaces.TryGetValue(role, out var face))
             {
-                face = null;
-                var usable = portraitSetup != null && portraitSetup.IsUsable;
-                if (usable && screen != AlfaUiScreen.Customization)
+                face = LoadRoleArt(role, string.Empty);
+                var remember = true;
+                if (face == null)
                 {
-                    var rendered = AlfaRolePortrait.RenderHead(portraitSetup, role, 192, ObjectiveBadge);
-                    if (rendered != null)
+                    var usable = portraitSetup != null && portraitSetup.IsUsable;
+                    if (usable && screen != AlfaUiScreen.Customization)
                     {
-                        renderedPortraits.Add(rendered);
-                        face = rendered;
+                        var rendered = AlfaRolePortrait.RenderHead(portraitSetup, role, 192, ObjectiveBadge);
+                        if (rendered != null)
+                        {
+                            renderedPortraits.Add(rendered);
+                            face = rendered;
+                        }
                     }
+                    // The rig is busy while customizing: try again later. Otherwise one attempt per role.
+                    remember = !usable || screen != AlfaUiScreen.Customization;
                 }
-                // One attempt per role (a failed render is not retried every HUD refresh).
-                if (!usable || screen != AlfaUiScreen.Customization) hudFaces[role] = face;
+                if (remember) hudFaces[role] = face;
             }
+            var painted = face != null && face == LoadRoleArt(role, string.Empty);
             hudRoleFace.texture = face;
+            hudRoleFace.uvRect = painted ? AlfaUiArt.FaceRect(face, role) : new Rect(0f, 0f, 1f, 1f);
             hudRoleFace.enabled = face != null;
             hudRoleIcon.gameObject.SetActive(face == null);
             hudRoleIcon.Kind = role == AlfaRole.Human ? AlfaUiIconKind.Human : AlfaUiIconKind.Mosquito;

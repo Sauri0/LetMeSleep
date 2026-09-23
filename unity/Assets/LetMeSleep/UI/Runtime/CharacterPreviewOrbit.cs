@@ -21,6 +21,11 @@ namespace LetMeSleep.UI
         private static readonly Color PedestalEdge = new Color(0.545f, 0.353f, 0.169f);           // #8B5A2B
         private static readonly Color RimColor = new Color(1f, 0.702f, 0.278f);                   // #FFB347
         private static readonly Color ViewBackground = new Color(0.663f, 0.722f, 0.808f, 1f);     // #A9B8CE, UI-06 thumbnails
+        private static readonly Color SummaryBackground = new Color(0.165f, 0.275f, 0.467f, 1f);  // #2A4677, rail summary card
+        // VISTA PREVIA rule (stage-3 director pass): the figure fills 85 % of the view's height (92 % of its width at
+        // most), centred, at one scale shared by FRENTE, ESPALDA and LADO, from the model's own bounds.
+        private const float ViewHeightFill = 0.85f;
+        private const float ViewWidthFill = 0.92f;
         private const string BackdropResource = "AlfaUiBackdrops/PreviewBedroom";
         private const int FallbackPreviewLayer = 30;
         private const int ViewWidth = 248;
@@ -53,6 +58,11 @@ namespace LetMeSleep.UI
         private float zoomFactor = 1f;
         private float characterRadius = 1f;
         private readonly List<Vector3> framingPoints = new List<Vector3>();
+        private readonly List<Vector3> viewPoints = new List<Vector3>();
+        // The clone is spawned in its bind pose (arms out): the framing is measured again once it has been animated.
+        private bool framingStale;
+        private UnityEngine.UI.RawImage summaryImage;
+        private RenderTexture summaryTarget;
         private Vector3 focusLocal = new Vector3(0f, 0.9f, 0f);
         private Vector2 dragStart;
         private float yawStart;
@@ -66,8 +76,7 @@ namespace LetMeSleep.UI
         private IReadOnlyList<PreviewPartStyle> approximation;
         private GameObject approximatedInstance;
         private readonly List<BoneEdit> boneEdits = new List<BoneEdit>();
-        // Approximation extras: rounded wing membranes and angry brows (with their meshes and materials), and the
-        // original wing renderers they replace while shown.
+        // Approximation extras: the angry brows (with their meshes and materials), and any renderer hidden while shown.
         private readonly List<Object> approximationObjects = new List<Object>();
         private readonly List<Renderer> hiddenRenderers = new List<Renderer>();
         private static readonly Color BrowColor = new Color(0.165f, 0.102f, 0.102f, 1f); // #2A1A1A
@@ -138,6 +147,7 @@ namespace LetMeSleep.UI
             yaw = DefaultYaw;
             zoomFactor = 1f;
             RecalculateFraming();
+            framingStale = true;
             ApplyOrbit();
             // Install optional presentation once per clone, after its camera is positioned.
             // Reusing a role or hiding/showing the preview must not reinstall components.
@@ -222,6 +232,21 @@ namespace LetMeSleep.UI
             RequestViews();
         }
 
+        /// <summary>
+        /// The rail's "TU HUMANO / TU MOSQUITO" picture: rendered by this viewer from the same clone as the big view
+        /// and VISTA PREVIA (colours, wings, eyes, proboscis included), re-rendered with every change of the look.
+        /// Null unbinds it.
+        /// </summary>
+        internal void BindSummary(UnityEngine.UI.RawImage image)
+        {
+            if (summaryImage != null && summaryImage != image && summaryImage.texture == summaryTarget) summaryImage.texture = null;
+            summaryImage = image;
+            RequestViews();
+        }
+
+        /// <summary>True when the summary picture is rendered by the viewer (a usable rig is bound).</summary>
+        internal bool RendersSummary => summaryImage != null && IsBound;
+
         /// <summary>Marks the angle views for a refresh at the end of the frame (after the look was applied).</summary>
         public void RequestViews()
         {
@@ -272,10 +297,20 @@ namespace LetMeSleep.UI
             if (!IsBound || !previewVisible) return;
             if (targetDirty) EnsureTarget();
             ApplyApproximationEdits();
+            if (framingStale && instance != null && instance.activeInHierarchy)
+            {
+                // First animated frame of a new clone: frame the posed character, not its bind pose.
+                framingStale = false;
+                RecalculateFraming();
+                ApplyOrbit();
+                RequestViews();
+            }
             // The angle views follow their frames' aspect (VISTA PREVIA grows taller when the panel has room).
             for (var i = 0; i < viewImages.Length && i < viewTargets.Length; i++)
                 if (viewTargets[i] != null && viewImages[i] != null && Mathf.Abs(ViewAspect(viewImages[i]) - (float)viewTargets[i].width / viewTargets[i].height) > 0.03f)
                     RequestViews();
+            if (summaryTarget != null && summaryImage != null && Mathf.Abs(ViewAspect(summaryImage) - (float)summaryTarget.width / summaryTarget.height) > 0.03f)
+                RequestViews();
             if (viewsDueFrame >= 0 && Time.frameCount >= viewsDueFrame && instance != null) RenderViews();
         }
 
@@ -581,19 +616,26 @@ namespace LetMeSleep.UI
             }
         }
 
-        private void RecalculateFraming()
+        /// <summary>
+        /// Corners of every visible mesh of the clone in stage space: renderers that are enabled and active under the
+        /// clone (an inactive held prop never widens the frame), skinned meshes baked in their current pose.
+        /// </summary>
+        private void CollectCharacterPoints(List<Vector3> into)
         {
-            framingPoints.Clear();
-            var renderers = instance.GetComponentsInChildren<Renderer>(true);
-            foreach (var renderer in renderers)
+            into.Clear();
+            if (instance == null) return;
+            var root = instance.transform;
+            foreach (var renderer in instance.GetComponentsInChildren<Renderer>(true))
             {
-                if (!renderer.enabled) continue;
+                if (!renderer.enabled || renderer is ParticleSystemRenderer || renderer is TrailRenderer || renderer is LineRenderer) continue;
+                if (!ActiveUnder(renderer.transform, root)) continue;
                 // Imported skin culling bounds are not necessarily in renderer-transform space.
                 // BakeMesh(true) compensates renderer scale before TransformPoint applies it.
                 // False would count a scaled visual root twice (see CharacterContentBuilder).
                 var bounds = renderer.localBounds;
-                if (renderer is SkinnedMeshRenderer skin && skin.sharedMesh != null)
+                if (renderer is SkinnedMeshRenderer skin)
                 {
+                    if (skin.sharedMesh == null) continue;
                     var snapshot = new Mesh();
                     try
                     {
@@ -613,10 +655,22 @@ namespace LetMeSleep.UI
                         (corner & 1) == 0 ? -1f : 1f,
                         (corner & 2) == 0 ? -1f : 1f,
                         (corner & 4) == 0 ? -1f : 1f));
-                    framingPoints.Add(setup.Stage.InverseTransformPoint(
-                        renderer.transform.TransformPoint(bounds.center + offset)));
+                    into.Add(setup.Stage.InverseTransformPoint(renderer.transform.TransformPoint(bounds.center + offset)));
                 }
             }
+        }
+
+        /// <summary>activeSelf of the transform and every parent up to the clone root (the clone itself may be hidden).</summary>
+        private static bool ActiveUnder(Transform item, Transform root)
+        {
+            for (var node = item; node != null && node != root; node = node.parent)
+                if (!node.gameObject.activeSelf) return false;
+            return true;
+        }
+
+        private void RecalculateFraming()
+        {
+            CollectCharacterPoints(framingPoints);
 
             if (framingPoints.Count == 0)
             {
@@ -673,11 +727,16 @@ namespace LetMeSleep.UI
             return Mathf.Clamp(fitDistance * zoomFactor, minDistance, maxDistance);
         }
 
-        /// <summary>Renders the angle views: no painting and no pedestal, the light thumbnail colour behind.</summary>
+        /// <summary>
+        /// Renders the angle views and the rail summary: no painting and no pedestal, the light thumbnail colour
+        /// behind. The character is measured again in its current pose; FRENTE, ESPALDA and LADO share one camera
+        /// distance (the largest any of them needs to show the figure at 85 % of its height and within 92 % of its
+        /// width), each centred on the figure, so the three read at the same size.
+        /// </summary>
         private void RenderViews()
         {
             viewsDueFrame = -1;
-            if (viewImages.Length == 0) return;
+            if (viewImages.Length == 0 && summaryImage == null) return;
             var camera = setup.Camera;
             var cameraTransform = camera.transform;
             var savedRotation = setup.Stage.localRotation;
@@ -692,43 +751,39 @@ namespace LetMeSleep.UI
             {
                 if (backdrop != null) backdrop.SetActive(false);
                 if (pedestal != null) pedestal.SetActive(false);
+                CollectCharacterPoints(viewPoints);
+                if (viewPoints.Count == 0) return;
                 camera.backgroundColor = ViewBackground;
+                // One distance for the three angles (same aspect: the views share their frame size).
+                var aspect = viewImages.Length > 0 && viewImages[0] != null ? ViewAspect(viewImages[0]) : (float)ViewWidth / ViewHeight;
+                var width = Mathf.Clamp(Mathf.RoundToInt(ViewTargetHeight * aspect), 64, 1024);
+                aspect = (float)width / ViewTargetHeight;
+                var shared = 0f;
+                for (var i = 0; i < viewImages.Length; i++)
+                    shared = Mathf.Max(shared, ViewDistance(i < viewYaws.Length ? viewYaws[i] : 0f, aspect, 1f, ViewHeightFill, out _));
                 for (var i = 0; i < viewImages.Length; i++)
                 {
                     var image = viewImages[i];
                     if (image == null) continue;
-                    var aspect = ViewAspect(image);
-                    var width = Mathf.Clamp(Mathf.RoundToInt(ViewTargetHeight * aspect), 64, 1024);
-                    if (viewTargets[i] != null && (viewTargets[i].width != width || viewTargets[i].height != ViewTargetHeight))
-                    {
-                        if (image.texture == viewTargets[i]) image.texture = null;
-                        viewTargets[i].Release();
-                        Destroy(viewTargets[i]);
-                        viewTargets[i] = null;
-                    }
-                    if (viewTargets[i] == null)
-                    {
-                        viewTargets[i] = new RenderTexture(width, ViewTargetHeight, 24, RenderTextureFormat.ARGB32)
-                        {
-                            name = "LMS customization angle view " + i,
-                            antiAliasing = 4,
-                            filterMode = FilterMode.Bilinear
-                        };
-                        viewTargets[i].Create();
-                    }
-                    setup.Stage.localRotation = Quaternion.Euler(0f, i < viewYaws.Length ? viewYaws[i] : 0f, 0f);
-                    aspect = (float)width / ViewTargetHeight;
-                    var fit = FitDistance(aspect, false, true) * 1.04f;
-                    var focusWorld = setup.Stage.TransformPoint(characterFocusLocal);
-                    cameraTransform.position = focusWorld + Vector3.forward * fit;
-                    cameraTransform.LookAt(focusWorld, Vector3.up);
-                    camera.targetTexture = viewTargets[i];
-                    camera.aspect = aspect;
-                    var request = new RenderPipeline.StandardRequest { destination = viewTargets[i] };
-                    if (RenderPipeline.SupportsRenderRequest(camera, request)) RenderPipeline.SubmitRenderRequest(camera, request);
-                    else camera.Render();
-                    image.texture = viewTargets[i];
-                    image.enabled = true;
+                    var viewAspect = ViewAspect(image);
+                    var viewWidth = Mathf.Clamp(Mathf.RoundToInt(ViewTargetHeight * viewAspect), 64, 1024);
+                    EnsureViewTarget(ref viewTargets[i], image, viewWidth, "LMS customization angle view " + i);
+                    var yawDegrees = i < viewYaws.Length ? viewYaws[i] : 0f;
+                    ViewDistance(yawDegrees, aspect, 1f, ViewHeightFill, out var centre);
+                    RenderView(viewTargets[i], image, yawDegrees, centre, shared, aspect);
+                }
+                if (summaryImage != null)
+                {
+                    // TU HUMANO / TU MOSQUITO: three-quarter view; the human from the nightcap to the hips.
+                    camera.backgroundColor = SummaryBackground;
+                    var summaryAspect = ViewAspect(summaryImage);
+                    var summaryWidth = Mathf.Clamp(Mathf.RoundToInt(ViewTargetHeight * summaryAspect), 64, 1024);
+                    EnsureViewTarget(ref summaryTarget, summaryImage, summaryWidth, "LMS customization summary");
+                    summaryAspect = (float)summaryWidth / ViewTargetHeight;
+                    var summaryYaw = visibleRole == AlfaRole.Human ? 22f : 30f;
+                    var fromTop = visibleRole == AlfaRole.Human ? 0.6f : 1f;
+                    var summaryDistance = ViewDistance(summaryYaw, summaryAspect, fromTop, 0.9f, out var summaryCentre);
+                    RenderView(summaryTarget, summaryImage, summaryYaw, summaryCentre, summaryDistance, summaryAspect);
                 }
             }
             catch (System.Exception exception)
@@ -746,6 +801,76 @@ namespace LetMeSleep.UI
                 if (backdrop != null) backdrop.SetActive(backdropWasActive);
                 if (pedestal != null) pedestal.SetActive(pedestalWasActive);
             }
+        }
+
+        private void EnsureViewTarget(ref RenderTexture target, UnityEngine.UI.RawImage image, int width, string name)
+        {
+            if (target != null && (target.width != width || target.height != ViewTargetHeight))
+            {
+                if (image.texture == target) image.texture = null;
+                target.Release();
+                Destroy(target);
+                target = null;
+            }
+            if (target != null) return;
+            target = new RenderTexture(width, ViewTargetHeight, 24, RenderTextureFormat.ARGB32)
+            {
+                name = name,
+                antiAliasing = 4,
+                filterMode = FilterMode.Bilinear
+            };
+            target.Create();
+        }
+
+        private void RenderView(RenderTexture target, UnityEngine.UI.RawImage image, float yawDegrees, Vector3 centre, float cameraDistance, float aspect)
+        {
+            var camera = setup.Camera;
+            setup.Stage.localRotation = Quaternion.Euler(0f, yawDegrees, 0f);
+            camera.transform.position = centre + Vector3.forward * cameraDistance;
+            camera.transform.rotation = Quaternion.LookRotation(Vector3.back, Vector3.up);
+            camera.targetTexture = target;
+            camera.aspect = aspect;
+            var request = new RenderPipeline.StandardRequest { destination = target };
+            if (RenderPipeline.SupportsRenderRequest(camera, request)) RenderPipeline.SubmitRenderRequest(camera, request);
+            else camera.Render();
+            image.texture = target;
+            image.uvRect = new Rect(0f, 0f, 1f, 1f);
+            image.enabled = true;
+        }
+
+        /// <summary>
+        /// Camera distance (looking along -Z at the stage turned by <paramref name="yawDegrees"/>) that shows the top
+        /// <paramref name="fromTop"/> of the figure at <paramref name="heightFill"/> of the view's height, within 92 %
+        /// of its width, and the world point the view is centred on.
+        /// </summary>
+        private float ViewDistance(float yawDegrees, float aspect, float fromTop, float heightFill, out Vector3 centre)
+        {
+            var camera = setup.Camera;
+            setup.Stage.localRotation = Quaternion.Euler(0f, yawDegrees, 0f);
+            var tanVertical = Mathf.Max(0.01f, Mathf.Tan(Mathf.Max(1f, camera.fieldOfView * 0.5f) * Mathf.Deg2Rad));
+            var tanHorizontal = tanVertical * Mathf.Max(0.1f, aspect);
+            var world = new Bounds(setup.Stage.TransformPoint(viewPoints[0]), Vector3.zero);
+            foreach (var point in viewPoints) world.Encapsulate(setup.Stage.TransformPoint(point));
+            var bottom = world.max.y - world.size.y * Mathf.Clamp01(fromTop);
+            var shown = new Bounds(new Vector3(world.center.x, (world.max.y + bottom) * 0.5f, world.center.z), Vector3.zero);
+            foreach (var point in viewPoints)
+            {
+                var p = setup.Stage.TransformPoint(point);
+                if (p.y < bottom - 0.0001f) continue;
+                shown.Encapsulate(p);
+            }
+            shown.Encapsulate(new Vector3(shown.center.x, bottom, shown.center.z));
+            centre = shown.center;
+            var needed = 0.0001f;
+            foreach (var point in viewPoints)
+            {
+                var p = setup.Stage.TransformPoint(point);
+                if (p.y < bottom - 0.0001f) continue;
+                var offset = p - centre;
+                needed = Mathf.Max(needed, offset.z + Mathf.Abs(offset.y) / (heightFill * tanVertical));
+                needed = Mathf.Max(needed, offset.z + Mathf.Abs(offset.x) / (ViewWidthFill * tanHorizontal));
+            }
+            return Mathf.Max(needed, camera.nearClipPlane * 4f);
         }
 
         /// <summary>Displayed aspect of an angle view (its frame), the default 248 x 400 before layout.</summary>
@@ -825,13 +950,14 @@ namespace LetMeSleep.UI
                 switch (style.Part)
                 {
                     case PreviewPart.Wings:
-                        // Bone Y runs along the wing (the rig's wing vertices span local Y 0..0.36); X/Z are its breadth.
-                        // REDONDAS: X 1.4 / Y 0.7 and a rounded membrane in place of the pointed one.
+                        // Bone Y runs along the wing (the rig's wing vertices span local Y 0..0.36 from the bone origin, the
+                        // wing root); X/Z are its breadth. REDONDAS: the wing's own mesh and material (lavender #DCDDF5 at
+                        // 0.45 with its veins) scaled X 1.4 / Y 0.7 about the root: shorter and wider, still translucent,
+                        // clear of the head.
                         var wing = style.Variant == "Round" ? new Vector3(1.4f, 0.7f, 1.4f) : style.Variant == "Long" ? new Vector3(0.58f, 1.5f, 0.58f)
                             : style.Variant == "Short" ? new Vector3(1f, 0.55f, 1f) : Vector3.one;
                         Edit("Wing.L", wing, Quaternion.identity);
                         Edit("Wing.R", wing, Quaternion.identity);
-                        if (style.Variant == "Round") RoundWings();
                         break;
                     case PreviewPart.Eyes:
                         var eye = style.Variant == "Small" ? 0.78f : style.Variant == "Big" ? 1.18f : 1f;
@@ -907,131 +1033,6 @@ namespace LetMeSleep.UI
                 break;
             }
             return Quaternion.AngleAxis(sign * degrees, axis);
-        }
-
-        /// <summary>
-        /// REDONDAS: a rounded (elliptical) membrane with its rim, built in each wing bone's space from the wing's own
-        /// vertices (same root, length and plane), shown instead of the pointed membrane and veins.
-        /// </summary>
-        private void RoundWings()
-        {
-            SkinnedMeshRenderer membranes = null, veins = null;
-            foreach (var skin in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
-            {
-                var materials = skin.sharedMaterials;
-                if (materials.Length == 0 || materials[0] == null) continue;
-                if (materials[0].name.StartsWith("Mosquito_WingEdge", System.StringComparison.Ordinal) || materials[0].name.StartsWith("Mosquito_WingVein", System.StringComparison.Ordinal)) veins = skin;
-                else if (materials[0].name.StartsWith("Mosquito_Wing", System.StringComparison.Ordinal)) membranes = skin;
-            }
-            if (membranes == null || membranes.sharedMesh == null || !membranes.sharedMesh.isReadable) return;
-            var mesh = membranes.sharedMesh;
-            var vertices = mesh.vertices;
-            var weights = mesh.boneWeights;
-            var bindposes = mesh.bindposes;
-            var bones = membranes.bones;
-            var built = 0;
-            for (var b = 0; b < bones.Length && b < bindposes.Length; b++)
-            {
-                var bone = bones[b];
-                if (bone == null || (bone.name != "Wing.L" && bone.name != "Wing.R")) continue;
-                var points = new List<Vector3>();
-                for (var v = 0; v < vertices.Length && v < weights.Length; v++)
-                    if (weights[v].boneIndex0 == b && weights[v].weight0 > 0.5f) points.Add(bindposes[b].MultiplyPoint3x4(vertices[v]));
-                if (points.Count < 3) continue;
-                var mean = Vector3.zero;
-                float minY = float.MaxValue, maxY = float.MinValue;
-                foreach (var point in points)
-                {
-                    mean += point;
-                    minY = Mathf.Min(minY, point.y);
-                    maxY = Mathf.Max(maxY, point.y);
-                }
-                mean /= points.Count;
-                // The membrane lies in the plane of the bone axis (Y) and its main direction across X/Z.
-                float xx = 0f, xz = 0f, zz = 0f;
-                foreach (var point in points)
-                {
-                    var dx = point.x - mean.x;
-                    var dz = point.z - mean.z;
-                    xx += dx * dx; xz += dx * dz; zz += dz * dz;
-                }
-                var angle = 0.5f * Mathf.Atan2(2f * xz, xx - zz);
-                var across = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
-                var halfWidth = 0f;
-                foreach (var point in points) halfWidth = Mathf.Max(halfWidth, Mathf.Abs(Vector3.Dot(point - mean, across)));
-                var centre = new Vector3(mean.x, (minY + maxY) * 0.5f, mean.z);
-                var halfLength = (maxY - minY) * 0.5f;
-                var membraneMaterial = membranes.sharedMaterials[0];
-                var rimMaterial = veins != null && veins.sharedMaterials.Length > 0 ? veins.sharedMaterials[0] : membraneMaterial;
-                AddOverlay(bone, "RoundWing." + bone.name, EllipseMesh(centre, Vector3.up, across, halfLength, halfWidth, 0f), membraneMaterial, membranes.gameObject.layer);
-                AddOverlay(bone, "RoundWingRim." + bone.name, EllipseMesh(centre, Vector3.up, across, halfLength, halfWidth, halfLength * 0.02f), rimMaterial, membranes.gameObject.layer);
-                built++;
-            }
-            if (built == 0) return;
-            membranes.enabled = false;
-            hiddenRenderers.Add(membranes);
-            if (veins != null)
-            {
-                veins.enabled = false;
-                hiddenRenderers.Add(veins);
-            }
-        }
-
-        /// <summary>Double-sided ellipse (fan) or, with a rim width, the elliptical rim strip.</summary>
-        private static Mesh EllipseMesh(Vector3 centre, Vector3 along, Vector3 across, float a, float b, float rim)
-        {
-            const int segments = 32;
-            var vertices = new List<Vector3>();
-            var triangles = new List<int>();
-            Vector3 Point(float t, float scale) => centre + along * (Mathf.Cos(t) * a * scale) + across * (Mathf.Sin(t) * b * scale);
-            if (rim <= 0f)
-            {
-                vertices.Add(centre);
-                for (var i = 0; i <= segments; i++) vertices.Add(Point(Mathf.PI * 2f * i / segments, 1f));
-                for (var i = 1; i <= segments; i++)
-                {
-                    triangles.Add(0); triangles.Add(i); triangles.Add(i + 1);
-                    triangles.Add(0); triangles.Add(i + 1); triangles.Add(i);
-                }
-            }
-            else
-            {
-                var inner = 1f - rim / Mathf.Max(0.0001f, Mathf.Min(a, b));
-                for (var i = 0; i <= segments; i++)
-                {
-                    var t = Mathf.PI * 2f * i / segments;
-                    vertices.Add(Point(t, 1f));
-                    vertices.Add(Point(t, inner));
-                }
-                for (var i = 0; i < segments; i++)
-                {
-                    var o = i * 2;
-                    triangles.Add(o); triangles.Add(o + 2); triangles.Add(o + 1);
-                    triangles.Add(o + 1); triangles.Add(o + 2); triangles.Add(o + 3);
-                    triangles.Add(o); triangles.Add(o + 1); triangles.Add(o + 2);
-                    triangles.Add(o + 1); triangles.Add(o + 3); triangles.Add(o + 2);
-                }
-            }
-            var mesh = new Mesh { name = "LMS preview approximation", hideFlags = HideFlags.HideAndDontSave };
-            mesh.SetVertices(vertices);
-            mesh.SetTriangles(triangles, 0);
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            return mesh;
-        }
-
-        private void AddOverlay(Transform parent, string name, Mesh mesh, Material material, int layer)
-        {
-            var node = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer));
-            node.layer = layer;
-            node.transform.SetParent(parent, false);
-            node.GetComponent<MeshFilter>().sharedMesh = mesh;
-            var renderer = node.GetComponent<MeshRenderer>();
-            renderer.sharedMaterial = material;
-            renderer.shadowCastingMode = ShadowCastingMode.Off;
-            renderer.receiveShadows = false;
-            approximationObjects.Add(node);
-            approximationObjects.Add(mesh);
         }
 
         /// <summary>
@@ -1165,6 +1166,13 @@ namespace LetMeSleep.UI
 
         private void ReleaseViewTargets()
         {
+            if (summaryTarget != null)
+            {
+                if (summaryImage != null && summaryImage.texture == summaryTarget) summaryImage.texture = null;
+                summaryTarget.Release();
+                Destroy(summaryTarget);
+                summaryTarget = null;
+            }
             for (var i = 0; i < viewTargets.Length; i++)
             {
                 if (viewTargets[i] == null) continue;

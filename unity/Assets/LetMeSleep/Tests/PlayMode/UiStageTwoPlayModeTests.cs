@@ -340,12 +340,14 @@ namespace LetMeSleep.Tests.PlayMode
             Invoke("SetCustomizationRole", AlfaRole.Mosquito);
             yield return null;
             Assert.That(Label("CustomizationCategory_mosquito/Label"), Is.EqualTo("COLORES"), "The colours category fits in one line.");
-            foreach (var locked in new[] { "CustomizationCategory_mosquito-body", "CustomizationCategory_mosquito-wings", "CustomizationCategory_mosquito-eyes", "CustomizationCategory_mosquito-proboscis" })
-            {
-                Assert.That(Find(locked).gameObject.activeInHierarchy, Is.True, locked);
-                Assert.That(Find(locked).GetComponent<UnityEngine.UI.Button>().interactable, Is.False, locked + " is locked in this build");
-                Assert.That(Find(locked + "/Lock"), Is.Not.Null);
-            }
+            // Director pass (UI-06 6): the rail keeps CUERPO and COLORES, both live; what this build lacks is a locked
+            // card inside CUERPO, never a locked rail entry.
+            Assert.That(Find("CustomizationCategory_mosquito-body").gameObject.activeInHierarchy, Is.True);
+            Assert.That(Find("CustomizationCategory_mosquito-body").GetComponent<UnityEngine.UI.Button>().interactable, Is.True, "CUERPO is live.");
+            Assert.That(Label("CustomizationCategory_mosquito-body/Label"), Is.EqualTo("CUERPO"));
+            foreach (var gone in new[] { "CustomizationCategory_mosquito-wings", "CustomizationCategory_mosquito-eyes", "CustomizationCategory_mosquito-proboscis" })
+                Assert.That(Find(gone), Is.Null, gone);
+            Assert.That(Find("MosquitoStyle_Wings_Round/Lock"), Is.Not.Null, "REDONDAS is a locked card.");
             Assert.That(Label("CustomizationSaveButton/Label"), Is.EqualTo("APLICAR"), "Changing the look keeps the same call to action.");
             Assert.That(Find("CustomizationSaveButton").GetComponent<UnityEngine.UI.Button>().interactable, Is.True);
         }

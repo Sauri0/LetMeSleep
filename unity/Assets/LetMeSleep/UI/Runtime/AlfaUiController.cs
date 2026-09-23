@@ -97,7 +97,7 @@ namespace LetMeSleep.UI
         private RectTransform onlineFormPanel;
         private UnityEngine.UI.Button onlineMapPrevious;
         private UnityEngine.UI.Button onlineMapNext;
-        private UnityEngine.UI.Image onlineMapThumbnail;
+        private UnityEngine.UI.RawImage onlineMapThumbnail;
         private AlfaUiIcon onlineMapPlaceholder;
         private TextMeshProUGUI onlineMapLabel;
         private TextMeshProUGUI onlineModeLabel;
@@ -780,17 +780,30 @@ namespace LetMeSleep.UI
             onlineMapPrevious.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 150f;
             var frame = factory.Inset(carousel, "OnlineMapFrame", 150f, AlfaUiTheme.ButtonRadius);
             var frameLayout = frame.GetComponent<UnityEngine.UI.LayoutElement>();
-            frameLayout.preferredWidth = 320f;
+            frameLayout.preferredWidth = 400f;
             frameLayout.flexibleWidth = 1f;
-            onlineMapThumbnail = AlfaUiFactory.Node("OnlineMapThumbnail", frame, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            // UI-06 2: a real picture of the map (about 400 x 140 at 1080p, drawn "cover" inside the rounded frame)
+            // with its name on a #0E1A30 strip at 70 % along the bottom of the picture.
+            var clip = AlfaUiFactory.Node("OnlineMapClip", frame, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Mask)).GetComponent<RectTransform>();
+            var clipImage = clip.GetComponent<UnityEngine.UI.Image>();
+            clipImage.sprite = AlfaUiSkin.Fill(AlfaUiTheme.SmallRadius);
+            clipImage.type = UnityEngine.UI.Image.Type.Sliced;
+            clipImage.raycastTarget = false;
+            clip.GetComponent<UnityEngine.UI.Mask>().showMaskGraphic = false;
+            AlfaUiFactory.Fill(clip, 4f, 4f, 4f, 4f);
+            onlineMapThumbnail = AlfaUiFactory.Node("OnlineMapThumbnail", clip, typeof(UnityEngine.UI.RawImage), typeof(AlfaUiCover)).GetComponent<UnityEngine.UI.RawImage>();
             onlineMapThumbnail.raycastTarget = false;
-            Anchor(onlineMapThumbnail.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -8f), new Vector2(300f, 110f));
+            AlfaUiFactory.Fill(onlineMapThumbnail.rectTransform);
             onlineMapPlaceholder = factory.Icon(frame, "OnlineMapPlaceholderIcon", AlfaUiIconKind.Map, AlfaUiTheme.WithAlpha(AlfaUiTheme.Sky400, 0.85f));
-            Anchor(onlineMapPlaceholder.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -63f), new Vector2(64f, 64f));
-            onlineMapLabel = factory.Text(frame, "OnlineMapName", "CASA CON PATIO", 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            Anchor(onlineMapPlaceholder.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -56f), new Vector2(64f, 64f));
+            var strip = AlfaUiFactory.Node("OnlineMapNameStrip", clip, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            strip.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Night800, AlfaUiTheme.OverlayAlpha(0.7f));
+            strip.raycastTarget = false;
+            Anchor(strip.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), Vector2.zero, new Vector2(0f, 34f));
+            onlineMapLabel = factory.Text(strip.transform, "OnlineMapName", "CASA CON PATIO", 22f, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
             onlineMapLabel.textWrappingMode = TextWrappingModes.NoWrap;
             onlineMapLabel.richText = false;
-            Anchor(onlineMapLabel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 2f), new Vector2(-16f, 30f));
+            AlfaUiFactory.Fill(onlineMapLabel.rectTransform, 8f, 8f, 1f, 1f);
             onlineMapNext = CycleButton(carousel, "OnlineMapNext", AlfaUiIconKind.ChevronRight, () => CycleOnlineMap(1));
             onlineMapNext.GetComponent<UnityEngine.UI.LayoutElement>().preferredHeight = 150f;
             onlineModeLabel = AddCycleField(defaults, "MODO", "OnlineMode", -1, 1, CycleOnlineMode, 128f, 250f);
@@ -847,7 +860,7 @@ namespace LetMeSleep.UI
             // CANCELAR inside it, and an error card with a neutral frame (red only on the icon and the title).
             onlineOverlay = AlfaUiFactory.Node("OnlineOverlay", view, typeof(UnityEngine.UI.Image));
             var overlayImage = onlineOverlay.GetComponent<UnityEngine.UI.Image>();
-            overlayImage.color = AlfaUiTheme.Scrim;
+            overlayImage.color = AlfaUiTheme.ModalScrim;
             overlayImage.raycastTarget = true;
             AlfaUiFactory.Fill(onlineOverlay.GetComponent<RectTransform>());
 
@@ -1199,6 +1212,7 @@ namespace LetMeSleep.UI
             var used = 0;
             if (visible)
             {
+                var placed = new List<Rect>();
                 var canvas = GetComponent<Canvas>();
                 foreach (var member in lobbyState.Members)
                 {
@@ -1210,8 +1224,15 @@ namespace LetMeSleep.UI
                     if (!lobbyNametagRoot.rect.Contains(local)) continue;
                     var tag = NametagAt(used++);
                     tag.gameObject.SetActive(true);
-                    tag.anchoredPosition = local;
                     tag.Find("Name").GetComponent<TextMeshProUGUI>().text = member.Name;
+                    // Players standing behind one another: the later tag moves up until it no longer covers another.
+                    UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(tag);
+                    var size = tag.rect.size;
+                    var box = new Rect(local.x - size.x * 0.5f, local.y, size.x, size.y);
+                    for (var guard = 0; guard < 16 && placed.Any(other => other.Overlaps(box)); guard++)
+                        box.y = placed.Where(other => other.Overlaps(box)).Max(other => other.yMax) + 4f;
+                    placed.Add(box);
+                    tag.anchoredPosition = new Vector2(local.x, box.y);
                     tag.Find("Dot").GetComponent<UnityEngine.UI.Image>().color = member.Ready ? AlfaUiTheme.StatusOk : AlfaUiTheme.StatusWarn;
                 }
             }
@@ -1246,8 +1267,9 @@ namespace LetMeSleep.UI
         {
             while (lobbyNametags.Count <= index)
             {
-                var tag = factory.Panel(lobbyNametagRoot, "Nametag" + lobbyNametags.Count, AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.82f), -1f, -1f, AlfaUiTheme.SmallRadius);
-                AlfaUiFactory.SetSurface(tag, frame: AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.8f), shadow: AlfaUiTheme.WithAlpha(Color.black, 0.3f));
+                // UI-06 3: the name on a #15264A chip at 80 % with a green (ready) or red (not ready) status dot.
+                var tag = factory.Panel(lobbyNametagRoot, "Nametag" + lobbyNametags.Count, AlfaUiTheme.WithAlpha(AlfaUiTheme.Night700, AlfaUiTheme.OverlayAlpha(0.8f)), -1f, -1f, AlfaUiTheme.SmallRadius);
+                AlfaUiFactory.SetSurface(tag, Color.white, Color.white, AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.8f), AlfaUiTheme.WithAlpha(Color.black, 0.3f));
                 tag.anchorMin = tag.anchorMax = new Vector2(0.5f, 0.5f);
                 tag.pivot = new Vector2(0.5f, 0f);
                 var fitter = tag.gameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
@@ -1479,7 +1501,7 @@ namespace LetMeSleep.UI
         private void BuildConfirm()
         {
             confirmModal = factory.View("ConfirmModal", transform, false);
-            confirmModal.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.Scrim;
+            confirmModal.GetComponent<UnityEngine.UI.Image>().color = AlfaUiTheme.ModalScrim;
             confirmModal.GetComponent<UnityEngine.UI.Image>().raycastTarget = true;
             var panel = CenteredPanel(confirmModal.transform, "ConfirmCard", 640f, 330f);
             var content = factory.Vertical(panel, "Content", 22f, TextAnchor.MiddleCenter);
@@ -1618,9 +1640,9 @@ namespace LetMeSleep.UI
             var selected = options.FirstOrDefault(map => map.Id == onlineMapId);
             onlineMapLabel.text = (selected?.DisplayName ?? "CASA CON PATIO").ToUpperInvariant();
             var thumbnail = LoadMapThumbnail(onlineMapId);
-            onlineMapThumbnail.sprite = thumbnail;
-            onlineMapThumbnail.preserveAspect = false;
-            onlineMapThumbnail.color = thumbnail != null ? Color.white : Color.clear;
+            onlineMapThumbnail.texture = thumbnail != null ? thumbnail.texture : null;
+            onlineMapThumbnail.enabled = thumbnail != null;
+            onlineMapThumbnail.GetComponent<AlfaUiCover>().Apply();
             onlineMapPlaceholder.gameObject.SetActive(thumbnail == null);
             onlineMapPrevious.interactable = onlineMapNext.interactable = options.Count > 1;
             onlineModeLabel.text = AlfaModeText.Name(onlineModeId);

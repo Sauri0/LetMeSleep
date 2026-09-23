@@ -271,6 +271,20 @@ namespace LetMeSleep.UI
             return material;
         }
 
+        /// <summary>
+        /// Disabled look of an action the player cannot take (UI-06 8, the guest's VOLVER A LA SALA): content at
+        /// <paramref name="contentAlpha"/>, the border at <paramref name="frame"/>, so it never reads as active.
+        /// </summary>
+        internal static void LockedWhenDisabled(UnityEngine.UI.Button button, float contentAlpha, Color frame)
+        {
+            var surface = button != null ? button.GetComponent<AlfaUiSurface>() : null;
+            if (surface == null) return;
+            surface.DisabledContentAlpha = Mathf.Clamp01(contentAlpha);
+            surface.DisabledFrameColor = frame;
+            surface.Refresh();
+            button.GetComponent<AlfaUiFocusMotion>()?.RefreshLook();
+        }
+
         /// <summary>Disabled keeps the button's intent colours; only its label and icon dim to 55 % (APLICAR stays green).</summary>
         internal static void KeepIntentWhenDisabled(UnityEngine.UI.Button button)
         {
@@ -1165,6 +1179,57 @@ namespace LetMeSleep.UI
             return radialVignetteSprite;
         }
 
+        private static Sprite contactShadowSprite;
+        private static Sprite edgeVignetteSprite;
+
+        /// <summary>
+        /// Contact shadow (UI-06 9): a radial gradient, opaque in the centre and linearly transparent at the edge, so
+        /// an Image tinted black at 35 % reads 35 % under the feet and 0 % at its rim.
+        /// </summary>
+        internal static Sprite ContactShadowSprite()
+        {
+            if (contactShadowSprite != null) return contactShadowSprite;
+            contactShadowSprite = RadialSprite("LMS UI contact shadow", 64, r => 1f - Mathf.Clamp01(r));
+            return contactShadowSprite;
+        }
+
+        /// <summary>
+        /// Being bitten (UI-06 7, stage-3 director pass): transparent inside 35 % of the radius, rising linearly to
+        /// opaque at the screen edge (and in the corners), for a #E0393E Image at 30 %.
+        /// </summary>
+        internal static Sprite EdgeVignetteSprite()
+        {
+            if (edgeVignetteSprite != null) return edgeVignetteSprite;
+            edgeVignetteSprite = RadialSprite("LMS UI bitten edge vignette", 128, r => Mathf.Clamp01((r - 0.35f) / 0.65f));
+            return edgeVignetteSprite;
+        }
+
+        /// <summary>Square white sprite whose alpha is a function of the normalised radius (0 centre, 1 edge midpoints).</summary>
+        private static Sprite RadialSprite(string name, int size, Func<float, float> alphaAt)
+        {
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false, true)
+            {
+                name = name,
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            var pixels = new Color32[size * size];
+            for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+            {
+                var dx = (x + 0.5f) / size * 2f - 1f;
+                var dy = (y + 0.5f) / size * 2f - 1f;
+                pixels[y * size + x] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(255f * Mathf.Clamp01(alphaAt(Mathf.Sqrt(dx * dx + dy * dy)))));
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, false); // kept readable: small, and the tests check the ramp
+            var sprite = Sprite.Create(texture, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 100f);
+            sprite.name = name;
+            sprite.hideFlags = HideFlags.HideAndDontSave;
+            return sprite;
+        }
+
         private static Sprite radialGlowSprite;
 
         /// <summary>Opaque centre fading to transparent edges: soft team-coloured light behind the results winner.</summary>
@@ -1417,6 +1482,7 @@ namespace LetMeSleep.UI
             AlfaUiTheme.DisabledColors(out _, out _, out _, out var disabledAlpha);
             // A selected control keeps its content; a kept intent (APLICAR) dims it to 55 %; the rest to 50 %.
             var factor = interactable || (surface != null && surface.SelectedKeepsLook) ? 1f
+                : surface != null && surface.DisabledContentAlpha >= 0f ? surface.DisabledContentAlpha
                 : surface != null && surface.DisabledKeepsIntent ? AlfaUiTheme.KeptIntentContentAlpha : disabledAlpha;
             foreach (var pair in content)
             {

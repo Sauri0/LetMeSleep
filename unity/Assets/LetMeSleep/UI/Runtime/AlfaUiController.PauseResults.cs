@@ -12,18 +12,22 @@ namespace LetMeSleep.UI
     /// Pause (UI-06 screen 8) and results (screen 9).
     /// Pause: the scene is dimmed with #0E1A30 so the menu stands out; left column "PARTIDA EN PAUSA" (ink contour
     /// and shadow) with the sketch's menu: CONTINUAR (blue), AJUSTES, VOLVER A LA SALA (online only: the host ends
-    /// the round for everyone after a confirmation; a guest sees it disabled with the reason) and SALIR DE LA PARTIDA
-    /// (red; SALIR DEL ENTRENAMIENTO in training). Under it, at 70 % of the menu width so it never competes with it,
-    /// a compact voice panel ("CHAT DE VOZ (12)") whose list shows three whole rows (3 rows + 2 gaps + padding), fades
-    /// at the bottom edge when it scrolls and is pooled (ui-presentation-audio-5 and -6). When the column is too short
-    /// (21:9) the voice panel moves beside the menu.
+    /// the round for everyone after a confirmation) and SALIR DE LA PARTIDA (red; SALIR DEL ENTRENAMIENTO in
+    /// training). A guest sees VOLVER A LA SALA locked: icon and label at 45 %, the
+    /// #3B5E9C border at 40 % and a 20-unit padlock on the right, with the reason under it. Only in an online round
+    /// with a voice session, under the menu at 70 % of its width, a compact voice panel ("CHAT DE VOZ (12)") whose
+    /// list shows three whole rows (3 rows + 2 gaps + padding), fades at the bottom edge when it scrolls and is
+    /// pooled (ui-presentation-audio-5 and -6); training, or a round without voice, shows no empty voice panel. When
+    /// the column is too short (21:9) the voice panel moves beside the menu.
     /// Results: #0E1A30 over the scene; a comic "¡HUMANOS GANAN!" / "¡MOSQUITOS GANAN!" title (the logo's face,
     /// #FFC93C, #0B1426 contour, tilted 3 degrees up to the right as the sketch); the winning team as a group of
-    /// min(players, 3) figures at 1.15, centred with 170 units between them, standing on one baseline with an
-    /// elliptical contact shadow each (220 x 40, black at 35 %) and a 25 % radial team light behind; the team chips in
-    /// front of their legs (winner centred, loser to its side with its own figure behind it at 0.8); the score line on
-    /// a #0E1A30 pill; and the actions that exist: the green JUGAR DE NUEVO (training) or VOLVER A LA SALA (host) on
-    /// the right and leaving, navy, on the left.
+    /// min(players, 3) figures at 1.15 on one baseline: the centre one in front, the sides at 0.92, 12 units higher and
+    /// behind it, 210 units apart (mosquitoes 230, each turned so its big wing is on the outer side), so no arm or wing
+    /// covers a head; each figure wears its player's colours (the painted art recoloured: trousers and skin, or the
+    /// mosquito's body); one radial contact shadow per team (black at 35 % in the centre to 0 % at the edge) no wider
+    /// than its chip, and a 25 % radial team light behind; the team chips in front of their legs (winner centred,
+    /// loser to its side with its own figure behind it at 0.8); the score line on a #0E1A30 pill; and the actions that
+    /// exist: the green JUGAR DE NUEVO (training) or VOLVER A LA SALA (host) on the right and leaving, navy, on the left.
     /// </summary>
     public sealed partial class AlfaUiController
     {
@@ -47,10 +51,13 @@ namespace LetMeSleep.UI
         private const float ResultsStatsBottom = 144f;
         private const float ResultsChipCentre = 275f;   // from the bottom: chips span y 760-850 at 1080p
         private const float ResultsBaseline = 260f;     // feet at y 820 at 1080p
-        private const float ResultsGroupSpacing = 170f;
-        private const float ResultsMosquitoSpacing = 210f;
+        private const float ResultsGroupSpacing = 210f;
+        private const float ResultsMosquitoSpacing = 230f;
+        private const float ResultsSideScale = 0.92f;
+        private const float ResultsSideLift = 12f;
         private const float ResultsLoserLift = 26f;
-        private static readonly Vector2 ResultsShadowSize = new Vector2(220f, 40f);
+        private const float ResultsShadowHeight = 44f;
+        private const float PauseLockedContentAlpha = 0.45f;
         private RectTransform resultsCard;
         private float resultsLaidOutHeight = -1f;
         private MatchOutcome resultsOutcome = MatchOutcome.Interrupted;
@@ -89,6 +96,7 @@ namespace LetMeSleep.UI
         private readonly Dictionary<AlfaRole, ResultsTeam> resultsTeams = new Dictionary<AlfaRole, ResultsTeam>();
         private readonly Dictionary<string, Texture2D> resultsFigureTextures = new Dictionary<string, Texture2D>();
         private readonly Dictionary<AlfaRole, ResultsChip> resultsChips = new Dictionary<AlfaRole, ResultsChip>();
+        private GameObject pauseLobbyLock;
 
         private sealed class ResultsChip
         {
@@ -98,12 +106,15 @@ namespace LetMeSleep.UI
             public GameObject Crown;
         }
 
-        /// <summary>One team on the results stage: a group root (its x is the team's place) with up to three figures.</summary>
+        /// <summary>
+        /// One team on the results stage: a group root (its x is the team's place) with up to three figures (slot 0
+        /// is the centre one, in front) over one contact shadow.
+        /// </summary>
         private sealed class ResultsTeam
         {
             public RectTransform Root;
             public readonly UnityEngine.UI.RawImage[] Figures = new UnityEngine.UI.RawImage[3];
-            public readonly UnityEngine.UI.Image[] Shadows = new UnityEngine.UI.Image[3];
+            public UnityEngine.UI.Image Shadow;
             public AlfaUiIcon Fallback;
             public int Count = 1;
         }
@@ -134,6 +145,13 @@ namespace LetMeSleep.UI
             PauseButton(content, "PauseContinueButton", "CONTINUAR", ResumeFromPause, AlfaButtonStyle.Primary, AlfaUiIconKind.Play);
             PauseButton(content, "PauseSettingsButton", "AJUSTES", () => OpenSettings(AlfaUiScreen.Pause), AlfaButtonStyle.Secondary, AlfaUiIconKind.Gear);
             pauseLobbyButton = PauseButton(content, "PauseLobbyButton", "VOLVER A LA SALA", ReturnToRoomFromPause, AlfaButtonStyle.Secondary, AlfaUiIconKind.Invite);
+            // A guest cannot end the round: locked look (icon and label at 45 %, #3B5E9C border at 40 %) and a 20-unit
+            // padlock on the right. The padlock is added after the button captured its content, so it stays legible.
+            AlfaUiFactory.LockedWhenDisabled(pauseLobbyButton, AlfaUiTheme.ContentAlpha(PauseLockedContentAlpha, AlfaUiTheme.Sheet100, AlfaUiTheme.DisabledFill),
+                AlfaUiTheme.WithAlpha(AlfaUiTheme.Border, 0.4f));
+            var padlock = factory.Icon(pauseLobbyButton.transform, "LockIcon", AlfaUiIconKind.Lock, AlfaUiTheme.WithAlpha(AlfaUiTheme.Moon200, 0.85f));
+            Anchor(padlock.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-24f, 0f), new Vector2(20f, 20f));
+            pauseLobbyLock = padlock.gameObject;
             pauseHostNote = factory.Text(content, "PauseHostNote", "Solo el anfitrión puede terminar la ronda y volver a la sala.", AlfaUiTheme.NoteSize,
                 AlfaUiTheme.Moon200, TextAlignmentOptions.MidlineLeft);
             pauseHostNote.textWrappingMode = TextWrappingModes.Normal;
@@ -227,8 +245,11 @@ namespace LetMeSleep.UI
             var host = online && lobbyState != null && lobbyState.IsOwner;
             pauseLobbyButton.gameObject.SetActive(online);
             pauseLobbyButton.interactable = host;
+            pauseLobbyLock.SetActive(online && !host);
             pauseHostNote.gameObject.SetActive(online && !host);
             pauseLeaveLabel.text = online ? "SALIR DE LA PARTIDA" : "SALIR DEL ENTRENAMIENTO";
+            // No empty "CHAT DE VOZ": the panel only exists in an online round with a voice session.
+            pauseVoicePanel.SetActive(PauseVoiceVisible);
             SetScreen(AlfaUiScreen.Pause, "PauseContinueButton");
             LayoutPause();
             if (pauseVoiceDirty) RebuildPauseVoicePeers();
@@ -285,10 +306,12 @@ namespace LetMeSleep.UI
         /// Voice rows are pooled per member: labels update in place; the list is rebuilt only when the set of
         /// members changes and only while the pause is on screen (otherwise it is marked dirty for ShowPause).
         /// </summary>
+        private bool PauseVoiceVisible => !gameplayIsTraining && voiceState != null && voiceState.InRoom;
+
         private void RebuildPauseVoicePeers()
         {
             if (pauseVoicePeers == null || voiceState == null) return;
-            pauseVoicePanel.SetActive(voiceState.InRoom);
+            pauseVoicePanel.SetActive(PauseVoiceVisible);
             if (pauseVoiceTitle != null)
                 pauseVoiceTitle.text = voiceState.Participants.Count > 0 ? "CHAT DE VOZ (" + voiceState.Participants.Count + ")" : "CHAT DE VOZ";
             var ids = voiceState.Participants.Select(item => item.MemberId).ToList();
@@ -436,15 +459,13 @@ namespace LetMeSleep.UI
         {
             var root = AlfaUiFactory.Node(name, card).GetComponent<RectTransform>();
             var team = new ResultsTeam { Root = root };
-            // Shadows first: every figure of the group stands in front of every shadow.
-            for (var i = 0; i < 3; i++)
-            {
-                var shadow = AlfaUiFactory.Node("ContactShadow" + i, root, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
-                shadow.sprite = AlfaUiFactory.RadialGlowSprite();
-                shadow.color = AlfaUiTheme.WithAlpha(Color.black, 0.35f);
-                shadow.raycastTarget = false;
-                team.Shadows[i] = shadow;
-            }
+            // One contact shadow under the whole group, behind every figure: a radial gradient (black at 35 % in the
+            // centre to 0 % at the edge), never wider than the team's chip.
+            var shadow = AlfaUiFactory.Node("ContactShadow", root, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+            shadow.sprite = AlfaUiFactory.ContactShadowSprite();
+            shadow.color = AlfaUiTheme.WithAlpha(Color.black, 0.35f);
+            shadow.raycastTarget = false;
+            team.Shadow = shadow;
             for (var i = 0; i < 3; i++)
             {
                 var image = AlfaUiFactory.Node(i == 0 ? name + "Image" : name + "Image" + i, root, typeof(UnityEngine.UI.RawImage)).GetComponent<UnityEngine.UI.RawImage>();
@@ -548,20 +569,26 @@ namespace LetMeSleep.UI
         {
             var human = role == AlfaRole.Human;
             var team = resultsTeams[role];
-            var texture = ResultsFigureTexture(role, winner);
             team.Count = winner ? Mathf.Clamp(count, 1, 3) : 1;
+            // Each figure wears its player's look; the local player (when on this team) is the centre one.
+            var looks = (resultsState?.Figures ?? Array.Empty<ResultsFigureUiState>()).Where(look => look.Role == role)
+                .OrderByDescending(look => look.IsLocal).ToList();
+            var any = false;
             for (var i = 0; i < team.Figures.Length; i++)
             {
                 var figure = team.Figures[i];
-                var used = i < team.Count && texture != null;
+                var texture = i < team.Count ? ResultsFigureTexture(role, winner, i < looks.Count ? looks[i] : null) : null;
+                var used = texture != null;
+                any |= used;
                 figure.texture = texture;
                 figure.enabled = used;
                 figure.gameObject.SetActive(used);
                 figure.color = loser ? new Color(0.55f, 0.6f, 0.72f, 0.94f) : Color.white;
-                team.Shadows[i].gameObject.SetActive(i < team.Count);
-                team.Shadows[i].color = AlfaUiTheme.WithAlpha(Color.black, loser ? 0.25f : 0.35f);
             }
-            team.Fallback.gameObject.SetActive(texture == null);
+            team.Shadow.gameObject.SetActive(any);
+            team.Shadow.color = AlfaUiTheme.WithAlpha(Color.black, loser ? 0.25f : 0.35f);
+            var fallbackShown = !any;
+            team.Fallback.gameObject.SetActive(fallbackShown);
             team.Fallback.color = AlfaUiTheme.WithAlpha(loser ? AlfaUiTheme.Moon200 : AlfaUiTheme.Sheet100, loser ? 0.6f : 0.9f);
             if (winner) team.Root.SetAsLastSibling();
 
@@ -607,12 +634,13 @@ namespace LetMeSleep.UI
                 Anchor(team.Root, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
                     new Vector2(x, ResultsBaseline + (loser ? ResultsLoserLift : 0f)), new Vector2(10f, 10f));
                 team.Root.localScale = Vector3.one * scale;
-                LayoutResultsFigures(team, human ? humanHeight : humanHeight * 0.72f, scale, human ? ResultsGroupSpacing : ResultsMosquitoSpacing);
+                var chipScale = winner ? ResultsWinnerScale : 1f;
+                LayoutResultsFigures(team, role, human ? humanHeight : humanHeight * 0.72f, scale, human ? ResultsGroupSpacing : ResultsMosquitoSpacing, chipScale);
 
                 var chip = resultsChips[role];
                 Anchor(chip.Root, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, ResultsChipCentre),
                     new Vector2(ResultsChipWidth, ResultsChipHeight));
-                chip.Root.localScale = Vector3.one * (winner ? ResultsWinnerScale : 1f);
+                chip.Root.localScale = Vector3.one * chipScale;
             }
             // Chips in front of every figure (they cover the legs), the winner's chip in front of the loser's.
             foreach (var role in new[] { AlfaRole.Human, AlfaRole.Mosquito })
@@ -630,36 +658,49 @@ namespace LetMeSleep.UI
         }
 
         /// <summary>
-        /// A team's figures on the baseline: each painted figure is cropped to its opaque bounds, its feet on the line,
-        /// spaced around the team's x (the right one of three mirrored so the group does not read as copies), each
-        /// over its own contact shadow. Values are unscaled: the team root carries the 1.15 / 0.8 scale.
+        /// A team's figures on the baseline, each painted figure cropped to its opaque bounds with its feet on the
+        /// line. Three: the centre one (slot 0) in front, the sides 210 units away (mosquitoes 230) at 0.92 and 12 units
+        /// higher, behind it, so no raised arm covers a head. Two: humans 105 units each side of the centre, mosquitoes
+        /// 230. Humans: the right one is mirrored so the group does not read as copies; mosquitoes are turned so their
+        /// big wing is on the outer side (no crossed wings in the middle). One contact shadow under the group, as wide
+        /// as the chip. Values are unscaled: the team root carries the 1.15 / 0.8 scale.
         /// </summary>
-        private static void LayoutResultsFigures(ResultsTeam team, float figureHeight, float scale, float spacing)
+        private static void LayoutResultsFigures(ResultsTeam team, AlfaRole role, float figureHeight, float scale, float spacing, float chipScale)
         {
-            var texture = team.Figures[0].texture;
-            var bounds = AlfaUiArt.OpaqueBounds(texture);
-            var aspect = texture != null && texture.height > 0 ? bounds.width * texture.width / Mathf.Max(1f, bounds.height * texture.height) : 0.5f;
-            var width = figureHeight * aspect;
-            var step = spacing / Mathf.Max(0.01f, scale);
-            var shadow = ResultsShadowSize / Mathf.Max(0.01f, scale);
-            // Draw order: sides first, the centre figure in front.
-            var order = team.Count == 3 ? new[] { 0, 2, 1 } : team.Count == 2 ? new[] { 0, 1 } : new[] { 0 };
-            var slot = 0;
-            foreach (var place in order)
+            var human = role == AlfaRole.Human;
+            var unit = 1f / Mathf.Max(0.01f, scale);
+            var offsets = team.Count == 3 ? new[] { 0f, -spacing, spacing }
+                : team.Count == 2 ? (human ? new[] { -spacing * 0.5f, spacing * 0.5f } : new[] { -spacing, spacing })
+                : new[] { 0f };
+            // Draw order: sides first, the centre (slot 0) last, in front.
+            var order = team.Count == 3 ? new[] { 1, 2, 0 } : team.Count == 2 ? new[] { 1, 0 } : new[] { 0 };
+            foreach (var slot in order)
             {
-                var offset = (place - (team.Count - 1) * 0.5f) * step;
                 var figure = team.Figures[slot];
-                var rect = figure.rectTransform;
-                // The side figures of a group of three stand a little behind (7 % smaller) on the same baseline.
-                var depth = team.Count == 3 && place != 1 ? 0.93f : 1f;
-                Anchor(rect, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(offset, 0f), new Vector2(width * depth, figureHeight * depth));
-                var mirrored = team.Count > 1 && place == team.Count - 1;
+                var texture = figure.texture;
+                var bounds = AlfaUiArt.OpaqueBounds(texture);
+                var aspect = texture != null && texture.height > 0 ? bounds.width * texture.width / Mathf.Max(1f, bounds.height * texture.height) : 0.5f;
+                var side = team.Count == 3 && slot != 0;
+                var depth = side ? ResultsSideScale : 1f;
+                var offset = offsets[slot] * unit;
+                Anchor(figure.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
+                    new Vector2(offset, side ? ResultsSideLift * unit : 0f), new Vector2(figureHeight * aspect * depth, figureHeight * depth));
+                bool mirrored;
+                if (human) mirrored = team.Count > 1 && offsets[slot] > 0f;
+                else
+                {
+                    // The art faces one way with its big wing on the other side: turn each figure towards the centre.
+                    var facesLeft = AlfaUiArt.FacesLeft(texture);
+                    mirrored = offsets[slot] < 0f ? facesLeft : offsets[slot] > 0f && !facesLeft;
+                }
                 figure.uvRect = mirrored ? new Rect(bounds.xMax, bounds.yMin, -bounds.width, bounds.height) : bounds;
                 figure.transform.SetAsLastSibling();
-                var contact = team.Shadows[slot].rectTransform;
-                Anchor(contact, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(offset, 2f / Mathf.Max(0.01f, scale)), shadow);
-                slot++;
             }
+            // The shadow: a radial gradient under the feet, exactly the chip's width on screen (it never shows past it).
+            var shadow = team.Shadow.rectTransform;
+            Anchor(shadow, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(0f, 2f * unit),
+                new Vector2(ResultsChipWidth * chipScale * unit, ResultsShadowHeight * unit));
+            shadow.SetAsFirstSibling();
             team.Fallback.transform.SetAsLastSibling();
         }
 
@@ -673,34 +714,52 @@ namespace LetMeSleep.UI
                 UpdatePauseVoiceFade();
             }
             if (screen == AlfaUiScreen.Customization) UpdateCustomizationLayout();
+            if (screen == AlfaUiScreen.Settings) UpdateSettingsLayout();
         }
 
         /// <summary>
-        /// Full-body figure for a team: painted art in Resources/AlfaUiPortraits/&lt;Role&gt;Winner or &lt;Role&gt;
-        /// when it exists, otherwise the in-game model rendered once on transparency (arms up when it won).
+        /// Full-body figure of one player: the painted art in Resources/AlfaUiPortraits/&lt;Role&gt;Winner (the winner,
+        /// arms up) or &lt;Role&gt;, recoloured with the player's look (trousers and skin, or the mosquito's body; the
+        /// default look keeps the art as painted); without art, the in-game model rendered once on transparency.
         /// </summary>
-        private Texture ResultsFigureTexture(AlfaRole role, bool celebrate)
+        private Texture ResultsFigureTexture(AlfaRole role, bool celebrate, ResultsFigureUiState look)
         {
-            var key = role + (celebrate ? ":win" : ":stand");
-            if (resultsFigureTextures.TryGetValue(key, out var cached)) return cached;
             var painted = LoadRoleArt(role, celebrate ? "Winner" : string.Empty) ?? (celebrate ? LoadRoleArt(role, string.Empty) : null);
-            if (painted != null) return painted.texture;
+            if (painted != null)
+            {
+                if (look == null) return painted;
+                var key = painted.GetInstanceID() + ":" + ColorKey(look.SkinColor) + ColorKey(look.PajamaColor) + ColorKey(look.MosquitoColor);
+                if (!resultsFigureTextures.TryGetValue(key, out var tinted))
+                {
+                    tinted = AlfaUiArt.Recolor(painted, role, look.SkinColor, look.PajamaColor, look.MosquitoColor);
+                    resultsFigureTextures[key] = tinted;
+                }
+                return tinted != null ? tinted : painted;
+            }
+            var renderKey = role + (celebrate ? ":win" : ":stand");
+            if (resultsFigureTextures.TryGetValue(renderKey, out var cached)) return cached;
             Texture2D rendered = null;
             if (portraitSetup != null && portraitSetup.IsUsable && screen != AlfaUiScreen.Customization)
                 rendered = role == AlfaRole.Human
                     ? AlfaRolePortrait.RenderFigure(portraitSetup, role, 420, 700, celebrate)
                     : AlfaRolePortrait.RenderFigure(portraitSetup, role, 720, 560, celebrate);
-            resultsFigureTextures[key] = rendered;
+            resultsFigureTextures[renderKey] = rendered;
             return rendered;
         }
 
-        private static Sprite LoadRoleArt(AlfaRole role, string suffix)
+        private static string ColorKey(Color? color) => color.HasValue ? ColorUtility.ToHtmlStringRGB(color.Value) : "-";
+
+        private static readonly Dictionary<string, Texture2D> RoleArt = new Dictionary<string, Texture2D>();
+
+        /// <summary>Painted figure Resources/AlfaUiPortraits/&lt;Human|Mosquito&gt;&lt;suffix&gt; (sprite or plain texture), or null.</summary>
+        private static Texture2D LoadRoleArt(AlfaRole role, string suffix)
         {
             var path = "AlfaUiPortraits/" + (role == AlfaRole.Human ? "Human" : "Mosquito") + suffix;
+            if (RoleArt.TryGetValue(path, out var cached) && cached != null) return cached;
             var sprite = Resources.Load<Sprite>(path);
-            if (sprite != null) return sprite;
-            var texture = Resources.Load<Texture2D>(path);
-            return texture == null ? null : Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
+            var texture = sprite != null ? sprite.texture : Resources.Load<Texture2D>(path);
+            RoleArt[path] = texture;
+            return texture;
         }
 
         private void ResultsPrimaryAction()
@@ -739,7 +798,11 @@ namespace LetMeSleep.UI
         private void DestroyResultsFigures()
         {
             foreach (var texture in resultsFigureTextures.Values)
-                if (texture != null) Destroy(texture);
+            {
+                if (texture == null) continue;
+                AlfaUiArt.Forget(texture);
+                Destroy(texture);
+            }
             resultsFigureTextures.Clear();
         }
     }

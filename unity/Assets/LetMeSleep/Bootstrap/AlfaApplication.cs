@@ -430,7 +430,7 @@ namespace LetMeSleep.Bootstrap
                 showingResults = true;
                 ui.PresentResults(new ResultsUiState(state.Winner == PlayerRole.Human ? MatchOutcome.Humans : state.Winner == PlayerRole.Mosquito ? MatchOutcome.Mosquitoes : MatchOutcome.Interrupted,
                     training, training || lobby?.IsOwner == true, state.BloodCollected, state.BloodGoal, (float)state.HostTime, ModeHudText.ResultReason(state.Result), trainingRole: trainingRole, modeId: state.ModeId, mapId: state.MapId, tasksCompleted: state.TasksCompleted, tasksGoal: state.TasksGoal, mosquitoesAlive: state.Actors.Count(a => a.Role == PlayerRole.Mosquito && !a.Eliminated),
-                    humansCount: state.Actors.Count(a => a.Role == PlayerRole.Human), mosquitoesCount: state.Actors.Count(a => a.Role == PlayerRole.Mosquito))); return;
+                    humansCount: state.Actors.Count(a => a.Role == PlayerRole.Human), mosquitoesCount: state.Actors.Count(a => a.Role == PlayerRole.Mosquito), figures: ResultsFigures())); return;
             }
             var actor = state.Actors.FirstOrDefault(a => a.ActorId == game.LocalActorId); var personal = ModeHudText.LocalPrivate(state, game.LocalActorId, game.LocalPrivate);
             var role = actor?.Role == PlayerRole.Mosquito ? AlfaRole.Mosquito : AlfaRole.Human;

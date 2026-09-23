@@ -35,6 +35,9 @@ namespace LetMeSleep.UI
         internal static readonly Color Disabled = Hex("6E8299");
         internal static readonly Color Border = Hex("3B5E9C");      // panel.border
         internal static readonly Color Scrim = Hex("0E1A30", 0.8f); // full-screen scrim behind modal cards
+        // The UI blends in linear space: #0E1A30 at 0.92 there darkens bright panel content as much as 80 % would
+        // in sRGB, so nothing cut behind a modal card still reads (UI-06 11, stage-3 director pass).
+        internal static readonly Color ModalScrim = Hex("0E1A30", 0.92f);
 
         // v0.3 tokens.
         internal static readonly Color PanelHeader = Hex("1C3160");
@@ -57,6 +60,38 @@ namespace LetMeSleep.UI
         internal static readonly Color StatusWarn = Hex("FF6B5E");
         internal static readonly Color LabelInk = Hex("8FA6CC");    // small uppercase field labels
         internal static readonly Color LogoCream = Hex("EACEAB");   // wordmark subtitle
+
+        /// <summary>
+        /// Alpha that makes <paramref name="content"/> over <paramref name="panel"/> read at <paramref name="coverage"/>
+        /// as the sketch specifies it (an sRGB mix). The project renders in linear space, where the UI blends in
+        /// linear too: light text at alpha 0.45 there reads about 65 %, so the alpha is solved in linear space.
+        /// </summary>
+        internal static float ContentAlpha(float coverage, Color content, Color panel)
+        {
+            coverage = Mathf.Clamp01(coverage);
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear) return coverage;
+            float Luma(Color c) => 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+            var front = Luma(content);
+            var back = Luma(panel);
+            if (Mathf.Abs(front - back) < 0.01f) return coverage;
+            var target = Mathf.GammaToLinearSpace(Mathf.Lerp(back, front, coverage));
+            var linearFront = Mathf.GammaToLinearSpace(front);
+            var linearBack = Mathf.GammaToLinearSpace(back);
+            return Mathf.Clamp01((target - linearBack) / (linearFront - linearBack));
+        }
+
+        /// <summary>
+        /// Alpha of a dark overlay (scrims, strips, chips over the scene) that darkens typical mid-bright content by
+        /// <paramref name="coverage"/> as an sRGB mix would (the sketch's "#0E1A30 al 70 %"), under linear blending.
+        /// </summary>
+        internal static float OverlayAlpha(float coverage)
+        {
+            coverage = Mathf.Clamp01(coverage);
+            if (QualitySettings.activeColorSpace != ColorSpace.Linear) return coverage;
+            const float content = 0.6f;
+            var target = Mathf.GammaToLinearSpace(content * (1f - coverage));
+            return Mathf.Clamp01(1f - target / Mathf.GammaToLinearSpace(content));
+        }
 
         /// <summary>Label/icon opacity of a disabled control that keeps its intent colours (inactive APLICAR).</summary>
         internal const float KeptIntentContentAlpha = 0.55f;

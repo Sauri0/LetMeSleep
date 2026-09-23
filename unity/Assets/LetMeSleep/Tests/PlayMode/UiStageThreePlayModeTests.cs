@@ -23,6 +23,11 @@ namespace LetMeSleep.Tests.PlayMode
     /// crosshair; one mosquito legend panel with a fixed key column; GENERAL settings as the sketch with one control
     /// column; inactive APLICAR keeping its green; the 3x3 palettes, the preview row inside the content margin and
     /// ALEATORIO right under it; modular cards clear of the scrollbar; training portraits that never cut the head.
+    /// Director pass: winners 210 units apart with their own colours over one shadow no wider than the chip,
+    /// mosquitoes 230 apart facing each other; the guest's locked VOLVER A LA SALA and no voice panel without a
+    /// session; the 30 % edge vignette and the neutral E chip; the mosquito header without dangling dots; settings
+    /// cards fitted to their rows; the mosquito's CUERPO column with locked cards; VISTA PREVIA 16 units under the
+    /// options; the map picture in the create carousel; the painted face in the HUD badge; nametag chips; the modal scrim.
     /// </summary>
     public sealed class UiStageThreePlayModeTests
     {
@@ -79,27 +84,43 @@ namespace LetMeSleep.Tests.PlayMode
         public IEnumerator ResultsGroupTheWinnersOnOneBaseline()
         {
             yield return UseCanvas(1920, 1080);
-            ui.PresentResults(new ResultsUiState(MatchOutcome.Humans, false, true, 5, 20, 175, humansCount: 4, mosquitoesCount: 2));
+            var blue = new Color(.176f, .31f, .604f);
+            var red = new Color(.65f, .17f, .16f);
+            var looks = new[]
+            {
+                new ResultsFigureUiState(AlfaRole.Human, new Color(.788f, .545f, .353f), blue, null, true),
+                new ResultsFigureUiState(AlfaRole.Human, new Color(.941f, .788f, .627f), red),
+                new ResultsFigureUiState(AlfaRole.Human, new Color(.4f, .216f, .125f), new Color(.16f, .4f, .27f))
+            };
+            ui.PresentResults(new ResultsUiState(MatchOutcome.Humans, false, true, 5, 20, 175, humansCount: 4, mosquitoesCount: 2, figures: looks));
             yield return null;
             Canvas.ForceUpdateCanvases();
             var group = Find("HumanFigure");
             var figures = group.GetComponentsInChildren<UnityEngine.UI.RawImage>(false).Where(image => image.enabled).ToList();
             Assert.That(figures.Count, Is.EqualTo(3), "min(players, 3) winners stand together.");
-            var bottoms = figures.Select(image => CanvasRect(image.rectTransform).yMin).ToList();
-            Assert.That(bottoms.Max() - bottoms.Min(), Is.LessThan(1f), "One baseline for the whole group.");
-            var centres = figures.Select(image => CanvasRect(image.rectTransform).center.x).OrderBy(x => x).ToList();
-            Assert.That(centres[1] - centres[0], Is.EqualTo(170f).Within(2f));
-            Assert.That(centres[2] - centres[1], Is.EqualTo(170f).Within(2f));
+            var byX = figures.OrderBy(image => CanvasRect(image.rectTransform).center.x).ToList();
+            var centre = byX[1];
+            var centres = byX.Select(image => CanvasRect(image.rectTransform).center.x).ToList();
+            Assert.That(centres[1] - centres[0], Is.EqualTo(210f).Within(2f), "Winners 210 units apart (no clones overlapping).");
+            Assert.That(centres[2] - centres[1], Is.EqualTo(210f).Within(2f));
             Assert.That(Mathf.Abs(centres[1]), Is.LessThan(2f), "The group is centred on the screen.");
-            Assert.That(bottoms[0], Is.EqualTo(-540f + 260f).Within(2f), "Feet at y 820 of 1080.");
+            Assert.That(CanvasRect(centre.rectTransform).yMin, Is.EqualTo(-540f + 260f).Within(2f), "Feet at y 820 of 1080.");
+            foreach (var side in new[] { byX[0], byX[2] })
+            {
+                Assert.That(CanvasRect(side.rectTransform).yMin - CanvasRect(centre.rectTransform).yMin, Is.EqualTo(12f).Within(1f), "Side figures stand 12 units higher.");
+                Assert.That(CanvasRect(side.rectTransform).height / CanvasRect(centre.rectTransform).height, Is.EqualTo(0.92f).Within(0.01f), "Side figures at 0.92.");
+                Assert.That(side.transform.GetSiblingIndex(), Is.LessThan(centre.transform.GetSiblingIndex()), "Side figures stand behind the centre one.");
+            }
+            Assert.That(figures.Select(image => image.texture).Distinct().Count(), Is.EqualTo(3), "Each winner wears their own colours.");
             var shadows = group.GetComponentsInChildren<UnityEngine.UI.Image>(false).Where(image => image.name.StartsWith("ContactShadow")).ToList();
-            Assert.That(shadows.Count, Is.EqualTo(3), "Each figure has a contact shadow.");
+            Assert.That(shadows.Count, Is.EqualTo(1), "One contact shadow under the group.");
             var shadow = CanvasRect(shadows[0].rectTransform);
-            Assert.That(shadow.width, Is.EqualTo(220f).Within(2f));
-            Assert.That(shadow.height, Is.EqualTo(40f).Within(2f));
-            Assert.That(shadows[0].color.a, Is.EqualTo(0.35f).Within(0.01f));
             var chip = CanvasRect((RectTransform)Find("ResultsHumansChip"));
-            Assert.That(chip.yMax, Is.GreaterThan(bottoms[0]), "The winner chip covers the legs.");
+            Assert.That(shadow.xMin, Is.GreaterThanOrEqualTo(chip.xMin - 1f), "The shadow never shows past the chip.");
+            Assert.That(shadow.xMax, Is.LessThanOrEqualTo(chip.xMax + 1f));
+            Assert.That(shadows[0].color.a, Is.EqualTo(0.35f).Within(0.01f), "35 % in the centre (radial, 0 % at the edge).");
+            Assert.That(shadows[0].transform.GetSiblingIndex(), Is.EqualTo(0), "Behind every figure.");
+            Assert.That(chip.yMax, Is.GreaterThan(CanvasRect(centre.rectTransform).yMin), "The winner chip covers the legs.");
             Assert.That(Find("ResultsHumansChip").GetSiblingIndex(), Is.GreaterThan(group.GetSiblingIndex()), "Chips are drawn in front of the figures.");
             Assert.That(Find("WinnerGlow").GetComponent<UnityEngine.UI.Image>().color.a, Is.LessThanOrEqualTo(0.26f), "Only a soft 25 % light.");
             var title = Find("ResultsBanner/Title").GetComponent<TextMeshProUGUI>();
@@ -117,7 +138,13 @@ namespace LetMeSleep.Tests.PlayMode
             ui.PresentResults(new ResultsUiState(MatchOutcome.Mosquitoes, false, true, 20, 20, 142, humansCount: 3, mosquitoesCount: 2));
             yield return null;
             Canvas.ForceUpdateCanvases();
-            Assert.That(Find("MosquitoFigure").GetComponentsInChildren<UnityEngine.UI.RawImage>(false).Count(image => image.enabled), Is.EqualTo(2));
+            var mosquitoes = Find("MosquitoFigure").GetComponentsInChildren<UnityEngine.UI.RawImage>(false).Where(image => image.enabled)
+                .OrderBy(image => CanvasRect(image.rectTransform).center.x).ToList();
+            Assert.That(mosquitoes.Count, Is.EqualTo(2));
+            Assert.That(CanvasRect(mosquitoes[0].rectTransform).center.x, Is.EqualTo(-230f).Within(2f), "Mosquitoes 230 units each side.");
+            Assert.That(CanvasRect(mosquitoes[1].rectTransform).center.x, Is.EqualTo(230f).Within(2f));
+            Assert.That(Mathf.Sign(mosquitoes[0].uvRect.width), Is.Not.EqualTo(Mathf.Sign(mosquitoes[1].uvRect.width)),
+                "The two face each other: each big wing on the outer side, no crossed wings in the middle.");
             Assert.That(Find("HumanFigure").GetComponentsInChildren<UnityEngine.UI.RawImage>(false).Count(image => image.enabled), Is.EqualTo(1), "The loser is one figure.");
             Assert.That(Find("HumanFigure").localScale.x, Is.EqualTo(0.8f).Within(0.001f));
             Assert.That(Find("HumanFigure").GetSiblingIndex(), Is.LessThan(Find("ResultsHumansChip").GetSiblingIndex()), "The loser stands behind its chip.");
@@ -147,13 +174,24 @@ namespace LetMeSleep.Tests.PlayMode
             yield return null;
             Assert.That(Find("PauseLobbyButton").GetComponent<UnityEngine.UI.Button>().interactable, Is.False, "A guest cannot end the round.");
             Assert.That(Find("PauseHostNote").gameObject.activeInHierarchy, Is.True, "... and is told why.");
+            Assert.That(Find("PauseLobbyButton/LockIcon").gameObject.activeSelf, Is.True, "Locked: a padlock on the right.");
+            Assert.That(CanvasRect((RectTransform)Find("PauseLobbyButton/LockIcon")).width, Is.EqualTo(20f).Within(0.5f));
+            var locked = ContentAlpha(0.45f, new Color(0.949f, 0.965f, 1f), new Color(0.118f, 0.2f, 0.345f));
+            Assert.That(Find("PauseLobbyButton/Label").GetComponent<TextMeshProUGUI>().color.a, Is.EqualTo(locked).Within(0.02f), "Label reads at 45 %.");
+            Assert.That(Find("PauseLobbyButton/IconPlate/Icon").GetComponent<AlfaUiIcon>().color.a, Is.EqualTo(locked).Within(0.02f), "Icon reads at 45 %.");
+            Assert.That(SurfaceColor(Find("PauseLobbyButton"), "DisabledFrameColor"), Is.EqualTo(new Color(0.231f, 0.369f, 0.612f, 0.4f)).Using(ColorComparer),
+                "Border #3B5E9C at 40 %.");
+            Assert.That(Find("PauseVoicePanel").gameObject.activeSelf, Is.False, "No voice session: no empty voice panel.");
             AssertInside(Find("PauseLeaveButton"), "PauseLeaveButton");
 
+            // Training never shows the voice panel, even with a voice state in a room.
+            ui.PresentVoice(new VoiceUiState(true, false, false, true, "PARTIDA", "V", string.Empty, null));
             ui.ShowGameplay(true);
             ui.ShowPause();
             yield return null;
             Assert.That(Find("PauseLobbyButton").gameObject.activeInHierarchy, Is.False, "Training has no room to return to.");
             Assert.That(Label("PauseLeaveButton/Label"), Is.EqualTo("SALIR DEL ENTRENAMIENTO"));
+            Assert.That(Find("PauseVoicePanel").gameObject.activeSelf, Is.False, "No CHAT DE VOZ panel in training.");
         }
 
         [UnityTest]
@@ -184,7 +222,14 @@ namespace LetMeSleep.Tests.PlayMode
             ui.PresentHud(Human(selected: 0, charge: .7f, bitten: true, interaction: "E · Recoger objeto · G · soltar equipado"));
             Canvas.ForceUpdateCanvases();
             Assert.That(Label("ActorState"), Does.Not.Contain("CARGA PANTUFLA"), "No slipper charge with the flyswatter in hand.");
-            Assert.That(Find("BittenVignette").GetComponent<UnityEngine.UI.Image>().color.a, Is.EqualTo(0.25f).Within(0.01f));
+            var vignette = Find("BittenVignette").GetComponent<UnityEngine.UI.Image>();
+            Assert.That(vignette.color.a, Is.EqualTo(0.3f).Within(0.01f), "#E0393E at 30 % on the edge.");
+            var edge = vignette.sprite.texture;
+            Assert.That(AlphaAt(edge, 0.5f, 0.5f), Is.LessThan(0.01f), "Clear in the centre.");
+            Assert.That(AlphaAt(edge, 0.5f + 0.35f * 0.5f * 0.95f, 0.5f), Is.LessThan(0.02f), "0 % up to 35 % of the radius.");
+            Assert.That(AlphaAt(edge, 0.995f, 0.5f), Is.GreaterThan(0.95f), "Full strength at the screen edge.");
+            Assert.That(SurfaceColor(Find("InteractionPrompt"), "FrameColor"), Is.EqualTo(new Color(0.231f, 0.369f, 0.612f, 1f)).Using(ColorComparer),
+                "The E chip has the panel border; red is only for ¡TE ESTÁN PICANDO!");
             var reticle = CanvasRect((RectTransform)Find("Reticle"));
             var prompt = CanvasRect((RectTransform)Find("InteractionPrompt"));
             Assert.That(prompt.xMin, Is.GreaterThan(reticle.xMax), "The interaction chip is right of the crosshair.");
@@ -226,6 +271,7 @@ namespace LetMeSleep.Tests.PlayMode
             foreach (Transform row in Find("ControlsLegend"))
                 Assert.That(CanvasRect((RectTransform)row.Find("Keys")).width, Is.EqualTo(150f).Within(1f));
             Assert.That(Find("InteractionPrompt").gameObject.activeSelf, Is.False, "No second 'Mantené E · Picar' pill.");
+            Assert.That(Label("LegendStatus"), Is.EqualTo("Interrumpiendo al humano\nSoltá E para despegar"), "The header breaks at the dots, no dangling '·'.");
             Assert.That(Find("RoleBadge").GetComponent<UnityEngine.UI.Image>().color, Is.EqualTo(new Color(0.082f, 0.149f, 0.29f, 1f)).Using(ColorComparer),
                 "The role badge is opaque #15264A.");
             Assert.That(Find("RoleLabel").GetComponent<TextMeshProUGUI>().color, Is.EqualTo(new Color(0.949f, 0.965f, 1f, 1f)).Using(ColorComparer));
@@ -260,6 +306,29 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(keyLabels.Max() - keyLabels.Min(), Is.LessThan(1f), "Fixed 84-unit key column.");
             Find("SettingsTabAccessibility").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             Assert.That(Find("StatusLegend").gameObject.activeInHierarchy, Is.True, "ACCESIBILIDAD also explains the status icons.");
+
+            // The content panel is its rows + 24 on every tab and the card follows it with its top fixed.
+            var tops = new List<float>();
+            foreach (var page in new[] { "General", "Audio", "Video", "Controls", "Accessibility" })
+            {
+                Find("SettingsTab" + page).GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+                yield return null;
+                Canvas.ForceUpdateCanvases();
+                var panel = (RectTransform)Find(page + "Panel");
+                var rows = UnityEngine.UI.LayoutUtility.GetPreferredHeight(panel);
+                // Never shorter than the tab column with VOLVER (5 x 64 + 4 x 10 + 20 + 66, minus the 96-unit footer).
+                Assert.That(CanvasRect((RectTransform)Find("Pages")).height, Is.EqualTo(Mathf.Max(rows + 24f, 350f)).Within(1.5f),
+                    page + ": the content panel is its rows + 24 (no empty band).");
+                tops.Add(CanvasRect((RectTransform)Find("SettingsCard")).yMax);
+            }
+            Assert.That(tops.Max() - tops.Min(), Is.LessThan(1f), "The card's top stays put between tabs.");
+            Find("SettingsTabAudio").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            Assert.That(Label("MusicVolumeSliderRow/Label"), Is.EqualTo("Volumen música"), "Same labels in GENERAL and AUDIO.");
+            Assert.That(Label("EffectsVolumeSliderRow/Label"), Is.EqualTo("Volumen efectos"));
+            Find("SettingsTabGeneral").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            Assert.That(Label("LanguageValue"), Is.EqualTo("Español"));
+            Assert.That(Find("LanguagePrevious").GetComponent<UnityEngine.UI.Button>().interactable, Is.False, "A locked ‹ Español › selector, not a mute field.");
+            Assert.That(Find("LanguageNext").GetComponent<UnityEngine.UI.Button>().interactable, Is.False);
 
             // Inactive APLICAR: the full green, content at 55 %; while a key is awaited GENERAL stays highlighted.
             Find("SettingsTabGeneral").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
@@ -300,6 +369,9 @@ namespace LetMeSleep.Tests.PlayMode
                 var random = CanvasRect((RectTransform)Find("CustomizationRandomButton"));
                 var row = CanvasRect((RectTransform)Find("PreviewRow"));
                 Assert.That(row.yMin - random.yMax, Is.EqualTo(12f).Within(1f), "ALEATORIO 12 units under VISTA PREVIA at " + size);
+                var options = CanvasRect((RectTransform)Find("PajamaGroup"));
+                var caption = CanvasRect((RectTransform)Find("PreviewCaption"));
+                Assert.That(options.yMin - caption.yMax, Is.EqualTo(16f).Within(1.5f), "VISTA PREVIA 16 units under the palette at " + size);
                 Assert.That(Find("RoleSummary").gameObject.activeInHierarchy, Is.True, "The rail is filled by the role card at " + size);
                 var rail = CanvasRect((RectTransform)Find("BasicCategories"));
                 Assert.That(rail.height, Is.EqualTo(3 * 74f + 2 * 10f).Within(1f), "The categories take their buttons' height.");
@@ -309,6 +381,36 @@ namespace LetMeSleep.Tests.PlayMode
             Invoke("SetCustomizationRole", AlfaRole.Mosquito);
             yield return null;
             Assert.That(Find("MosquitoPalette").Cast<Transform>().Count(), Is.EqualTo(8), "Eight body colours.");
+            // CUERPO (UI-06 6): COLOR DE CUERPO (8, 4 x 2), ESTILO DE ALAS and OJOS in one column; the rail has only
+            // CUERPO and COLORES, both live.
+            foreach (var name in new[] { "CustomizationCategory_mosquito-body", "CustomizationCategory_mosquito" })
+            {
+                Assert.That(Find(name).gameObject.activeInHierarchy, Is.True, name);
+                Assert.That(Find(name).GetComponent<UnityEngine.UI.Button>().interactable, Is.True, name + " is live");
+            }
+            foreach (var gone in new[] { "CustomizationCategory_mosquito-wings", "CustomizationCategory_mosquito-eyes", "CustomizationCategory_mosquito-proboscis" })
+                Assert.That(Find(gone), Is.Null, gone + " is not a locked rail entry any more.");
+            Invoke("SelectBasicCategory", "mosquito-body");
+            yield return null;
+            Assert.That(Find("MosquitoBodyPalette").Cast<Transform>().Count(), Is.EqualTo(8));
+            Assert.That(Find("MosquitoBodyPalette").GetComponent<UnityEngine.UI.GridLayoutGroup>().constraintCount, Is.EqualTo(4));
+            foreach (var section in new[] { "Wings", "Eyes" })
+            {
+                var cards = Find(section + "Cards").Cast<Transform>().ToList();
+                Assert.That(cards.Count, Is.EqualTo(3), section + ": three cards.");
+                Assert.That(cards.Count(card => card.Find("Lock") != null), Is.EqualTo(2), section + ": the two this build lacks are locked.");
+                foreach (var card in cards.Where(card => card.Find("Lock") != null))
+                {
+                    Assert.That(card.GetComponent<UnityEngine.UI.Button>().interactable, Is.False);
+                    Assert.That(card.Find("Label").GetComponent<TextMeshProUGUI>().text, Is.EqualTo("Próximamente"));
+                    Assert.That(card.Find("Label").GetComponent<TextMeshProUGUI>().color.a,
+                        Is.EqualTo(ContentAlpha(0.55f, new Color(0.949f, 0.965f, 1f), new Color(0.118f, 0.2f, 0.345f))).Within(0.02f), "Locked cards read at 55 %.");
+                }
+                Assert.That(cards[0].Find("SelectionMark").gameObject.activeSelf, Is.True, section + ": what the mosquito wears is marked.");
+            }
+            var column = CanvasRect((RectTransform)Find("MosquitoBodyGroup"));
+            var content2 = CanvasRect((RectTransform)Find("OptionsPanel/Content"));
+            Assert.That(column.xMax, Is.LessThanOrEqualTo(content2.xMax + 0.5f), "The column fits the panel.");
             Assert.That(Label("HumanFields/PajamaGroup/DefaultClothes"), Does.Contain("gorro rojo"), "The clothes colour never tints the nightcap.");
             Assert.That(Label("CustomizationHumanButton/Subtitle"), Is.EqualTo("PIEL, ROPA Y ACCESORIOS"));
         }
@@ -377,6 +479,103 @@ namespace LetMeSleep.Tests.PlayMode
             return new CustomizationUiState(Options("s", skins), Options("p", clothes), Options("m", mosquitoes),
                 new BasicCustomizationDraft(AlfaRole.Human, "warm", "blue", "red"));
         }
+
+        [UnityTest]
+        public IEnumerator DirectorPassDetails()
+        {
+            // JUGAR ONLINE: the default map (CASA CON PATIO) has a real picture about 400 x 140 with its name on a strip.
+            ui.ShowCreateRoom("Branko");
+            yield return UseCanvas(1920, 1080);
+            Canvas.ForceUpdateCanvases();
+            var picture = Find("OnlineMapThumbnail").GetComponent<UnityEngine.UI.RawImage>();
+            Assert.That(picture.texture, Is.Not.Null, "A picture of the map, not the generic icon.");
+            Assert.That(Find("OnlineMapPlaceholderIcon").gameObject.activeSelf, Is.False);
+            var area = CanvasRect(picture.rectTransform);
+            Assert.That(area.width, Is.EqualTo(400f).Within(20f));
+            Assert.That(area.height, Is.EqualTo(140f).Within(8f));
+            var strip = Find("OnlineMapNameStrip").GetComponent<UnityEngine.UI.Image>();
+            Assert.That((Vector4)strip.color, Is.EqualTo(new Vector4(0.055f, 0.102f, 0.188f, OverlayAlpha(0.7f))).Using(Vector4Comparer), "#0E1A30 strip reading at 70 %.");
+            Assert.That(CanvasRect((RectTransform)Find("OnlineMapName")).yMin, Is.GreaterThanOrEqualTo(area.yMin - 0.5f), "The name sits on the picture.");
+
+            // Modal cards: #0E1A30 reading at 80 % behind them.
+            ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.Searching, canCancel: true));
+            yield return null;
+            Assert.That(Find("OnlineOverlay").GetComponent<UnityEngine.UI.Image>().color.a, Is.GreaterThanOrEqualTo(0.9f), "Nothing cut behind the modal reads.");
+            ui.PresentOnline(new OnlineUiState());
+
+            // HUD: the painted face on the 84-unit #FFC93C disc, cropped to the head (with the whole nightcap).
+            ui.PresentHud(Human(selected: 0, charge: 0f, bitten: false, interaction: string.Empty));
+            yield return null;
+            var face = Find("RoleFace").GetComponent<UnityEngine.UI.RawImage>();
+            Assert.That(face.texture, Is.Not.Null, "The v0.3 character's face.");
+            Assert.That(face.uvRect.width, Is.LessThan(0.6f), "A head crop, not the whole figure.");
+            Assert.That(face.uvRect.y, Is.GreaterThan(0.3f), "From the top of the figure.");
+            var disc = Find("RolePortrait").GetComponent<UnityEngine.UI.Image>();
+            Assert.That(CanvasRect(disc.rectTransform).width, Is.EqualTo(84f).Within(0.5f));
+            Assert.That(disc.color, Is.EqualTo(new Color(1f, 0.788f, 0.235f, 1f)).Using(ColorComparer));
+            Assert.That(Find("RoleBadge").GetComponent<UnityEngine.UI.Image>().color.a, Is.EqualTo(1f).Within(0.001f), "The role badge is opaque.");
+
+            // Waiting room nametags: #15264A chips reading at 80 % with a status dot, never stacked.
+            var cameraObject = new GameObject("NametagTestCamera", typeof(Camera));
+            var worldCamera = cameraObject.GetComponent<Camera>();
+            worldCamera.transform.position = new Vector3(0f, 1.5f, -6f);
+            var avatars = new[] { new GameObject("AvatarA"), new GameObject("AvatarB") };
+            avatars[0].transform.position = new Vector3(0f, 0f, 0f);
+            avatars[1].transform.position = new Vector3(0.05f, 0f, 1f); // right behind the first one
+            typeof(AlfaUiController).GetField("lobbyPresenceOverride", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(ui, new Presence(new Dictionary<string, Transform> { { "m0", avatars[0].transform }, { "m1", avatars[1].transform } }, worldCamera));
+            ui.PresentLobby(new LobbyUiState(true, "ABCDE12345", new[] { new LobbyMemberUiState("m0", "Branko", true), new LobbyMemberUiState("m1", "Luna", false) },
+                true, false, null, true, string.Empty));
+            yield return null;
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+            var tags = ui.GetComponentsInChildren<RectTransform>(false).Where(item => item.name.StartsWith("Nametag")).ToList();
+            try
+            {
+                Assert.That(tags.Count, Is.EqualTo(2));
+                var chip = tags[0].GetComponent<UnityEngine.UI.Image>();
+                Assert.That((Vector4)chip.color, Is.EqualTo(new Vector4(0.082f, 0.149f, 0.29f, OverlayAlpha(0.8f))).Using(Vector4Comparer), "#15264A chip reading at 80 %.");
+                Assert.That(CanvasRect(tags[0]).Overlaps(CanvasRect(tags[1])), Is.False, "Tags of players behind one another do not stack.");
+                var dots = tags.Select(tag => tag.Find("Dot").GetComponent<UnityEngine.UI.Image>().color).ToList();
+                Assert.That(dots, Does.Contain(new Color(0.341f, 0.824f, 0.42f, 1f)).Using(ColorComparer), "Green dot: ready.");
+                Assert.That(dots, Does.Contain(new Color(1f, 0.42f, 0.369f, 1f)).Using(ColorComparer), "Red dot: not ready.");
+            }
+            finally
+            {
+                foreach (var avatar in avatars) Object.DestroyImmediate(avatar);
+                Object.DestroyImmediate(cameraObject);
+            }
+        }
+
+        private sealed class Presence : ILobbyPresenceSource
+        {
+            private readonly Dictionary<string, Transform> avatars;
+            private readonly Camera camera;
+            public Presence(Dictionary<string, Transform> avatars, Camera camera) { this.avatars = avatars; this.camera = camera; }
+            public bool TryGetLobbyAvatar(string memberId, out Transform avatar, out Camera view)
+            {
+                view = camera;
+                return avatars.TryGetValue(memberId, out avatar);
+            }
+        }
+
+        private static readonly IEqualityComparer<Vector4> Vector4Comparer = new Vector4Equality();
+
+        private sealed class Vector4Equality : IEqualityComparer<Vector4>
+        {
+            public bool Equals(Vector4 a, Vector4 b) => (a - b).magnitude < 0.02f;
+            public int GetHashCode(Vector4 value) => 0;
+        }
+
+        private static readonly System.Type Theme = typeof(AlfaUiController).Assembly.GetType("LetMeSleep.UI.AlfaUiTheme");
+
+        private static float ContentAlpha(float coverage, Color content, Color panel) =>
+            (float)Theme.GetMethod("ContentAlpha", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { coverage, content, panel });
+
+        private static float OverlayAlpha(float coverage) =>
+            (float)Theme.GetMethod("OverlayAlpha", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { coverage });
+
+        private static float AlphaAt(Texture2D texture, float u, float v) => texture.GetPixelBilinear(u, v).a;
 
         private static CustomizationCatalogSnapshot MosquitoSnapshot()
         {

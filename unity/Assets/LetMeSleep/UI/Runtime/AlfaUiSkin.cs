@@ -234,6 +234,12 @@ namespace LetMeSleep.UI
         /// GENERAL stays highlighted in Ajustes while a push-to-talk key is awaited.
         /// </summary>
         internal bool SelectedKeepsLook;
+        /// <summary>
+        /// Disabled look of a locked action (the guest's VOLVER A LA SALA): when its alpha is above zero this frame
+        /// replaces the disabled border, and <see cref="DisabledContentAlpha"/> (0-1) replaces the content opacity.
+        /// </summary>
+        internal Color DisabledFrameColor = Color.clear;
+        internal float DisabledContentAlpha = -1f;
         internal Color ShadowColor = Color.clear;
         internal Vector2 ShadowOffset = new Vector2(0f, -AlfaUiTheme.ShadowOffset);
         internal Color FocusFrameColor = Color.clear;
@@ -282,6 +288,7 @@ namespace LetMeSleep.UI
             else if (Disabled)
             {
                 AlfaUiTheme.DisabledColors(out top, out bottom, out frameColor, out _);
+                if (DisabledFrameColor.a > 0.003f) frameColor = DisabledFrameColor;
                 shadowColor = AlfaUiTheme.WithAlpha(ShadowColor, ShadowColor.a * 0.5f);
             }
             var height = Mathf.Max(0.001f, rect.height);
