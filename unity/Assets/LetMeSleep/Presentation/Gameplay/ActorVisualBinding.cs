@@ -41,7 +41,7 @@ namespace LetMeSleep.Presentation.Gameplay
         public int LastBiteSampleFrame { get; private set; } = -1;
         private sealed class ArmChain
         {
-            public Transform Shoulder, Upper, Lower, Hand;
+            public Transform Shoulder, Upper, Lower, Hand, Palm;
             public bool IsValid => Upper && Lower && Hand && Lower.IsChildOf(Upper) && Hand.IsChildOf(Lower);
         }
         private ArmChain leftArm, rightArm;
@@ -53,11 +53,16 @@ namespace LetMeSleep.Presentation.Gameplay
         private bool localGaitInterpolation;
         private int landedFrame = -1;
         // v0.3.0 animation pass: presentation-only expressive layers.
-        private const float StrikeClipTimeScale = 1.9f;   // authority strike seconds -> Human_Swat seconds
-        // v0.3.0 review: at 150 deg the extended stroke still read straight; the whole strike keeps <=140 deg
-        // (constant, so the limit never pops between phases) and the clavicle/torso make up the reach.
-        private const float StrikeElbowInnerDegrees = 140f;
-        private const float MaximumTorsoAssistDegrees = 24f, MaximumSpineAssistDegrees = 14f;
+        // The whole Human_Swat clip spans this many authority strike seconds (normalized clip time t = 1.9 x
+        // authority seconds): cocked at t .23, impact at t .47 when the sweep ends at .25 s.
+        private const float SwatAuthoritySeconds = 1f / 1.9f;
+        private float StrikeClipTimeScale => HasMotion(Ids.HumanSwat) ? MotionDuration(Ids.HumanSwat) / SwatAuthoritySeconds : 1.9f;
+        private const float MosquitoTumbleSeconds = .5f;  // Mosquito_Fall's tumble (author_mosquito_motion FALL_TUMBLE_SECONDS)
+        // v0.3.0 round 3: 140 deg still read as a straight-arm push in third person; the swat keeps the elbow at
+        // or below 120 deg (constant, so the limit never pops between phases) and the clavicle, a forward lean
+        // and the torso twist make up the reach. The first-person local human (no torso help) keeps 140 deg.
+        public const float StrikeElbowInnerDegrees = 120f, LocalStrikeElbowInnerDegrees = 140f;
+        private const float MaximumTorsoAssistDegrees = 24f, MaximumSpineAssistDegrees = 14f, MaximumLeanAssistDegrees = 12f;
         private const float OwnerCrossfadeSeconds = .18f;
         // Entering the gait while the body already moves: the legs join the stride almost at once (no skate),
         // the torso and arms keep the longer blend.
@@ -80,6 +85,13 @@ namespace LetMeSleep.Presentation.Gameplay
         /// <summary>Reach assists used by the last strike frame (clavicle, chest), for review.</summary>
         public float LastClavicleAssistDegrees { get; private set; }
         public float LastTorsoAssistDegrees { get; private set; }
+        public float LastLeanAssistDegrees { get; private set; }
+        /// <summary>World goal of the swat effector (palm or tool impact point) on the last solved frame.</summary>
+        public Vector3 LastStrikeGoal { get; private set; }
+        /// <summary>Distance between the effector and its goal after the last solve (reach residual included).</summary>
+        public float LastStrikeEffectorError { get; private set; }
+        /// <summary>Time.frameCount of the last frame the swat arm IK solved (diagnostics and tests).</summary>
+        public int LastStrikeSolveFrame { get; private set; } = -1;
         public int CurrentMotion => currentMotion;
         public int TemporaryMotion => temporaryMotion;
         public bool UsingLocomotion => usingLocomotion;
@@ -253,13 +265,19 @@ namespace LetMeSleep.Presentation.Gameplay
                 case GameplayModel.GameplayEventKind.MosquitoKnockedDown:
                     if (proxy.Role == PlayerRole.Mosquito)
                     {
-                        // Short flinch, then Falling -> Fall -> StunnedLoop; squash and a roll shake sell the hit.
-                        motion = 10; duration = .25f;
-                        secondary?.Kick(-.28f); secondary?.KickWobble(30f);
+                        // v0.3.0 round 3: the swatted mosquito tumbles at once (Fall: 1.5 turns in 0.5 s, then belly
+                        // up) instead of a 0.25 s Hit flinch that left the fall to the last frames before touchdown;
+                        // Falling keeps playing the same clip and Stunned then crossfades into StunnedLoop.
+                        motion = HasMotion(Ids.MosquitoFall) ? Ids.MosquitoFall : Ids.MosquitoHit;
+                        duration = motion == Ids.MosquitoFall ? MosquitoTumbleSeconds : .25f;
+                        secondary?.Kick(-.28f); secondary?.KickWobble(24f);
                     }
                     break;
             }
-            if (motion >= 0)
+            if (motion == Ids.HumanSwat && proxy.Role == PlayerRole.Human)
+                // The Swat clip is authored on the strike timeline scaled by StrikeClipTimeScale (see UpdateLocomotionOverlays).
+                PlayTemporary(motion, -1f, StrikeClipTimeScale);
+            else if (motion >= 0)
                 PlayTemporary(motion, duration);
         }
 
@@ -433,7 +451,12 @@ namespace LetMeSleep.Presentation.Gameplay
             var result = mood.Evaluate(new GameplayMoodPolicy.Frame(proxy.Role, current.LifeState, PlanarSpeed(current.Velocity),
                 current.Grounded, current.CrouchFraction, current.StrikeState.Phase != GameplayModel.StrikePhase.None,
                 opponentNear), now);
-            if (moodRig && moodRig.IsConfigured) moodRig.SetMood(result.Mood, result.Weight, result.Mood == FacialMood.Yawning ? .35f : .12f);
+            if (moodRig && moodRig.IsConfigured)
+            {
+                // The first-person camera rides on the local human's head: its moods never pitch or roll it.
+                moodRig.MoodHeadPoseEnabled = !(localActor && proxy.Role == PlayerRole.Human);
+                moodRig.SetMood(result.Mood, result.Weight, result.Mood == FacialMood.Yawning ? .35f : .12f);
+            }
             // The policy opens a yawn on one evaluation; the body clip keeps retrying while the face still yawns
             // (a Land or another short temporary may hold the body for a moment).
             if (result.StartYawn) yawnRequestedUntil = now + 2.0;
@@ -559,15 +582,17 @@ namespace LetMeSleep.Presentation.Gameplay
                 view.Animator.Play(binding.StateName, 0, authoritative);
         }
 
-        private void PlayTemporary(int motion, float durationOverride = -1f)
+        private void PlayTemporary(int motion, float durationOverride = -1f, float speed = 1f)
         {
             ReleaseLocomotion();
             temporaryMotion = motion;
-            float duration = durationOverride > 0f ? Mathf.Min(durationOverride, MotionDuration(motion)) : MotionDuration(motion);
+            speed = Mathf.Clamp(float.IsNaN(speed) ? 1f : speed, .25f, 4f);
+            float clip = MotionDuration(motion) / speed;
+            float duration = durationOverride > 0f ? Mathf.Min(durationOverride, clip) : clip;
             temporaryUntil = Time.unscaledTime + Mathf.Clamp(duration, 0.08f, 3.2f);
             currentMotion = motion;
             if (view.Animator != null)
-                view.Animator.speed = 1f;
+                view.Animator.speed = speed;
             view.PlayMotion(motion, 0.06f);
         }
 
@@ -814,141 +839,225 @@ namespace LetMeSleep.Presentation.Gameplay
             if (proxy.Role != PlayerRole.Human ||
                 current.StrikeState.Phase == GameplayModel.StrikePhase.None)
                 return;
+            float elapsed = StrikeElapsed();
             if (current.StrikeState.Hand < 0)
-                AlignArm(leftArm, 5u, -1f);
+                AlignArm(leftArm, 5u, -1f, elapsed);
             else
-                AlignArm(rightArm, 6u, 1f);
+                AlignArm(rightArm, 6u, 1f, elapsed);
         }
+
+        /// <summary>Authority strike seconds, continuous between the ~30 Hz snapshots.</summary>
+        private float StrikeElapsed() => Mathf.Min(GameplayModel.StrikeVisualTrajectory.Duration,
+            GameplayModel.StrikeVisualTrajectory.Elapsed(current.StrikeState) +
+            Mathf.Clamp(Time.unscaledTime - snapshotArrivalTime, 0f, snapshotInterval));
 
         private ArmChain FindArm(string side) => new ArmChain
         {
             Shoulder = FindDescendant(view.transform, "Shoulder." + side),
             Upper = FindDescendant(view.transform, "UpperArm." + side),
             Lower = FindDescendant(view.transform, "LowerArm." + side),
-            Hand = FindDescendant(view.transform, "Hand." + side)
+            Hand = FindDescendant(view.transform, "Hand." + side),
+            Palm = FindDescendant(view.transform, "Socket.Grip." + side)
         };
 
-        private void AlignArm(ArmChain arm, uint localSurfaceId, float side)
+        /// <summary>Where the arm solve must put its end this frame (see StrikeSwingPath).</summary>
+        private struct SwingSolve
+        {
+            public Transform End;
+            public Vector3 EndTarget;
+            public Quaternion HandRotation;
+            public bool RotatesHand;
+            public float Reach;
+        }
+
+        /// <summary>
+        /// v0.3.0 round 3 (anim-r3): the swat follows StrikeSwingPath (cocked above the ear, a diagonal whip
+        /// into the authoritative target, follow-through across the body) instead of the authority's straight
+        /// shoulder-to-target line, with the elbow held at or below 120 deg in third person (140 deg for the
+        /// first-person local human, whose torso cannot help). The clavicle, a forward lean of the waist and
+        /// the chest/waist twist make up the rest of the reach, so the palm (bare hand) or the flyswatter's
+        /// impact point arrives on the authoritative target when the sweep ends. The held tool stays rigidly
+        /// mounted to the hand: the hand is rotated (radial alignment plus a wrist snap), never detached.
+        /// </summary>
+        private void AlignArm(ArmChain arm, uint localSurfaceId, float side, float elapsed)
         {
             if (arm == null || !arm.IsValid || !proxy.BodySurfaces.TryGetValue(
                     proxy.ActorId * 100 + localSurfaceId, out GameplayBodySurface forearm) ||
-                forearm.Collider == null)
+                !(forearm.Collider is CapsuleCollider))
                 return;
-            var capsule = forearm.Collider as CapsuleCollider;
-            if (capsule == null)
-                return;
-            AssistReach(arm);
-            Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
-            float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
-            if (!StrikeTarget(arm, out Vector3 target, out Quaternion handRotation, out bool hasTool)) return;
-            if (!Finite(target) || !Finite(shoulder) || !Finite(elbow) || !Finite(wrist) ||
-                upperLength < .001f || lowerLength < .001f) return;
-            Vector3 delta = target - shoulder;
-            Vector3 axis = delta.sqrMagnitude > .000001f ? delta.normalized : (wrist - shoulder).normalized;
+            float weight = StrikeSwingPath.Weight(elapsed);
+            if (weight <= .001f) return;
+            bool hasTool = HoldsStrikeTool();
+            view.RefreshAnchors();
+            Transform effector = hasTool ? strikeTool.Impact : arm.Palm ? arm.Palm : arm.Hand;
+            Vector3 shoulder = arm.Upper.position, rest = effector.position;
+            Vector3 up = transform.up, forward = transform.forward, outward = transform.right * side;
+            Vector3 target = current.StrikeState.Target.ToUnity();
+            if (!Finite(target) || !Finite(shoulder) || !Finite(rest)) return;
+            Vector3 cocked = hasTool
+                ? shoulder + up * .70f + outward * .16f - forward * .24f
+                : shoulder + up * .40f + outward * .14f - forward * .10f;
+            Vector3 follow = hasTool
+                ? shoulder - up * .50f - outward * .40f + forward * .45f
+                : shoulder - up * .55f - outward * .32f + forward * .28f;
+            // The hand cocks at crown height and the arc bulges up and well out to the striking side, so the whip
+            // comes over and around the head instead of dragging across the eyes.
+            Vector3 path = StrikeSwingPath.Evaluate(elapsed, cocked, target, follow, up * (hasTool ? .10f : .14f) + outward * .22f);
+            Vector3 goal = Vector3.Lerp(rest, path, weight);
+            Vector3 sweepAxis = Vector3.Cross(cocked - shoulder, target - shoulder);
+            sweepAxis = sweepAxis.sqrMagnitude > 1e-8f ? sweepAxis.normalized : outward;
+            float wrist = StrikeSwingPath.WristDegrees(elapsed) * weight;
+            float limit = localActor ? LocalStrikeElbowInnerDegrees : StrikeElbowInnerDegrees;
+            LastStrikeGoal = goal;
+            // Solve the arm, then let the clavicle and the torso close whatever the bent arm cannot reach: every
+            // assist is driven by the residual of a real solve (the palm is rigid with a flexed hand, so its reach
+            // cannot be predicted from the clip pose), and the arm is re-solved after each joint turns.
+            bool solvable = true;
+            float Residual()
+            {
+                // Two passes: the palm's offset from the wrist (and the tool's hand rotation) is re-measured once
+                // the forearm has turned.
+                for (int pass = 0; pass < 2 && solvable; pass++)
+                {
+                    SwingSolve solve = Swing(arm, goal, hasTool, weight, wrist, sweepAxis, effector, limit);
+                    if (!SolveWrist(arm, solve, outward, up)) { solvable = false; break; }
+                    if (solve.RotatesHand) arm.Hand.rotation = solve.HandRotation;
+                }
+                if (hasTool) view.RefreshAnchors();
+                return solvable ? Vector3.Distance(effector.position, goal) : 0f;
+            }
+            AssistReach(arm, weight, goal, Residual);
+            Residual();
+            if (!solvable) return;
+            LastElbowInnerDegrees = TwoBoneSolver.InnerAngle(arm.Upper.position, arm.Lower.position, arm.Hand.position);
+            LastStrikeSolveFrame = Time.frameCount;
+            view.RefreshAnchors();
+            LastStrikeEffectorError = Vector3.Distance(effector.position, goal);
+        }
+
+        /// <summary>Analytic two-bone solve of the real wrist onto the solve's wrist target, the elbow inner angle
+        /// capped by the solve's reach; segments rotate about their joints and are never stretched.</summary>
+        private bool SolveWrist(ArmChain arm, SwingSolve solve, Vector3 outward, Vector3 up)
+        {
+            Vector3 root = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
+            float upperLength = Vector3.Distance(root, elbow), lowerLength = Vector3.Distance(elbow, wrist);
+            if (!Finite(solve.EndTarget) || upperLength < .001f || lowerLength < .001f) return false;
+            Vector3 delta = solve.EndTarget - root;
+            Vector3 axis = delta.sqrMagnitude > .000001f ? delta.normalized : (wrist - root).normalized;
             if (axis.sqrMagnitude < .5f) axis = transform.forward;
-            // v0.3.0: never lock the elbow straight (was ~177.7 deg): at most 140 deg inner angle while striking.
             float length = Mathf.Clamp(delta.magnitude, Mathf.Abs(upperLength - lowerLength) + .0001f,
-                Mathf.Min(upperLength + lowerLength - .0001f,
-                    TwoBoneSolver.MaximumReach(upperLength, lowerLength, StrikeElbowInnerDegrees)));
+                Mathf.Max(Mathf.Abs(upperLength - lowerLength) + .0001f, solve.Reach));
             LastArmReachResidualMeters = Mathf.Max(0f, delta.magnitude - length);
-            Vector3 bend = Vector3.ProjectOnPlane(elbow - shoulder, axis);
-            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.right * side - transform.forward * .3f, axis);
-            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.up, axis);
+            Vector3 bend = Vector3.ProjectOnPlane(elbow - root, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(outward - transform.forward * .3f, axis);
+            if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(up, axis);
             if (bend.sqrMagnitude < .000001f) bend = Vector3.ProjectOnPlane(transform.forward, axis);
             float along = (upperLength * upperLength - lowerLength * lowerLength + length * length) / (2 * length);
-            Vector3 solvedElbow = shoulder + axis * along + bend.normalized *
+            Vector3 solvedElbow = root + axis * along + bend.normalized *
                 Mathf.Sqrt(Mathf.Max(0, upperLength * upperLength - along * along));
-            Vector3 reachableTarget = shoulder + axis * length;
-            // Rotate real segments around their joints. Never stretch local offsets to
-            // reach a collider target authored with different proportions.
-            arm.Upper.rotation = Quaternion.FromToRotation(elbow - shoulder, solvedElbow - shoulder) * arm.Upper.rotation;
+            Vector3 reachable = root + axis * length;
+            arm.Upper.rotation = Quaternion.FromToRotation(elbow - root, solvedElbow - root) * arm.Upper.rotation;
             arm.Lower.rotation = Quaternion.FromToRotation(arm.Hand.position - arm.Lower.position,
-                reachableTarget - arm.Lower.position) * arm.Lower.rotation;
-            // Bare-hand local finger/wrist pose remains authored. A held tool needs
-            // explicit wrist orientation as well as position to put Impact on the
-            // sweep; the socket, grip and tool remain rigidly mounted to that hand.
-            if (hasTool) arm.Hand.rotation = handRotation;
-            LastElbowInnerDegrees = TwoBoneSolver.InnerAngle(arm.Upper.position, arm.Lower.position, arm.Hand.position);
+                reachable - arm.Lower.position) * arm.Lower.rotation;
+            return true;
         }
 
         /// <summary>
-        /// Where the wrist must go for the authoritative contact this frame, from the current shoulder and elbow:
-        /// the contact itself with a bare hand, or short of it by the held flyswatter (whose hand rotation is
-        /// returned as well). The collision center follows Authority's timeline; the anatomical proxy has
-        /// different lengths and shoulder height, so its clamped wrist is never fed back into the real rig.
+        /// End of the arm solve for the current shoulder: the palm itself for a bare-hand slap, or the wrist
+        /// short of the goal by the held tool, whose hand rotation (radial from the shoulder, plus the wrist
+        /// snap about the sweep axis) is returned too. Reach keeps the elbow inner angle at the limit.
         /// </summary>
-        private bool StrikeTarget(ArmChain arm, out Vector3 target, out Quaternion handRotation, out bool hasTool)
+        private SwingSolve Swing(ArmChain arm, Vector3 goal, bool hasTool, float weight, float wristDegrees,
+            Vector3 sweepAxis, Transform effector, float elbowLimit)
         {
-            var strike = current.StrikeState;
+            // The tool hangs on a presentation anchor: refresh it after every assist moved the hand bones.
+            if (hasTool) view.RefreshAnchors();
             Vector3 shoulder = arm.Upper.position, elbow = arm.Lower.position, wrist = arm.Hand.position;
-            float upperLength = Vector3.Distance(shoulder, elbow), lowerLength = Vector3.Distance(elbow, wrist);
-            hasTool = HoldsStrikeTool();
-            view.RefreshAnchors();
-            Vector3 restContact = hasTool ? strikeTool.Impact.position : wrist;
-            Vector3 contact = GameplayModel.StrikeVisualTrajectory.Contact(strike, restContact.ToFloat()).ToUnity();
-            handRotation = arm.Hand.rotation;
-            target = contact;
+            float upperLength = Vector3.Distance(shoulder, elbow), forearmLength = Vector3.Distance(elbow, wrist);
+            var result = new SwingSolve { HandRotation = arm.Hand.rotation };
             if (hasTool)
             {
-                // Rotate the hand and mounted grip together; never detach the tool or
-                // translate individual bones. Measure the full real Hand -> Impact
-                // offset, including the authored hand/socket offset, not only .365 m.
-                Vector3 offset = restContact - wrist;
-                Vector3 direction = GameplayModel.StrikeVisualTrajectory.ToolOffset((contact - shoulder).ToFloat(),
-                    offset.magnitude, Mathf.Abs(upperLength - lowerLength) + .0001f,
-                    (elbow - shoulder).ToFloat()).ToUnity();
+                Vector3 offset = effector.position - wrist;
+                Vector3 direction = GameplayModel.StrikeVisualTrajectory.ToolOffset((goal - shoulder).ToFloat(),
+                    offset.magnitude, Mathf.Abs(upperLength - forearmLength) + .0001f, (elbow - shoulder).ToFloat()).ToUnity();
+                result.End = arm.Hand;
+                result.EndTarget = goal;
                 if (offset.sqrMagnitude > .000001f && direction.sqrMagnitude > .000001f)
                 {
-                    Quaternion aligned = Quaternion.FromToRotation(offset, direction) * handRotation;
-                    Quaternion desired = Quaternion.Slerp(handRotation, aligned,
-                        GameplayModel.StrikeVisualTrajectory.PoseWeight(strike));
-                    Vector3 rotatedOffset = desired * Quaternion.Inverse(handRotation) * offset;
-                    handRotation = desired;
-                    target = contact - rotatedOffset;
+                    direction = Quaternion.AngleAxis(wristDegrees, sweepAxis) * direction;
+                    Quaternion aligned = Quaternion.FromToRotation(offset, direction) * arm.Hand.rotation;
+                    Quaternion desired = Quaternion.Slerp(arm.Hand.rotation, aligned, weight);
+                    result.EndTarget = goal - desired * Quaternion.Inverse(arm.Hand.rotation) * offset;
+                    result.HandRotation = desired;
+                    result.RotatesHand = true;
                 }
+                result.Reach = Mathf.Min(upperLength + forearmLength - .0001f,
+                    TwoBoneSolver.MaximumReach(upperLength, forearmLength, elbowLimit));
+                return result;
             }
-            return Finite(target);
+            // The palm is rigid with the hand (the clip's wrist is kept): aim the wrist short of the goal by the
+            // palm's current offset, so the elbow limit applies to the real shoulder-elbow-wrist angle.
+            result.End = arm.Hand;
+            result.EndTarget = goal - (effector.position - wrist);
+            result.Reach = Mathf.Min(upperLength + forearmLength - .0001f,
+                TwoBoneSolver.MaximumReach(upperLength, forearmLength, elbowLimit));
+            return result;
         }
 
         /// <summary>
-        /// A stroke beyond the bent-elbow reach is made up first by the clavicle (up to 20 deg toward the
-        /// contact) and then, in third person, by the chest (up to 24 deg) and the waist (up to 16 deg) turning
-        /// and leaning into the swat,
-        /// both weighted like the stroke, so a long swat (flyswatter at the authority's maximum reach included)
-        /// visually connects instead of straightening the elbow. The first-person eye rides on the head, so the
-        /// local human only uses the clavicle.
+        /// A swat beyond the bent-elbow reach is made up first by the clavicle (up to 20 deg toward the goal),
+        /// then, in third person only, by the waist leaning forward (up to 12 deg on top of the clip's lean),
+        /// the chest twisting (up to 24 deg) and the waist twisting (up to 14 deg), all weighted like the
+        /// stroke. Each joint turns the shoulder toward the goal by the residual left after solving the arm.
+        /// The first-person eye rides on the head, so the local human only uses the clavicle.
         /// </summary>
-        private void AssistReach(ArmChain arm)
+        private void AssistReach(ArmChain arm, float weight, Vector3 goal, System.Func<float> residual)
         {
-            float weight = GameplayModel.StrikeVisualTrajectory.PoseWeight(current.StrikeState);
+            LastClavicleAssistDegrees = LastTorsoAssistDegrees = LastLeanAssistDegrees = 0f;
             if (weight <= .001f) return;
-            float reach = TwoBoneSolver.MaximumReach(Vector3.Distance(arm.Upper.position, arm.Lower.position),
-                Vector3.Distance(arm.Lower.position, arm.Hand.position), StrikeElbowInnerDegrees);
-            LastClavicleAssistDegrees = LastTorsoAssistDegrees = 0f;
-            if (arm.Shoulder && arm.Upper.IsChildOf(arm.Shoulder)) LastClavicleAssistDegrees = TurnToward(arm.Shoulder, arm, reach, 20f * weight);
-            // The torso only twists about the body's up axis (no duck or lean), so the head stays up and the
-            // face is not buried behind the striking arm; the waist follows the chest for the longest swats.
-            if (!localActor && chestBone && arm.Upper.IsChildOf(chestBone))
-                LastTorsoAssistDegrees = TurnToward(chestBone, arm, reach, MaximumTorsoAssistDegrees * weight, transform.up);
-            if (!localActor && spineBone && chestBone && chestBone.IsChildOf(spineBone))
-                LastTorsoAssistDegrees += TurnToward(spineBone, arm, reach, MaximumSpineAssistDegrees * weight, transform.up);
+            if (arm.Shoulder && arm.Upper.IsChildOf(arm.Shoulder))
+                LastClavicleAssistDegrees = TurnToward(arm.Shoulder, arm, goal, 20f * weight, residual, Vector3.zero, false);
+            if (localActor) return;
+            if (spineBone && arm.Upper.IsChildOf(spineBone))
+                LastLeanAssistDegrees = TurnToward(spineBone, arm, goal, MaximumLeanAssistDegrees * weight, residual, transform.right, true);
+            if (chestBone && arm.Upper.IsChildOf(chestBone))
+                LastTorsoAssistDegrees = TurnToward(chestBone, arm, goal, MaximumTorsoAssistDegrees * weight, residual, transform.up, false);
+            if (spineBone && chestBone && chestBone.IsChildOf(spineBone))
+                LastTorsoAssistDegrees += TurnToward(spineBone, arm, goal, MaximumSpineAssistDegrees * weight, residual, transform.up, false);
         }
 
-        private float TurnToward(Transform joint, ArmChain arm, float reach, float maximumDegrees, Vector3 twistAxis = default)
+        /// <summary>
+        /// Turns a joint so the shoulder swings toward the goal by the arc the solved arm is still short
+        /// (at most maximumDegrees, a few passes); with an axis the turn is about it only, and forwardOnly
+        /// (the waist lean) never pitches back.
+        /// </summary>
+        private static float TurnToward(Transform joint, ArmChain arm, Vector3 goal, float maximumDegrees,
+            System.Func<float> residual, Vector3 axis, bool forwardOnly)
         {
-            bool twistOnly = twistAxis.sqrMagnitude > .5f;
+            bool aboutAxis = axis.sqrMagnitude > .5f;
             float used = 0f;
             for (int pass = 0; pass < 3 && used < maximumDegrees - .01f; pass++)
             {
-                if (!StrikeTarget(arm, out Vector3 target, out _, out _)) return used;
-                float deficit = Vector3.Distance(arm.Upper.position, target) - reach;
-                Vector3 from = arm.Upper.position - joint.position, to = target - joint.position;
-                if (twistOnly) { from = Vector3.ProjectOnPlane(from, twistAxis); to = Vector3.ProjectOnPlane(to, twistAxis); }
+                float deficit = residual();
+                Vector3 from = arm.Upper.position - joint.position, to = goal - joint.position;
+                if (aboutAxis) { from = Vector3.ProjectOnPlane(from, axis); to = Vector3.ProjectOnPlane(to, axis); }
                 if (deficit <= .002f || from.sqrMagnitude < 1e-6f || to.sqrMagnitude < 1e-6f) return used;
-                Vector3 axis = Vector3.Cross(from, to);
-                if (axis.sqrMagnitude < 1e-10f) return used;
+                Vector3 turnAxis;
+                if (aboutAxis)
+                {
+                    float signed = Vector3.SignedAngle(from, to, axis);
+                    if (forwardOnly && signed <= .01f) return used;
+                    turnAxis = signed >= 0 ? axis.normalized : -axis.normalized;
+                }
+                else
+                {
+                    turnAxis = Vector3.Cross(from, to);
+                    if (turnAxis.sqrMagnitude < 1e-10f) return used;
+                    turnAxis.Normalize();
+                }
                 float angle = Mathf.Min(maximumDegrees - used, Vector3.Angle(from, to), deficit / from.magnitude * Mathf.Rad2Deg);
-                joint.rotation = Quaternion.AngleAxis(angle, axis.normalized) * joint.rotation;
+                if (angle <= .01f) return used;
+                joint.rotation = Quaternion.AngleAxis(angle, turnAxis) * joint.rotation;
                 used += angle;
             }
             return used;

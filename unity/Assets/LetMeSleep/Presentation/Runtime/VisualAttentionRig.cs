@@ -112,19 +112,39 @@ namespace LetMeSleep.Presentation
         private MoodBone leftBrow,rightBrow,jaw,leftPupil,rightPupil,leftEyeball,rightEyeball;
         private float leftBrowSign,rightBrowSign;
         private int eyeUpAxis=-1,eyeLookAxis=-1;
+        private int smileShape=-1,mouthOShape=-1,frownShape=-1;
+        private float oldSmile,oldMouthO,oldFrown,lastSmile,lastMouthO,lastFrown;
+        private bool mouthWritten;
+        // Human pupil decals sit ~2 mm off the faceted globe; turning or narrowing them lets facet creases poke
+        // through (bitten edges, white holes). They are pushed out along the look axis while the lid is open:
+        // enough to clear the narrowing across a 16 deg decal plus a 3.5% (~2.3 mm) crease margin, fading to
+        // the authored depth as the lid closes so the closed lid shell (1.09 r) always covers them.
+        private const float HumanPupilCreaseLift=.035f,HumanPupilMin=.82f,HumanPupilMax=1.3f,HumanSquintMax=.3f;
+        private static readonly float PupilEdgeSin2=Mathf.Pow(Mathf.Sin(16*Mathf.Deg2Rad),2),PupilEdgeCos2=Mathf.Pow(Mathf.Cos(16*Mathf.Deg2Rad),2);
         public bool SupportsEyeScale=>leftEyeball!=null && rightEyeball!=null;
         public FacialMood Mood=>mood;
         public FacialMoodShape MoodShape=>moodCurrent;
         public bool SupportsBrows=>leftBrow!=null && rightBrow!=null;
         public bool SupportsJaw=>jaw!=null;
         public bool SupportsLowerLids{ get { foreach(var lid in leftLids) if(lid.lower) return true; return false; } }
+        /// <summary>v0.3.0 round 3: the human mouth morphs (Smile, MouthO, Frown) are optional; older heads lack them.</summary>
+        public bool SupportsMouthShapes=>smileShape>=0 && mouthOShape>=0 && frownShape>=0;
+        /// <summary>
+        /// Mood head pitch/roll (and the dizzy sway) on top of the look-at. The first-person local human turns it
+        /// off: its camera rides on the head, and a mood must never move the player's view.
+        /// </summary>
+        public bool MoodHeadPoseEnabled { get; set; } = true;
+        /// <summary>Scale of the human pupil decals along the look axis on the last evaluation (1 = authored).</summary>
+        public float LastPupilLift { get; private set; } = 1;
+        /// <summary>Degrees of mood head pose (pitch/roll/dizzy sway) applied on the last evaluation.</summary>
+        public float LastMoodHeadDegrees { get; private set; }
         /// <summary>Sets the expression target; channels ease toward it over blendSeconds.</summary>
         public void SetMood(FacialMood value,float weight=1,float blendSeconds=.12f)
         {
             if(float.IsNaN(weight) || float.IsInfinity(weight)) weight=0;
             if(float.IsNaN(blendSeconds) || float.IsInfinity(blendSeconds)) blendSeconds=.12f;
             mood=value;
-            moodTarget=FacialMoodShape.Lerp(FacialMoodShape.Neutral,FacialMoodShape.For(value),Mathf.Clamp01(weight));
+            moodTarget=FacialMoodShape.Lerp(FacialMoodShape.Neutral,FacialMoodShape.For(value,leftLids.Length>0),Mathf.Clamp01(weight));
             moodBlendSeconds=Mathf.Max(.01f,blendSeconds);
         }
         // Contact owners observe the completed facial pose, including eyes and lids.
@@ -174,6 +194,13 @@ namespace LetMeSleep.Presentation
                 rightBrowSign=InnerDownSign(headForward,browLeft.position-browRight.position,down);
             }
             var jawBone=FindUnder(head,"Jaw"); if(jawBone) jaw=new MoodBone{bone=jawBone};
+            smileShape=mouthOShape=frownShape=-1;
+            if(value.Eyelids && value.Eyelids.sharedMesh && leftLids.Length==0)
+            {
+                smileShape=value.Eyelids.sharedMesh.GetBlendShapeIndex("Smile");
+                mouthOShape=value.Eyelids.sharedMesh.GetBlendShapeIndex("MouthO");
+                frownShape=value.Eyelids.sharedMesh.GetBlendShapeIndex("Frown");
+            }
             // Mosquito pupils are separate discs on their own bones: scale them across the look axis.
             if(leftLids.Length>0 && value.LeftEye && value.RightEye && LookAxisIndex(value.EyeForward)>=0)
             { leftPupil=new MoodBone{bone=value.LeftEye,scaleOnly=true}; rightPupil=new MoodBone{bone=value.RightEye,scaleOnly=true}; }
@@ -243,13 +270,36 @@ namespace LetMeSleep.Presentation
                 var scale=Vector3.one*Mathf.Clamp(shape.Pupil,.5f,1.5f); scale[axis]=1;
                 ScalePupil(leftPupil,scale); ScalePupil(rightPupil,scale);
             }
-            if(leftEyeball!=null && rightEyeball!=null && eyeUpAxis>=0 && eyeLookAxis>=0 && (Mathf.Abs(shape.Pupil-1)>.001f || shape.Squint>.001f))
+            if(leftEyeball!=null && rightEyeball!=null && eyeUpAxis>=0 && eyeLookAxis>=0)
             {
-                var scale=Vector3.one*Mathf.Clamp(shape.Pupil,.5f,1.5f);
-                scale[eyeUpAxis]*=1-.5f*Mathf.Clamp01(shape.Squint);
-                scale[eyeLookAxis]=1;
-                ScalePupil(leftEyeball,scale); ScalePupil(rightEyeball,scale);
+                ScalePupil(leftEyeball,HumanPupilScale(shape,leftClosure));
+                ScalePupil(rightEyeball,HumanPupilScale(shape,rightClosure));
             }
+        }
+        /// <summary>Human decal pupils: size across the look axis, the squint vertically, and the look-axis lift
+        /// that keeps the whole decal outside the faceted globe while the lid is open.</summary>
+        private Vector3 HumanPupilScale(FacialMoodShape shape,float closure)
+        {
+            float size=Mathf.Clamp(shape.Pupil,HumanPupilMin,HumanPupilMax);
+            var scale=Vector3.one*size;
+            scale[eyeUpAxis]*=1-.5f*Mathf.Clamp(shape.Squint,0,HumanSquintMax);
+            float narrowest=Mathf.Min(1,Mathf.Min(scale[eyeUpAxis],size));
+            // A decal edge at 16 deg narrowed by k sits at r*sqrt(k^2 sin^2 + d^2 cos^2): d restores >= r.
+            float needed=Mathf.Sqrt(Mathf.Max(1,(1-narrowest*narrowest*PupilEdgeSin2)/PupilEdgeCos2));
+            float open=1-Mathf.Clamp01(closure);
+            scale[eyeLookAxis]=1+(needed-1+HumanPupilCreaseLift)*open;
+            LastPupilLift=scale[eyeLookAxis];
+            return scale;
+        }
+        private float leftClosure,rightClosure;
+        private void ApplyMouthShapes()
+        {
+            if(!binding.Eyelids || !SupportsMouthShapes) return;
+            var renderer=binding.Eyelids;
+            oldSmile=renderer.GetBlendShapeWeight(smileShape); oldMouthO=renderer.GetBlendShapeWeight(mouthOShape); oldFrown=renderer.GetBlendShapeWeight(frownShape);
+            lastSmile=100*Mathf.Clamp01(moodCurrent.Smile); lastMouthO=100*Mathf.Clamp01(moodCurrent.MouthOpen); lastFrown=100*Mathf.Clamp01(moodCurrent.Frown);
+            renderer.SetBlendShapeWeight(smileShape,lastSmile); renderer.SetBlendShapeWeight(mouthOShape,lastMouthO); renderer.SetBlendShapeWeight(frownShape,lastFrown);
+            mouthWritten=true;
         }
         private static void ApplyBrow(MoodBone brow,float sign,FacialMoodShape shape,Vector3 headForward,Vector3 headUp)
         {
@@ -270,7 +320,8 @@ namespace LetMeSleep.Presentation
         /// head joint's own write so it is restored with it. Skipped while head tracking is locked (bite).</summary>
         private void ApplyMoodHead()
         {
-            if(head==null || !head.bone || !head.written) return;
+            LastMoodHeadDegrees=0;
+            if(!MoodHeadPoseEnabled || head==null || !head.bone || !head.written) return;
             float pitch=moodCurrent.HeadPitch, roll=moodCurrent.HeadRoll+(reduced ? 0 : 6*moodCurrent.Dizzy*Mathf.Sin(dizzyPhase));
             if(Mathf.Abs(pitch)<.01f && Mathf.Abs(roll)<.01f) return;
             Vector3 forward=head.bone.TransformDirection(head.forward), up=head.bone.TransformDirection(head.up);
@@ -278,6 +329,7 @@ namespace LetMeSleep.Presentation
             if(right.sqrMagnitude<1e-8f || forward.sqrMagnitude<1e-8f) return;
             head.bone.rotation=Quaternion.AngleAxis(roll,forward.normalized)*Quaternion.AngleAxis(pitch,right.normalized)*head.bone.rotation;
             head.after=head.bone.localRotation;
+            LastMoodHeadDegrees=Mathf.Sqrt(pitch*pitch+roll*roll);
         }
         /// <summary>Blend-shape lids (human) only show below the brow line past ~40% closure: map mood lids so a
         /// light squint is visible, while 0 stays fully open and 1 fully closed.</summary>
@@ -378,6 +430,8 @@ namespace LetMeSleep.Presentation
             float lower=Mathf.Clamp01(moodCurrent.Lower);
             foreach(var lid in leftLids) lid.Apply(lid.lower ? Mathf.Max(blinkLeft,lower) : closureLeft,moodCurrent.Tilt);
             foreach(var lid in rightLids) lid.Apply(lid.lower ? Mathf.Max(blinkRight,lower) : closureRight,moodCurrent.Tilt);
+            leftClosure=closureLeft; rightClosure=closureRight;
+            ApplyMouthShapes();
             ApplyMoodBones(binding.Head.TransformDirection(binding.HeadForward).normalized,binding.Head.TransformDirection(binding.HeadUp).normalized);
             AfterEvaluation?.Invoke();
         }
@@ -453,6 +507,14 @@ namespace LetMeSleep.Presentation
             }
             foreach(var lid in leftLids) lid.Restore();
             foreach(var lid in rightLids) lid.Restore();
+            if(mouthWritten && binding!=null && binding.Eyelids && SupportsMouthShapes)
+            {
+                var renderer=binding.Eyelids;
+                if(Mathf.Abs(renderer.GetBlendShapeWeight(smileShape)-lastSmile)<.01f) renderer.SetBlendShapeWeight(smileShape,oldSmile);
+                if(Mathf.Abs(renderer.GetBlendShapeWeight(mouthOShape)-lastMouthO)<.01f) renderer.SetBlendShapeWeight(mouthOShape,oldMouthO);
+                if(Mathf.Abs(renderer.GetBlendShapeWeight(frownShape)-lastFrown)<.01f) renderer.SetBlendShapeWeight(frownShape,oldFrown);
+            }
+            mouthWritten=false;
             leftPupil?.Restore(); rightPupil?.Restore(); leftEyeball?.Restore(); rightEyeball?.Restore(); jaw?.Restore(); rightBrow?.Restore(); leftBrow?.Restore();
             if(scaleWritten && binding!=null)
             {

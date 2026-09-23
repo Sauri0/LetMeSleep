@@ -7,9 +7,10 @@ namespace LetMeSleep.Presentation.Gameplay
     /// Cartoon secondary motion written on already evaluated bones (ActorVisualBinding calls Apply after the
     /// base pose and before hand IK/anchors/bite contact, so every later writer sees the final skeleton).
     /// Squash and stretch keeps volume (sy = 1 + s, sx = sz = 1 / sqrt(1 + s)) about the character origin;
-    /// the mosquito also gets a roll wobble when hit and a filling abdomen while feeding; the human gait gets
-    /// pelvis roll/sway with planted feet, shoulder counter-rotation and elbow flexion synced to the gait phase,
-    /// plus a bigger arm pump and a forward lean at trot and run speeds.
+    /// the mosquito also gets a roll wobble when hit and a filling, pumping abdomen while feeding; the human
+    /// gait gets pelvis roll/sway with planted feet synced to the gait phase and a little extra forward lean at
+    /// trot and run speeds. v0.3.0 round 3: the arm swing, elbow flexion and shoulder counter-twist are now
+    /// authored in the four gait clips, so this layer no longer bends the arms.
     /// Presentation only: never moves the visual root, hit volumes or anything the authority reads.
     /// </summary>
     public sealed class CharacterSecondaryMotion
@@ -28,11 +29,11 @@ namespace LetMeSleep.Presentation.Gameplay
 
         private const float SquashHz = 3.5f, SquashDamping = .45f, WobbleHz = 4.5f, WobbleDamping = .25f;
         private const float MaximumSquash = .32f;
+        public const float AbdomenFillGain = .45f, AbdomenPump = .07f, BitePumpHz = 2f;
         private const float PlantedFootTolerance = .035f, MinimumPlantKneeDegrees = 60f;
         private readonly PlayerRole role;
         private readonly Transform actor, root, hips, spine, chest, abdomen;
         private readonly Transform[] upperLeg = new Transform[2], lowerLeg = new Transform[2], foot = new Transform[2];
-        private readonly Transform[] upperArm = new Transform[2], lowerArm = new Transform[2], hand = new Transform[2];
         private readonly Vector3 rootRestScale, abdomenRestScale;
         private readonly Quaternion rootRestRotation;
         private readonly int upAxis = -1;
@@ -64,8 +65,6 @@ namespace LetMeSleep.Presentation.Gameplay
                     string side = i == 0 ? "L" : "R";
                     upperLeg[i] = Find(rigRoot, "UpperLeg." + side); lowerLeg[i] = Find(rigRoot, "LowerLeg." + side);
                     foot[i] = Find(rigRoot, "Foot." + side);
-                    upperArm[i] = Find(rigRoot, "UpperArm." + side); lowerArm[i] = Find(rigRoot, "LowerArm." + side);
-                    hand[i] = Find(rigRoot, "Hand." + side);
                 }
             }
             else
@@ -147,11 +146,12 @@ namespace LetMeSleep.Presentation.Gameplay
         private void ApplyAbdomen(in Input input, float dt)
         {
             if (!abdomen) return;
-            // Blood fills the abdomen while feeding and drains slowly afterwards.
-            float target = input.Biting ? Mathf.Clamp01(input.BitingSeconds / 3f) : 0;
+            // Blood fills the abdomen while feeding (up to +45% in 2.5 s) and drains slowly afterwards; each
+            // sip pumps it another 7% at 2 Hz, in step with the BiteLoop clip's two pumps per second.
+            float target = input.Biting ? Mathf.Clamp01(input.BitingSeconds / 2.5f) : 0;
             abdomenFill = Mathf.MoveTowards(abdomenFill, target, dt * (input.Biting ? 1f : .4f));
-            float pulse = input.Biting ? .035f * Mathf.Sin(input.BitingSeconds * 2 * Mathf.PI * 2.2f) : 0;
-            abdomen.localScale = abdomenRestScale * (1 + .22f * abdomenFill + pulse);
+            float pulse = input.Biting ? AbdomenPump * Mathf.Max(0f, Mathf.Sin(input.BitingSeconds * 2 * Mathf.PI * BitePumpHz)) : 0;
+            abdomen.localScale = abdomenRestScale * (1 + AbdomenFillGain * abdomenFill + pulse);
         }
 
         private void ApplyGait(in Input input, float dt)
@@ -164,24 +164,9 @@ namespace LetMeSleep.Presentation.Gameplay
             // Trot and run read more energetic than the walk (v0.3.0 review, pending a new gait source): bigger
             // arm pump, deeper elbows and a forward lean, all from 1.8 m/s up to the 3.1 m/s trot.
             float energy = Mathf.Clamp01((input.PlanarSpeed - 1.8f) / 1.3f) * gaitWeight;
-            // Arms first: their swing (from the clip) drives the shoulder counter-rotation.
-            float swing = 0;
-            if (hand[0] && hand[1]) swing = Mathf.Clamp(Vector3.Dot(hand[1].position - hand[0].position, forward) / .45f, -1, 1);
-            for (int i = 0; i < 2; i++)
-            {
-                if (!upperArm[i] || !lowerArm[i] || !hand[i]) continue;
-                // 18-30 deg total elbow flexion over the cycle: the arm swinging forward bends more.
-                float forwardness = Mathf.Clamp(Vector3.Dot(hand[i].position - upperArm[i].position, forward) / .25f, -1, 1);
-                if (energy > .001f && right.sqrMagnitude > 1e-6f)
-                    upperArm[i].rotation = Quaternion.AngleAxis(-14f * energy * forwardness, right) * upperArm[i].rotation;
-                Vector3 direction = hand[i].position - lowerArm[i].position;
-                Vector3 axis = Vector3.Cross(direction, forward);
-                if (axis.sqrMagnitude < 1e-8f) continue;
-                lowerArm[i].rotation = Quaternion.AngleAxis(gaitWeight * (8f + 6f * forwardness) + 24f * energy, axis.normalized) * lowerArm[i].rotation;
-            }
             if (input.CameraOnBody) return;
             if (energy > .001f && right.sqrMagnitude > 1e-6f)
-                chest.rotation = Quaternion.AngleAxis(7f * energy, right) * chest.rotation;
+                chest.rotation = Quaternion.AngleAxis(3f * energy, right) * chest.rotation;
             // Pelvis rolls toward the stance leg (L stance around phase .25) and sways over it; the feet stay put.
             Vector3 left = upperLeg[0].position - upperLeg[1].position;
             left = Vector3.ProjectOnPlane(left, up);
@@ -202,9 +187,8 @@ namespace LetMeSleep.Presentation.Gameplay
                 TwoBoneSolver.InnerAngle(upperLeg[1].position, lowerLeg[1].position, footPosition1) > MinimumPlantKneeDegrees;
             hips.position += sway;
             hips.rotation = Quaternion.AngleAxis(roll, forward) * hips.rotation;
-            // Torso stays upright over the rolled pelvis; shoulders counter-rotate against the arm swing.
+            // Torso stays upright over the rolled pelvis (the clips counter-twist the shoulders).
             spine.rotation = Quaternion.AngleAxis(-roll * .8f, forward) * spine.rotation;
-            chest.rotation = Quaternion.AngleAxis(-6f * gaitWeight * swing, up) * chest.rotation;
             if (plant0) { TwoBoneSolver.Solve(upperLeg[0], lowerLeg[0], foot[0], footPosition0, forward); foot[0].rotation = footRotation0; }
             if (plant1) { TwoBoneSolver.Solve(upperLeg[1], lowerLeg[1], foot[1], footPosition1, forward); foot[1].rotation = footRotation1; }
         }

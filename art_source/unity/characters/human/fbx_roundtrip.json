@@ -1,8 +1,8 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "89bc35c13815769ad1f3407f365c350f2bc1659f3270777a42bc462d6cdaa714",
-    "source_audit_sha256": "a63860bfa1712408555d59ab9ffa68937351215a934f43f4b9fb029f1fec37a5",
+    "fbx_sha256": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783",
+    "source_audit_sha256": "8fd905c0e7d9767ad87ccf15a7fff7fe4245363e33e892132a35f442adf164bf",
     "dimensions": [
       1.9442545771598816,
       0.42527371644973755,
@@ -75,7 +75,10 @@
         "Blink25.R",
         "Blink50.R",
         "Blink75.R",
-        "Blink.R"
+        "Blink.R",
+        "Smile",
+        "MouthO",
+        "Frown"
       ]
     },
     "errors": [],

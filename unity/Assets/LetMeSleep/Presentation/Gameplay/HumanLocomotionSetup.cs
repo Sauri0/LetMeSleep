@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using LetMeSleep.Content.Characters;
 using UnityEngine;
 
@@ -44,27 +46,47 @@ namespace LetMeSleep.Presentation.Gameplay
             // Do not adopt an unrelated preinstalled writer.
             if (view.GetComponent<HumanLocomotionPresenter>()) return false;
             var created = view.gameObject.AddComponent<HumanLocomotionPresenter>();
-            AvatarMask mask = null;
             try
             {
                 created.Configure(actorId, view.Animator, gaits, left, right, "human-four-gaits-20260913");
                 // v0.3.0 optional layers: legs keep walking while the Swat plays on the Chest subtree, and the
                 // crouched gait replaces the sliding static crouch. Older controllers simply lack the clips.
                 AnimationClip strike = Find(source, "Human_Swat"), crouchWalk = Find(source, "Human_CrouchWalk");
-                mask = strike ? UpperBodyMask(view.Animator.transform) : null;
+                // Round 3 (anim-r3): one mask per rig layout, shared by every actor and never destroyed with
+                // one of them (no per-actor allocation, nothing to leak over respawns).
+                AvatarMask mask = strike ? SharedUpperBodyMask(view.Animator.transform) : null;
                 if (strike && !mask) strike = null;
-                // The presenter owns the runtime mask and destroys it with itself (respawns never accumulate masks).
-                if (strike || crouchWalk) { created.ConfigureOverlays(strike, mask, crouchWalk, true); mask = null; }
+                if (strike || crouchWalk) created.ConfigureOverlays(strike, mask, crouchWalk, false);
                 presenter = created;
                 return true;
             }
             catch (ArgumentException)
             {
-                if (mask) UnityEngine.Object.Destroy(mask);
                 created.enabled = false;
                 UnityEngine.Object.Destroy(created);
                 return false;
             }
+        }
+
+        private static readonly Dictionary<string, AvatarMask> SharedMasks = new Dictionary<string, AvatarMask>();
+
+        /// <summary>
+        /// The upper-body mask for this rig layout (transform paths), created once and shared by every actor
+        /// with the same skeleton; it lives for the session (HideAndDontSave), so presenters never own it.
+        /// </summary>
+        public static AvatarMask SharedUpperBodyMask(Transform animatorRoot)
+        {
+            if (!animatorRoot) return null;
+            var key = new StringBuilder();
+            foreach (var item in animatorRoot.GetComponentsInChildren<Transform>(true))
+                key.Append(RelativePath(animatorRoot, item)).Append('|');
+            string signature = key.ToString();
+            if (SharedMasks.TryGetValue(signature, out var shared) && shared) return shared;
+            shared = UpperBodyMask(animatorRoot);
+            if (!shared) return null;
+            shared.hideFlags = HideFlags.HideAndDontSave;
+            SharedMasks[signature] = shared;
+            return shared;
         }
 
         private static AnimationClip Find(AnimationClip[] clips, string name)

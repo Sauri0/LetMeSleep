@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4885229714814820998}
   - component: {fileID: 3732719119732265235}
   - component: {fileID: 2608018652447596919}
-  - component: {fileID: 1840148708305794257}
+  - component: {fileID: 7497674303191275357}
   m_Layer: 0
   m_Name: LMS_Mosquito
   m_TagString: Untagged
@@ -279,7 +279,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.055
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1840148708305794257
+--- !u!114 &7497674303191275357
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,7 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: mosquito-v030-r7-facial
-  SourceSha256: 654e83c2a8121aaa14255e17ddf2a0628a4c68edf1233fe18cc446943b61c94f
+  SourceSha256: bcc7a1cc129f5e2147858d58e0dd2303b4443f611b21540f60dd32a8d4099c0f
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:
@@ -616,6 +616,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 483916dd41effed479826b9930069204, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7738328030251898768, guid: 483916dd41effed479826b9930069204, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.0000001
       objectReference: {fileID: 0}
     - target: {fileID: -7738328030251898768, guid: 483916dd41effed479826b9930069204, type: 3}
       propertyPath: m_LocalScale.y
@@ -990,16 +994,8 @@ PrefabInstance:
       value: 0.26836646
       objectReference: {fileID: 0}
     - target: {fileID: -2217579179383812377, guid: 483916dd41effed479826b9930069204, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.0000002
-      objectReference: {fileID: 0}
-    - target: {fileID: -2217579179383812377, guid: 483916dd41effed479826b9930069204, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -2217579179383812377, guid: 483916dd41effed479826b9930069204, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.0000001
       objectReference: {fileID: 0}
     - target: {fileID: -2217579179383812377, guid: 483916dd41effed479826b9930069204, type: 3}
       propertyPath: m_LocalPosition.x

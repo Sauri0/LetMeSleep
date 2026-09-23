@@ -138,7 +138,8 @@ def audit_candidate(baseline, candidate):
         assert len(bone_actions) == len(preserved) + len(PROFILES) and set(bone_actions) == set(actions.values()) | set(old_actions.values())
         assert len(rig.data.bones) == 65
         head = next(o for o in meshes if o.name == 'HumanHead')
-        assert len(head.data.shape_keys.key_blocks) == 9, 'Expected Basis and eight blink samples'
+        # Basis, the eight blink samples and the round-3 mouth morphs (Smile, MouthO, Frown).
+        assert len(head.data.shape_keys.key_blocks) == 12, 'Expected Basis, eight blink samples and three mouth morphs'
         arm_rows += capture_arm_envelopes(rig, kind)
         write_json(candidate / 'human_arm_reach_samples.json', dict(files_sha256=receipt['files_sha256'], clips=arm_rows,
                    scope='Evaluated actor-local metre coordinates at >=120Hz source time, plus Swat ticks0..18/30 and gait boundaries. Sampled AABBs and adjacent displacement are not certified continuous bounds. Tool Hand-to-Impact requires Director/Gameplay imported ToolView mount calibration; grip matrices are provided.'))
@@ -198,7 +199,7 @@ def audit_candidate(baseline, candidate):
                     forward, z, stance = foot(phase + offset, profile)
                     upper, lower, ankle = [rig.pose.bones[n + '.' + side] for n in ('UpperLeg', 'LowerLeg', 'Foot')]
                     actual = rig.matrix_world @ ankle.head
-                    target = Vector((sign * .125, -forward, z))
+                    target = Vector((sign * profile['track'], -forward, z))
                     peaks['ankle_error_m'] = max(peaks['ankle_error_m'], (actual - target).length)
                     peaks['hip_error_m'] = max(peaks['hip_error_m'], abs((rig.matrix_world @ upper.head).z - hip_height(phase, profile)))
                     for segment, length in ((upper, .34), (lower, .32)):

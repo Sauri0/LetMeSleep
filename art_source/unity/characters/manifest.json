@@ -123,9 +123,9 @@
         {
           "name": "Human_Swat",
           "start": 1,
-          "end": 31,
+          "end": 61,
           "fps": 30,
-          "duration_seconds": 1.0,
+          "duration_seconds": 2.0,
           "loop": false,
           "root_motion": false
         },
@@ -306,7 +306,10 @@
           "Blink25.R",
           "Blink50.R",
           "Blink75.R",
-          "Blink.R"
+          "Blink.R",
+          "Smile",
+          "MouthO",
+          "Frown"
         ]
       },
       "facial_contract": {
@@ -2920,8 +2923,8 @@
       "bytes": 9247
     },
     "audit_human_locomotion.py": {
-      "sha256": "9e2fdf7f6d379363f806c677b33633495d4431ecde9a5cac2c0ea50e4abeccba",
-      "bytes": 16681
+      "sha256": "1a2897c7e641c24f471a41c8506561673eb36d7b685c0828ba88e6b29c4ec6c9",
+      "bytes": 17071
     },
     "audit_mosquito_candidate.py": {
       "sha256": "cbc2a9890071cb548fd8344793fc69a21f1bbd9863acd957a58c381d8e9cb6b5",
@@ -2940,8 +2943,8 @@
       "bytes": 4263
     },
     "author_human_facial.py": {
-      "sha256": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
-      "bytes": 8925
+      "sha256": "183e13f25d82e6d0f245abe749aeb273be6f5de3e8ba3d35316ca28b3f7d73e7",
+      "bytes": 12433
     },
     "author_human_geometry.py": {
       "sha256": "af958c70b1167c499f81ae3d4b41df974220eb2b7faa7ee0eb7aff603b52c36f",
@@ -2952,8 +2955,8 @@
       "bytes": 19367
     },
     "author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
+      "sha256": "fedad58fa081b049990ea5a988c02df2a31cc84860ac217a06dcfa4d44af9b1e",
+      "bytes": 4003
     },
     "author_human_menu_motion.py": {
       "sha256": "2a16740eb02adaea80fe08e3186a2213615c2a2309e7628207ed597e83cd7cb7",
@@ -2968,12 +2971,12 @@
       "bytes": 43234
     },
     "author_mosquito_motion.py": {
-      "sha256": "15e40a212d205b967a5253344d2989b37bf5c7f3f9cdfe0890f0156da346f288",
-      "bytes": 19606
+      "sha256": "43dd3d362a937ffdec6d6a4bb264d248767b2fbb4181ca8812ae5437318413cf",
+      "bytes": 23408
     },
     "author_motion.py": {
-      "sha256": "f4b91acb71b98cbef4c4b35ab5633c5f236ef937cc2b7aa006052bc800d5da22",
-      "bytes": 29748
+      "sha256": "37c279e274f8baee59a15f982d835746cf6a3372ab7a23039d69e0d524dbd696",
+      "bytes": 38158
     },
     "build_characters.py": {
       "sha256": "905eb715a9401e6452d18b8771d868a597f6bd26a78741c5c5ca9507bb7e6785",
@@ -3020,8 +3023,8 @@
       "bytes": 3915
     },
     "human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
+      "sha256": "ee862e37beb77d04a966bfc57f0d6f01009e4b3bd2fbfc72d454c9adfae3a77e",
+      "bytes": 5008
     },
     "human_menu_contract.py": {
       "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
@@ -3048,8 +3051,8 @@
       "bytes": 9253
     },
     "render_portrait.py": {
-      "sha256": "f4559191a4326548d4d8f529d1480cde9cdd0c8f15517c4abbd1380d52b2bf70",
-      "bytes": 12038
+      "sha256": "ead72cc0fc866d01c44ceb0bc6eb588f498eec95f785da27ebb27cd8b5c46529",
+      "bytes": 13631
     },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
@@ -3096,12 +3099,12 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "1a5bafd1dbc0525b8fc81ef816951577c6dbe584469ba766ee2f4b7fec269e38",
-      "bytes": 1861925
+      "sha256": "b7ffe864bdd1321ecf065ba25381cacd5b18bbc277146a359c60fb95bcd523ed",
+      "bytes": 2084517
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "89bc35c13815769ad1f3407f365c350f2bc1659f3270777a42bc462d6cdaa714",
-      "bytes": 12983260
+      "sha256": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783",
+      "bytes": 13299372
     },
     "menu/LMS_HumanMenu.blend": {
       "sha256": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
@@ -3112,12 +3115,12 @@
       "bytes": 4207468
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
-      "sha256": "4c712e31716479ea80ba6e9cfa5700a54132cead591e3576cc69b5e7e37e895b",
-      "bytes": 876638
+      "sha256": "abc11a4fa434721a9c3feb9cafcd4a1d036565052278075eecc7a6a427940f64",
+      "bytes": 883422
     },
     "mosquito/LMS_Mosquito_alpha.fbx": {
-      "sha256": "654e83c2a8121aaa14255e17ddf2a0628a4c68edf1233fe18cc446943b61c94f",
-      "bytes": 4722140
+      "sha256": "bcc7a1cc129f5e2147858d58e0dd2303b4443f611b21540f60dd32a8d4099c0f",
+      "bytes": 4744700
     },
     "diagnostics/gameplay-e9d15e7/gait_feasibility.py": {
       "sha256": "16c56ca800da9b2ab1fd3456e4c79b4b9cb23d7d9460b4c198ee4181bfb838a1",
@@ -3326,6 +3329,74 @@
     "candidates/human-blink-winding1/source-snapshot/repair_human_lid_winding.py": {
       "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
       "bytes": 6097
+    },
+    ".validation/v030-anim-r3c/base/LMS_Human_alpha.blend": {
+      "sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "bytes": 1775404
+    },
+    ".validation/v030-anim-r3c/base/LMS_Human_alpha.fbx": {
+      "sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "bytes": 11833068
+    },
+    ".validation/v030-anim-r3c/gait/LMS_Human_alpha.blend": {
+      "sha256": "b7ffe864bdd1321ecf065ba25381cacd5b18bbc277146a359c60fb95bcd523ed",
+      "bytes": 2084517
+    },
+    ".validation/v030-anim-r3c/gait/LMS_Human_alpha.fbx": {
+      "sha256": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783",
+      "bytes": 13299372
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/audit_human_joints.py": {
+      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
+      "bytes": 9247
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/audit_human_locomotion.py": {
+      "sha256": "1a2897c7e641c24f471a41c8506561673eb36d7b685c0828ba88e6b29c4ec6c9",
+      "bytes": 17071
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/author_human_facial.py": {
+      "sha256": "183e13f25d82e6d0f245abe749aeb273be6f5de3e8ba3d35316ca28b3f7d73e7",
+      "bytes": 12433
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/author_human_locomotion.py": {
+      "sha256": "fedad58fa081b049990ea5a988c02df2a31cc84860ac217a06dcfa4d44af9b1e",
+      "bytes": 4003
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/author_motion.py": {
+      "sha256": "37c279e274f8baee59a15f982d835746cf6a3372ab7a23039d69e0d524dbd696",
+      "bytes": 38158
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/build_characters.py": {
+      "sha256": "905eb715a9401e6452d18b8771d868a597f6bd26a78741c5c5ca9507bb7e6785",
+      "bytes": 26436
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/compare_fbx_winding_repair.py": {
+      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
+      "bytes": 4074
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/export_human_locomotion.py": {
+      "sha256": "0c4b67e8e526f61e936f26872ba3b1fdb9d83a80b8455f1a4ea2da0e965cce36",
+      "bytes": 7143
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/human_locomotion_contract.py": {
+      "sha256": "ee862e37beb77d04a966bfc57f0d6f01009e4b3bd2fbfc72d454c9adfae3a77e",
+      "bytes": 5008
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/human_menu_contract.py": {
+      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
+      "bytes": 4923
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
+      "bytes": 7021
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/repair_human_lid_winding.py": {
+      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
+      "bytes": 6097
+    },
+    ".validation/v030-anim-r3c/gait/source-snapshot/verify_human_menu.py": {
+      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
+      "bytes": 9365
     },
     ".validation/v030-anim-h6/base/LMS_Human_alpha.blend": {
       "sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",

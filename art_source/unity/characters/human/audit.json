@@ -102,9 +102,9 @@
     {
       "name": "Human_Swat",
       "start": 1,
-      "end": 31,
+      "end": 61,
       "fps": 30,
-      "duration_seconds": 1.0,
+      "duration_seconds": 2.0,
       "loop": false,
       "root_motion": false
     },
@@ -303,7 +303,10 @@
       "Blink25.R",
       "Blink50.R",
       "Blink75.R",
-      "Blink.R"
+      "Blink.R",
+      "Smile",
+      "MouthO",
+      "Frown"
     ]
   },
   "facial_contract": {
@@ -1538,67 +1541,67 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "1a5bafd1dbc0525b8fc81ef816951577c6dbe584469ba766ee2f4b7fec269e38",
-    "LMS_Human_alpha.fbx": "89bc35c13815769ad1f3407f365c350f2bc1659f3270777a42bc462d6cdaa714"
+    "LMS_Human_alpha.blend": "b7ffe864bdd1321ecf065ba25381cacd5b18bbc277146a359c60fb95bcd523ed",
+    "LMS_Human_alpha.fbx": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-anim\\art_source\\unity\\characters\\.validation\\v030-anim-h6\\base",
+    "baseline_blend_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-anim\\art_source\\unity\\characters\\.validation\\v030-anim-r3c\\base",
     "scene_before": {
-      "meshes": "34357247904c88230a7c49392da1193d2107936e479022c0b81e42cfb39f6076",
+      "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
       "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
     },
     "scene_after": {
-      "meshes": "34357247904c88230a7c49392da1193d2107936e479022c0b81e42cfb39f6076",
+      "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
       "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
     },
     "actions_before": {
-      "Human_Blink": "5fcac41fe9788d20ab6d4e3bce7250b9a891d96b340338057603d5327874fdec",
+      "Human_Blink": "33809c4a6e207e3060f95d586cc9b98eda6de6a09917e1343e5852e1b4e2e463",
       "Human_Clap": "289e9c877a7d6468bbc9b3c56cdd1f407bb4e56bb06f900412a0c04d3430ad8e",
-      "Human_Crouch": "63ad1f196a29ce739bf94678ebadb0726fea7e71460a390ca0fd70fce651b62a",
-      "Human_CrouchWalk": "c15bcd9217fa723c16f27841fda6e78134e6f52feae7abe27d4e0004ffdbf4b9",
-      "Human_Faint": "77afeb5ec996336220d5c6bede053ebed390e8e1416e4c1fb519b75ed3d7ba51",
-      "Human_Fall": "48dd56144bac0a5dd68a0123c891a9ff08b0b19404c1345f2e59d5e9717e34b2",
-      "Human_FallAir": "8bbd93763279dcb29d77777245167491aa7781b82119fd37cd4df0888c15b5bd",
+      "Human_Crouch": "62cad1909b516eda3f718ff7ee2a0aa5a637c0f5b2a59b4931c4873a47ee4228",
+      "Human_CrouchWalk": "86c5b8a2ff25d3d2c753183cfcc7a1c7069209ba6ae35753edc3acd08d2ec6d2",
+      "Human_Faint": "ddd1ad77e0401f1ca41b38e4685bb745d197e3be2553246f9e5b65e70cc017a9",
+      "Human_Fall": "7d0e8095412c37042f8cfd8bfbc2bd866eb6c5737600ca122d1c83534e96c745",
+      "Human_FallAir": "afe3afd07d22cca90852abfa71b4c6b3639800e16cf7556bd0a5776d9eb72746",
       "Human_FingerCurl": "7bbbd1117be601ed107918f960e9f7fcf3db4b422ab6efc4faa6bda970619a20",
-      "Human_Hit": "51a6cbfe9ed918c51d09a0c6f640838fb5d41f0d05c778e305f9f12c526fd03a",
-      "Human_Idle": "7e7ae35957d265b1b1239ff94025c78536c994621614800a145128befa00edf6",
-      "Human_Jump": "33d91f8f9ca5119245b832958d6866dd56719e2d109fe61ae21f7aad031a99ac",
-      "Human_JumpAir": "8e3dbba105e66e2ef1c5a66a27b387938f7b498ec2e3f31e19fbe43bfd47dbae",
-      "Human_Land": "13b18e958d3218612c2c3b6582f2e9f87bcc30fee302f00c1996d0ecb8a011b6",
-      "Human_Recover": "c626045e5838b3fb826148b8ad4e6d1d6417ca12a92d477ac45ed8f6cde4438f",
-      "Human_Run": "9041b56b0f42c51eead6d0eec2a5d0ae77910faa004e0ce590dbd7061b347c38",
-      "Human_Swat": "02b716e27715605439d7c4704c8ed13a0c93b7da80d672ea0c6de30ed4154cf1",
-      "Human_Turn": "6dca9ddb2327f8a7e36024fdbba4a987a5cadc841b47e8b31eba2996e9bc0ead",
-      "Human_Victory": "14e9162dbb06ce84dd40f75088878e2670f9b5184f63aaff31799eb12901fda5",
-      "Human_Walk": "545c2497cd84766c13d2bc453f605079bd9e5e54b3c1e0c3259cbdd36578a1ba",
-      "Human_Yawn": "879e6d8ed41b026f1fdca4bf07161cb03d24c94cacda445093d91cd3bd0d743d"
+      "Human_Hit": "4bf2ef062c3d76f12c32108abc702cdabc2e0a6cb838b62d30f1caf99c9a5ceb",
+      "Human_Idle": "619fa6eec89d0a40059cc4690f3432ee3c02201885c00bd6f3e082ad5969576e",
+      "Human_Jump": "7158ff2bbc24bcc47fb287cb564aba2d8a1eb4d368838038e97fec7fce036ef7",
+      "Human_JumpAir": "f5f2263dad8f24429893ab1d9df3b82ea3865b676f358f8acddd023dff70b82f",
+      "Human_Land": "3986455bc66c533db1c896f1105f141a131f2197af3c319d732b81764cdefef3",
+      "Human_Recover": "dae5d670e8f204678eeea12d98e34014a21d4842c5c857266120cc85b880df78",
+      "Human_Run": "c21d41dd881da06d02dc8f1a812ba418ff38b7c548f080286cb59de75fc2c265",
+      "Human_Swat": "77f7434f38aff7d2a92bb7e47560159474f7e3abd470f39a4e7f3c10aeee9804",
+      "Human_Turn": "d1a236e8f6a80cdcc81f90953214848eb2a7a2a9cf815b6aff167bb6e456e073",
+      "Human_Victory": "d5e36c07e339592731b616b9130ec7bcc98e9908f097daa7c5af4e4252e147bf",
+      "Human_Walk": "3d6f95370a39461ea2c6f24c1fccba831509b43016465181852a903968a8cddd",
+      "Human_Yawn": "98304022b5c529e9d83aea04d0c100c4f7c3c3ddbb5be0272081d79637aacd23"
     },
     "actions_after": {
-      "Human_Blink": "5fcac41fe9788d20ab6d4e3bce7250b9a891d96b340338057603d5327874fdec",
+      "Human_Blink": "33809c4a6e207e3060f95d586cc9b98eda6de6a09917e1343e5852e1b4e2e463",
       "Human_Clap": "289e9c877a7d6468bbc9b3c56cdd1f407bb4e56bb06f900412a0c04d3430ad8e",
-      "Human_Crouch": "63ad1f196a29ce739bf94678ebadb0726fea7e71460a390ca0fd70fce651b62a",
-      "Human_CrouchWalk": "c15bcd9217fa723c16f27841fda6e78134e6f52feae7abe27d4e0004ffdbf4b9",
-      "Human_Faint": "77afeb5ec996336220d5c6bede053ebed390e8e1416e4c1fb519b75ed3d7ba51",
-      "Human_Fall": "48dd56144bac0a5dd68a0123c891a9ff08b0b19404c1345f2e59d5e9717e34b2",
-      "Human_FallAir": "8bbd93763279dcb29d77777245167491aa7781b82119fd37cd4df0888c15b5bd",
+      "Human_Crouch": "62cad1909b516eda3f718ff7ee2a0aa5a637c0f5b2a59b4931c4873a47ee4228",
+      "Human_CrouchWalk": "86c5b8a2ff25d3d2c753183cfcc7a1c7069209ba6ae35753edc3acd08d2ec6d2",
+      "Human_Faint": "ddd1ad77e0401f1ca41b38e4685bb745d197e3be2553246f9e5b65e70cc017a9",
+      "Human_Fall": "7d0e8095412c37042f8cfd8bfbc2bd866eb6c5737600ca122d1c83534e96c745",
+      "Human_FallAir": "afe3afd07d22cca90852abfa71b4c6b3639800e16cf7556bd0a5776d9eb72746",
       "Human_FingerCurl": "7bbbd1117be601ed107918f960e9f7fcf3db4b422ab6efc4faa6bda970619a20",
-      "Human_Hit": "51a6cbfe9ed918c51d09a0c6f640838fb5d41f0d05c778e305f9f12c526fd03a",
-      "Human_Idle": "7e7ae35957d265b1b1239ff94025c78536c994621614800a145128befa00edf6",
-      "Human_Jump": "33d91f8f9ca5119245b832958d6866dd56719e2d109fe61ae21f7aad031a99ac",
-      "Human_JumpAir": "8e3dbba105e66e2ef1c5a66a27b387938f7b498ec2e3f31e19fbe43bfd47dbae",
-      "Human_Land": "13b18e958d3218612c2c3b6582f2e9f87bcc30fee302f00c1996d0ecb8a011b6",
-      "Human_Recover": "c626045e5838b3fb826148b8ad4e6d1d6417ca12a92d477ac45ed8f6cde4438f",
-      "Human_Run": "833a3a889a7a265a7285bf9a039dd41393f5f4580ca742f164c98da933bb4044",
-      "Human_Swat": "02b716e27715605439d7c4704c8ed13a0c93b7da80d672ea0c6de30ed4154cf1",
-      "Human_Trot": "290d915c003e753def91f9ee28d88a99ae939a7b571ebf9b92684ed12ddc42d6",
-      "Human_Turn": "6dca9ddb2327f8a7e36024fdbba4a987a5cadc841b47e8b31eba2996e9bc0ead",
-      "Human_Victory": "14e9162dbb06ce84dd40f75088878e2670f9b5184f63aaff31799eb12901fda5",
-      "Human_Walk": "69964ca54d610533ed516543c990bcff5bbd338dd96b2ff24b3557702e136e04",
-      "Human_WalkSlow": "e8216be115f8937771820b306757da94e083eea3548ea596b43d80d4910e6428",
-      "Human_Yawn": "879e6d8ed41b026f1fdca4bf07161cb03d24c94cacda445093d91cd3bd0d743d"
+      "Human_Hit": "4bf2ef062c3d76f12c32108abc702cdabc2e0a6cb838b62d30f1caf99c9a5ceb",
+      "Human_Idle": "619fa6eec89d0a40059cc4690f3432ee3c02201885c00bd6f3e082ad5969576e",
+      "Human_Jump": "7158ff2bbc24bcc47fb287cb564aba2d8a1eb4d368838038e97fec7fce036ef7",
+      "Human_JumpAir": "f5f2263dad8f24429893ab1d9df3b82ea3865b676f358f8acddd023dff70b82f",
+      "Human_Land": "3986455bc66c533db1c896f1105f141a131f2197af3c319d732b81764cdefef3",
+      "Human_Recover": "dae5d670e8f204678eeea12d98e34014a21d4842c5c857266120cc85b880df78",
+      "Human_Run": "cc01406450d309b9a7ce80a0369cad773159543ef08b0c40a811617159626117",
+      "Human_Swat": "77f7434f38aff7d2a92bb7e47560159474f7e3abd470f39a4e7f3c10aeee9804",
+      "Human_Trot": "c6faa209d20600aec1b023f0734826ccb5b472e341d888e4f4f66159d02beb5d",
+      "Human_Turn": "d1a236e8f6a80cdcc81f90953214848eb2a7a2a9cf815b6aff167bb6e456e073",
+      "Human_Victory": "d5e36c07e339592731b616b9130ec7bcc98e9908f097daa7c5af4e4252e147bf",
+      "Human_Walk": "42c570fb2d6808b1f6a91a3cf5473e5b4ea8521172fafbed0adedccbf38d1c49",
+      "Human_WalkSlow": "6ffaec705fc6c5447cc53c06d20edc20214ddeb7da478078f9835b74674f3e87",
+      "Human_Yawn": "98304022b5c529e9d83aea04d0c100c4f7c3c3ddbb5be0272081d79637aacd23"
     },
     "preserved_action_names": [
       "Human_Blink",
@@ -1621,8 +1624,8 @@
       "Human_Yawn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "1a5bafd1dbc0525b8fc81ef816951577c6dbe584469ba766ee2f4b7fec269e38",
-      "LMS_Human_alpha.fbx": "89bc35c13815769ad1f3407f365c350f2bc1659f3270777a42bc462d6cdaa714"
+      "LMS_Human_alpha.blend": "b7ffe864bdd1321ecf065ba25381cacd5b18bbc277146a359c60fb95bcd523ed",
+      "LMS_Human_alpha.fbx": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783"
     },
     "author": {
       "clips": [
@@ -1663,7 +1666,7 @@
           "root_motion": false
         }
       ],
-      "minimum_authored_extension_margin_m": 0.021489169152340226,
+      "minimum_authored_extension_margin_m": 0.021313002220793464,
       "grip_source_by_clip": {
         "Human_WalkSlow": "Human_Walk",
         "Human_Walk": "Human_Walk",

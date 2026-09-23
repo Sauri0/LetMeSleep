@@ -36,6 +36,8 @@ namespace LetMeSleep.Presentation.Gameplay
         /// <summary>v0.3.0: a crouched gait clip sampled on the same clock replaces the static crouch while moving.</summary>
         public bool SupportsCrouchWalk => crouchClip;
         public float StrikeLayerWeight { get; private set; }
+        /// <summary>The upper-body mask of the strike layer (shared per rig layout by HumanLocomotionSetup).</summary>
+        public AvatarMask UpperBodyMask => upperBodyMask;
         public float CrouchWeight { get; private set; }
         private HumanLocomotionClock clock;
         private Animator animator;

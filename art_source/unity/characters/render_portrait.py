@@ -16,8 +16,8 @@ horizontally; its top sits <top_px> rows below the top edge, or lower if the wid
                nightcap down to the shins (head in the upper third); results show the whole figure.
   Mosquito.png 1092 x 592 (the card aspect, so the card shows it whole), top 18.
   HumanWinner  1024 x 1024, top 16, action Human_Victory (v0.3.0 animation pass) at phase .25 with pose
-               "victory": the clip's own fists-up pump, open shout and lifted brows, with the pupils turned
-               up to 30 deg toward the camera (they are decals on the faceted globes).
+               "victory": the clip's own fists-up pump and lifted brows, the open jaw with the Smile morph (a
+               wide grin, round 3), with the pupils turned up to 30 deg toward the camera.
   (legacy)     pose "cheer": both fists up (the arm aim of the UI's own
                AlfaRolePortrait.RaiseArms), tight fists, brows lifted, the jaw dropped in a shout
                (the dark mouth cavity shows), chest and head tipped back a little. The pupils stay on the
@@ -150,8 +150,33 @@ def cheer():
 
 
 def victory():
-    """Human_Victory as authored (fists up, shout, lifted brows); the pupils are turned toward the viewer."""
+    """Human_Victory as authored (fists up, lifted brows) with a real open grin (round 3: the Smile mouth morph on
+    the clip's open jaw instead of an O of fright); the pupils are turned toward the viewer."""
     freeze_pose()
+    import os
+    # Round 3: the arms open into a wider V (30 deg) and the head leans 18 deg away from the nightcap's tail, so
+    # the tail and its pompom show beside the head instead of hiding behind the raised left upper arm; the jaw
+    # opens 0.18 rad under the Smile morph (a wide grin, not an O). LMS_WINNER_* variables override them.
+    spread = float(os.environ.get('LMS_WINNER_SPREAD', '30'))
+    lean = float(os.environ.get('LMS_WINNER_HEAD_ROLL', '18'))
+    for side, s in (('L', 1), ('R', -1)):
+        if spread:
+            turn_about('UpperArm.' + side, (0, 1, 0), s * spread)
+    if lean:
+        turn_about('Head', (0, 1, 0), lean)
+    jaw = float(os.environ.get('LMS_WINNER_JAW', '.18'))
+    if jaw >= 0:
+        bone = rig.pose.bones['Jaw']
+        bone.rotation_mode = 'XYZ'
+        bone.rotation_euler = (-jaw, 0, 0)
+        bpy.context.view_layer.update()
+    for obj in scene.objects:
+        keys = obj.data.shape_keys.key_blocks if obj.type == 'MESH' and obj.data.shape_keys else None
+        if keys and 'Smile' in keys:
+            keys['Smile'].value = 1.0
+            if 'MouthO' in keys:
+                keys['MouthO'].value = 0.0
+    bpy.context.view_layer.update()
 
 
 def look_at(point, limit_degrees=30):

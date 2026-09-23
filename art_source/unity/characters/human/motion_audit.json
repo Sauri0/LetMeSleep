@@ -10,34 +10,34 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Idle",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 32,
-      "max_bone_head_motion_m": 0.009920984137360239,
-      "max_mesh_vertex_motion_m": 0.010120540499561516,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 59,
+      "max_bone_head_motion_m": 0.03383299735288968,
+      "max_mesh_vertex_motion_m": 0.04820277970818667,
       "loop_expected": true,
-      "first_last_bone_difference_m": 6.757064591056501e-08,
-      "first_last_mesh_difference_m": 2.7314279645418166e-07,
-      "minimum_mesh_z_m": 4.284083843231201e-08,
-      "max_edge_stretch_ratio": 3.415699949450307,
+      "first_last_bone_difference_m": 2.1950781140709273e-07,
+      "first_last_mesh_difference_m": 4.042583693936627e-07,
+      "minimum_mesh_z_m": -1.9191656974726357e-06,
+      "max_edge_stretch_ratio": 3.4200407421956234,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
           14,
           26
         ],
-        "phase": 0.75,
+        "phase": 0.375,
         "rest_length_m": 0.028372900533188583,
-        "deformed_length_m": 0.09691331491697083,
+        "deformed_length_m": 0.09703647579776888,
         "world_endpoints_m": [
           [
-            0.2362697273492813,
-            0.01775507815182209,
-            1.2240394353866577
+            0.24810470640659332,
+            0.018361011520028114,
+            1.2263554334640503
           ],
           [
-            0.3093913793563843,
-            -0.023351728916168213,
-            1.175504446029663
+            0.321674108505249,
+            -0.02296215295791626,
+            1.178438663482666
           ]
         ],
         "weights": [
@@ -64,24 +64,24 @@
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": 5.587935447692871e-08,
-            "Socket.Foot.R": 5.587935447692871e-08
+            "Socket.Foot.L": -1.8961727619171143e-06,
+            "Socket.Foot.R": 0.003065332770347595
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": 5.587935447692871e-08,
-            "Socket.Foot.R": 5.587935447692871e-08
+            "Socket.Foot.L": 1.4901161193847656e-08,
+            "Socket.Foot.R": 0.004426833242177963
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": 5.587935447692871e-08,
-            "Socket.Foot.R": 5.587935447692871e-08
+            "Socket.Foot.L": -1.8961727619171143e-06,
+            "Socket.Foot.R": 0.003065332770347595
           },
           "hips_z": 0.7497000098228455
         },
@@ -96,24 +96,24 @@
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": 5.587935447692871e-08,
-            "Socket.Foot.R": 5.587935447692871e-08
+            "Socket.Foot.L": 0.0030653364956378937,
+            "Socket.Foot.R": -1.911073923110962e-06
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": 5.587935447692871e-08,
-            "Socket.Foot.R": 5.587935447692871e-08
+            "Socket.Foot.L": 0.004426844418048859,
+            "Socket.Foot.R": 1.4901161193847656e-08
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 5.587935447692871e-08,
-            "Socket.Foot.R": 5.587935447692871e-08
+            "Socket.Foot.L": 0.0030653364956378937,
+            "Socket.Foot.R": -1.911073923110962e-06
           },
           "hips_z": 0.7497000098228455
         },
@@ -131,7 +131,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_FingerCurl",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "variable_curve_count": 60,
       "max_bone_head_motion_m": 0.06445142608295716,
       "max_mesh_vertex_motion_m": 0.11705762717816597,
@@ -253,13 +253,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Blink",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 16,
-      "max_bone_head_motion_m": 1.4901161193847656e-08,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 14,
+      "max_bone_head_motion_m": 2.9802322387695312e-08,
       "max_mesh_vertex_motion_m": 0.01378190519436229,
       "loop_expected": false,
-      "first_last_bone_difference_m": 1.4901161193847656e-08,
-      "first_last_mesh_difference_m": 2.5288109106536417e-07,
+      "first_last_bone_difference_m": 2.9802322387695312e-08,
+      "first_last_mesh_difference_m": 1.7881393432617188e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
       "max_edge_stretch_ratio": 3.388985420522378,
       "worst_stretched_edge": {
@@ -374,34 +374,34 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Walk",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 32,
-      "max_bone_head_motion_m": 0.19777798918355866,
-      "max_mesh_vertex_motion_m": 0.21466969353565415,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 38,
+      "max_bone_head_motion_m": 0.7089913580684619,
+      "max_mesh_vertex_motion_m": 0.7347838425393257,
       "loop_expected": true,
-      "first_last_bone_difference_m": 1.6924465733171325e-07,
-      "first_last_mesh_difference_m": 4.3392836387637365e-07,
+      "first_last_bone_difference_m": 1.55572690202453e-07,
+      "first_last_mesh_difference_m": 3.674277068954096e-07,
       "minimum_mesh_z_m": 0.00018370147154200822,
-      "max_edge_stretch_ratio": 2.940193239731071,
+      "max_edge_stretch_ratio": 3.531189484206981,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          15,
-          27
+          14,
+          26
         ],
-        "phase": 0.75,
-        "rest_length_m": 0.029211696608287895,
-        "deformed_length_m": 0.08588803288876312,
+        "phase": 0,
+        "rest_length_m": 0.028372900533188583,
+        "deformed_length_m": 0.10019008799924617,
         "world_endpoints_m": [
           [
-            0.234561949968338,
-            -0.02699616178870201,
-            1.225740909576416
+            0.23602384328842163,
+            0.007619092240929604,
+            1.223043441772461
           ],
           [
-            0.3133666515350342,
-            -0.0240237507969141,
-            1.1917153596878052
+            0.309384286403656,
+            -0.030402660369873047,
+            1.1663808822631836
           ]
         ],
         "weights": [
@@ -495,34 +495,34 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Run",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 30,
-      "max_bone_head_motion_m": 0.2740177542063532,
-      "max_mesh_vertex_motion_m": 0.29742090034206176,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 38,
+      "max_bone_head_motion_m": 0.8522259026727016,
+      "max_mesh_vertex_motion_m": 0.86901385636526,
       "loop_expected": true,
-      "first_last_bone_difference_m": 1.1920928955078125e-07,
-      "first_last_mesh_difference_m": 4.2981520598697533e-07,
+      "first_last_bone_difference_m": 1.3738191809196602e-07,
+      "first_last_mesh_difference_m": 3.911377414586153e-07,
       "minimum_mesh_z_m": 2.832223271640816e-16,
-      "max_edge_stretch_ratio": 2.985511793820039,
+      "max_edge_stretch_ratio": 3.5834840738342626,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          15,
-          27
+          14,
+          26
         ],
-        "phase": 0.75,
-        "rest_length_m": 0.029211696608287895,
-        "deformed_length_m": 0.08721186474153633,
+        "phase": 1,
+        "rest_length_m": 0.028372900533188583,
+        "deformed_length_m": 0.10167383718916495,
         "world_endpoints_m": [
           [
-            0.2347603291273117,
-            -0.03709523379802704,
-            1.223414659500122
+            0.23602384328842163,
+            -0.0024495571851730347,
+            1.2220278978347778
           ],
           [
-            0.31421351432800293,
-            -0.031371358782052994,
-            1.187913417816162
+            0.309384286403656,
+            -0.03552734851837158,
+            1.1598855257034302
           ]
         ],
         "weights": [
@@ -616,43 +616,43 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Crouch",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 98,
-      "max_bone_head_motion_m": 0.6308733522266284,
-      "max_mesh_vertex_motion_m": 0.6416183248853049,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 110,
+      "max_bone_head_motion_m": 0.7174035293408537,
+      "max_mesh_vertex_motion_m": 0.7316436396840681,
       "loop_expected": false,
-      "first_last_bone_difference_m": 0.6308733227017612,
-      "first_last_mesh_difference_m": 0.6416182610183707,
-      "minimum_mesh_z_m": -0.0006019771099090576,
-      "max_edge_stretch_ratio": 3.388985420522378,
+      "first_last_bone_difference_m": 0.717403425486038,
+      "first_last_mesh_difference_m": 0.7316435073005534,
+      "minimum_mesh_z_m": -0.0007753688842058182,
+      "max_edge_stretch_ratio": 3.4104432105636806,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          14,
-          26
+          1339,
+          1351
         ],
-        "phase": 0,
-        "rest_length_m": 0.028372900533188583,
-        "deformed_length_m": 0.09615534624490772,
+        "phase": 0.75,
+        "rest_length_m": 0.029458926657082763,
+        "deformed_length_m": 0.10046799640814133,
         "world_endpoints_m": [
           [
-            0.23633386194705963,
-            0.014614252373576164,
-            1.2247415781021118
+            -0.23460179567337036,
+            -0.15811896324157715,
+            0.7339588403701782
           ],
           [
-            0.30976587533950806,
-            -0.02561241388320923,
-            1.1774615049362183
+            -0.3091799020767212,
+            -0.10155659168958664,
+            0.6974537372589111
           ]
         ],
         "weights": [
           {
             "Chest": 0.8286921381950378,
-            "UpperArm.L": 0.17130786180496216
+            "UpperArm.R": 0.17130786180496216
           },
           {
-            "UpperArm.L": 1.0
+            "UpperArm.R": 1.0
           }
         ]
       },
@@ -670,66 +670,66 @@
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": -0.0005405694246292114,
-            "Socket.Foot.R": -0.0005395673215389252
+            "Socket.Foot.L": 0.0010465383529663086,
+            "Socket.Foot.R": 0.0010479278862476349
           },
-          "hips_z": 0.7242398858070374
+          "hips_z": 0.7258943915367126
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": -0.0006019622087478638,
-            "Socket.Foot.R": -0.0005940385162830353
+            "Socket.Foot.L": 0.007920224219560623,
+            "Socket.Foot.R": 0.007935967296361923
           },
-          "hips_z": 0.6159953474998474
+          "hips_z": 0.62468421459198
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": -0.0001394413411617279,
-            "Socket.Foot.R": -0.0001386776566505432
+            "Socket.Foot.L": 0.01808791607618332,
+            "Socket.Foot.R": 0.0181024968624115
           },
-          "hips_z": 0.4712876081466675
+          "hips_z": 0.489380419254303
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": 7.450580596923828e-09,
-            "Socket.Foot.R": -8.568167686462402e-08
+            "Socket.Foot.L": 0.024699747562408447,
+            "Socket.Foot.R": 0.024699747562408447
           },
-          "hips_z": 0.37865447998046875
+          "hips_z": 0.4027671217918396
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": -1.1175870895385742e-08,
-            "Socket.Foot.R": -7.078051567077637e-08
+            "Socket.Foot.L": 0.025666534900665283,
+            "Socket.Foot.R": 0.02566653862595558
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": -8.195638656616211e-08,
-            "Socket.Foot.R": -2.2351741790771484e-08
+            "Socket.Foot.L": 0.025666572153568268,
+            "Socket.Foot.R": 0.02566653862595558
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": -8.195638656616211e-08,
-            "Socket.Foot.R": -2.9802322387695312e-08
+            "Socket.Foot.L": 0.025666531175374985,
+            "Socket.Foot.R": 0.02566653862595558
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": -8.195638656616211e-08,
-            "Socket.Foot.R": -5.960464477539063e-08
+            "Socket.Foot.L": 0.025666531175374985,
+            "Socket.Foot.R": 0.02566653862595558
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         }
       ]
     },
@@ -737,13 +737,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Jump",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 36,
-      "max_bone_head_motion_m": 0.4317800784204528,
-      "max_mesh_vertex_motion_m": 0.4424388988890117,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 34,
+      "max_bone_head_motion_m": 0.44309087954340076,
+      "max_mesh_vertex_motion_m": 0.4581032452257947,
       "loop_expected": false,
-      "first_last_bone_difference_m": 3.332000937312528e-08,
-      "first_last_mesh_difference_m": 2.9200193199910854e-07,
+      "first_last_bone_difference_m": 6.143906154658885e-08,
+      "first_last_mesh_difference_m": 4.3392836387637365e-07,
       "minimum_mesh_z_m": -0.0005703706410713494,
       "max_edge_stretch_ratio": 3.388985953910022,
       "worst_stretched_edge": {
@@ -858,13 +858,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Land",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 44,
-      "max_bone_head_motion_m": 0.43954165507366294,
-      "max_mesh_vertex_motion_m": 0.44872584074002964,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 42,
+      "max_bone_head_motion_m": 0.44532959731642163,
+      "max_mesh_vertex_motion_m": 0.459561702534742,
       "loop_expected": false,
-      "first_last_bone_difference_m": 0.43586009765119166,
-      "first_last_mesh_difference_m": 0.44570443570506024,
+      "first_last_bone_difference_m": 0.44078143488803356,
+      "first_last_mesh_difference_m": 0.45530640648638926,
       "minimum_mesh_z_m": -0.0003370512567926198,
       "max_edge_stretch_ratio": 3.388984908470162,
       "worst_stretched_edge": {
@@ -979,13 +979,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Turn",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 18,
-      "max_bone_head_motion_m": 0.09861061317306541,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 16,
+      "max_bone_head_motion_m": 0.09896472314362736,
       "max_mesh_vertex_motion_m": 0.16649678570240872,
       "loop_expected": false,
-      "first_last_bone_difference_m": 1.4901161193847656e-08,
-      "first_last_mesh_difference_m": 2.5288109106536417e-07,
+      "first_last_bone_difference_m": 2.9802322387695312e-08,
+      "first_last_mesh_difference_m": 1.7881393432617188e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
       "max_edge_stretch_ratio": 3.388985420522378,
       "worst_stretched_edge": {
@@ -1100,7 +1100,7 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Clap",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "variable_curve_count": 28,
       "max_bone_head_motion_m": 0.8728051501687503,
       "max_mesh_vertex_motion_m": 0.924360412259446,
@@ -1221,34 +1221,34 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Swat",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 99,
-      "max_bone_head_motion_m": 1.2129177629503163,
-      "max_mesh_vertex_motion_m": 1.2358978601505763,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 104,
+      "max_bone_head_motion_m": 1.2782528239172295,
+      "max_mesh_vertex_motion_m": 1.2994686952564931,
       "loop_expected": false,
-      "first_last_bone_difference_m": 1.4905817079352256e-07,
-      "first_last_mesh_difference_m": 3.725290298461914e-07,
-      "minimum_mesh_z_m": -0.0003205908869858831,
-      "max_edge_stretch_ratio": 3.8915786332494426,
+      "first_last_bone_difference_m": 1.3328003749250113e-07,
+      "first_last_mesh_difference_m": 4.0823810917654885e-07,
+      "minimum_mesh_z_m": -0.0001123236506828107,
+      "max_edge_stretch_ratio": 5.7253039373276655,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1339,
-          1351
+          1331,
+          1343
         ],
-        "phase": 0.75,
-        "rest_length_m": 0.029458926657082763,
-        "deformed_length_m": 0.11464172953716571,
+        "phase": 0.25,
+        "rest_length_m": 0.028420835903778308,
+        "deformed_length_m": 0.16271792370204544,
         "world_endpoints_m": [
           [
-            -0.24101373553276062,
-            -0.03148975968360901,
-            1.1878371238708496
+            -0.19198188185691833,
+            0.10897333174943924,
+            1.10085129737854
           ],
           [
-            -0.29549095034599304,
-            -0.11460220068693161,
-            1.1306769847869873
+            -0.20273566246032715,
+            0.07940316200256348,
+            1.260498046875
           ]
         ],
         "weights": [
@@ -1267,72 +1267,72 @@
         {
           "time": 0,
           "feet_z": {
-            "Socket.Foot.L": 0.00020302832126617432,
-            "Socket.Foot.R": 0.000581156462430954
+            "Socket.Foot.L": 5.587935447692871e-08,
+            "Socket.Foot.R": 5.587935447692871e-08
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": -0.0002771131694316864,
-            "Socket.Foot.R": -0.00029904767870903015
+            "Socket.Foot.L": -6.266310811042786e-05,
+            "Socket.Foot.R": -6.294995546340942e-05
           },
-          "hips_z": 0.742358922958374
+          "hips_z": 0.7302030920982361
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": -5.319714546203613e-06,
-            "Socket.Foot.R": -5.014240741729736e-06
+            "Socket.Foot.L": 3.3527612686157227e-08,
+            "Socket.Foot.R": -3.725290298461914e-08
           },
-          "hips_z": 0.7211131453514099
+          "hips_z": 0.7158435583114624
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": -0.00011282041668891907,
-            "Socket.Foot.R": -8.605420589447021e-06
+            "Socket.Foot.L": -3.359466791152954e-05,
+            "Socket.Foot.R": -3.2648444175720215e-05
           },
-          "hips_z": 0.7273600697517395
+          "hips_z": 0.6814279556274414
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": 4.842877388000488e-08,
-            "Socket.Foot.R": -4.470348358154297e-08
+            "Socket.Foot.L": 1.1175870895385742e-08,
+            "Socket.Foot.R": 5.960464477539063e-08
           },
-          "hips_z": 0.7077000141143799
+          "hips_z": 0.6660608053207397
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": -2.004578709602356e-05,
-            "Socket.Foot.R": -2.022087574005127e-05
+            "Socket.Foot.L": -6.940215826034546e-06,
+            "Socket.Foot.R": -6.906688213348389e-06
           },
-          "hips_z": 0.7145476937294006
+          "hips_z": 0.683708667755127
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": -0.0001489780843257904,
-            "Socket.Foot.R": -0.00015561655163764954
+            "Socket.Foot.L": -1.3783574104309082e-07,
+            "Socket.Foot.R": 0.0
           },
-          "hips_z": 0.7359297871589661
+          "hips_z": 0.6915119886398315
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 4.836171865463257e-05,
-            "Socket.Foot.R": 0.00014374032616615295
+            "Socket.Foot.L": -0.0001057945191860199,
+            "Socket.Foot.R": -0.00010560452938079834
           },
-          "hips_z": 0.7491610646247864
+          "hips_z": 0.726119875907898
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": 0.00020302832126617432,
-            "Socket.Foot.R": 0.000581156462430954
+            "Socket.Foot.L": 5.587935447692871e-08,
+            "Socket.Foot.R": 5.587935447692871e-08
           },
           "hips_z": 0.7497000098228455
         }
@@ -1342,13 +1342,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Hit",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 26,
-      "max_bone_head_motion_m": 0.08793892195698451,
-      "max_mesh_vertex_motion_m": 0.08999796775669187,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 24,
+      "max_bone_head_motion_m": 0.09148996108467304,
+      "max_mesh_vertex_motion_m": 0.09451126673606693,
       "loop_expected": false,
-      "first_last_bone_difference_m": 1.4901161193847656e-08,
-      "first_last_mesh_difference_m": 2.5288109106536417e-07,
+      "first_last_bone_difference_m": 2.9802322387695312e-08,
+      "first_last_mesh_difference_m": 1.7881393432617188e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
       "max_edge_stretch_ratio": 6.547625115955273,
       "worst_stretched_edge": {
@@ -1463,8 +1463,8 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Fall",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 41,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 39,
       "max_bone_head_motion_m": 1.703394880410604,
       "max_mesh_vertex_motion_m": 1.7681774161443546,
       "loop_expected": false,
@@ -1584,8 +1584,8 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Faint",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 41,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 39,
       "max_bone_head_motion_m": 1.7033948802739178,
       "max_mesh_vertex_motion_m": 1.7681774161443546,
       "loop_expected": false,
@@ -1705,8 +1705,8 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Recover",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 43,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 41,
       "max_bone_head_motion_m": 1.7040831564862917,
       "max_mesh_vertex_motion_m": 1.7686793290914073,
       "loop_expected": false,
@@ -1826,13 +1826,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_JumpAir",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 32,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 34,
       "max_bone_head_motion_m": 0.02319608659772415,
       "max_mesh_vertex_motion_m": 0.029014284346485116,
       "loop_expected": true,
-      "first_last_bone_difference_m": 1.228781230931777e-07,
-      "first_last_mesh_difference_m": 3.6863436927953305e-07,
+      "first_last_bone_difference_m": 1.2013700229374393e-07,
+      "first_last_mesh_difference_m": 4.768953623117584e-07,
       "minimum_mesh_z_m": 0.11010958254337311,
       "max_edge_stretch_ratio": 2.848213186244613,
       "worst_stretched_edge": {
@@ -1947,13 +1947,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_FallAir",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 50,
-      "max_bone_head_motion_m": 0.38284157105452343,
-      "max_mesh_vertex_motion_m": 0.39905716779397193,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 48,
+      "max_bone_head_motion_m": 0.38403453846755076,
+      "max_mesh_vertex_motion_m": 0.4007444827434843,
       "loop_expected": true,
-      "first_last_bone_difference_m": 2.1950781140709273e-07,
-      "first_last_mesh_difference_m": 5.356651386028138e-07,
+      "first_last_bone_difference_m": 1.959941750461743e-07,
+      "first_last_mesh_difference_m": 4.3901562281418546e-07,
       "minimum_mesh_z_m": 0.009999960660934448,
       "max_edge_stretch_ratio": 5.007923375992452,
       "worst_stretched_edge": {
@@ -2068,43 +2068,43 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_CrouchWalk",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
-      "variable_curve_count": 43,
-      "max_bone_head_motion_m": 0.6335712780183481,
-      "max_mesh_vertex_motion_m": 0.7483592694566499,
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
+      "variable_curve_count": 54,
+      "max_bone_head_motion_m": 0.6149034531654237,
+      "max_mesh_vertex_motion_m": 0.7460907137847081,
       "loop_expected": true,
-      "first_last_bone_difference_m": 1.8745281734182126e-07,
-      "first_last_mesh_difference_m": 4.04532908216066e-07,
-      "minimum_mesh_z_m": -0.00020235218107700348,
-      "max_edge_stretch_ratio": 3.0913149361859382,
+      "first_last_bone_difference_m": 1.4975481660844222e-07,
+      "first_last_mesh_difference_m": 5.092623081992585e-07,
+      "minimum_mesh_z_m": 0.0007925480604171753,
+      "max_edge_stretch_ratio": 3.421676330273496,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          14,
-          26
+          1339,
+          1351
         ],
-        "phase": 1,
-        "rest_length_m": 0.028372900533188583,
-        "deformed_length_m": 0.08770957120116384,
+        "phase": 0.125,
+        "rest_length_m": 0.029458926657082763,
+        "deformed_length_m": 0.10079891205780302,
         "world_endpoints_m": [
           [
-            0.2354998141527176,
-            -0.14777439832687378,
-            0.7507086992263794
+            -0.21736770868301392,
+            -0.16435107588768005,
+            0.7475234866142273
           ],
           [
-            0.31210899353027344,
-            -0.11408975720405579,
-            0.7244532704353333
+            -0.29465556144714355,
+            -0.10850533097982407,
+            0.7148392200469971
           ]
         ],
         "weights": [
           {
             "Chest": 0.8286921381950378,
-            "UpperArm.L": 0.17130786180496216
+            "UpperArm.R": 0.17130786180496216
           },
           {
-            "UpperArm.L": 1.0
+            "UpperArm.R": 1.0
           }
         ]
       },
@@ -2114,74 +2114,74 @@
         {
           "time": 0,
           "feet_z": {
-            "Socket.Foot.L": 1.1175870895385742e-08,
-            "Socket.Foot.R": 0.07214830815792084
+            "Socket.Foot.L": 0.025666579604148865,
+            "Socket.Foot.R": 0.07692702859640121
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": -0.00011379271745681763,
-            "Socket.Foot.R": 0.07258424162864685
+            "Socket.Foot.L": 0.02554227039217949,
+            "Socket.Foot.R": 0.07722031325101852
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": -7.450580596923828e-08,
-            "Socket.Foot.R": 0.06515461206436157
+            "Socket.Foot.L": 0.025666505098342896,
+            "Socket.Foot.R": 0.05902205407619476
           },
-          "hips_z": 0.37700000405311584
+          "hips_z": 0.4000000059604645
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": 0.011402223259210587,
-            "Socket.Foot.R": 0.06965424120426178
+            "Socket.Foot.L": 0.034160662442445755,
+            "Socket.Foot.R": 0.05865103751420975
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": 0.07214828580617905,
-            "Socket.Foot.R": 2.60770320892334e-08
+            "Socket.Foot.L": 0.07692704349756241,
+            "Socket.Foot.R": 0.025666534900665283
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": 0.07258425652980804,
-            "Socket.Foot.R": -0.00011385232210159302
+            "Socket.Foot.L": 0.07722035050392151,
+            "Socket.Foot.R": 0.02554205432534218
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": 0.06515459716320038,
-            "Socket.Foot.R": -9.313225746154785e-08
+            "Socket.Foot.L": 0.05902206897735596,
+            "Socket.Foot.R": 0.025666460394859314
           },
-          "hips_z": 0.37700000405311584
+          "hips_z": 0.4000000059604645
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 0.06965424120426178,
-            "Socket.Foot.R": 0.01140221580862999
+            "Socket.Foot.L": 0.05865113437175751,
+            "Socket.Foot.R": 0.03416066989302635
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": -3.725290298461914e-09,
-            "Socket.Foot.R": 0.07214828580617905
+            "Socket.Foot.L": 0.02566644921898842,
+            "Socket.Foot.R": 0.07692702859640121
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         }
       ]
     },
@@ -2189,13 +2189,13 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Yawn",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "variable_curve_count": 96,
-      "max_bone_head_motion_m": 1.396629872445265,
-      "max_mesh_vertex_motion_m": 1.4235724376889916,
+      "max_bone_head_motion_m": 1.42792476502183,
+      "max_mesh_vertex_motion_m": 1.4780052179149237,
       "loop_expected": false,
-      "first_last_bone_difference_m": 1.2489448945403256e-07,
-      "first_last_mesh_difference_m": 3.1763971226810265e-07,
+      "first_last_bone_difference_m": 1.2146174624730518e-07,
+      "first_last_mesh_difference_m": 3.03925246810483e-07,
       "minimum_mesh_z_m": 4.284083843231201e-08,
       "max_edge_stretch_ratio": 12.2776542219468,
       "worst_stretched_edge": {
@@ -2310,34 +2310,34 @@
       "species": "Human",
       "format": "blend",
       "clip": "Human_Victory",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "variable_curve_count": 48,
-      "max_bone_head_motion_m": 0.40825137823954294,
-      "max_mesh_vertex_motion_m": 0.41253244770691583,
+      "max_bone_head_motion_m": 0.4809183637692302,
+      "max_mesh_vertex_motion_m": 0.48535146991490913,
       "loop_expected": true,
-      "first_last_bone_difference_m": 1.228781230931777e-07,
-      "first_last_mesh_difference_m": 3.371747880871523e-07,
-      "minimum_mesh_z_m": -6.795227136535686e-08,
-      "max_edge_stretch_ratio": 12.617537358441044,
+      "first_last_bone_difference_m": 1.1920928955078125e-07,
+      "first_last_mesh_difference_m": 3.769728732309794e-07,
+      "minimum_mesh_z_m": -1.366359043686316e-07,
+      "max_edge_stretch_ratio": 12.617547975085884,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          15,
-          18
+          16,
+          19
         ],
-        "phase": 0.75,
+        "phase": 0.25,
         "rest_length_m": 0.0030040140852014593,
-        "deformed_length_m": 0.03790325994531251,
+        "deformed_length_m": 0.037903291837863146,
         "world_endpoints_m": [
           [
-            0.02140996977686882,
-            -0.0859745591878891,
-            1.4200859069824219
+            -0.021409979090094566,
+            -0.08590403944253922,
+            1.4439730644226074
           ],
           [
-            0.022858336567878723,
-            -0.09213900566101074,
-            1.4574564695358276
+            -0.022858336567878723,
+            -0.0920766294002533,
+            1.4813423156738281
           ]
         ],
         "weights": [
@@ -2356,74 +2356,74 @@
         {
           "time": 0,
           "feet_z": {
-            "Socket.Foot.L": -2.9802322387695312e-08,
-            "Socket.Foot.R": -2.9802322387695312e-08
+            "Socket.Foot.L": -6.332993507385254e-08,
+            "Socket.Foot.R": -7.078051567077637e-08
           },
-          "hips_z": 0.640500009059906
+          "hips_z": 0.5900999903678894
         },
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": 0.0086669921875,
-            "Socket.Foot.R": 0.0086669921875
+            "Socket.Foot.L": 0.014964316040277481,
+            "Socket.Foot.R": 0.014964330941438675
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": 0.03423936665058136,
-            "Socket.Foot.R": 0.034239351749420166
+            "Socket.Foot.L": 0.05869603902101517,
+            "Socket.Foot.R": 0.05869603902101517
           },
-          "hips_z": 0.7827461957931519
+          "hips_z": 0.8066521883010864
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": 0.008666988462209702,
-            "Socket.Foot.R": 0.008666988462209702
+            "Socket.Foot.L": 0.014964297413825989,
+            "Socket.Foot.R": 0.014964312314987183
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": -2.60770320892334e-08,
-            "Socket.Foot.R": -2.60770320892334e-08
+            "Socket.Foot.L": -1.1175870895385742e-08,
+            "Socket.Foot.R": -1.862645149230957e-08
           },
-          "hips_z": 0.640500009059906
+          "hips_z": 0.5900999903678894
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": 0.00866694375872612,
-            "Socket.Foot.R": 0.00866694375872612
+            "Socket.Foot.L": 0.014964252710342407,
+            "Socket.Foot.R": 0.014964267611503601
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": 0.03423936292529106,
-            "Socket.Foot.R": 0.03423934802412987
+            "Socket.Foot.L": 0.058696046471595764,
+            "Socket.Foot.R": 0.058696046471595764
           },
-          "hips_z": 0.7827461957931519
+          "hips_z": 0.8066521883010864
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 0.00866701826453209,
-            "Socket.Foot.R": 0.00866701826453209
+            "Socket.Foot.L": 0.014964301139116287,
+            "Socket.Foot.R": 0.014964316040277481
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": 2.60770320892334e-08,
-            "Socket.Foot.R": 2.60770320892334e-08
+            "Socket.Foot.L": -1.1175870895385742e-08,
+            "Socket.Foot.R": -1.862645149230957e-08
           },
-          "hips_z": 0.640500009059906
+          "hips_z": 0.5900999903678894
         }
       ]
     },
@@ -2431,34 +2431,34 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Idle",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
-      "variable_curve_count": 18,
-      "max_bone_head_motion_m": 0.009920861746300715,
-      "max_mesh_vertex_motion_m": 0.010120429624401114,
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "variable_curve_count": 51,
+      "max_bone_head_motion_m": 0.03383302473207721,
+      "max_mesh_vertex_motion_m": 0.04820277970818667,
       "loop_expected": true,
-      "first_last_bone_difference_m": 4.069807723347333e-07,
-      "first_last_mesh_difference_m": 6.22290760809812e-07,
-      "minimum_mesh_z_m": -2.1259319638033958e-08,
-      "max_edge_stretch_ratio": 3.4157226209888076,
+      "first_last_bone_difference_m": 2.5463115409962923e-07,
+      "first_last_mesh_difference_m": 5.990192664337689e-07,
+      "minimum_mesh_z_m": -2.0020133888465352e-06,
+      "max_edge_stretch_ratio": 3.4200583532468283,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
           26,
           14
         ],
-        "phase": 0.75,
+        "phase": 0.875,
         "rest_length_m": 0.028372900533188583,
-        "deformed_length_m": 0.09691395817427764,
+        "deformed_length_m": 0.097036975474373,
         "world_endpoints_m": [
           [
-            0.30939191579818726,
-            -0.023352252319455147,
-            1.175504207611084
+            0.29694926738739014,
+            -0.022782133892178535,
+            1.1718859672546387
           ],
           [
-            0.23626981675624847,
-            0.017754996195435524,
-            1.2240394353866577
+            0.22438682615756989,
+            0.018498729914426804,
+            1.2213506698608398
           ]
         ],
         "weights": [
@@ -2485,64 +2485,64 @@
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": 3.953861238414902e-09,
-            "Socket.Foot.R": -3.4967246875794444e-09
+            "Socket.Foot.L": -1.8773176861941465e-06,
+            "Socket.Foot.R": 0.003065373981371522
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": 2.2857360448824693e-10,
-            "Socket.Foot.R": 2.2856827541772873e-10
+            "Socket.Foot.L": 2.6305610134613744e-08,
+            "Socket.Foot.R": 0.004426978528499603
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": 3.953861238414902e-09,
-            "Socket.Foot.R": -3.4967246875794444e-09
+            "Socket.Foot.L": -1.8717297507464536e-06,
+            "Socket.Foot.R": 0.0030653441790491343
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": 2.2857360448824693e-10,
-            "Socket.Foot.R": 2.2856827541772873e-10
+            "Socket.Foot.L": 3.953861238414902e-09,
+            "Socket.Foot.R": -3.4967246875794444e-09
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": 3.953861238414902e-09,
-            "Socket.Foot.R": -3.4967246875794444e-09
+            "Socket.Foot.L": 0.0030653851572424173,
+            "Socket.Foot.R": -1.9928017991333036e-06
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": 2.2857360448824693e-10,
-            "Socket.Foot.R": 2.2856827541772873e-10
+            "Socket.Foot.L": 0.004426959902048111,
+            "Socket.Foot.R": 8.591024425186333e-08
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 3.953861238414902e-09,
-            "Socket.Foot.R": -3.4967246875794444e-09
+            "Socket.Foot.L": 0.003065383294597268,
+            "Socket.Foot.R": -1.8884935570895323e-06
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": 2.2857360448824693e-10,
-            "Socket.Foot.R": 2.2856827541772873e-10
+            "Socket.Foot.L": -3.496717582152087e-09,
+            "Socket.Foot.R": -3.4967246875794444e-09
           },
           "hips_z": 0.7497000098228455
         }
@@ -2552,7 +2552,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_FingerCurl",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 60,
       "max_bone_head_motion_m": 0.06445143563323329,
       "max_mesh_vertex_motion_m": 0.11705708510885807,
@@ -2674,12 +2674,12 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Blink",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 2,
-      "max_bone_head_motion_m": 7.300048299977713e-08,
+      "max_bone_head_motion_m": 1.2377834115800373e-07,
       "max_mesh_vertex_motion_m": 0.013781905194364305,
       "loop_expected": false,
-      "first_last_bone_difference_m": 6.664001874625056e-08,
+      "first_last_bone_difference_m": 1.2377834115800373e-07,
       "first_last_mesh_difference_m": 2.7314279645418166e-07,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
       "max_edge_stretch_ratio": 3.3889966856515663,
@@ -2795,34 +2795,34 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Walk",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
-      "variable_curve_count": 20,
-      "max_bone_head_motion_m": 0.1977780174377774,
-      "max_mesh_vertex_motion_m": 0.21466974776562275,
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "variable_curve_count": 28,
+      "max_bone_head_motion_m": 0.7089914946816628,
+      "max_mesh_vertex_motion_m": 0.7347838374694126,
       "loop_expected": true,
-      "first_last_bone_difference_m": 5.356651386028138e-07,
-      "first_last_mesh_difference_m": 7.530985540616588e-07,
+      "first_last_bone_difference_m": 3.21326533747432e-07,
+      "first_last_mesh_difference_m": 6.07850493620966e-07,
       "minimum_mesh_z_m": 0.00018367287702858448,
-      "max_edge_stretch_ratio": 2.9402021761235617,
+      "max_edge_stretch_ratio": 3.5312112709315,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          27,
-          15
+          26,
+          14
         ],
-        "phase": 0.75,
-        "rest_length_m": 0.029211696608287895,
-        "deformed_length_m": 0.08588829393594934,
+        "phase": 0,
+        "rest_length_m": 0.028372900533188583,
+        "deformed_length_m": 0.10019070615181389,
         "world_endpoints_m": [
           [
-            0.3133671283721924,
-            -0.02402375265955925,
-            1.1917155981063843
+            0.30938470363616943,
+            -0.030403006821870804,
+            1.1663804054260254
           ],
           [
-            0.23456203937530518,
-            -0.02699616737663746,
-            1.225740909576416
+            0.2360239326953888,
+            0.007619030773639679,
+            1.223043441772461
           ]
         ],
         "weights": [
@@ -2916,34 +2916,34 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Run",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
-      "variable_curve_count": 20,
-      "max_bone_head_motion_m": 0.2740178357719478,
-      "max_mesh_vertex_motion_m": 0.2974209287197263,
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "variable_curve_count": 28,
+      "max_bone_head_motion_m": 0.8522260294388597,
+      "max_mesh_vertex_motion_m": 0.86901385636526,
       "loop_expected": true,
-      "first_last_bone_difference_m": 1.812804499357408e-07,
-      "first_last_mesh_difference_m": 3.625608998714816e-07,
+      "first_last_bone_difference_m": 1.97686242482388e-07,
+      "first_last_mesh_difference_m": 4.951133646320149e-07,
       "minimum_mesh_z_m": 6.950273956363162e-08,
-      "max_edge_stretch_ratio": 2.985521059375198,
+      "max_edge_stretch_ratio": 3.583498399825404,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          27,
-          15
+          26,
+          14
         ],
-        "phase": 0.75,
-        "rest_length_m": 0.029211696608287895,
-        "deformed_length_m": 0.08721213540412255,
+        "phase": 0,
+        "rest_length_m": 0.028372900533188583,
+        "deformed_length_m": 0.10167424365908664,
         "world_endpoints_m": [
           [
-            0.31421399116516113,
-            -0.03137137368321419,
-            1.1879136562347412
+            0.3093847632408142,
+            -0.0355275459587574,
+            1.1598854064941406
           ],
           [
-            0.23476040363311768,
-            -0.03709523379802704,
-            1.223414659500122
+            0.2360239326953888,
+            -0.0024495909456163645,
+            1.2220278978347778
           ]
         ],
         "weights": [
@@ -3037,43 +3037,43 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Crouch",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
-      "variable_curve_count": 98,
-      "max_bone_head_motion_m": 0.6308735352807741,
-      "max_mesh_vertex_motion_m": 0.641618626801635,
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "variable_curve_count": 111,
+      "max_bone_head_motion_m": 0.7174034981844106,
+      "max_mesh_vertex_motion_m": 0.7316435378505973,
       "loop_expected": false,
-      "first_last_bone_difference_m": 0.6308733227017612,
-      "first_last_mesh_difference_m": 0.6416182900487962,
-      "minimum_mesh_z_m": -0.0006019776919856668,
-      "max_edge_stretch_ratio": 3.3889966856515663,
+      "first_last_bone_difference_m": 0.7174034202932968,
+      "first_last_mesh_difference_m": 0.7316435378505973,
+      "minimum_mesh_z_m": -0.0007754251710139215,
+      "max_edge_stretch_ratio": 3.4104562103471525,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          26,
-          14
+          1351,
+          1339
         ],
-        "phase": 0,
-        "rest_length_m": 0.028372900533188583,
-        "deformed_length_m": 0.09615566586929766,
+        "phase": 0.625,
+        "rest_length_m": 0.029458926657082763,
+        "deformed_length_m": 0.1004683793678092,
         "world_endpoints_m": [
           [
-            0.30976617336273193,
-            -0.02561281807720661,
-            1.1774615049362183
+            -0.30918049812316895,
+            -0.10155656933784485,
+            0.6974536776542664
           ],
           [
-            0.2363339215517044,
-            0.014614173211157322,
-            1.2247415781021118
+            -0.23460189998149872,
+            -0.15811893343925476,
+            0.7339588403701782
           ]
         ],
         "weights": [
           {
-            "UpperArm.L": 1.0
+            "UpperArm.R": 1.0
           },
           {
             "Chest": 0.8286921381950378,
-            "UpperArm.L": 0.17130786180496216
+            "UpperArm.R": 0.17130786180496216
           }
         ]
       },
@@ -3091,66 +3091,66 @@
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": -0.0005405546980910003,
-            "Socket.Foot.R": -0.000539556669536978
+            "Socket.Foot.L": 0.0010466331150382757,
+            "Socket.Foot.R": 0.0010479866759851575
           },
-          "hips_z": 0.7242398858070374
+          "hips_z": 0.7258944511413574
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": -0.0006019013817422092,
-            "Socket.Foot.R": -0.0005940422415733337
+            "Socket.Foot.L": 0.007920246571302414,
+            "Socket.Foot.R": 0.007936038076877594
           },
-          "hips_z": 0.6159953474998474
+          "hips_z": 0.62468421459198
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": -0.00013931409921497107,
-            "Socket.Foot.R": -0.00013866426888853312
+            "Socket.Foot.L": 0.01808791607618332,
+            "Socket.Foot.R": 0.018102671951055527
           },
-          "hips_z": 0.4712876081466675
+          "hips_z": 0.489380419254303
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": -2.5442149720333873e-08,
-            "Socket.Foot.R": -1.1880450045964608e-07
+            "Socket.Foot.L": 0.024699753150343895,
+            "Socket.Foot.R": 0.024699673056602478
           },
-          "hips_z": 0.37865447998046875
+          "hips_z": 0.4027671217918396
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": -8.941427154240955e-08,
-            "Socket.Foot.R": -1.1641534314321689e-07
+            "Socket.Foot.L": 0.025666628032922745,
+            "Socket.Foot.R": 0.025666536763310432
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": -1.9565076669891823e-08,
-            "Socket.Foot.R": -9.313224325069314e-08
+            "Socket.Foot.L": 0.025666609406471252,
+            "Socket.Foot.R": 0.02566654235124588
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": -9.320531901835238e-09,
-            "Socket.Foot.R": -5.7741981862591274e-08
+            "Socket.Foot.L": 0.025666557252407074,
+            "Socket.Foot.R": 0.02566654235124588
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": -1.0251856252807556e-08,
-            "Socket.Foot.R": -1.303851746570217e-07
+            "Socket.Foot.L": 0.025666598230600357,
+            "Socket.Foot.R": 0.02566654235124588
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         }
       ]
     },
@@ -3158,13 +3158,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Jump",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 26,
-      "max_bone_head_motion_m": 0.4317803183796654,
-      "max_mesh_vertex_motion_m": 0.4424390799167767,
+      "max_bone_head_motion_m": 0.44309096256753855,
+      "max_mesh_vertex_motion_m": 0.4581031364604363,
       "loop_expected": false,
-      "first_last_bone_difference_m": 3.11145380404906e-07,
-      "first_last_mesh_difference_m": 5.253716034480944e-07,
+      "first_last_bone_difference_m": 3.956531896397994e-07,
+      "first_last_mesh_difference_m": 6.398829982752767e-07,
       "minimum_mesh_z_m": -0.0005703190108761191,
       "max_edge_stretch_ratio": 3.3889999286363603,
       "worst_stretched_edge": {
@@ -3279,13 +3279,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Land",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 34,
-      "max_bone_head_motion_m": 0.43954170162213335,
-      "max_mesh_vertex_motion_m": 0.44872556719785484,
+      "max_bone_head_motion_m": 0.4453296774397576,
+      "max_mesh_vertex_motion_m": 0.45956162767922154,
       "loop_expected": false,
-      "first_last_bone_difference_m": 0.4358602018509618,
-      "first_last_mesh_difference_m": 0.4457045312755244,
+      "first_last_bone_difference_m": 0.44078150718847364,
+      "first_last_mesh_difference_m": 0.4553064444557091,
       "minimum_mesh_z_m": -0.0003371310012880713,
       "max_edge_stretch_ratio": 3.3890000993196843,
       "worst_stretched_edge": {
@@ -3400,12 +3400,12 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Turn",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 4,
-      "max_bone_head_motion_m": 0.09861059221935232,
+      "max_bone_head_motion_m": 0.09896476519834929,
       "max_mesh_vertex_motion_m": 0.16649684443562915,
       "loop_expected": false,
-      "first_last_bone_difference_m": 6.664001874625056e-08,
+      "first_last_bone_difference_m": 1.2377834115800373e-07,
       "first_last_mesh_difference_m": 2.7314279645418166e-07,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
       "max_edge_stretch_ratio": 3.3890002379998796,
@@ -3521,7 +3521,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Clap",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 24,
       "max_bone_head_motion_m": 0.8728052312641842,
       "max_mesh_vertex_motion_m": 0.9243600293972561,
@@ -3642,34 +3642,34 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Swat",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
-      "variable_curve_count": 95,
-      "max_bone_head_motion_m": 1.2129183633983396,
-      "max_mesh_vertex_motion_m": 1.2358982489872175,
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "variable_curve_count": 100,
+      "max_bone_head_motion_m": 1.278252986848219,
+      "max_mesh_vertex_motion_m": 1.2994683667190343,
       "loop_expected": false,
-      "first_last_bone_difference_m": 3.1061527696956254e-07,
-      "first_last_mesh_difference_m": 5.127385417844431e-07,
-      "minimum_mesh_z_m": -0.00032055715564638376,
-      "max_edge_stretch_ratio": 3.8915913873990475,
+      "first_last_bone_difference_m": 3.407978963602903e-07,
+      "first_last_mesh_difference_m": 4.842304232499576e-07,
+      "minimum_mesh_z_m": -0.0001124162517953664,
+      "max_edge_stretch_ratio": 5.725295602642472,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          1351,
-          1339
+          1343,
+          1331
         ],
-        "phase": 0.75,
-        "rest_length_m": 0.029458926657082763,
-        "deformed_length_m": 0.11464210526072349,
+        "phase": 0.25,
+        "rest_length_m": 0.028420835903778308,
+        "deformed_length_m": 0.16271768682332524,
         "world_endpoints_m": [
           [
-            -0.295491099357605,
-            -0.11460272967815399,
-            1.1306769847869873
+            -0.20273590087890625,
+            0.07940328121185303,
+            1.2604974508285522
           ],
           [
-            -0.241013765335083,
-            -0.03148984909057617,
-            1.1878371238708496
+            -0.19198186695575714,
+            0.10897334665060043,
+            1.1008509397506714
           ]
         ],
         "weights": [
@@ -3688,72 +3688,72 @@
         {
           "time": 0,
           "feet_z": {
-            "Socket.Foot.L": 0.00020314729772508144,
-            "Socket.Foot.R": 0.0005812039598822594
+            "Socket.Foot.L": 3.953861238414902e-09,
+            "Socket.Foot.R": -3.4967246875794444e-09
           },
           "hips_z": 0.7497000098228455
         },
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": -0.0002771171275526285,
-            "Socket.Foot.R": -0.00029901714879088104
+            "Socket.Foot.L": -6.257533823372796e-05,
+            "Socket.Foot.R": -6.294040940701962e-05
           },
-          "hips_z": 0.742358922958374
+          "hips_z": 0.7302031517028809
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": -5.256622898741625e-06,
-            "Socket.Foot.R": -4.932608135277405e-06
+            "Socket.Foot.L": 7.679174629515728e-09,
+            "Socket.Foot.R": -8.917839977584663e-08
           },
-          "hips_z": 0.7211132049560547
+          "hips_z": 0.7158435583114624
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": -0.00011290905968053266,
-            "Socket.Foot.R": -8.655673809698783e-06
+            "Socket.Foot.L": -3.34379801643081e-05,
+            "Socket.Foot.R": -3.269292210461572e-05
           },
-          "hips_z": 0.7273600101470947
+          "hips_z": 0.6814279556274414
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": 6.585953826743207e-08,
-            "Socket.Foot.R": -5.308782746737961e-08
+            "Socket.Foot.L": 1.1404445388052409e-08,
+            "Socket.Foot.R": 1.082619718317801e-07
           },
-          "hips_z": 0.7077000141143799
+          "hips_z": 0.6660608053207397
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": -2.0183122614980675e-05,
-            "Socket.Foot.R": -2.0378272893140092e-05
+            "Socket.Foot.L": -6.943712378415512e-06,
+            "Socket.Foot.R": -6.9176353463262785e-06
           },
-          "hips_z": 0.7145476937294006
+          "hips_z": 0.683708667755127
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": -0.00014887865108903497,
-            "Socket.Foot.R": -0.00015547778457403183
+            "Socket.Foot.L": -1.4133246395431343e-07,
+            "Socket.Foot.R": 8.218493263711935e-08
           },
-          "hips_z": 0.7359298467636108
+          "hips_z": 0.6915119886398315
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 4.843096394324675e-05,
-            "Socket.Foot.R": 0.0001438269391655922
+            "Socket.Foot.L": -0.00010589673183858395,
+            "Socket.Foot.R": -0.00010554469918133691
           },
-          "hips_z": 0.7491610646247864
+          "hips_z": 0.726119875907898
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": 0.00020314729772508144,
-            "Socket.Foot.R": 0.0005812039598822594
+            "Socket.Foot.L": 3.953863902950161e-09,
+            "Socket.Foot.R": -3.4967246875794444e-09
           },
           "hips_z": 0.7497000098228455
         }
@@ -3763,12 +3763,12 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Hit",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 12,
-      "max_bone_head_motion_m": 0.08793889812821756,
-      "max_mesh_vertex_motion_m": 0.08999791989596612,
+      "max_bone_head_motion_m": 0.0914898764674933,
+      "max_mesh_vertex_motion_m": 0.09451103762818537,
       "loop_expected": false,
-      "first_last_bone_difference_m": 6.664001874625056e-08,
+      "first_last_bone_difference_m": 1.2377834115800373e-07,
       "first_last_mesh_difference_m": 2.7314279645418166e-07,
       "minimum_mesh_z_m": -2.1259319638033958e-08,
       "max_edge_stretch_ratio": 6.547551598544063,
@@ -3884,7 +3884,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Fall",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7033949155389676,
       "max_mesh_vertex_motion_m": 1.7681774329991802,
@@ -4005,7 +4005,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Faint",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7033950559840718,
       "max_mesh_vertex_motion_m": 1.768177550982956,
@@ -4126,7 +4126,7 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Recover",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 31,
       "max_bone_head_motion_m": 1.7040827015732032,
       "max_mesh_vertex_motion_m": 1.7686791611175354,
@@ -4247,13 +4247,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_JumpAir",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 32,
       "max_bone_head_motion_m": 0.023196165015549254,
       "max_mesh_vertex_motion_m": 0.029014272434833132,
       "loop_expected": true,
-      "first_last_bone_difference_m": 5.497296674757217e-07,
-      "first_last_mesh_difference_m": 7.562981570034933e-07,
+      "first_last_bone_difference_m": 5.399486700294446e-07,
+      "first_last_mesh_difference_m": 7.748603820800781e-07,
       "minimum_mesh_z_m": 0.11010964214801788,
       "max_edge_stretch_ratio": 2.8481736958986765,
       "worst_stretched_edge": {
@@ -4368,13 +4368,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_FallAir",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 32,
-      "max_bone_head_motion_m": 0.38284157135860564,
-      "max_mesh_vertex_motion_m": 0.3990570820538898,
+      "max_bone_head_motion_m": 0.38403469971779275,
+      "max_mesh_vertex_motion_m": 0.4007446368297514,
       "loop_expected": true,
-      "first_last_bone_difference_m": 6.6656676668957e-07,
-      "first_last_mesh_difference_m": 8.439899837080417e-07,
+      "first_last_bone_difference_m": 5.094802676820385e-07,
+      "first_last_mesh_difference_m": 8.0023536575422e-07,
       "minimum_mesh_z_m": 0.009999976493418217,
       "max_edge_stretch_ratio": 5.007954632492561,
       "worst_stretched_edge": {
@@ -4489,43 +4489,43 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_CrouchWalk",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
-      "variable_curve_count": 31,
-      "max_bone_head_motion_m": 0.6335712658912038,
-      "max_mesh_vertex_motion_m": 0.7483594604852144,
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
+      "variable_curve_count": 56,
+      "max_bone_head_motion_m": 0.6149035624048255,
+      "max_mesh_vertex_motion_m": 0.7460908307709929,
       "loop_expected": true,
-      "first_last_bone_difference_m": 6.603753508973223e-07,
-      "first_last_mesh_difference_m": 8.860867468904558e-07,
-      "minimum_mesh_z_m": -0.00020231057715136558,
-      "max_edge_stretch_ratio": 3.091327110634602,
+      "first_last_bone_difference_m": 3.384893146634265e-07,
+      "first_last_mesh_difference_m": 5.462855929083633e-07,
+      "minimum_mesh_z_m": 0.0007927259430289268,
+      "max_edge_stretch_ratio": 3.4216853473269246,
       "worst_stretched_edge": {
         "mesh": "HumanBody",
         "vertices": [
-          26,
-          14
+          1351,
+          1339
         ],
-        "phase": 1,
-        "rest_length_m": 0.028372900533188583,
-        "deformed_length_m": 0.08770991662558482,
+        "phase": 0.125,
+        "rest_length_m": 0.029458926657082763,
+        "deformed_length_m": 0.10079917769051863,
         "world_endpoints_m": [
           [
-            0.31210947036743164,
-            -0.11408993601799011,
-            0.7244530916213989
+            -0.29465603828430176,
+            -0.10850539058446884,
+            0.7148391008377075
           ],
           [
-            0.23549991846084595,
-            -0.14777448773384094,
-            0.7507086992263794
+            -0.21736778318881989,
+            -0.1643509864807129,
+            0.7475234866142273
           ]
         ],
         "weights": [
           {
-            "UpperArm.L": 1.0
+            "UpperArm.R": 1.0
           },
           {
             "Chest": 0.8286921381950378,
-            "UpperArm.L": 0.17130786180496216
+            "UpperArm.R": 0.17130786180496216
           }
         ]
       },
@@ -4535,74 +4535,74 @@
         {
           "time": 0,
           "feet_z": {
-            "Socket.Foot.L": 8.912430615737321e-08,
-            "Socket.Foot.R": 0.07214827835559845
+            "Socket.Foot.L": 0.02566670812666416,
+            "Socket.Foot.R": 0.07692695409059525
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": -0.00011392821761546656,
-            "Socket.Foot.R": 0.07258426398038864
+            "Socket.Foot.L": 0.02554219402372837,
+            "Socket.Foot.R": 0.07722030580043793
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": -6.21241014187035e-09,
-            "Socket.Foot.R": 0.06515473872423172
+            "Socket.Foot.L": 0.025666549801826477,
+            "Socket.Foot.R": 0.05902215093374252
           },
-          "hips_z": 0.37700000405311584
+          "hips_z": 0.4000000059604645
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": 0.011402196250855923,
-            "Socket.Foot.R": 0.06965398788452148
+            "Socket.Foot.L": 0.03416063264012337,
+            "Socket.Foot.R": 0.058651138097047806
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": 0.07214825600385666,
-            "Socket.Foot.R": 8.912431326280057e-08
+            "Socket.Foot.L": 0.07692702114582062,
+            "Socket.Foot.R": 0.02566649205982685
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": 0.07258422672748566,
-            "Socket.Foot.R": -0.0001138760635512881
+            "Socket.Foot.L": 0.07722033560276031,
+            "Socket.Foot.R": 0.025542208924889565
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": 0.06515461206436157,
-            "Socket.Foot.R": 2.731519366250268e-08
+            "Socket.Foot.L": 0.05902205407619476,
+            "Socket.Foot.R": 0.025666527450084686
           },
-          "hips_z": 0.37700000405311584
+          "hips_z": 0.4000000059604645
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 0.06965401768684387,
-            "Socket.Foot.R": 0.011402188800275326
+            "Socket.Foot.L": 0.05865112692117691,
+            "Socket.Foot.R": 0.03416067361831665
           },
-          "hips_z": 0.3709999918937683
+          "hips_z": 0.39500001072883606
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": 9.657487964886968e-08,
-            "Socket.Foot.R": 0.07214821130037308
+            "Socket.Foot.L": 0.025666506960988045,
+            "Socket.Foot.R": 0.07692696899175644
           },
-          "hips_z": 0.36500000953674316
+          "hips_z": 0.38999998569488525
         }
       ]
     },
@@ -4610,13 +4610,13 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Yawn",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 94,
-      "max_bone_head_motion_m": 1.3966299557997175,
-      "max_mesh_vertex_motion_m": 1.4235723307248198,
+      "max_bone_head_motion_m": 1.427924543348187,
+      "max_mesh_vertex_motion_m": 1.4780048774130852,
       "loop_expected": false,
-      "first_last_bone_difference_m": 4.515445254594612e-07,
-      "first_last_mesh_difference_m": 6.58354819845394e-07,
+      "first_last_bone_difference_m": 4.510525127549562e-07,
+      "first_last_mesh_difference_m": 5.990192664337689e-07,
       "minimum_mesh_z_m": -2.1259321414390797e-08,
       "max_edge_stretch_ratio": 12.277656771811916,
       "worst_stretched_edge": {
@@ -4731,43 +4731,43 @@
       "species": "Human",
       "format": "fbx",
       "clip": "Human_Victory",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "variable_curve_count": 46,
-      "max_bone_head_motion_m": 0.40825179969986375,
-      "max_mesh_vertex_motion_m": 0.41253290853397423,
+      "max_bone_head_motion_m": 0.4809181802810596,
+      "max_mesh_vertex_motion_m": 0.4853511031722384,
       "loop_expected": true,
-      "first_last_bone_difference_m": 4.7403495671113926e-07,
+      "first_last_bone_difference_m": 6.034510353599962e-07,
       "first_last_mesh_difference_m": 7.562981570034933e-07,
-      "minimum_mesh_z_m": -1.0582430576278057e-07,
-      "max_edge_stretch_ratio": 12.617494933707915,
+      "minimum_mesh_z_m": -2.136188470558409e-07,
+      "max_edge_stretch_ratio": 12.61758526556822,
       "worst_stretched_edge": {
         "mesh": "HumanHead",
         "vertices": [
-          16,
-          19
+          18,
+          15
         ],
         "phase": 0.75,
         "rest_length_m": 0.0030040140852014593,
-        "deformed_length_m": 0.03790313250081663,
+        "deformed_length_m": 0.03790340385899733,
         "world_endpoints_m": [
           [
-            -0.01855839602649212,
-            -0.08578795194625854,
-            1.4216657876968384
+            0.02285834029316902,
+            -0.09207659959793091,
+            1.4813421964645386
           ],
           [
-            -0.01711001619696617,
-            -0.09195233881473541,
-            1.4590362310409546
+            0.021409954875707626,
+            -0.08590405434370041,
+            1.4439728260040283
           ]
         ],
         "weights": [
           {
-            "Head": 0.30000001192092896,
-            "Jaw": 0.699999988079071
+            "Head": 1.0
           },
           {
-            "Head": 1.0
+            "Head": 0.30000001192092896,
+            "Jaw": 0.699999988079071
           }
         ]
       },
@@ -4777,74 +4777,74 @@
         {
           "time": 0,
           "feet_z": {
-            "Socket.Foot.L": -2.2123170850818497e-08,
-            "Socket.Foot.R": -5.9376077388151316e-08
+            "Socket.Foot.L": -1.0035428488208709e-07,
+            "Socket.Foot.R": -1.3015662148063711e-07
           },
-          "hips_z": 0.640500009059906
+          "hips_z": 0.5900999903678894
         },
         {
           "time": 0.125,
           "feet_z": {
-            "Socket.Foot.L": 0.00866704061627388,
-            "Socket.Foot.R": 0.00866704061627388
+            "Socket.Foot.L": 0.014964312314987183,
+            "Socket.Foot.R": 0.014964298345148563
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 0.25,
           "feet_z": {
-            "Socket.Foot.L": 0.03423936292529106,
-            "Socket.Foot.R": 0.03423933684825897
+            "Socket.Foot.L": 0.05869605764746666,
+            "Socket.Foot.R": 0.05869605019688606
           },
-          "hips_z": 0.7827461957931519
+          "hips_z": 0.8066521883010864
         },
         {
           "time": 0.375,
           "feet_z": {
-            "Socket.Foot.L": 0.00866707693785429,
-            "Socket.Foot.R": 0.008667071349918842
+            "Socket.Foot.L": 0.01496430579572916,
+            "Socket.Foot.R": 0.014964294619858265
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 0.5,
           "feet_z": {
-            "Socket.Foot.L": -7.800252888046089e-08,
-            "Socket.Foot.R": -5.937608804629235e-08
+            "Socket.Foot.L": -2.9573744342314967e-08,
+            "Socket.Foot.R": -2.2123169074461657e-08
           },
-          "hips_z": 0.640500009059906
+          "hips_z": 0.5900999903678894
         },
         {
           "time": 0.625,
           "feet_z": {
-            "Socket.Foot.L": 0.008667046204209328,
-            "Socket.Foot.R": 0.00866704061627388
+            "Socket.Foot.L": 0.014964263886213303,
+            "Socket.Foot.R": 0.014964244328439236
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 0.75,
           "feet_z": {
-            "Socket.Foot.L": 0.03423936292529106,
-            "Socket.Foot.R": 0.03423933684825897
+            "Socket.Foot.L": 0.05869603902101517,
+            "Socket.Foot.R": 0.05869603157043457
           },
-          "hips_z": 0.7827461957931519
+          "hips_z": 0.8066521883010864
         },
         {
           "time": 0.875,
           "feet_z": {
-            "Socket.Foot.L": 0.00866703875362873,
-            "Socket.Foot.R": 0.008667031303048134
+            "Socket.Foot.L": 0.014964358881115913,
+            "Socket.Foot.R": 0.014964347705245018
           },
-          "hips_z": 0.7042129635810852
+          "hips_z": 0.6855064034461975
         },
         {
           "time": 1,
           "feet_z": {
-            "Socket.Foot.L": -2.5848475360135126e-08,
-            "Socket.Foot.R": 3.95383725759757e-09
+            "Socket.Foot.L": -2.9573744342314967e-08,
+            "Socket.Foot.R": -2.2123169074461657e-08
           },
-          "hips_z": 0.640500009059906
+          "hips_z": 0.5900999903678894
         }
       ]
     }
@@ -4852,8 +4852,8 @@
   "source_fbx_comparison": [
     {
       "clip": "Human_Idle",
-      "max_source_fbx_head_difference_m": 9.547214793945162e-07,
-      "time": 0,
+      "max_source_fbx_head_difference_m": 1.18283686771787e-06,
+      "time": 0.25,
       "bone": "Thumb03.R"
     },
     {
@@ -4864,43 +4864,43 @@
     },
     {
       "clip": "Human_Blink",
-      "max_source_fbx_head_difference_m": 9.51459854265724e-07,
+      "max_source_fbx_head_difference_m": 9.564642033506163e-07,
       "time": 1,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Walk",
-      "max_source_fbx_head_difference_m": 9.081020738677468e-07,
-      "time": 0.625,
-      "bone": "Thumb03.L"
+      "max_source_fbx_head_difference_m": 9.068920644940697e-07,
+      "time": 0.125,
+      "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Run",
-      "max_source_fbx_head_difference_m": 7.015830991611954e-07,
+      "max_source_fbx_head_difference_m": 7.396741894478117e-07,
+      "time": 0.5,
+      "bone": "Index03.L"
+    },
+    {
+      "clip": "Human_Crouch",
+      "max_source_fbx_head_difference_m": 1.0268835517179996e-06,
       "time": 0.25,
       "bone": "Thumb03.R"
     },
     {
-      "clip": "Human_Crouch",
-      "max_source_fbx_head_difference_m": 9.491232597407209e-07,
-      "time": 0,
-      "bone": "Thumb03.R"
-    },
-    {
       "clip": "Human_Jump",
-      "max_source_fbx_head_difference_m": 9.491232597407209e-07,
+      "max_source_fbx_head_difference_m": 9.564642033506163e-07,
       "time": 0,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Land",
-      "max_source_fbx_head_difference_m": 7.49811269367285e-07,
+      "max_source_fbx_head_difference_m": 8.910844557122024e-07,
       "time": 1,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Turn",
-      "max_source_fbx_head_difference_m": 9.51459854265724e-07,
+      "max_source_fbx_head_difference_m": 9.564642033506163e-07,
       "time": 1,
       "bone": "Thumb03.R"
     },
@@ -4912,62 +4912,62 @@
     },
     {
       "clip": "Human_Swat",
-      "max_source_fbx_head_difference_m": 1.0242854867031813e-06,
-      "time": 0,
+      "max_source_fbx_head_difference_m": 1.2247143275296466e-06,
+      "time": 0.875,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Hit",
-      "max_source_fbx_head_difference_m": 9.51459854265724e-07,
-      "time": 1,
-      "bone": "Thumb03.R"
+      "max_source_fbx_head_difference_m": 1.0117438552837346e-06,
+      "time": 0.625,
+      "bone": "Thumb03.L"
     },
     {
       "clip": "Human_Fall",
-      "max_source_fbx_head_difference_m": 9.143292282010582e-07,
+      "max_source_fbx_head_difference_m": 9.588986958978277e-07,
       "time": 0.125,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Faint",
-      "max_source_fbx_head_difference_m": 1.0290435952317445e-06,
+      "max_source_fbx_head_difference_m": 1.0852301988621428e-06,
       "time": 0.375,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Recover",
-      "max_source_fbx_head_difference_m": 1.0482837162590955e-06,
-      "time": 0.875,
-      "bone": "Thumb03.L"
+      "max_source_fbx_head_difference_m": 9.95705358522422e-07,
+      "time": 0.625,
+      "bone": "Thumb03.R"
     },
     {
       "clip": "Human_JumpAir",
-      "max_source_fbx_head_difference_m": 8.597595534772668e-07,
-      "time": 0.125,
-      "bone": "Middle03.R"
+      "max_source_fbx_head_difference_m": 8.612110610070193e-07,
+      "time": 1,
+      "bone": "Thumb03.L"
     },
     {
       "clip": "Human_FallAir",
-      "max_source_fbx_head_difference_m": 1.0649900666001819e-06,
-      "time": 0.875,
+      "max_source_fbx_head_difference_m": 9.142077952729444e-07,
+      "time": 0,
       "bone": "Thumb03.L"
     },
     {
       "clip": "Human_CrouchWalk",
-      "max_source_fbx_head_difference_m": 7.552538009992017e-07,
-      "time": 0.75,
-      "bone": "Thumb03.R"
+      "max_source_fbx_head_difference_m": 8.313993355371547e-07,
+      "time": 1,
+      "bone": "Thumb03.L"
     },
     {
       "clip": "Human_Yawn",
-      "max_source_fbx_head_difference_m": 9.452552513571802e-07,
+      "max_source_fbx_head_difference_m": 1.0389219530554627e-06,
       "time": 0,
       "bone": "Thumb03.R"
     },
     {
       "clip": "Human_Victory",
-      "max_source_fbx_head_difference_m": 1.054513812837251e-06,
-      "time": 0.375,
+      "max_source_fbx_head_difference_m": 7.185079724336382e-07,
+      "time": 0.125,
       "bone": "Thumb03.R"
     }
   ],
@@ -5441,7 +5441,7 @@
     {
       "format": "blend",
       "clip": "Human_Idle",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -5481,9 +5481,9 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -3.552713678800501e-15,
-              1.5099597305834322e-07,
-              0.0
+              0.0,
+              1.4901161193847656e-07,
+              2.9103830456733704e-11
             ],
             [
               6.327607593448192e-08,
@@ -5492,9 +5492,9 @@
               0.0849999189376831
             ],
             [
-              1.3709804136396997e-07,
-              0.419058620929718,
-              0.907960057258606,
+              1.341104507446289e-07,
+              0.4190586507320404,
+              0.9079601168632507,
               0.004999999888241291
             ],
             [
@@ -5508,10 +5508,10 @@
             [
               -0.14900000393390656,
               -0.03999984264373779,
-              -0.00800000037997961
+              -0.008000015281140804
             ],
             [
-              0.14900000393390656,
+              0.14900001883506775,
               0.060000061988830566,
               0.13516129553318024
             ]
@@ -5523,21 +5523,21 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -2.6623558913030365e-10,
-              1.5099574568466778e-07,
-              0.0
+              -1.3969838619232178e-09,
+              1.511070877313614e-07,
+              1.1641532182693481e-09
             ],
             [
-              6.327606882905457e-08,
-              -0.9086968898773193,
-              0.41745784878730774,
-              0.08499984443187714
+              6.324262358248234e-08,
+              -0.9086968302726746,
+              0.4174578785896301,
+              0.08499985188245773
             ],
             [
-              1.3709802715311525e-07,
-              0.41745704412460327,
-              0.9086974859237671,
-              0.004999998025596142
+              1.3847602531313896e-07,
+              0.41745707392692566,
+              0.9086974263191223,
+              0.00500000175088644
             ],
             [
               0.0,
@@ -5548,14 +5548,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14900000393390656,
-              -0.040220167487859726,
+              -0.14899998903274536,
+              -0.040220290422439575,
               -0.008034484460949898
             ],
             [
               0.14900000393390656,
-              0.059931155294179916,
-              0.13514797389507294
+              0.05993112176656723,
+              0.13514798879623413
             ]
           ]
         },
@@ -5564,20 +5564,20 @@
           "phase": 0.25,
           "jaw_relative_to_head": [
             [
-              -1.0,
-              -9.059741290506906e-10,
-              1.5099325878509262e-07,
-              0.0
+              -0.9999999403953552,
+              0.0,
+              1.5058321878314018e-07,
+              -2.0754669094458222e-09
             ],
             [
-              6.327607593448192e-08,
-              -0.91045743227005,
+              6.218249382072827e-08,
+              -0.9104573726654053,
               0.41360417008399963,
-              0.08499985188245773
+              0.08499974757432938
             ],
             [
-              1.3709804136396997e-07,
-              0.4136033356189728,
+              1.3700582712772302e-07,
+              0.41360336542129517,
               0.9104580283164978,
               0.004999999888241291
             ],
@@ -5590,13 +5590,13 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14900000393390656,
-              -0.04074767604470253,
-              -0.008117289282381535
+              -0.14899998903274536,
+              -0.04074797034263611,
+              -0.008117285557091236
             ],
             [
-              0.14900000393390656,
-              0.05976598709821701,
+              0.14899998903274536,
+              0.05976572260260582,
               0.1351155787706375
             ]
           ]
@@ -5606,22 +5606,22 @@
           "phase": 0.375,
           "jaw_relative_to_head": [
             [
-              -1.0,
-              -1.5456961266480107e-09,
-              1.5098805761226686e-07,
-              0.0
+              -0.9999999403953552,
+              -9.313225746154785e-10,
+              1.4901161193847656e-07,
+              -1.5352270565927029e-09
             ],
             [
-              6.327606882905457e-08,
-              -0.9122016429901123,
-              0.40974295139312744,
-              0.08499984443187714
+              6.408663466572762e-08,
+              -0.9122015833854675,
+              0.40974298119544983,
+              0.08500003069639206
             ],
             [
-              1.3709802715311525e-07,
-              0.409742146730423,
-              0.9122022390365601,
-              0.004999998025596142
+              1.3212775229476392e-07,
+              0.40974217653274536,
+              0.9122021794319153,
+              0.005000001285225153
             ],
             [
               0.0,
@@ -5633,13 +5633,13 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.04127299785614014,
-              -0.008200034499168396
+              -0.04127298295497894,
+              -0.008200021460652351
             ],
             [
-              0.14900000393390656,
-              0.05960056558251381,
-              0.1350824534893036
+              0.14899998903274536,
+              0.059600602835416794,
+              0.13508246839046478
             ]
           ]
         },
@@ -5649,9 +5649,9 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -1.8119118427861736e-09,
-              1.509851017544861e-07,
-              0.0
+              -1.6412754488825954e-09,
+              1.489126475462399e-07,
+              -3.8808484204011506e-11
             ],
             [
               6.327607593448192e-08,
@@ -5660,7 +5660,7 @@
               0.0849999189376831
             ],
             [
-              1.3709804136396997e-07,
+              1.2665987014770508e-07,
               0.40813320875167847,
               0.912923276424408,
               0.004999999888241291
@@ -5674,14 +5674,14 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14900000393390656,
+              -0.14900001883506775,
               -0.041491031646728516,
-              -0.008234445005655289
+              -0.008234436623752117
             ],
             [
               0.14900000393390656,
               0.05953192710876465,
-              0.13506846129894257
+              0.13506849110126495
             ]
           ]
         },
@@ -5691,20 +5691,62 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -1.5456961266480107e-09,
-              1.5098805761226686e-07,
-              0.0
+              -1.862645149230957e-09,
+              1.5087425708770752e-07,
+              -1.1641532182693481e-09
             ],
             [
-              6.327606882905457e-08,
+              6.332993507385254e-08,
               -0.9122015833854675,
-              0.40974298119544983,
-              0.08499985933303833
+              0.4097430109977722,
+              0.08499985188245773
             ],
             [
-              1.3709804136396997e-07,
+              1.3593671610578895e-07,
               0.40974217653274536,
               0.9122021794319153,
+              0.005000001285225153
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "mixed_jaw_bounds_in_head_space": [
+            [
+              -0.14900001883506775,
+              -0.04127306863665581,
+              -0.008200028911232948
+            ],
+            [
+              0.14899998903274536,
+              0.059600573033094406,
+              0.1350824534893036
+            ]
+          ]
+        },
+        {
+          "frame": 46.0,
+          "phase": 0.75,
+          "jaw_relative_to_head": [
+            [
+              -0.9999999403953552,
+              -1.862645149230957e-09,
+              1.5116529539227486e-07,
+              2.0754669094458222e-09
+            ],
+            [
+              6.438358468585648e-08,
+              -0.9104573726654053,
+              0.41360414028167725,
+              0.08499974757432938
+            ],
+            [
+              1.3685666999663226e-07,
+              0.41360336542129517,
+              0.9104580283164978,
               0.004999999888241291
             ],
             [
@@ -5716,37 +5758,79 @@
           ],
           "mixed_jaw_bounds_in_head_space": [
             [
-              -0.14900000393390656,
-              -0.04127296805381775,
-              -0.008200028911232948
+              -0.14899998903274536,
+              -0.04074797034263611,
+              -0.008117285557091236
             ],
             [
-              0.14900000393390656,
-              0.059600647538900375,
-              0.1350824534893036
+              0.14899998903274536,
+              0.05976572260260582,
+              0.1351155787706375
             ]
           ]
         },
         {
-          "frame": 46.0,
-          "phase": 0.75,
+          "frame": 53.5,
+          "phase": 0.875,
+          "jaw_relative_to_head": [
+            [
+              -0.9999999403953552,
+              -1.3969838619232178e-09,
+              1.5529803931713104e-07,
+              2.459273673593998e-09
+            ],
+            [
+              6.26896508038044e-08,
+              -0.9086969494819641,
+              0.4174578785896301,
+              0.08500003069639206
+            ],
+            [
+              1.4116085367277265e-07,
+              0.41745707392692566,
+              0.9086975455284119,
+              0.005000001285225153
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "mixed_jaw_bounds_in_head_space": [
+            [
+              -0.14899998903274536,
+              -0.0402202345430851,
+              -0.008034488186240196
+            ],
+            [
+              0.14900000393390656,
+              0.05993114039301872,
+              0.13514800369739532
+            ]
+          ]
+        },
+        {
+          "frame": 61.0,
+          "phase": 1.0,
           "jaw_relative_to_head": [
             [
               -1.0,
-              -9.059739625172369e-10,
-              1.5099325878509262e-07,
-              0.0
+              -3.9790154504615316e-10,
+              1.4919525881396112e-07,
+              3.360123290718775e-11
             ],
             [
               6.327607593448192e-08,
-              -0.9104573726654053,
-              0.41360417008399963,
-              0.08499996364116669
+              -0.9079594612121582,
+              0.4190594255924225,
+              0.0849999189376831
             ],
             [
-              1.3709802715311525e-07,
-              0.41360336542129517,
-              0.910457968711853,
+              1.341104507446289e-07,
+              0.4190586507320404,
+              0.9079601168632507,
               0.004999999422580004
             ],
             [
@@ -5759,95 +5843,11 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.04074762761592865,
-              -0.008117282763123512
-            ],
-            [
-              0.14900000393390656,
-              0.05976597219705582,
-              0.1351155936717987
-            ]
-          ]
-        },
-        {
-          "frame": 53.5,
-          "phase": 0.875,
-          "jaw_relative_to_head": [
-            [
-              -1.0,
-              -2.6623558913030365e-10,
-              1.5099574568466778e-07,
-              0.0
-            ],
-            [
-              6.327606882905457e-08,
-              -0.9086968898773193,
-              0.4174578785896301,
-              0.08499985933303833
-            ],
-            [
-              1.3709804136396997e-07,
-              0.41745707392692566,
-              0.9086974859237671,
-              0.005000000353902578
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "mixed_jaw_bounds_in_head_space": [
-            [
-              -0.14900000393390656,
-              -0.04022025689482689,
-              -0.008034494705498219
-            ],
-            [
-              0.14900000393390656,
-              0.05993109196424484,
-              0.13514797389507294
-            ]
-          ]
-        },
-        {
-          "frame": 61.0,
-          "phase": 1.0,
-          "jaw_relative_to_head": [
-            [
-              -1.0,
-              -3.552713678800501e-15,
-              1.5099597305834322e-07,
-              0.0
-            ],
-            [
-              6.327607593448192e-08,
-              -0.9079594612121582,
-              0.4190594255924225,
-              0.0849999189376831
-            ],
-            [
-              1.3709804136396997e-07,
-              0.419058620929718,
-              0.907960057258606,
-              0.004999999888241291
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "mixed_jaw_bounds_in_head_space": [
-            [
-              -0.14900000393390656,
               -0.03999984264373779,
-              -0.00800000037997961
+              -0.008000015281140804
             ],
             [
-              0.14900000393390656,
+              0.14900001883506775,
               0.060000061988830566,
               0.13516129553318024
             ]
@@ -5859,7 +5859,7 @@
     {
       "format": "blend",
       "clip": "Human_Hit",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -6277,7 +6277,7 @@
     {
       "format": "blend",
       "clip": "Human_Fall",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -6695,7 +6695,7 @@
     {
       "format": "blend",
       "clip": "Human_Faint",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -7113,7 +7113,7 @@
     {
       "format": "blend",
       "clip": "Human_Recover",
-      "source_sha256": "64bec0348ed778044396f51112747a665034b16d2848a978905113b891cf617a",
+      "source_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -7531,7 +7531,7 @@
     {
       "format": "fbx",
       "clip": "Human_Idle",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -7571,20 +7571,20 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -2.9612019147862156e-07,
-              2.876671203466685e-07,
-              8.141852742575746e-17
+              -2.9922233579782187e-07,
+              2.8797393269996974e-07,
+              8.060142830945694e-11
             ],
             [
-              3.8941465163588873e-07,
+              3.894146232141793e-07,
               -0.9079595804214478,
-              0.4190599024295807,
-              0.0849999189376831
+              0.4190599322319031,
+              0.08499979972839355
             ],
             [
-              1.370982687376454e-07,
+              1.3411039390121005e-07,
               0.41905856132507324,
-              0.9079605340957642,
+              0.9079605937004089,
               0.005000001285225153
             ],
             [
@@ -7597,13 +7597,13 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.039999961853027344,
-              -0.007999999448657036
+              -0.040000081062316895,
+              -0.007999985478818417
             ],
             [
-              0.14900000393390656,
-              0.059999942779541016,
-              0.13516129553318024
+              0.14900001883506775,
+              0.059999823570251465,
+              0.13516132533550262
             ]
           ]
         },
@@ -7613,21 +7613,63 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -2.9662692213605624e-07,
-              2.871445587970811e-07,
-              2.2276542996314472e-17
+              -2.989545464515686e-07,
+              2.805609256029129e-07,
+              -2.9103830456733704e-10
             ],
             [
-              3.8941468005759816e-07,
+              3.894383553415537e-07,
               -0.9086970090866089,
-              0.41745853424072266,
-              0.08499984443187714
+              0.4174584746360779,
+              0.08499997854232788
             ],
             [
-              1.3709821189422655e-07,
-              0.4174571931362152,
-              0.9086979627609253,
-              0.005000000819563866
+              1.2675445759668946e-07,
+              0.41745713353157043,
+              0.9086979031562805,
+              0.004999998025596142
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "mixed_jaw_bounds_in_head_space": [
+            [
+              -0.14899998903274536,
+              -0.04022010788321495,
+              -0.0080344770103693
+            ],
+            [
+              0.14900000393390656,
+              0.05993124097585678,
+              0.13514800369739532
+            ]
+          ]
+        },
+        {
+          "frame": 16.0,
+          "phase": 0.25,
+          "jaw_relative_to_head": [
+            [
+              -0.9999999403953552,
+              -2.9872171580791473e-07,
+              2.859160304069519e-07,
+              -4.052708391100168e-09
+            ],
+            [
+              3.891191227012314e-07,
+              -0.9104573130607605,
+              0.41360482573509216,
+              0.08499974757432938
+            ],
+            [
+              1.364487616228871e-07,
+              0.41360342502593994,
+              0.9104584455490112,
+              0.004999998956918716
             ],
             [
               0.0,
@@ -7639,36 +7681,120 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.040220167487859726,
-              -0.008034482598304749
+              -0.04074796661734581,
+              -0.008117275312542915
             ],
             [
-              0.14900000393390656,
-              0.059931039810180664,
-              0.13514798879623413
+              0.14899998903274536,
+              0.059765689074993134,
+              0.1351156085729599
             ]
           ]
         },
         {
-          "frame": 16.0,
-          "phase": 0.25,
+          "frame": 23.5,
+          "phase": 0.375,
           "jaw_relative_to_head": [
             [
               -1.0,
-              -2.978408133458288e-07,
-              2.858852496956388e-07,
-              2.2276542996314472e-17
+              -2.975575625896454e-07,
+              2.912711352109909e-07,
+              -4.5838532969355583e-10
             ],
             [
-              3.8941465163588873e-07,
-              -0.9104575514793396,
-              0.4136047661304474,
-              0.08499974012374878
+              3.8993312045931816e-07,
+              -0.9122017621994019,
+              0.40974342823028564,
+              0.08500003069639206
             ],
             [
-              1.3709824031593598e-07,
-              0.41360342502593994,
-              0.910458505153656,
+              1.345943019259721e-07,
+              0.4097421169281006,
+              0.9122026562690735,
+              0.005000003147870302
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "mixed_jaw_bounds_in_head_space": [
+            [
+              -0.14900000393390656,
+              -0.041272927075624466,
+              -0.0082000233232975
+            ],
+            [
+              0.14899998903274536,
+              0.05960078909993172,
+              0.1350824534893036
+            ]
+          ]
+        },
+        {
+          "frame": 31.0,
+          "phase": 0.5,
+          "jaw_relative_to_head": [
+            [
+              -1.0,
+              -3.039958471617865e-07,
+              2.7084715270575543e-07,
+              -9.030803882481564e-11
+            ],
+            [
+              3.8941468005759816e-07,
+              -0.9129227995872498,
+              0.40813449025154114,
+              0.08499979972839355
+            ],
+            [
+              1.1920922560193503e-07,
+              0.4081331491470337,
+              0.9129236340522766,
+              0.005000000819563866
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "mixed_jaw_bounds_in_head_space": [
+            [
+              -0.14900001883506775,
+              -0.041491031646728516,
+              -0.00823442917317152
+            ],
+            [
+              0.14900000393390656,
+              0.0595318078994751,
+              0.13506849110126495
+            ]
+          ]
+        },
+        {
+          "frame": 38.5,
+          "phase": 0.625,
+          "jaw_relative_to_head": [
+            [
+              -1.0,
+              -2.975575625896454e-07,
+              2.859160304069519e-07,
+              3.4924596548080444e-10
+            ],
+            [
+              3.8897269405424595e-07,
+              -0.9122017621994019,
+              0.4097434878349304,
+              0.08499997854232788
+            ],
+            [
+              1.449589035473764e-07,
+              0.40974217653274536,
+              0.9122027158737183,
               0.005000000353902578
             ],
             [
@@ -7681,138 +7807,12 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.04074803367257118,
-              -0.008117271587252617
+              -0.04127288609743118,
+              -0.008200029842555523
             ],
             [
-              0.14900000393390656,
-              0.05976574867963791,
-              0.1351155936717987
-            ]
-          ]
-        },
-        {
-          "frame": 23.5,
-          "phase": 0.375,
-          "jaw_relative_to_head": [
-            [
-              -1.0,
-              -2.990494465393567e-07,
-              2.846207678430801e-07,
-              2.967749337294892e-17
-            ],
-            [
-              3.8941468005759816e-07,
-              -0.9122017621994019,
-              0.4097435176372528,
-              0.08499984443187714
-            ],
-            [
-              1.370982545267907e-07,
-              0.409742146730423,
-              0.912202775478363,
-              0.005000000819563866
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "mixed_jaw_bounds_in_head_space": [
-            [
-              -0.14900000393390656,
-              -0.04127311706542969,
-              -0.00820002518594265
-            ],
-            [
-              0.14900000393390656,
-              0.05960056558251381,
-              0.1350824534893036
-            ]
-          ]
-        },
-        {
-          "frame": 31.0,
-          "phase": 0.5,
-          "jaw_relative_to_head": [
-            [
-              -1.0,
-              -2.995507770719996e-07,
-              2.8409303354237636e-07,
-              8.141852742575746e-17
-            ],
-            [
-              3.8941465163588873e-07,
-              -0.9129227995872498,
-              0.40813449025154114,
-              0.0849999189376831
-            ],
-            [
-              1.370982545267907e-07,
-              0.4081331789493561,
-              0.9129236936569214,
-              0.005000001285225153
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "mixed_jaw_bounds_in_head_space": [
-            [
-              -0.14900000393390656,
-              -0.041490912437438965,
-              -0.008234434761106968
-            ],
-            [
-              0.14900000393390656,
-              0.0595320463180542,
-              0.13506847620010376
-            ]
-          ]
-        },
-        {
-          "frame": 38.5,
-          "phase": 0.625,
-          "jaw_relative_to_head": [
-            [
-              -1.0,
-              -2.9904947496106615e-07,
-              2.8462073942137067e-07,
-              -2.959965104509625e-16
-            ],
-            [
-              3.8941468005759816e-07,
-              -0.9122018814086914,
-              0.40974345803260803,
-              0.08499985933303833
-            ],
-            [
-              1.3709821189422655e-07,
-              0.409742146730423,
-              0.9122027158737183,
-              0.004999999422580004
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "mixed_jaw_bounds_in_head_space": [
-            [
-              -0.14900000393390656,
-              -0.04127296805381775,
-              -0.008200024254620075
-            ],
-            [
-              0.14900000393390656,
-              0.059600647538900375,
+              0.14899998903274536,
+              0.05960069224238396,
               0.1350824534893036
             ]
           ]
@@ -7822,22 +7822,22 @@
           "phase": 0.75,
           "jaw_relative_to_head": [
             [
-              -1.0,
-              -2.9784078492411936e-07,
-              2.8588522127392935e-07,
-              2.1460257345045503e-16
+              -0.9999999403953552,
+              -2.973247319459915e-07,
+              2.8527574613690376e-07,
+              4.052708391100168e-09
             ],
             [
-              3.8941465163588873e-07,
-              -0.91045743227005,
+              3.903045353581547e-07,
+              -0.9104573130607605,
               0.4136047959327698,
-              0.08499996364116669
+              0.08499974757432938
             ],
             [
-              1.3709821189422655e-07,
-              0.41360339522361755,
+              1.3674525689566508e-07,
+              0.41360342502593994,
               0.9104584455490112,
-              0.00500000175088644
+              0.004999998956918716
             ],
             [
               0.0,
@@ -7849,13 +7849,13 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.04074762761592865,
-              -0.00811727810651064
+              -0.04074796661734581,
+              -0.00811727624386549
             ],
             [
-              0.14900000393390656,
-              0.059765733778476715,
-              0.1351155936717987
+              0.14899998903274536,
+              0.059765689074993134,
+              0.1351156085729599
             ]
           ]
         },
@@ -7865,21 +7865,21 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -2.9662692213605624e-07,
-              2.871445303753717e-07,
-              -3.1635113568995697e-16
+              -2.9942020773887634e-07,
+              2.8335489332675934e-07,
+              1.418811734765768e-09
             ],
             [
-              3.8941468005759816e-07,
-              -0.9086970686912537,
-              0.41745850443840027,
-              0.08499985933303833
+              3.8906000554561615e-07,
+              -0.9086970090866089,
+              0.4174584448337555,
+              0.08500003069639206
             ],
             [
-              1.3709818347251712e-07,
+              1.453554432373494e-07,
               0.4174571633338928,
-              0.9086979627609253,
-              0.004999999422580004
+              0.9086978435516357,
+              0.005000002682209015
             ],
             [
               0.0,
@@ -7891,12 +7891,12 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.04022025689482689,
+              -0.04022013768553734,
               -0.0080344807356596
             ],
             [
               0.14900000393390656,
-              0.05993109196424484,
+              0.05993125960230827,
               0.13514800369739532
             ]
           ]
@@ -7907,21 +7907,21 @@
           "jaw_relative_to_head": [
             [
               -1.0,
-              -2.9612019147862156e-07,
-              2.876671203466685e-07,
-              8.141852742575746e-17
+              -2.9775759458061657e-07,
+              2.88157593786309e-07,
+              8.509878912654756e-11
             ],
             [
               3.8941465163588873e-07,
               -0.9079595804214478,
-              0.4190599024295807,
-              0.0849999189376831
+              0.4190599322319031,
+              0.08499979972839355
             ],
             [
-              1.370982687376454e-07,
+              1.3411039390121005e-07,
               0.41905856132507324,
-              0.9079605340957642,
-              0.005000001285225153
+              0.9079605937004089,
+              0.005000000353902578
             ],
             [
               0.0,
@@ -7933,13 +7933,13 @@
           "mixed_jaw_bounds_in_head_space": [
             [
               -0.14900000393390656,
-              -0.039999961853027344,
-              -0.007999999448657036
+              -0.040000081062316895,
+              -0.007999985478818417
             ],
             [
-              0.14900000393390656,
-              0.059999942779541016,
-              0.13516129553318024
+              0.14900001883506775,
+              0.059999823570251465,
+              0.13516132533550262
             ]
           ]
         }
@@ -7949,7 +7949,7 @@
     {
       "format": "fbx",
       "clip": "Human_Hit",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -8367,7 +8367,7 @@
     {
       "format": "fbx",
       "clip": "Human_Fall",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -8785,7 +8785,7 @@
     {
       "format": "fbx",
       "clip": "Human_Faint",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -9203,7 +9203,7 @@
     {
       "format": "fbx",
       "clip": "Human_Recover",
-      "source_sha256": "66a4f415efa67b3b4a8a8a260d0d6c2fe2c1f1e37a7d5f1d58a778dd5a86ad40",
+      "source_sha256": "b36b855c92bf2041cff43c0b381edfad0a55c65d4edac5b6e642c6dff5f74de9",
       "included_vertices": {
         "HumanHead": [
           0,
@@ -9628,29 +9628,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08474723994731903,
-          0.08770471066236496,
-          0.016060054302215576
+          0.08556171506643295,
+          0.08883579075336456,
+          0.01243630237877369
         ],
         "Index": [
-          0.04999171197414398,
-          0.15979261696338654,
-          0.05403585731983185
+          0.05088506639003754,
+          0.17764461040496826,
+          0.034427791833877563
         ],
         "Middle": [
-          0.013167295604944229,
-          0.16560347378253937,
-          0.06027080491185188
+          0.013406545855104923,
+          0.18553878366947174,
+          0.03840028494596481
         ],
         "Ring": [
-          -0.025274153798818588,
-          0.16079081594944,
-          0.055075012147426605
+          -0.02582061104476452,
+          0.17900066077709198,
+          0.0350898876786232
         ],
         "Little": [
-          -0.061891429126262665,
-          0.1491829752922058,
-          0.04260515421628952
+          -0.06301768124103546,
+          0.16323107481002808,
+          0.027145028114318848
         ]
       }
     },
@@ -9662,29 +9662,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08048851042985916,
-          0.08178972452878952,
-          0.027011405676603317
+          0.08048837631940842,
+          0.08178975433111191,
+          0.027011454105377197
         ],
         "Index": [
-          0.049937598407268524,
-          0.15870968997478485,
-          0.050142571330070496
+          0.049937523901462555,
+          0.15870943665504456,
+          0.05014265328645706
         ],
         "Middle": [
-          0.013152847066521645,
-          0.16439403593540192,
-          0.05592837184667587
+          0.01315276324748993,
+          0.1643940657377243,
+          0.05592838302254677
         ],
         "Ring": [
-          -0.025240961462259293,
-          0.1596861034631729,
-          0.05110689252614975
+          -0.025241022929549217,
+          0.15968605875968933,
+          0.05110692232847214
         ],
         "Little": [
-          -0.061823055148124695,
-          0.14833076298236847,
-          0.0395355224609375
+          -0.06182311847805977,
+          0.14833064377307892,
+          0.03953554853796959
         ]
       }
     },
@@ -9696,29 +9696,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08048839867115021,
-          0.0817895382642746,
-          0.027011357247829437
+          0.080488421022892,
+          0.081789530813694,
+          0.02701151929795742
         ],
         "Index": [
-          0.049937501549720764,
+          0.04993753507733345,
           0.15870949625968933,
-          0.050142526626586914
+          0.05014269798994064
         ],
         "Middle": [
-          0.013152770698070526,
-          0.16439393162727356,
-          0.055928319692611694
+          0.013152853585779667,
+          0.16439399123191833,
+          0.05592840164899826
         ],
         "Ring": [
-          -0.02524101361632347,
-          0.15968602895736694,
-          0.051106780767440796
+          -0.025241006165742874,
+          0.15968596935272217,
+          0.05110692232847214
         ],
         "Little": [
-          -0.06182308495044708,
-          0.14833061397075653,
-          0.039535462856292725
+          -0.061823099851608276,
+          0.14833055436611176,
+          0.03953559696674347
         ]
       }
     },
@@ -9730,29 +9730,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08474723249673843,
-          0.08770464360713959,
-          0.01606004498898983
+          0.08556170016527176,
+          0.08883582800626755,
+          0.0124363349750638
         ],
         "Index": [
-          0.049991708248853683,
-          0.15979254245758057,
-          0.05403586104512215
+          0.05088504031300545,
+          0.17764459550380707,
+          0.034427788108587265
         ],
         "Middle": [
-          0.013167322613298893,
-          0.1656034141778946,
-          0.06027080491185188
+          0.013406549580395222,
+          0.18553875386714935,
+          0.038400258868932724
         ],
         "Ring": [
-          -0.025274157524108887,
-          0.16079081594944,
-          0.05507500842213631
+          -0.025820620357990265,
+          0.179000586271286,
+          0.035089895129203796
         ],
         "Little": [
-          -0.061891429126262665,
-          0.1491829752922058,
-          0.0426052026450634
+          -0.06301768869161606,
+          0.1632310450077057,
+          0.027145015075802803
         ]
       }
     },
@@ -9764,29 +9764,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08474675565958023,
-          0.08770498633384705,
-          0.016060035675764084
+          0.08556123077869415,
+          0.0888361781835556,
+          0.01243638526648283
         ],
         "Index": [
-          0.04999174550175667,
-          0.1597924381494522,
-          0.05403584614396095
+          0.05088508501648903,
+          0.17764462530612946,
+          0.03442783281207085
         ],
         "Middle": [
-          0.013167311437427998,
-          0.1656034290790558,
-          0.060270749032497406
+          0.013406537473201752,
+          0.18553867936134338,
+          0.038400325924158096
         ],
         "Ring": [
-          -0.025274163112044334,
-          0.1607908308506012,
-          0.055075064301490784
+          -0.025820616632699966,
+          0.1790008246898651,
+          0.035089924931526184
         ],
         "Little": [
-          -0.061891164630651474,
-          0.14918310940265656,
-          0.04260518401861191
+          -0.06301739066839218,
+          0.16323107481002808,
+          0.027144987136125565
         ]
       }
     },
@@ -9798,29 +9798,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08048835396766663,
-          0.08178985863924026,
-          0.027011316269636154
+          0.08048784732818604,
+          0.08178997039794922,
+          0.027011312544345856
         ],
         "Index": [
-          0.049937717616558075,
-          0.1587096005678177,
-          0.05014266073703766
+          0.04993755370378494,
+          0.15870964527130127,
+          0.05014260113239288
         ],
         "Middle": [
-          0.01315290853381157,
-          0.1643943190574646,
-          0.055928464978933334
+          0.013152698054909706,
+          0.164394348859787,
+          0.05592852085828781
         ],
         "Ring": [
-          -0.025240905582904816,
-          0.1596861332654953,
-          0.05110698938369751
+          -0.025240862742066383,
+          0.15968604385852814,
+          0.051106929779052734
         ],
         "Little": [
-          -0.06182277202606201,
-          0.14833085238933563,
-          0.039535388350486755
+          -0.06182285025715828,
+          0.14833080768585205,
+          0.039535511285066605
         ]
       }
     },
@@ -9832,29 +9832,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.08048795163631439,
-          0.08178995549678802,
-          0.02701140195131302
+          0.08048805594444275,
+          0.08178994804620743,
+          0.027011407539248466
         ],
         "Index": [
-          0.04993733391165733,
+          0.04993753880262375,
           0.15870952606201172,
-          0.05014273524284363
+          0.050142619758844376
         ],
         "Middle": [
-          0.013152685016393661,
+          0.013152854517102242,
           0.16439393162727356,
-          0.0559283047914505
+          0.055928610265254974
         ],
         "Ring": [
-          -0.025240957736968994,
-          0.15968604385852814,
-          0.05110684037208557
+          -0.025240963324904442,
+          0.15968602895736694,
+          0.051107123494148254
         ],
         "Little": [
-          -0.061822738498449326,
-          0.1483306884765625,
-          0.03953540325164795
+          -0.0618228018283844,
+          0.1483306735754013,
+          0.03953561931848526
         ]
       }
     },
@@ -9866,29 +9866,29 @@
       "tool_geometry_included": false,
       "distal_heads_in_hand_space_m": {
         "Thumb": [
-          0.0847468227148056,
-          0.08770498633384705,
-          0.016060037538409233
+          0.08556124567985535,
+          0.08883614838123322,
+          0.012436281889677048
         ],
         "Index": [
-          0.04999174177646637,
-          0.15979261696338654,
-          0.05403592064976692
+          0.05088505893945694,
+          0.17764459550380707,
+          0.03442779555916786
         ],
         "Middle": [
-          0.013167239725589752,
-          0.16560353338718414,
-          0.060270752757787704
+          0.013406526297330856,
+          0.18553876876831055,
+          0.038400162011384964
         ],
         "Ring": [
-          -0.025274185463786125,
-          0.16079086065292358,
-          0.055075060576200485
+          -0.02582061104476452,
+          0.17900066077709198,
+          0.0350898802280426
         ],
         "Little": [
-          -0.061891183257102966,
-          0.1491832286119461,
-          0.042605284601449966
+          -0.06301741302013397,
+          0.16323113441467285,
+          0.0271450188010931
         ]
       }
     }
