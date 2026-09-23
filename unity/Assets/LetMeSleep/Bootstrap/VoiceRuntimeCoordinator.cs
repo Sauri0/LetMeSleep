@@ -54,7 +54,7 @@ namespace LetMeSleep.Bootstrap
             this.lobby = lobby ?? throw new ArgumentNullException(nameof(lobby));
             this.mixer = mixer;
             this.ui = ui ?? throw new ArgumentNullException(nameof(ui));
-            capture = owner.GetComponent<VoiceMicrophoneCapture>() ?? owner.AddComponent<VoiceMicrophoneCapture>();
+            capture = UnityComponents.GetOrAdd<VoiceMicrophoneCapture>(owner);
             session = new VoiceOnlineSession(new VoiceEosChannelTransport(sharedTransport ?? throw new ArgumentNullException(nameof(sharedTransport)), lobby));
             voiceGroup = mixer?.FindMatchingGroups("Voice").FirstOrDefault();
             capture.FrameCaptured += OnCapturedFrame;
