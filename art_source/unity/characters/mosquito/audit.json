@@ -2,8 +2,8 @@
   "species": "Mosquito",
   "mesh_count": 3,
   "bones": 39,
-  "triangles": 4696,
-  "vertices": 2510,
+  "triangles": 5698,
+  "vertices": 3017,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -160,28 +160,34 @@
       0
     ],
     "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
-    "geometry_revision": "mosquito-sketch-r3-source",
+    "geometry_revision": "mosquito-sketch-r6-source",
     "palette_srgb_hex": {
-      "shell": "#B8262B",
+      "shell": "#9E2228",
       "segment": "#6E1418",
-      "legs": "#3A1418",
-      "joint": "#1A0C0E",
+      "legs": "#2A1A1A",
+      "joint": "#140A0A",
       "eye": "#FAFAF8",
       "pupil": "#141218",
-      "wing": "#DCDDF5",
+      "wing": "#D8D2F2",
       "vein": "#C3C3E6",
-      "wing_edge": "#ECECFA"
+      "wing_edge": "#DAD5F2"
     },
-    "belly_shade": {
-      "vertex_color_layer": "Col",
-      "lower_fraction": 0.4,
-      "lowest_multiplier_linear": [
-        0.325307527630289,
-        0.36091630956662024,
-        0.37810239565865
-      ],
-      "unity_note": "URP/Lit ignores vertex colour; a vertex-colour multiply is needed to show it"
+    "shell_tones": {
+      "materials_srgb_hex": {
+        "Mosquito_Shell": "#9E2228",
+        "Mosquito_ShellShade": "#821C21",
+        "Mosquito_ShellDark": "#6E1418",
+        "Mosquito_ShellDeep": "#611215"
+      },
+      "abdomen_band_srgb_hex": "#6E1418",
+      "abdomen_band_border_material": "Mosquito_ShellDeep",
+      "proboscis_tip_material": "Mosquito_ShellDark",
+      "shade_rule": "faces on Mosquito_Shell whose normal z < -0.30 use Mosquito_ShellShade",
+      "unity_note": "per-face materials, no vertex colour; the runtime Mosquito colour binding covers Mosquito_Shell/Mosquito_Abdomen only, so tinting must also scale Mosquito_ShellShade/ShellDark/ShellDeep to keep a recoloured body faceted"
     },
+    "wing_vein_alpha": 0.35,
+    "wing_vein_unity_note": "Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder only makes Mosquito_Wing transparent, so Unity draws them opaque until its membrane branch also covers the MosquitoVeins renderer",
+    "leg_skin_note": "leg bones are the unchanged R4 bind; the visible knee/foot (A stance) are skin only: tibia skin blends femur -> tarsus, foot rigid on the tarsus",
     "face": {
       "revision": "mosquito-facial-controls-v1",
       "bind_is_open": true,
@@ -198,48 +204,49 @@
       "source_coordinates": "metres, Z up, -Y forward; actor scale .5 once",
       "eye_centers_source_m": {
         "L": [
-          0.037,
-          -0.066,
+          0.0405,
+          -0.067,
           0.132
         ],
         "R": [
-          -0.037,
-          -0.066,
+          -0.0405,
+          -0.067,
           0.132
         ]
       },
       "eye_radii_source_m": [
         0.0355,
-        0.029,
+        0.03,
         0.0366
       ],
-      "eye_white_forward_offset_source_m": 0.011,
+      "eye_white_forward_offset_source_m": 0.014,
       "lid_radii_source_m": {
-        "x": 0.0392,
-        "yz": 0.0447,
+        "x": 0.04,
+        "yz": 0.048,
         "lower_inset": 0.0005
       },
-      "lid_geometry_revision": "mosquito-sketch-r3-forward-white-cups",
+      "lid_geometry_revision": "mosquito-sketch-r6-ball-white-cap",
       "lid_rest_edges_degrees_about_x_from_front": {
         "upper_front_center_to_pole": [
-          68.0,
-          84.0
+          66.0,
+          70.0
         ],
         "upper_back": 198.0,
         "lower_front_center_to_pole": [
-          -92.0,
-          -86.0
+          -104.0,
+          -100.0
         ],
         "lower_back": -208.0
       },
       "pupil": {
         "radii_source_m": [
           0.0087,
-          0.0022,
+          0.0018,
           0.0095
         ],
-        "depth_source_m": 0.03940193549694342,
-        "inward_yaw_degrees": 2
+        "depth_source_m": 0.0433991453289253,
+        "inward_yaw_degrees": 2,
+        "down_pitch_degrees": 2.1
       },
       "bone_tail_direction_source": [
         1,
@@ -287,7 +294,9 @@
         "material": "Mosquito_Shell"
       },
       "eye_housing": "fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure",
-      "rest_pose": "upper shutter rests at ~68 deg over the top of the white (<=5% cover); blink closure 0..1 starts from that bind pose",
+      "eye_collar": "fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) in the shutters rest-edge surface, from the white to 97% of the innermost shell; never touched by the shutters",
+      "eye_cap": "fixed eyelid wedge weighted to Head (EyeCap.L/R) from the top of the white (~12% of its front-view height) up under the upper shutter rim; inside the innermost shell",
+      "rest_pose": "upper shutter rests at ~66 deg over the eyelid cap, lower at ~-104 deg behind the bottom of the white; blink closure 0..1 starts from that bind pose",
       "runtime_writer": "one shared facial driver after Animator/Playable evaluation; menu supplies target only",
       "runtime_binding": "serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ",
       "body_clips": "15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only",
@@ -444,19 +453,19 @@
     "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
   },
   "bounds_min": [
-    -0.26491206884384155,
-    -0.19030287861824036,
+    -0.2490209937095642,
+    -0.1904340386390686,
     -0.11370769143104553
   ],
   "bounds_max": [
-    0.26491206884384155,
-    0.21522346138954163,
-    0.21435943245887756
+    0.2490209937095642,
+    0.22623825073242188,
+    0.32047712802886963
   ],
   "dimensions": [
-    0.5298241376876831,
-    0.405526340007782,
-    0.3280671238899231
+    0.4980419874191284,
+    0.4166722893714905,
+    0.43418481945991516
   ],
   "sockets": [
     "Socket.Mouth",
@@ -472,7 +481,10 @@
       "name": "MosquitoSkin",
       "materials": [
         "Mosquito_Shell",
+        "Mosquito_ShellShade",
         "Mosquito_Abdomen",
+        "Mosquito_ShellDeep",
+        "Mosquito_ShellDark",
         "Mosquito_EyeWhite",
         "Mosquito_Expression",
         "Mosquito_Legs",
@@ -624,13 +636,13 @@
       "name": "Pupil.L",
       "parent": "Head",
       "head_blender_m": [
-        0.03700000047683716,
-        -0.06599999964237213,
+        0.04050000011920929,
+        -0.06700000166893005,
         0.13199999928474426
       ],
       "tail_blender_m": [
-        0.04899999871850014,
-        -0.06599999964237213,
+        0.05249999836087227,
+        -0.06700000166893005,
         0.13199999928474426
       ]
     },
@@ -638,13 +650,13 @@
       "name": "LidUpper.L",
       "parent": "Head",
       "head_blender_m": [
-        0.03700000047683716,
-        -0.06599999964237213,
+        0.04050000011920929,
+        -0.06700000166893005,
         0.13199999928474426
       ],
       "tail_blender_m": [
-        0.04899999871850014,
-        -0.06599999964237213,
+        0.05249999836087227,
+        -0.06700000166893005,
         0.13199999928474426
       ]
     },
@@ -652,13 +664,13 @@
       "name": "LidLower.L",
       "parent": "Head",
       "head_blender_m": [
-        0.03700000047683716,
-        -0.06599999964237213,
+        0.04050000011920929,
+        -0.06700000166893005,
         0.13199999928474426
       ],
       "tail_blender_m": [
-        0.04899999871850014,
-        -0.06599999964237213,
+        0.05249999836087227,
+        -0.06700000166893005,
         0.13199999928474426
       ]
     },
@@ -666,13 +678,13 @@
       "name": "Pupil.R",
       "parent": "Head",
       "head_blender_m": [
-        -0.03700000047683716,
-        -0.06599999964237213,
+        -0.04050000011920929,
+        -0.06700000166893005,
         0.13199999928474426
       ],
       "tail_blender_m": [
-        -0.02500000037252903,
-        -0.06599999964237213,
+        -0.02850000001490116,
+        -0.06700000166893005,
         0.13199999928474426
       ]
     },
@@ -680,13 +692,13 @@
       "name": "LidUpper.R",
       "parent": "Head",
       "head_blender_m": [
-        -0.03700000047683716,
-        -0.06599999964237213,
+        -0.04050000011920929,
+        -0.06700000166893005,
         0.13199999928474426
       ],
       "tail_blender_m": [
-        -0.02500000037252903,
-        -0.06599999964237213,
+        -0.02850000001490116,
+        -0.06700000166893005,
         0.13199999928474426
       ]
     },
@@ -694,13 +706,13 @@
       "name": "LidLower.R",
       "parent": "Head",
       "head_blender_m": [
-        -0.03700000047683716,
-        -0.06599999964237213,
+        -0.04050000011920929,
+        -0.06700000166893005,
         0.13199999928474426
       ],
       "tail_blender_m": [
-        -0.02500000037252903,
-        -0.06599999964237213,
+        -0.02850000001490116,
+        -0.06700000166893005,
         0.13199999928474426
       ]
     },
@@ -1090,6 +1102,9 @@
     "Mosquito_LegJoint",
     "Mosquito_Legs",
     "Mosquito_Shell",
+    "Mosquito_ShellDark",
+    "Mosquito_ShellDeep",
+    "Mosquito_ShellShade",
     "Mosquito_Wing",
     "Mosquito_WingEdge",
     "Mosquito_WingVein"
@@ -1128,9 +1143,9 @@
     {
       "name": "Mosquito_LegJoint",
       "color": {
-        "r": 0.10196078568696976,
-        "g": 0.0470588244497776,
-        "b": 0.054901961237192154,
+        "r": 0.0784313753247261,
+        "g": 0.03921568766236305,
+        "b": 0.03921568766236305,
         "a": 1.0
       },
       "roughness": 0.800000011920929
@@ -1138,9 +1153,9 @@
     {
       "name": "Mosquito_Legs",
       "color": {
-        "r": 0.22745098173618317,
-        "g": 0.0784313753247261,
-        "b": 0.0941176488995552,
+        "r": 0.16470588743686676,
+        "g": 0.10196078568696976,
+        "b": 0.10196078568696976,
         "a": 1.0
       },
       "roughness": 0.8600000143051147
@@ -1148,9 +1163,39 @@
     {
       "name": "Mosquito_Shell",
       "color": {
-        "r": 0.7215686440467834,
-        "g": 0.14901961386203766,
-        "b": 0.16862745583057404,
+        "r": 0.6196078658103943,
+        "g": 0.13333334028720856,
+        "b": 0.1568627506494522,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421
+    },
+    {
+      "name": "Mosquito_ShellDark",
+      "color": {
+        "r": 0.4313725531101227,
+        "g": 0.0784313753247261,
+        "b": 0.0941176488995552,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421
+    },
+    {
+      "name": "Mosquito_ShellDeep",
+      "color": {
+        "r": 0.3803921639919281,
+        "g": 0.07058823853731155,
+        "b": 0.08235294371843338,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421
+    },
+    {
+      "name": "Mosquito_ShellShade",
+      "color": {
+        "r": 0.5098039507865906,
+        "g": 0.10980392247438431,
+        "b": 0.12941177189350128,
         "a": 1.0
       },
       "roughness": 0.8999999761581421
@@ -1158,20 +1203,20 @@
     {
       "name": "Mosquito_Wing",
       "color": {
-        "r": 0.8627451062202454,
-        "g": 0.8666666746139526,
-        "b": 0.9607843160629272,
-        "a": 0.44999998807907104
+        "r": 0.8470588326454163,
+        "g": 0.8235294222831726,
+        "b": 0.9490196108818054,
+        "a": 0.3799999952316284
       },
       "roughness": 0.8500000238418579
     },
     {
       "name": "Mosquito_WingEdge",
       "color": {
-        "r": 0.9254902005195618,
-        "g": 0.9254902005195618,
-        "b": 0.9803921580314636,
-        "a": 1.0
+        "r": 0.8549019694328308,
+        "g": 0.8352941274642944,
+        "b": 0.9490196108818054,
+        "a": 0.3499999940395355
       },
       "roughness": 0.800000011920929
     },
@@ -1181,7 +1226,7 @@
         "r": 0.7647058963775635,
         "g": 0.7647058963775635,
         "b": 0.9019607901573181,
-        "a": 1.0
+        "a": 0.3499999940395355
       },
       "roughness": 0.800000011920929
     }

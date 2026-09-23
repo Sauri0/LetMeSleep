@@ -10,6 +10,20 @@ TAU=2*math.pi
 FINGER_JOINT_ANGLES=(.42,.90,1.20)
 FINGER_REST_AMOUNT=.24
 THUMB_CURL_FACTOR=.72
+# v0.3.0 round 5 standing pose (PER-04 BASE CHARACTER): arms hang relaxed
+# ~9 deg from the body with the elbows flexed ~13 deg, forearms pronated so
+# the palms face the thighs (thumb forward), fingers curled into a loose fist
+# and the thumb ~20 deg; knees nearly straight (<=5 deg). Degrees.
+# Round 6 (art director): the idle hand is a loose fist with the thumb
+# forward over the index (PER-04), not an open drooping claw: absolute
+# knuckle/middle/tip flexion of the four fingers (radians; the bind already
+# holds FINGER_REST_AMOUNT of FINGER_JOINT_ANGLES) and a firmer thumb.
+STAND_DROP=.0003
+ARM_ABDUCTION,ARM_FORWARD=10.0,3.0
+FOREARM_ABDUCTION,FOREARM_FORWARD=5.0,15.5
+UPPER_ARM_TWIST=40.0
+IDLE_FIST_ANGLES=(1.00,.95,.80)
+RELAXED_THUMB=.75
 
 def smooth(t):
     t=max(0,min(1,t)); return t*t*t*(t*(t*6-15)+10)
@@ -88,11 +102,31 @@ def sampled(c,name,end,pose_fn):
 
 def human(c):
     p=Pose(c)
+    def hang(side,s):
+        """Relaxed hanging arm, authored as world directions that follow the chest."""
+        p.update()
+        chest=p.rig.pose.bones['Chest']
+        turn=(chest.matrix@p.rest['Chest'].inverted()).to_3x3()
+        rad=math.radians
+        upper=Vector((s*math.sin(rad(ARM_ABDUCTION)),-math.sin(rad(ARM_FORWARD)),-1)).normalized()
+        lower=Vector((s*math.sin(rad(FOREARM_ABDUCTION)),-math.sin(rad(FOREARM_FORWARD)),-1)).normalized()
+        twist=rad(UPPER_ARM_TWIST)
+        upper_normal=Vector((-s*math.sin(twist),-math.cos(twist),0))
+        palm=Vector((-s,0,0))
+        bone=p.rig.pose.bones['UpperArm.'+side]
+        p.point(bone.name,bone.head.copy(),turn@upper,turn@upper_normal)
+        bone=p.rig.pose.bones['LowerArm.'+side]
+        p.point(bone.name,bone.head.copy(),turn@lower,turn@palm)
+        for digit in ['Index','Middle','Ring','Little']:
+            for i,(angle,full) in enumerate(zip(IDLE_FIST_ANGLES,FINGER_JOINT_ANGLES),1):
+                p.rotate(f'{digit}{i:02d}.{side}',(angle-full*FINGER_REST_AMOUNT,0,0))
+        for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
+            p.rotate(f'Thumb{i:02d}.{side}',(angle*(RELAXED_THUMB-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
     def base(squat=0,lean=0,breathe=0,feet=None):
-        p.reset(); p.translate('Hips',(0,.11*squat,-.42*squat-.018))
+        p.reset(); p.translate('Hips',(0,.11*squat,-.42*squat-STAND_DROP))
         p.rotate('Chest',(lean+breathe,0,0));p.rotate('Neck',(-lean*.35,0,0));p.update()
         for side,s in [('L',1),('R',-1)]:
-            p.rotate('UpperArm.'+side,(.04,0,-s*1.20));p.rotate('LowerArm.'+side,(.16,0,0));p.fingers(side,.24)
+            hang(side,s)
             offset=feet[side] if feet else (0,0)
             p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,offset[0],.12+offset[1]),
                     (s*.125,-.6,.42),'Foot.'+side)
@@ -133,7 +167,7 @@ def human(c):
         base(squat=squat,lean=.15*squat)
         airborne=.12*math.sin(math.pi*max(0,min(1,(t-.30)/.42)))**2 if .30<t<.72 else 0
         if airborne:
-            p.translate('Hips',(0,0,airborne-.018));p.update()
+            p.translate('Hips',(0,0,airborne-STAND_DROP));p.update()
             for side,s in [('L',1),('R',-1)]:
                 p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,.03,.12+airborne+.015),(s*.125,-.5,.45),'Foot.'+side)
                 p.rotate('UpperArm.'+side,(-.15,0,-s*1.0))
@@ -179,7 +213,7 @@ def human(c):
     sampled(c,'Hit',19,hit)
     def fallen(t,with_faint=False):
         u=smooth(t);base(squat=.7*math.sin(math.pi*u),lean=.2*math.sin(math.pi*u))
-        p.rotate('Hips',(-1.48*u,0,.08*u));p.translate('Hips',(0,0,-.58*u-.018))
+        p.rotate('Hips',(-1.48*u,0,.08*u));p.translate('Hips',(0,0,-.58*u-STAND_DROP))
         p.rotate('UpperLeg.L',(.1*u,0,0));p.rotate('UpperLeg.R',(.14*u,0,0))
         p.rotate('LowerLeg.L',(-.12*u,0,0));p.rotate('LowerLeg.R',(-.16*u,0,0))
         p.rotate('Head',(.16*u,0,.12*u));p.rotate('Jaw',(-.13*u,0,0))

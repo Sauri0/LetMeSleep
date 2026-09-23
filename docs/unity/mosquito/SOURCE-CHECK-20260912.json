@@ -8,7 +8,7 @@
   "skin_or_fbx_verified": false,
   "art_accepted": false,
   "source_sha256": {
-    "author_mosquito_geometry.py": "bceca528b33b2077108eedea0602fb601837d0b12992654a2a6a653031a2679e",
+    "author_mosquito_geometry.py": "4d0a6d0a3da53fb04c41a1abc2ef35c9c8bd2611784cdbfbf6eaa02debc045a6",
     "author_mosquito_motion.py": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
     "build_mosquito_candidate.py": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
     "check_mosquito_source.py": "816f694aa417892a5c3e1218305823153e2cfef5cd0abda09506b4da61f6c0c0",
@@ -16,10 +16,10 @@
     "check_mosquito_audit_math.py": "0f6e44e8774a0fcf1b0aaa2e1c9592b64120e71461dbf69d3c3d89db7390b45c",
     "study_mosquito_surface.py": "f07d93d8905b611c6e6ff694551c9ffb9bc893330bf1ef9503a1ea213869599c",
     "render_mosquito_witness.py": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267",
-    "author_mosquito_face.py": "1a12d613f6d3c1a2eb999df37501da1dc306812d225e07ae92d3d2a029c63be8",
+    "author_mosquito_face.py": "842788f252f6626a923173a73f180f11456715d9fe787aeaa5613f0aa0fcc852",
     "check_mosquito_face.py": "c46f17afd1818897fc2af88328dec454bce87336d94b2eb91530e19069f43d10"
   },
-  "comparison_asset_sha256": "ddaf3083c0b34a84ba1eac14057ba62798fda5d680d2c56303669eb8bf844587",
+  "comparison_asset_sha256": "0814f3fd4c069abcab7a0b817e6ad9ff7e3fe05107ca681b97c2c61efd09d3d1",
   "custom_meshes": [
     {
       "name": "Thorax",
@@ -35,20 +35,20 @@
     },
     {
       "name": "Abdomen",
-      "vertices": 200,
-      "faces": 194,
+      "vertices": 129,
+      "faces": 129,
       "errors": []
     },
     {
-      "name": "Snout",
-      "vertices": 30,
-      "faces": 26,
+      "name": "Proboscis",
+      "vertices": 48,
+      "faces": 44,
       "errors": []
     },
     {
       "name": "Wing.1",
-      "vertices": 24,
-      "faces": 35,
+      "vertices": 28,
+      "faces": 43,
       "errors": []
     },
     {
@@ -58,9 +58,9 @@
       "errors": []
     },
     {
-      "name": "LidLip.1",
-      "vertices": 55,
-      "faces": 52,
+      "name": "EyeCap.1",
+      "vertices": 144,
+      "faces": 142,
       "errors": []
     },
     {
@@ -76,9 +76,21 @@
       "errors": []
     },
     {
+      "name": "EyeCollar.1",
+      "vertices": 68,
+      "faces": 66,
+      "errors": []
+    },
+    {
+      "name": "EyeCollarInner.1",
+      "vertices": 68,
+      "faces": 66,
+      "errors": []
+    },
+    {
       "name": "Wing.-1",
-      "vertices": 24,
-      "faces": 35,
+      "vertices": 28,
+      "faces": 43,
       "errors": []
     },
     {
@@ -88,9 +100,9 @@
       "errors": []
     },
     {
-      "name": "LidLip.-1",
-      "vertices": 55,
-      "faces": 52,
+      "name": "EyeCap.-1",
+      "vertices": 144,
+      "faces": 142,
       "errors": []
     },
     {
@@ -103,6 +115,18 @@
       "name": "Pupil.-1",
       "vertices": 34,
       "faces": 40,
+      "errors": []
+    },
+    {
+      "name": "EyeCollar.-1",
+      "vertices": 68,
+      "faces": 66,
+      "errors": []
+    },
+    {
+      "name": "EyeCollarInner.-1",
+      "vertices": 68,
+      "faces": 66,
       "errors": []
     }
   ],

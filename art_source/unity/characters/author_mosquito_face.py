@@ -30,35 +30,83 @@ the side coverage check fails (measured: 2 exposed points at 4 deg, 32 at 20
 deg). For the same reason every circle around the axis can be at most half
 open, which is why the white has to move forward, not the cup rotate.
 
+Sketch r4 (art-director round 4, item 6): the pupil is pitched ~2.1 deg down
+about the unchanged pivot (~1.5 mm lower on the white), so the gaze reads
+slightly down/forward like PER-07; the white, cups and lids are unchanged.
+
+Sketch r5 (art-director round 5, item 1): the white reads as a faceted dome.
+It is rounder (depth radius .029 -> .035, close to its .0355/.0366 front
+radii); the lids grow to .040 / .048 and the upper shutter rests at 80 deg
+(lower -90, keeping upper - lower <= 170) with a rolled lip half as thick, so
+the neutral eye is a full round white (PER-07 'NORMAL'). The white's centre
+moves from 11 to 8 mm ahead of the pivot: with 11 mm the deeper white put the
+pupil ~.0476 from the pivot and the closed .048 shutters (facet sag ~1.4 mm,
+X radius .040) left up to 146 of 358 pupil samples exposed at the gaze
+limits; with 8 mm (and a .0018 pupil half-depth) every sample is covered
+with ~0.7-1 mm to spare. A fixed collar (EyeCollar.L/R, Head) hugs the
+white's equator inside each cup so the unlit inside of the shutter no longer
+shows as a dark crescent over the white; it lies inside the innermost shell,
+so no shutter touches it at any closure.
+
+Sketch r6 (art-director round 6, item 3: the eye read as a lighthouse in
+profile - a flat-backed white half-dome glued to a red cylinder with two
+stacked rims): the white is a ball that sticks out of the head. The whole eye
+(pivot, shutters, housings, white) moves 3.5 mm outward and 1 mm forward and
+the white moves a further 6 mm ahead of the pivot (white 7 mm forward in
+total); its front-view radii are unchanged and its depth is .030 (was .035)
+so its front stays 44 mm from the pivot and the closed .048 shutters still
+clear the pupil. The shutters rest 14 deg further round (upper 66, lower
+-104: the lower rim sits behind the pivot, so the ball's round underside shows
+in profile). The rolled lip on the shutter is gone and the r5 collar (a cone
+at the white's equator: the second rim) is replaced by a flat rim face in the
+shutters' rest-edge surface (EyeCollar/EyeCollarInner, edge-on in profile, a
+thin red ring from the front): one rim. A fixed eyelid wedge (EyeCap, Head)
+rests on the top of the white, covering its upper ~13% on the centre column
+seen from the front (PER-03 NEUTRAL), and rises to just under the upper
+shutter's rim instead of leaving that rim floating above the ball; it lies
+inside the innermost shell, so blinks are unchanged. Ray probe of the built
+bind pose (scratch measure, left eye): 66.9% of the white's profile visible
+from the side, 13.0% of the centre column covered from the front.
+Not done: the cup depth. The rest cup is the closed-shutter sphere (.048
+around the pivot), fixed by the 90 deg shutter blink having to contain the
+white's front plus the pupil; a shallower back makes the rotating shutters
+dip through the housing/rim face or leaves the rim crevice open.
+
 Lid pivots, bone names, axes and the 90 deg runtime closure are unchanged; every
 rest edge keeps upper - lower <= 170 deg so the rotated shutters plus the fixed
 housing still hide the white and the pupil when closed (check_mosquito_face.py),
 and the lid vertex centroids still let Unity's FacialContentBuilder derive
-+/-90 deg. The pupil stays within 2 deg of the character front (Unity requires
++/-90 deg. The pupil stays within 3 deg of the character front (Unity requires
 < 16 deg).
 """
 import math
 
 FACE_REVISION = 'mosquito-facial-controls-v1'
-LID_GEOMETRY_REVISION = 'mosquito-sketch-r3-forward-white-cups'
+LID_GEOMETRY_REVISION = 'mosquito-sketch-r6-ball-white-cap'
 # Eye white, source metres (x lateral, y depth along the look axis, z up).
-EYE_RADII = (.0355, .029, .0366)
+# r6: depth .035 -> .030 (front view unchanged) so the white can sit further
+# ahead of the pivot inside the same closed-shutter radius.
+EYE_RADII = (.0355, .030, .0366)
 EYE_SEGMENTS, EYE_RINGS = 10, 6
 # The white bulges out of its cup: its centre sits ahead (-Y) of the pivot the
-# shutters and the pupil rotate about, so ~70% of it shows in profile.
-EYE_FORWARD_OFFSET = .011
+# shutters and the pupil rotate about (r5: 8 mm; r6: 14 mm; the white's front
+# stays 44 mm and the pupil front ~45 mm from the pivot, inside the closed
+# .048 shutters with their facet sag).
+EYE_FORWARD_OFFSET = .014
 # Pupil: small flattened black disc sitting on the white, aimed forward.
-PUPIL_RADII = (.0087, .0022, .0095)
+PUPIL_RADII = (.0087, .0018, .0095)
 PUPIL_INWARD_DEGREES = 2
+# r4: pupil pitched down about the pivot (~1.5 mm lower on the white).
+PUPIL_DOWN_DEGREES = 2.1
 PUPIL_EMBED = .0006
 PUPIL_SEGMENTS, PUPIL_RINGS = 8, 5
-# Closed shutters must clear the white (farthest ~.040 from the pivot) and the
-# pupil front (~.0416), including faceting sag and the recessed rear housing.
+# Closed shutters must clear the white (front ~.043 from the pivot) and the
+# pupil front (~.0442), including faceting sag and the recessed rear housing.
 # Upper shutter outermost; lower shutter and housings step inward so no two
 # shells ever share a radius (no z-fighting where they overlap). Equal Y/Z
 # radii let every shell slide over itself when rotated about source X.
-LID_RADIUS_X = .0392
-LID_RADIUS_YZ = .0447
+LID_RADIUS_X = .0400
+LID_RADIUS_YZ = .0480
 LOWER_LID_INSET = .0005
 LID_THICKNESS = .0006
 HOUSING_RECESS = .0008
@@ -67,14 +115,40 @@ HOUSING_RECESS = .0008
 # |sin(latitude)| from the centre value (x = 0) to the pole value (lateral
 # poles) while upper - lower stays <= 170 deg: after +/-90 deg the shutters
 # still overlap by >= 10 deg.
-UPPER_FRONT_CENTER, UPPER_FRONT_POLE, UPPER_BACK = 68.0, 84.0, 198.0
-LOWER_FRONT_CENTER, LOWER_FRONT_POLE, LOWER_BACK = -92.0, -86.0, -208.0
+# r6: both shutters rest 14 deg further round (upper 80 -> 66, lower -90 ->
+# -104; upper - lower still 170 at every latitude): the lower rim moves behind
+# the pivot so the bottom of the ball shows its round back in profile, and the
+# upper rim comes down onto the fixed eyelid cap. The vertex centroids sit at
+# ~133 / ~-155 deg (closed ~43 / ~-65), so Unity still derives +90 / -90.
+UPPER_FRONT_CENTER, UPPER_FRONT_POLE, UPPER_BACK = 66.0, 70.0, 198.0
+LOWER_FRONT_CENTER, LOWER_FRONT_POLE, LOWER_BACK = -104.0, -100.0, -208.0
 LID_EDGE_RAMP_POWER = 1.0
-# Rolled lip on the upper shutter's front edge: (degrees past the edge,
-# radial offset in m) section, tapered toward the lateral poles.
-LIP_SAMPLES, LIP_LATITUDE = 11, 76.0
-LIP_SECTION = ((-1.0, -.0004), (0.0, .0017), (3.2, .0024), (6.5, .0012), (8.0, -.0004))
 LID_LATITUDE_STEPS, UPPER_ARC_STEPS, LOWER_ARC_STEPS = 8, 7, 5
+# r6 rim face (EyeCollar, Head): fills the crevice between the white and the
+# shutters' rim so the cup's dark inside never shows, lying in the shutters'
+# rest-edge surface (the upper edge angle above the pivot axis, the lower one
+# below): edge-on in profile, a thin red ring around the white from the front.
+# psi is the front-view angle about the pivot (0 = lateral, 90 = top). Two
+# closed strips (sphere topology each): lateral/lower and medial/lower; the
+# top is the eyelid cap's. Inner edge 0.3 mm off the white, outer edge at 97%
+# of the innermost housing layer, so no shutter ever touches it.
+COLLAR_ARCS_DEGREES = {'EyeCollar': (-78.0, 64.0), 'EyeCollarInner': (116.0, 258.0)}
+COLLAR_SEGMENTS = 16
+COLLAR_INNER_CLEARANCE, COLLAR_OUTER_FILL = .0003, .97
+COLLAR_THICKNESS = .0012
+# r6 fixed eyelid cap (EyeCap, Head): a wedge over the top of the white. Its
+# front edge (angle about the pivot axis) is 38 deg on the eye's centre
+# column (the top ~13% of the white's front-view height, PER-03 NEUTRAL) and
+# ramps to 68 deg on the outer columns the side view sees, so the profile
+# keeps ~67% of the ball white. From that edge it hugs the white, then rises
+# to just under the upper shutter's rim and runs on under it: one lid resting
+# on the ball instead of a ring floating above it. It stays inside the
+# innermost housing layer (96.5%), so blinks never touch it.
+CAP_FRONT_DEGREES, CAP_FRONT_SIDE_DEGREES, CAP_FRONT_RAMP_POWER = 38.0, 68.0, 1.5
+CAP_BACK_DEGREES, CAP_MIN_RISE_DEGREES = 112.0, 6.0
+CAP_RISE_STEPS, CAP_BACK_STEPS = 3, 4
+CAP_X_EXTENT, CAP_ROWS = .030, 9
+CAP_INNER_CLEARANCE, CAP_EDGE_THICKNESS, CAP_OUTER_FILL = .0004, .0012, .965
 GAZE_YAW_LIMIT_DEGREES = 12
 GAZE_PITCH_LIMIT_DEGREES = 10
 FACE_BONES = tuple(role + '.' + side for side in ('L', 'R')
@@ -82,8 +156,9 @@ FACE_BONES = tuple(role + '.' + side for side in ('L', 'R')
 
 
 def eye_center(sign):
-    """Pivot of Pupil/LidUpper/LidLower (bone heads); not the white's centre."""
-    return (sign * .037, -.066, .132)
+    """Pivot of Pupil/LidUpper/LidLower (bone heads); not the white's centre.
+    r6: 3.5 mm outward and 1 mm forward (was (sign * .037, -.066, .132))."""
+    return (sign * .0405, -.067, .132)
 
 
 def eye_white_center(sign):
@@ -160,13 +235,19 @@ def pupil_yaw(sign):
     return -sign * math.radians(PUPIL_INWARD_DEGREES)
 
 
+def pupil_direction():
+    """Unit look direction of the pupil for the +X eye before the side yaw
+    sign: inward yaw then the r4 down pitch (source -Y is forward)."""
+    yaw, pitch = math.radians(PUPIL_INWARD_DEGREES), math.radians(PUPIL_DOWN_DEGREES)
+    return (-math.sin(yaw) * math.cos(pitch), -math.cos(yaw) * math.cos(pitch), -math.sin(pitch))
+
+
 def _white_surface_distance():
     """Pivot-to-white distance along the pupil direction (analytic ellipsoid;
     identical for both eyes)."""
-    angle = math.radians(PUPIL_INWARD_DEGREES)
-    dx, dy = -math.sin(angle), -math.cos(angle)
-    # Point t*d relative to the white centre (0, -offset): (t dx, t dy + offset).
-    a = (dx / EYE_RADII[0]) ** 2 + (dy / EYE_RADII[1]) ** 2
+    dx, dy, dz = pupil_direction()
+    # Point t*d relative to the white centre (0, -offset, 0): (t dx, t dy + offset, t dz).
+    a = (dx / EYE_RADII[0]) ** 2 + (dy / EYE_RADII[1]) ** 2 + (dz / EYE_RADII[2]) ** 2
     b = 2 * dy * EYE_FORWARD_OFFSET / EYE_RADII[1] ** 2
     c = (EYE_FORWARD_OFFSET / EYE_RADII[1]) ** 2 - 1
     return (-b + math.sqrt(b * b - 4 * a * c)) / (2 * a)
@@ -177,8 +258,12 @@ PUPIL_DEPTH = _white_surface_distance() - PUPIL_EMBED
 
 
 def pupil_mesh(sign):
-    return ellipsoid_mesh(PUPIL_RADII, PUPIL_SEGMENTS, PUPIL_RINGS, offset=(0, -PUPIL_DEPTH, 0),
-                          yaw=pupil_yaw(sign), center=eye_center(sign))
+    """Flattened disc on the white: built on the look axis, pitched down about
+    the pivot (source X), then yawed toward the snout and moved to the pivot."""
+    vertices, faces = ellipsoid_mesh(PUPIL_RADII, PUPIL_SEGMENTS, PUPIL_RINGS, offset=(0, -PUPIL_DEPTH, 0))
+    pitch, yaw, center = math.radians(PUPIL_DOWN_DEGREES), pupil_yaw(sign), eye_center(sign)
+    placed = [tuple(a + b for a, b in zip(rotate_z(rotate_x(v, pitch), yaw), center)) for v in vertices]
+    return outward(placed, faces)
 
 
 def lid_front_degrees(upper, latitude):
@@ -262,27 +347,132 @@ def upper_lid_point(sign, latitude, phi_degrees, offset, closure=0):
     return _lid_world(sign, local, 90 * max(0, min(1, closure)))
 
 
-def upper_lip_mesh(sign, closure=0):
-    """Thick rolled red rim along the upper shutter's front edge (PER-07).
-
-    Rigid on LidUpper, entirely outside the shutter's inner layer, so it never
-    reaches the white; the lower shutter and housings are always inside it.
-    """
-    rings = []
-    for row in range(LIP_SAMPLES):
-        latitude = math.radians(-LIP_LATITUDE + 2 * LIP_LATITUDE * row / (LIP_SAMPLES - 1))
-        front = lid_front_degrees(True, latitude)
-        taper = math.cos(latitude) ** .5
-        rings.append([upper_lid_point(sign, latitude, front + d * taper, o * taper, closure)
-                      for d, o in LIP_SECTION])
+def _strip_mesh(rings):
+    """Closed loft through equal-size open-section rings with planar end caps."""
+    n = len(rings[0])
     vertices = [v for ring in rings for v in ring]
-    n = len(LIP_SECTION)
     faces = [tuple(reversed(range(n)))]
     for row in range(len(rings) - 1):
         for j in range(n):
             a, b = row * n + j, row * n + (j + 1) % n
             faces.append((a, b, b + n, a + n))
     faces.append(tuple((len(rings) - 1) * n + j for j in range(n)))
+    return outward(vertices, faces)
+
+
+def inside_white(point, grow=0.0):
+    """Pivot-relative point inside the white ellipsoid grown by `grow` metres."""
+    x, y, z = point
+    return ((x / (EYE_RADII[0] + grow)) ** 2 + ((y + EYE_FORWARD_OFFSET) / (EYE_RADII[1] + grow)) ** 2
+            + (z / (EYE_RADII[2] + grow)) ** 2) < 1
+
+
+def _bisect(test, lo, hi, steps=40):
+    """Last parameter in [lo, hi] for which test() still holds (test(lo) true)."""
+    for _ in range(steps):
+        mid = (lo + hi) * .5
+        lo, hi = (mid, hi) if test(mid) else (lo, mid)
+    return lo
+
+
+def _rim_point(psi, t):
+    """Pivot-relative point at front-view angle psi, distance t from the pivot
+    axis, on the shutters' rest-edge surface (upper edge above the axis, lower
+    edge below it), plus whether it belongs to the upper half."""
+    c, s = math.cos(psi), math.sin(psi)
+    x, h = t * c, t * s
+    upper = h >= 0
+    rx = lid_radii(upper, HOUSING_RECESS)[0] - LID_THICKNESS
+    latitude = math.asin(max(-1.0, min(1.0, x / rx)))
+    edge = math.radians(lid_front_degrees(upper, latitude))
+    radius = h / math.sin(edge)
+    return (x, -radius * math.cos(edge), h), upper, radius
+
+
+def _inside_housing(psi, t, fill):
+    point, upper, radius = _rim_point(psi, t)
+    hx, hyz = (r - LID_THICKNESS for r in lid_radii(upper, HOUSING_RECESS))
+    return (point[0] / hx) ** 2 + (radius / hyz) ** 2 < fill * fill
+
+
+def collar_mesh(sign, part='EyeCollar'):
+    """Fixed red rim face in the shutters' rest-edge surface (r6).
+
+    Each section spans, at front-view angle psi, from 0.3 mm off the white to
+    97% of the innermost housing layer; it is 1.2 mm thick toward the back.
+    Seen from the side it is edge-on (no second rim), seen from the front it
+    is the red ring of the cup around the white. Closed strip with end caps
+    (sphere topology), outward winding. part selects the arc
+    (COLLAR_ARCS_DEGREES).
+    """
+    pivot = eye_center(sign)
+    first, last = COLLAR_ARCS_DEGREES[part]
+    rings = []
+    for i in range(COLLAR_SEGMENTS + 1):
+        psi = math.radians(first + (last - first) * i / COLLAR_SEGMENTS)
+        outer = _bisect(lambda t: _inside_housing(psi, t, COLLAR_OUTER_FILL), 0.0, .07)
+        inner = _bisect(lambda t: inside_white(_rim_point(psi, t)[0], COLLAR_INNER_CLEARANCE), 0.0, outer)
+        inner = min(inner, outer - .0008)
+        section = []
+        for t, back in ((inner, 0.0), (outer, 0.0), (outer, COLLAR_THICKNESS), (inner, COLLAR_THICKNESS)):
+            x, y, z = _rim_point(psi, t)[0]
+            section.append((pivot[0] + sign * x, pivot[1] + y + back, pivot[2] + z))
+        rings.append(section)
+    return _strip_mesh(rings)
+
+
+def _smooth(t):
+    t = max(0.0, min(1.0, t))
+    return t * t * (3 - 2 * t)
+
+
+def cap_mesh(sign):
+    """Fixed eyelid wedge over the top of the white (r6, PER-03 NEUTRAL).
+
+    Rows across the eye (pivot-relative x), columns by angle about the pivot
+    axis. The inner layer follows the white 0.4 mm off it; the outer layer
+    starts 1.2 mm above that at the lid's front edge and rises to 96.5% of the
+    innermost housing layer at the upper shutter's rim, then runs on under the
+    shutter. Closed (two layers and four walls), sphere topology.
+    """
+    pivot = eye_center(sign)
+    hx, hyz = (r - LID_THICKNESS for r in lid_radii(False, HOUSING_RECESS))
+    shutter_x = lid_radii(True)[0]
+    inner_layer, outer_layer = [], []
+    for k in range(CAP_ROWS):
+        x = -CAP_X_EXTENT + 2 * CAP_X_EXTENT * k / (CAP_ROWS - 1)
+        ceiling = CAP_OUTER_FILL * hyz * math.sqrt(max(0.0, 1 - (x / hx) ** 2))
+        front = CAP_FRONT_DEGREES + (CAP_FRONT_SIDE_DEGREES - CAP_FRONT_DEGREES) * (abs(x) / CAP_X_EXTENT) ** CAP_FRONT_RAMP_POWER
+        rim = lid_front_degrees(True, math.asin(min(1.0, abs(x) / shutter_x)))
+        top = max(rim, front + CAP_MIN_RISE_DEGREES)
+        columns_degrees = ([front + (top - front) * i / CAP_RISE_STEPS for i in range(CAP_RISE_STEPS + 1)]
+                           + [top + (CAP_BACK_DEGREES - top) * i / CAP_BACK_STEPS for i in range(1, CAP_BACK_STEPS + 1)])
+        for degrees in columns_degrees:
+            phi = math.radians(degrees)
+            direction = (0.0, -math.cos(phi), math.sin(phi))
+
+            def at(t):
+                return (x, t * direction[1], t * direction[2])
+            t_in = _bisect(lambda t: inside_white(at(t), CAP_INNER_CLEARANCE), 0.0, .07)
+            rise = _smooth((degrees - front) / (top - front))
+            t_out = max(t_in + CAP_EDGE_THICKNESS * (1 - rise), t_in + (ceiling - t_in) * rise)
+            t_out = min(max(t_out, t_in + .0006), max(ceiling, t_in + .0006))
+            for layer, t in ((inner_layer, t_in), (outer_layer, t_out)):
+                px, py, pz = at(t)
+                layer.append((pivot[0] + sign * px, pivot[1] + py, pivot[2] + pz))
+    columns = CAP_RISE_STEPS + CAP_BACK_STEPS + 1
+    size = len(inner_layer)
+    vertices = inner_layer + outer_layer
+    sheet = []
+    for k in range(CAP_ROWS - 1):
+        for j in range(columns - 1):
+            a = k * columns + j
+            sheet.append((a, a + 1, a + columns + 1, a + columns))
+    faces = sheet + [tuple(size + v for v in reversed(f)) for f in sheet]
+    boundary = ([j for j in range(columns)] + [k * columns + columns - 1 for k in range(1, CAP_ROWS)]
+                + [(CAP_ROWS - 1) * columns + j for j in reversed(range(columns - 1))]
+                + [k * columns for k in reversed(range(1, CAP_ROWS - 1))])
+    faces += [(b, a, a + size, b + size) for a, b in zip(boundary, boundary[1:] + boundary[:1])]
     return outward(vertices, faces)
 
 
@@ -300,7 +490,7 @@ def facial_contract():
             'upper_front_center_to_pole': [UPPER_FRONT_CENTER, UPPER_FRONT_POLE], 'upper_back': UPPER_BACK,
             'lower_front_center_to_pole': [LOWER_FRONT_CENTER, LOWER_FRONT_POLE], 'lower_back': LOWER_BACK},
         'pupil': {'radii_source_m': list(PUPIL_RADII), 'depth_source_m': PUPIL_DEPTH,
-                  'inward_yaw_degrees': PUPIL_INWARD_DEGREES},
+                  'inward_yaw_degrees': PUPIL_INWARD_DEGREES, 'down_pitch_degrees': PUPIL_DOWN_DEGREES},
         'bone_tail_direction_source': [1, 0, 0],
         'gaze': {'controls': ['Pupil.L', 'Pupil.R'],
                  'yaw_axis_source': [0, 0, 1], 'pitch_axis_source': [1, 0, 0],
@@ -312,7 +502,9 @@ def facial_contract():
                   'lower_angle_source_x_degrees': [0, -90],
                   'scale': [1, 1, 1], 'material': 'Mosquito_Shell'},
         'eye_housing': 'fixed rear cup weighted to Head: recessed .8 mm copy of each open shutter; covers the posterior white during closure',
-        'rest_pose': 'upper shutter rests at ~68 deg over the top of the white (<=5% cover); blink closure 0..1 starts from that bind pose',
+        'eye_collar': 'fixed red rim faces weighted to Head (EyeCollar.L/R lateral, EyeCollarInner.L/R medial) in the shutters rest-edge surface, from the white to 97% of the innermost shell; never touched by the shutters',
+        'eye_cap': 'fixed eyelid wedge weighted to Head (EyeCap.L/R) from the top of the white (~12% of its front-view height) up under the upper shutter rim; inside the innermost shell',
+        'rest_pose': 'upper shutter rests at ~66 deg over the eyelid cap, lower at ~-104 deg behind the bottom of the white; blink closure 0..1 starts from that bind pose',
         'runtime_writer': 'one shared facial driver after Animator/Playable evaluation; menu supplies target only',
         'runtime_binding': 'serialize axes transformed into each imported bone bind-local frame; do not assume FBX local XYZ',
         'body_clips': '15 existing IDs unchanged; all facial tracks neutral, runtime overwrites six facial controls only',
@@ -334,12 +526,15 @@ def create_face(c, *, mesh, shell, eye, pupil, **_unused):
             name = ('LidUpper.' if upper else 'LidLower.') + side
             vertices, faces = lid_mesh(sign, upper)
             mesh(name, vertices, faces, shell, name)
-            if upper:
-                mesh('LidLip.' + side, *upper_lip_mesh(sign), shell, name)
             # A fixed rear housing prevents the white back of the eye becoming
             # exposed in profile when the articulated shutters rotate forward.
             vertices, faces = lid_mesh(sign, upper, recess=HOUSING_RECESS)
             mesh('EyeHousing.' + name, vertices, faces, shell, 'Head')
+        # r6: one rim (the collar face in the rest-edge surface) and a fixed
+        # eyelid cap over the top of the white; no rolled lip on the shutter.
+        for part in COLLAR_ARCS_DEGREES:
+            mesh(part + '.' + side, *collar_mesh(sign, part), shell, 'Head')
+        mesh('EyeCap.' + side, *cap_mesh(sign), shell, 'Head')
 
 
 def apply_facial_pose(rig, yaw_degrees=0, pitch_degrees=0, blink_left=0, blink_right=0):

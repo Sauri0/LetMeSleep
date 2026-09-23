@@ -6,16 +6,24 @@ rest rotated back into the forehead/cheek so the neutral eye reads as a clean
 white sphere; the piecewise morph samples sweep them over the front.
 Round 3: 121 mm wide x 126 mm tall (slightly vertical) eyeballs set 11 mm
 deeper into a shallow socket so about half of each globe sits in the face.
+Round 5 (art director): the open upper lid returns to the hidden round-3 rest
+(rotated back into the forehead) so no skin rim covers the globe, and the
+globes grow to 132 mm wide x 148 mm tall (radius +9%, height factor 1.12)
+around the unchanged centres (Socket.Eye z=1.53).
 """
 import math
 
-EYE_RADIUS=.0605
-EYE_HEIGHT_FACTOR=1.04
+EYE_RADIUS=.066
+EYE_HEIGHT_FACTOR=1.12
 EYE_CENTERS={'L':(.067,-.132,1.53),'R':(-.067,-.132,1.53)}
 # Lid shells (1.09 r) sit outside the globe and the pupil lens (max radius r+.003).
 LID_RADII=(EYE_RADIUS*1.09,EYE_RADIUS*1.09,EYE_RADIUS*EYE_HEIGHT_FACTOR*1.07)
 LID_SIDE_WRAP=.25
 LID_OPEN_TILT=.62
+# Round 5: the round-4 8-10 mm lid rim read as tired eyes; the open upper lid
+# is back at the round-3 rest, folded into the forehead (hidden).
+UPPER_OPEN_ANGLES=[.035,.09,.15,.21,.27,.33]
+UPPER_OPEN_TILT=LID_OPEN_TILT
 
 CONTRACT={
     'renderer':'HumanHead','head_bone':'Head','neck_bone':'Neck',
@@ -54,9 +62,9 @@ def eyelids(c, mesh, skin):
         wrap=math.pi/2+LID_SIDE_WRAP
         for upper in [True,False]:
             # Open lids rest rotated into the head; closed lids meet below centre.
-            open_angles=[.035,.09,.15,.21,.27,.33] if upper else [math.pi-v for v in [.035,.09,.15,.21,.27,.33]]
+            open_angles=list(UPPER_OPEN_ANGLES) if upper else [math.pi-v for v in [.035,.09,.15,.21,.27,.33]]
             closed_angles=[.035,.365,.700,1.035,1.37,1.70] if upper else [math.pi-.035,2.825,2.54,2.26,1.98,1.70]
-            open_tilt=LID_OPEN_TILT if upper else -LID_OPEN_TILT
+            open_tilt=UPPER_OPEN_TILT if upper else -LID_OPEN_TILT
             count=13
             thetas=[-wrap+j*2*wrap/(count-1) for j in range(count)]
             vertices=[point(phi,theta,open_tilt) for phi in open_angles for theta in thetas]

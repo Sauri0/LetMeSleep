@@ -6,5 +6,5 @@
   ],
   "scope": "30 source/FBX clip evaluations, floor/support, loop, root, digits and facial checks as applicable; Unity/runtime/visual review separate",
   "sampling": "Nine fixed checkpoints plus Clap23.5",
-  "motion_audit_sha256": "592cbd4cd17206209bace974564dba1266704b9d72df528096da486bfa62389a"
+  "motion_audit_sha256": "95acde85725f68dd9967d8801bd8a8cd72af4fc58e1fd4cf1368354519360dd3"
 }

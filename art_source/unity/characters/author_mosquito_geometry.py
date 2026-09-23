@@ -41,22 +41,94 @@ and the brow band stays available as a customization option (BASE_BROWS).
 Look-dev only (Blender; the audit/Unity palette is unchanged): the eye white
 gets the same faint self-light the human eyes use, and wing membranes/veins
 cast no shadow, as Unity already renders them.
+
+Sketch r4 (art-director round 4, in priority order): (1) the thorax is the
+dominant mass again, as in PER-07: radii (.068, .062, .060), hump rise .009,
+centre 6 mm further back, broader shoulders and a 180-face geodesic, so the eye
+is ~0.51 of the thorax width, the crest is ~13 mm above the cup tops in
+profile and the cups show <= ~7 mm per side from behind;
+(2) darker, faceted red WITHOUT vertex colours (URP/Lit ignores them): the
+shell albedo drops to #8C1E24 (the sheet render then reads ~(125-130,38,44) on
+the thorax) and every shell face picks one of five tone materials
+(Mosquito_ShellLight/Shell/ShellShade/ShellDark/ShellDeep, ~12% value steps)
+from a gradient to #6E1418 over the lower 55% of each mass times a +/-12%
+facet jitter; abdomen bands (Mosquito_Abdomen) sit 60% of the way from the
+shell to #6E1418; (3) a solid, legible cone for the proboscis
+(radii .0088 -> .0007) continuing the snout, with its underside on the dark
+tones (bone and Socket.Mouth untouched); (4) broad leaf wings: chord +25%
+(span:chord ~3.7), widest at ~54% of the span, tapering over the last 40%,
+55 deg from vertical in front view, membrane #CFC8F2 alpha .5 whose triangles
+differ in value through deeper pleats (no extra wing materials: Unity's
+membrane branch matches the exact name Mosquito_Wing); (5) a wider abdomen,
+shifted 12 mm back so its waist still clears the larger thorax, 44 deg descent
+and tip 56 mm above the support plane kept; (6) the pupil sits ~1.5 mm lower
+(author_mosquito_face) and the eye white look-dev self-light rises to .70 so
+its lower half stays bright in the sheet (Blender only). The thorax gets
+broader shoulders and the wing blades a -50 deg twist (see below).
+
+Sketch r5 (art-director round 5, in priority order): (1) eyes: the white is a
+faceted dome, not a flat disc: look-dev self-light .70 -> .10 (URP has no
+emission, so the sheet anticipates Unity: lower half ~200-215 grey), rounder
+white, larger lids, upper shutter at rest 80 deg, thinner rolled lip, and a
+fixed red collar inside each cup that hides the unlit inside of the shutter
+(the dark crescent over the white) - see author_mosquito_face; (2) abdomen: four
+segments (0/.25/.48/.70) without step-in or bevel, three colour-only bands at
+85% toward #6E1418, every other ring turned pi/8 with each band split in two
+triangles (PER-07 diamond facets), wobble .025 -> .05, belly shade over the
+lower 35% only and ShellLight on up-facing faces; (3) subtle leg joints (~1.4x
+the leg): knuckles (.0065, .0036) x1.1 long, coxa .0062, tibia ring .0036;
+(4) wings: 5 midrib vertices with an alternating pleat (17 triangles), edges
+half as wide in the membrane's lavender #DAD5F2, membrane #D8D2F2 alpha .38;
+(5) thorax/head/cups: +/-6% facet jitter and the tone baked from the face
+normal (nz > .5 ShellLight, nz < -.3 ShellShade, nz < -.6 ShellDark);
+(6) legs #3A1C20 (joint colour only on knuckles, rings and feet). The shell
+base red is the approved #9E2228 (tones #B1262D/#9E2228/#8D1E24/#6E1418/#611215).
+
+Sketch r6 (art-director round 6, in priority order): (1) wings: the blades are
+aimed from the idle/stance wing pose (author_mosquito_motion stance(): fold
+.24, flap .12) so that there the span points up, back and out (~42 deg above
+the horizontal, swept ~60 deg back from lateral, ~29 deg from vertical in
+front view; ~40 deg in the bind pose) and the membrane faces sideways (normal
+~(.93, -.23, -.29)): broad in the side and three-quarter views, foreshortened
+from the front (the r5 blades were edge-on in profile).
+The bind frame is that stance frame with the stance rotation undone. Blades
++25% long (scale 1.2 -> 1.5), lanceolate and ~20% wider over the proximal 40%;
+veins and edges at alpha .35. (2) Big clean planes: an 80-face thorax
+geodesic with 9% vertex jitter, an 8-sided abdomen on six shape rings (band
+loops are coplanar subdivisions of those planes), and no random per-face tone:
+only the lit base red (Mosquito_Shell), one shade tone on down-facing faces
+(Mosquito_ShellShade) and the dark band tones. (3) Eyes: see
+author_mosquito_face (ball white 7 mm forward / 3.5 mm out, ~67% of it seen
+in profile, one rim, fixed eyelid wedge over the top ~13%; the cup depth is
+unchanged, bound by the shutter blink). (4) Legs in an A: the leg BONES are the unchanged R4 bind (Unity's
+MosquitoRagdollBuilder rejects hip/knee/ankle moves > .2 mm), so only the skin
+changes: the visible knee sits 82% down the femur (femur -18%, tibia ~+15%),
+the visible tibia opens outward so each foot is 23% further out than its knee
+in front view, and the foot keeps the support plane. The visible tibia blends
+from the femur bone (top) to the tarsus bone (bottom), whose IK keeps it
+planted, so the foot does not skate and the knee never gaps; knee knuckle
+.0080 and tibia ring .0045 in Mosquito_LegJoint #140A0A, legs #2A1A1A.
+(5) Proboscis: one thick faceted cone from a snout under the eyes (radius
+.0115, ~32% of the white's diameter) tapering linearly to Socket.Mouth, the
+last 25% on Mosquito_ShellDark #6E1418 (bone, socket and tip vertex
+unchanged). (6) Abdomen: five bands on ring loops (30% of each segment,
+#6E1418 with a #611215 trailing border) and a waist 30% thinner. (7) Thorax
+10% wider and its back 12% taller (crest ~24 mm above the eye cups).
 """
 import math
 import random
-from author_mosquito_face import (create_face, facial_contract, outward, eye_mesh, pupil_mesh,
-                                  lid_front_degrees, upper_lid_point, upper_lip_mesh)
+from author_mosquito_face import (create_face, facial_contract, outward, eye_mesh, pupil_mesh, eye_center,
+                                  lid_front_degrees, upper_lid_point, collar_mesh, cap_mesh, COLLAR_ARCS_DEGREES)
 
-REVISION = 'mosquito-sketch-r3-source'
+REVISION = 'mosquito-sketch-r6-source'
 UNITY_SCALE = .5
 COLLISION_RADIUS = .055
 SURFACE_ROOT_OFFSET = .057
 SUPPORT_Z = -.114
 MOUTH = (0, -.190, 0)
-# Proboscis bone head is the unchanged R4 bind; the visible snout and needle
-# continue along the same line back into the head.
+# Proboscis bone head is the unchanged R4 bind; the visible cone is authored
+# separately (PROBOSCIS_VISUAL_BASE) and ends exactly on Mouth.
 PROBOSCIS_BASE = (0, -.096, .092)
-PROBOSCIS_ROOT_EXTENSION = .22
 THORAX = (0, .015, .110)
 
 # Absolute bind coordinates, independent of the new visual sections.
@@ -71,28 +143,53 @@ SOCKETS = (
     ('Socket.WingRoot.R', (-.017, 0, .082), (-.017, -.020, .082), 'Thorax'),
 )
 
-# Palette from docs/v030/GUIA-ESTILO-BOCETOS.md section 3 plus the round-2 art
-# direction (sRGB hex); Blender material colours are scene-linear, so each hex
-# is converted once here.
+# Palette from docs/v030/GUIA-ESTILO-BOCETOS.md section 3 plus the art
+# direction rounds (sRGB hex); Blender material colours are scene-linear, so
+# each hex is converted once here.
 PALETTE_HEX = {
-    'shell': '#B8262B',      # saturated body red
-    'segment': '#6E1418',    # dark abdomen bands and the belly shade target
-    'legs': '#3A1418',       # maroon legs (r2: was neutral #2A1A1A, read grey-brown)
-    'joint': '#1A0C0E',      # knuckles, coxae, tibia rings and feet
-    'eye': '#FAFAF8',        # r3: cleaner white
+    'shell': '#9E2228',      # approved darker base red (guide #B8262B)
+    'segment': '#6E1418',    # bands, proboscis tip
+    'legs': '#2A1A1A',       # r6: dark legs (guide)
+    'joint': '#140A0A',      # r6: knee knuckles, tibia rings, coxae, ankles, feet
+    'eye': '#FAFAF8',
     'pupil': '#141218',
-    'wing': '#DCDDF5',       # r3: style-guide lavender-white membrane, alpha .45
-    'vein': '#C3C3E6',       # subtle veins
-    'wing_edge': '#ECECFA',  # blade edges a little lighter than the membrane
+    'wing': '#D8D2F2',       # lavender-white membrane, alpha WING_ALPHA
+    'vein': '#C3C3E6',       # veins, alpha VEIN_ALPHA
+    'wing_edge': '#DAD5F2',  # outline in the membrane's tone, alpha VEIN_ALPHA
 }
-# Belly shade: per-face vertex-colour multiplier (scene linear) that turns the
-# shell #B8262B into the segment #6E1418 at the lowest faces.
-BELLY_SHADE_FRACTION = .40
+WING_ALPHA = .38
+# r6: outline and veins at alpha .35 so they no longer read as a wireframe
+# (Blender look-dev renders them blended; Unity's CharacterContentBuilder only
+# makes Mosquito_Wing transparent today, see the audit unity_note).
+VEIN_ALPHA = .35
+# r6 tones: no random per-face value any more. Every shell face is the lit
+# base red unless it looks down (normal z < NORMAL_SHADE_Z: ShellShade); the
+# dark tones are only used where they mean something (bands, band borders,
+# proboscis tip). Mosquito_ShellLight is retired.
+SHELL_TONES = (('Mosquito_Shell', 0), ('Mosquito_ShellShade', 1), ('Mosquito_ShellDark', 2),
+               ('Mosquito_ShellDeep', 3))
+TONE_FACTORS = {0: ('shell', 1.0), 1: ('shell', .82), 2: ('segment', 1.0), 3: ('segment', .88)}
+NORMAL_SHADE_Z = -.3
 
 
 def srgb(hex_color, alpha=None):
     values = tuple(int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5))
     return values + ((alpha,) if alpha is not None else ())
+
+
+def _hex(rgb):
+    return '#' + ''.join('%02X' % max(0, min(255, round(c * 255))) for c in rgb)
+
+
+def tone_hex(k):
+    """sRGB hex of shell tone k (0..3, see SHELL_TONES): shell, shade
+    (#821C21), segment #6E1418 and band border #611215."""
+    key, factor = TONE_FACTORS[k]
+    return _hex(tuple(c * factor for c in srgb(PALETTE_HEX[key])))
+
+
+def band_hex():
+    return PALETTE_HEX['segment']
 
 
 def srgb_to_linear(hex_color, alpha=None):
@@ -103,127 +200,112 @@ def srgb_to_linear(hex_color, alpha=None):
 def palette_material(material, name, key, roughness, alpha=None, specular=None):
     """Same convention as the human build: the audit/Unity colour keeps the
     sketch sRGB value (Unity SetColor is gamma space); only the Blender
-    Principled node receives the linear equivalent so source renders match."""
-    m = material(name, srgb(PALETTE_HEX[key], alpha), roughness)
+    Principled node receives the linear equivalent so source renders match.
+    key is a PALETTE_HEX key or a literal '#RRGGBB'."""
+    hex_color = key if key.startswith('#') else PALETTE_HEX[key]
+    m = material(name, srgb(hex_color, alpha), roughness)
     node = next(n for n in m.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
-    node.inputs['Base Color'].default_value = (*srgb_to_linear(PALETTE_HEX[key]), 1)
+    node.inputs['Base Color'].default_value = (*srgb_to_linear(hex_color), 1)
     if specular is not None and 'Specular IOR Level' in node.inputs:
         node.inputs['Specular IOR Level'].default_value = specular
     return m
 
 
-def belly_shade():
-    """Linear multiplier taking the shell colour to the segment colour."""
-    return tuple(d / s for d, s in zip(srgb_to_linear(PALETTE_HEX['segment']), srgb_to_linear(PALETTE_HEX['shell'])))
-
-
-def shade_factor(height):
-    """Faceted gradient: 1 above BELLY_SHADE_FRACTION, belly_shade() at 0,
-    convex so the lowest facet rows read as the dark crimson belly."""
-    t = max(0.0, min(1.0, height / BELLY_SHADE_FRACTION)) ** 1.5
-    return tuple(b + (1 - b) * t for b in belly_shade())
-
-
-def multiply_vertex_color(m, layer):
-    """Blender look-dev: Base Color x the per-face shade attribute. The audit
-    colour is unchanged; Unity receives the attribute as mesh colours."""
-    tree = m.node_tree
-    node = next(n for n in tree.nodes if n.type == 'BSDF_PRINCIPLED')
-    attribute = tree.nodes.new('ShaderNodeVertexColor')
-    attribute.layer_name = layer
-    mix = tree.nodes.new('ShaderNodeMix')
-    mix.data_type, mix.blend_type = 'RGBA', 'MULTIPLY'
-    mix.inputs[0].default_value = 1.0
-    a = next(s for s in mix.inputs if s.name == 'A' and s.type == 'RGBA')
-    b = next(s for s in mix.inputs if s.name == 'B' and s.type == 'RGBA')
-    a.default_value = node.inputs['Base Color'].default_value
-    tree.links.new(attribute.outputs['Color'], b)
-    tree.links.new(next(s for s in mix.outputs if s.type == 'RGBA'), node.inputs['Base Color'])
-
-
 # Round, robust faceted thorax whose extra height rises up and back (humped
-# crest above the eyes); its front overlaps the eye cups. r3: radii -15%.
-THORAX_CENTER, THORAX_RADII = (0, .002, .124), (.05525, .05185, .0493)
-THORAX_HUMP_RISE, THORAX_HUMP_BACK = .0064, .0051
-THORAX_FREQUENCY = 2
-# Head r2: radius -35% and 9 mm deeper into the thorax; mostly hidden between
-# the eye cups, it bridges them to the thorax and anchors the snout.
-HEAD_CENTER, HEAD_RADII = (0, -.041, .122), (.0275, .027, .026)
-HEAD_FREQUENCY = 2
+# crest above the eyes); its front overlaps the eye cups. r6: 10% wider, the
+# back 12% taller (centre 7.5 mm up, height radius +7.5 mm, bottom unchanged)
+# so the crest clears the eye cups in profile by ~24 mm; 80-face geodesic
+# (was 180) with 9% vertex jitter: few big, slightly irregular planes.
+THORAX_CENTER, THORAX_RADII = (0, .008, .1315), (.075, .062, .0675)
+THORAX_HUMP_RISE, THORAX_HUMP_BACK = .009, .0051
+# Shoulders: the upper half widens (x * (1 + .15 * up)) so, seen from behind,
+# the crest covers the cup tops instead of forming a 'heart'.
+THORAX_SHOULDER = .15
+THORAX_FREQUENCY, THORAX_JITTER, THORAX_SEED = 2, .09, 31
+# Head: compact, mostly hidden between the eye cups; r6 a little wider (the
+# eyes moved 3.5 mm out) and lower, so its underside is the snout's root.
+HEAD_CENTER, HEAD_RADII = (0, -.045, .114), (.031, .029, .030)
+HEAD_FREQUENCY, HEAD_JITTER, HEAD_SEED = 2, .04, 17
 # Big pointed leaf abdomen: slightly arched axis from inside the thorax,
-# 44 deg below horizontal (r2 ~34; ~46 visually with the arch), .245 m long;
-# the tip stays ~60 mm above the support plane.
-ABDOMEN_START, ABDOMEN_ARCH = (0, .038, .112), .008
+# 44 deg below horizontal, .245 m long; the tip stays ~56 mm above the support.
+ABDOMEN_START, ABDOMEN_ARCH = (0, .050, .112), .008
 ABDOMEN_LENGTH, ABDOMEN_DESCENT_DEGREES = .245, 44.0
 ABDOMEN_TIP = (0, ABDOMEN_START[1] + ABDOMEN_LENGTH * math.cos(math.radians(ABDOMEN_DESCENT_DEGREES)),
                ABDOMEN_START[2] - ABDOMEN_LENGTH * math.sin(math.radians(ABDOMEN_DESCENT_DEGREES)))
-ABDOMEN_RADII = (.045, .0465)
-# Leaf/teardrop: hidden root inside the thorax, waist just outside it (.44 of
-# the max = 40% of the thorax height), widest at t=.42 (~36% of the visible
-# length), then a long taper to the point over the last 40%.
-ABDOMEN_PROFILE = ((0, .60), (.05, .50), (.10, .44), (.18, .64), (.27, .84), (.35, .96), (.42, 1.0),
-                   (.50, .97), (.60, .86), (.70, .67), (.80, .46), (.90, .24), (1.0, .03))
-# Plates: each segment is a light row, then a colour-only dark band covering
-# ~28% of the step, ending in a 0.5 mm bevel down to the next segment (1%
-# step, <=0.5 mm). The dark colour sits on the dorsal/lateral faces.
-ABDOMEN_SEGMENTS = (0, .17, .32, .46, .59, .71, .83)
-ABDOMEN_BAND_FRACTION = .28
-ABDOMEN_BEVEL_M = .0005
-ABDOMEN_STEP_IN = .99
+ABDOMEN_RADII = (.062, .050)
 ABDOMEN_SIDES = 8
-# Leaf wing drawn in (span, chord) and mapped on to a tilted plane. The pivot
-# stays at the concealed R4 axilla (Wing.L/R bone heads untouched); only the
-# blade turns about it. r3: span 62 deg from vertical in front view (+10 deg
-# outward) and 40 deg in profile (was 50), so the far wing leans well away
-# from vertical in the three-quarter view instead of showing its edge.
-WING_SPAN = (math.tan(math.radians(62)), math.tan(math.radians(40)), 1.0)
-WING_CHORD_HINT = (.40, .34, -.85)
-# Blade twisted about its own span so both membranes stay readable in the
-# front, profile and three-quarter views (no edge-on 'rabbit ear').
-WING_TWIST_DEGREES = -20
-WING_SCALE = 1.15
-# r3 lanceolate blade: straight leading edge (indices 0-4), widest chord
-# ~.0545 at u ~.15 (57% of the span, -32% vs r2), petiole at u=.05 ~24% of it.
+# r6: six shape rings (t along the axis, section scale) and a point: root
+# hidden in the thorax, waist (.31: -30% from .44, a drop separate from the
+# thorax), widest at t=.42, taper to the tip. The loft columns are straight
+# (no twisted diamonds) and every band loop is a linear subdivision of a
+# row, so each column stays one clean plane per row.
+ABDOMEN_RINGS = ((0.0, .50), (.10, .31), (.26, .80), (.42, 1.0), (.60, .88), (.78, .52))
+# One dark band at the start of each visible row (the tip cone included):
+# 30% of the row in #6E1418, its last quarter a #611215 border.
+ABDOMEN_BAND_FRACTION, ABDOMEN_BORDER_FRACTION = .30, .25
+# Leaf wing drawn in (span, chord) and mapped on to a plane through the
+# unchanged R4 axilla (Wing.L/R bone heads untouched).
+# r6: the plane is authored in the stance wing pose (author_mosquito_motion
+# stance(): Rz(sign * .24) @ Ry(-sign * .12) about the axilla), where the
+# rest/idle wings are seen, then carried back to the bind pose.
+WING_STANCE_FOLD, WING_STANCE_FLAP = .24, .12
+WING_STANCE_SPAN = (.371, .641, .672)
+WING_STANCE_NORMAL = (.93, -.23, -.29)
+WING_SCALE = 1.50
+# r6 lanceolate leaf: straight leading edge (0-4), widest at u ~.10 (~40% of
+# the span, +20% over the proximal 40%), long taper to the pointed tip; the
+# petiole (8) stays inside the thorax.
 WING_OUTLINE = tuple((u * WING_SCALE, v * WING_SCALE) for u, v in (
-    (0, 0), (.070, -.007), (.135, -.010), (.200, -.008), (.262, 0),
-    (.222, .024), (.160, .046), (.108, .042), (.050, .008)))
-WING_RIDGE = tuple((u * WING_SCALE, v * WING_SCALE) for u, v in ((.080, .007), (.135, .014), (.195, .011)))
-WING_RIDGE_RAISE = .004
+    (0, 0), (.070, -.008), (.135, -.011), (.200, -.008), (.262, 0),
+    (.212, .026), (.150, .052), (.095, .062), (.040, .020)))
+WING_RIDGE = tuple((u * WING_SCALE, v * WING_SCALE) for u, v in (
+    (.058, .012), (.098, .024), (.142, .022), (.185, .015), (.225, .007)))
+# Alternating pleat (per ridge vertex) so neighbouring membrane triangles
+# differ in value under the key light (the membrane must stay the single
+# Mosquito_Wing material for Unity's membrane branch).
+WING_RIDGE_RAISE = (.012, .006, .012, .006, .012)
 WING_THICKNESS = .00045
-WING_TRIANGLES = ((0, 1, 9), (0, 9, 8), (1, 2, 10), (1, 10, 9), (2, 3, 11), (2, 11, 10),
-                  (3, 4, 11), (4, 5, 11), (5, 6, 10), (5, 10, 11), (6, 7, 9), (6, 9, 10), (7, 8, 9))
+# Leading strip (outline 0-4 against the midrib 0, 9-13, 4) and trailing
+# strip (midrib against 4-8, 0); wing_mesh fixes each winding from the uv area.
+WING_TRIANGLES = ((0, 1, 9), (1, 10, 9), (1, 2, 10), (2, 11, 10), (2, 3, 11), (3, 12, 11), (3, 13, 12),
+                  (3, 4, 13),
+                  (0, 9, 8), (9, 7, 8), (9, 10, 7), (10, 6, 7), (10, 11, 6), (11, 12, 6), (12, 5, 6),
+                  (12, 13, 5), (13, 4, 5))
 # (prefix, outline indices, width, material key). Prefixes keep the export
 # renderer buckets: WingLeadingEdge.* / WingVein.* -> MosquitoVeins.
-WING_VEINS = (('WingLeadingEdge.', (0, 1, 2, 3, 4), .0008, 'wing_edge'),
-              ('WingVein.Edge.', (4, 5, 6, 7, 8, 0), .00045, 'wing_edge'),
-              ('WingVein.', (0, 9, 10, 11, 4), .00055, 'vein'),
-              ('WingVein.Branch.', (10, 6), .0004, 'vein'),
-              ('WingVein.Branch2.', (11, 5), .0004, 'vein'),
-              ('WingVein.Branch3.', (9, 7), .0004, 'vein'))
+WING_VEINS = (('WingLeadingEdge.', (0, 1, 2, 3, 4), .0004, 'wing_edge'),
+              ('WingVein.Edge.', (4, 5, 6, 7, 8, 0), .0003, 'wing_edge'),
+              ('WingVein.', (0, 9, 10, 11, 12, 13, 4), .00055, 'vein'),
+              ('WingVein.Branch.', (11, 6), .0004, 'vein'),
+              ('WingVein.Branch2.', (12, 5), .0004, 'vein'),
+              ('WingVein.Branch3.', (10, 7), .0004, 'vein'))
 # Leg joints are the unchanged R4 bind: Unity's MosquitoRagdollBuilder
-# validates hip/knee/ankle within .2 mm, and surface_step reads them. Only the
-# skin changes: tapered segments, dark faceted knuckles split between the two
-# bones, coxae, a dark ring at mid tibia and dark feet. r3: femur .0045 at the
-# knee, knee knuckle x1.65 (~0.15 of the smaller thorax), ankle knuckle x1.2
-# (kept above the support plane).
-LEG_RADII = ((.0064, .0045), (.0048, .0024), (.0017, .00135))
-LEG_JOINT_RADII = (.0095, .0048)
-LEG_COXA_RADIUS = .0080
-TIBIA_RING_T, TIBIA_RING_RADIUS = .5, .0054
-# Hips outside the smaller thorax get a visual femur root this deep inside it.
+# validates hip/knee/ankle within .2 mm, and surface_step reads them. r6: only
+# the skin draws the A (visual_leg_points).
+LEG_RADII = ((.0064, .0045), (.0046, .0023), (.0017, .00135))
+LEG_VISUAL_FEMUR = .82
+LEG_FOOT_SPLAY = 1.23
+LEG_KNEE_RADIUS, LEG_ANKLE_RADIUS = .0080, .0036
+LEG_KNUCKLE_LENGTH = 1.1
+LEG_COXA_RADIUS = .0062
+TIBIA_RING_T, TIBIA_RING_RADIUS = .5, .0045
+TIBIA_STATIONS = (0.0, .25, .5, .75, 1.0)
+# Hips outside the thorax get a visual femur root this deep inside it.
 FEMUR_ROOT_DEPTH = .80
 LEG_FOOT_START = .70
 LEG_TOE_RADIUS = .0012
-# Snout wedge between/below the eyes on the unchanged Proboscis line
-# (t: 0 = extended base, 1 = Mouth), then a needle ~45% finer than r1.
-SNOUT_STATIONS = ((-.14, .0075, .0075, .0065), (-.05, .0100, .0098, .0082), (.04, .0138, .0104, .0094),
-                  (.12, .0092, .0070, .0066), (.19, .0046, .0040, .0040))
-SNOUT_SECTION = ((0, 1), (.86, .30), (.58, -.62), (0, -1), (-.58, -.62), (-.86, .30))
-NEEDLE_STATIONS = ((.12, .0046), (.30, .0034), (.55, .0022), (.80, .0012), (1.0, .0005))
+# r6 proboscis: one faceted cone from a thick snout under the eyes (fused
+# with the underside of the head) to Socket.Mouth; linear taper; the last 25%
+# on the dark tone. Stations are fractions from the visual base to Mouth
+# (the first one is hidden inside the head).
+PROBOSCIS_VISUAL_BASE = (0, -.066, .098)
+PROBOSCIS_BASE_RADIUS, PROBOSCIS_TIP_RADIUS = .0115, .0007
+PROBOSCIS_STATIONS = (-.08, 0.0, .15, .35, .55, .75, .88, 1.0)
+PROBOSCIS_DARK_FROM = .75
+PROBOSCIS_SIDES = 6
 # Brow band lying on the upper shutter (0.3 mm clear of it: the shutter
-# rotates on the same ellipsoid, so it never cuts the brow). r3: not part of
-# the base look (it read as a worried brow / a ridged helmet in profile); kept
-# as the customization option, emitted only when BASE_BROWS is True.
+# rotates on the same ellipsoid, so it never cuts the brow). Not part of the
+# base look; kept as the customization option, emitted only when BASE_BROWS.
 BASE_BROWS = False
 BROW_LATITUDES = (-34, 36)
 BROW_CLEARANCE, BROW_THICKNESS, BROW_WIDTH_DEGREES = .0003, .0011, 17.0
@@ -259,6 +341,16 @@ def _lerp(a, b, t):
     return tuple(x + (y - x) * t for x, y in zip(a, b))
 
 
+def _rot_y(v, angle):
+    c, s = math.cos(angle), math.sin(angle)
+    return (v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c)
+
+
+def _rot_z(v, angle):
+    c, s = math.cos(angle), math.sin(angle)
+    return (v[0] * c - v[1] * s, v[0] * s + v[1] * c, v[2])
+
+
 def rings_mesh(rings):
     """Closed loft through equal-size vertex rings, planar caps at both ends."""
     n = len(rings[0])
@@ -271,13 +363,6 @@ def rings_mesh(rings):
             faces.append((a, b, b + n, a + n))
     faces.append(tuple((len(rings) - 1) * n + j for j in range(n)))
     return outward(vertices, faces)
-
-
-def section_mesh(sections, profile=None):
-    """Legacy helper: rings perpendicular to Y from (y, z, width, height) tuples."""
-    profile = profile or tuple((math.cos(math.tau * j / 10), math.sin(math.tau * j / 10)) for j in range(10))
-    return rings_mesh([[(x * width, y, z + dz * height) for x, dz in profile]
-                       for y, z, width, height in sections])
 
 
 def icosphere(frequency):
@@ -324,26 +409,21 @@ def faceted_ellipsoid(center, radii, frequency=3, jitter=.035, seed=0, deform=No
 
 
 def _thorax_hump(vertex, direction):
-    """Extra crest volume rises up and back (PER-07 hunched thorax)."""
+    """Extra crest volume rises up and back (PER-07 hunched thorax), with
+    broader shoulders on the upper half."""
     x, y, z = vertex
     up, back = max(0, direction[2]), direction[1]
+    x = THORAX_CENTER[0] + (x - THORAX_CENTER[0]) * (1 + THORAX_SHOULDER * up)
     return (x, y + THORAX_HUMP_BACK * up * max(0, back), z + THORAX_HUMP_RISE * up ** 1.5 * (.7 + .3 * back))
 
 
 def thorax_mesh():
-    return faceted_ellipsoid(THORAX_CENTER, THORAX_RADII, THORAX_FREQUENCY, jitter=.035, seed=31,
+    return faceted_ellipsoid(THORAX_CENTER, THORAX_RADII, THORAX_FREQUENCY, jitter=THORAX_JITTER, seed=THORAX_SEED,
                              deform=_thorax_hump)
 
 
 def head_mesh():
-    return faceted_ellipsoid(HEAD_CENTER, HEAD_RADII, HEAD_FREQUENCY, jitter=.03, seed=17)
-
-
-def _abdomen_scale(t):
-    for (t0, s0), (t1, s1) in zip(ABDOMEN_PROFILE, ABDOMEN_PROFILE[1:]):
-        if t <= t1:
-            return s0 + (s1 - s0) * (t - t0) / (t1 - t0)
-    return ABDOMEN_PROFILE[-1][1]
+    return faceted_ellipsoid(HEAD_CENTER, HEAD_RADII, HEAD_FREQUENCY, jitter=HEAD_JITTER, seed=HEAD_SEED)
 
 
 def _abdomen_point(t):
@@ -354,72 +434,71 @@ def _abdomen_point(t):
     return _add(_add(ABDOMEN_START, _scale(axis, t)), _scale(up, ABDOMEN_ARCH * math.sin(math.pi * t)))
 
 
-def abdomen_stations():
-    """(t, scale factor, row-after-is-band) for the plate loft; the leaf
-    profile knots are extra rings so the waist and taper are real geometry."""
-    length = math.dist(ABDOMEN_START, ABDOMEN_TIP)
-    bevel = ABDOMEN_BEVEL_M / length
-    bounds = ABDOMEN_SEGMENTS + (1.0,)
-    factors, bands = {}, []
-    for index, (a, b) in enumerate(zip(bounds, bounds[1:])):
-        factors[a] = ABDOMEN_STEP_IN if index else 1.0
-        if index == len(bounds) - 2:
-            break
-        band = b - (b - a) * ABDOMEN_BAND_FRACTION
-        factors[band] = 1.0
-        factors[b - bevel] = 1.0
-        bands.append((band, b))
-    for t, _ in ABDOMEN_PROFILE:
-        if all(abs(t - s) > .012 for s in factors):
-            factors[t] = 1.0
-    factors[1.0] = 1.0
-    return [(t, factors[t], any(lo - 1e-9 <= t < hi - 1e-9 for lo, hi in bands)) for t in sorted(factors)]
+def _abdomen_ring(t, scale):
+    center = _abdomen_point(t)
+    ahead = _abdomen_point(min(1, t + .01))
+    behind = _abdomen_point(max(0, t - .01))
+    tangent = _normalize(_sub(ahead, behind))
+    up = _normalize((0, -tangent[2], tangent[1]))
+    if up[2] < 0:
+        up = _scale(up, -1)
+    ring = []
+    for j in range(ABDOMEN_SIDES):
+        # Half-side offset: flat faces on top, bottom and flanks.
+        angle = math.tau * j / ABDOMEN_SIDES + math.pi / ABDOMEN_SIDES
+        ring.append(_add(_add(center, (ABDOMEN_RADII[0] * scale * math.cos(angle), 0, 0)),
+                         _scale(up, ABDOMEN_RADII[1] * scale * math.sin(angle))))
+    return ring
+
+
+def abdomen_loops():
+    """[(t, kind of the row that starts at this loop)] including the band
+    loops; kind is 'shell', 'band' or 'border'. Rows are (shape ring i, shape
+    ring i+1) and the tip cone (last ring, apex)."""
+    bounds = [t for t, _ in ABDOMEN_RINGS] + [1.0]
+    loops = [(bounds[0], 'shell')]
+    for a, b in zip(bounds[1:], bounds[2:]):
+        band = (b - a) * ABDOMEN_BAND_FRACTION
+        loops += [(a, 'band'), (a + band * (1 - ABDOMEN_BORDER_FRACTION), 'border'), (a + band, 'shell')]
+    return loops
 
 
 def abdomen_mesh():
-    """Stepped faceted loft; returns vertices, faces and per-face dark-band flags."""
-    stations = abdomen_stations()
-    rng = random.Random(7)
-    rings, band_rows = [], []
-    for index, (t, factor, band_after) in enumerate(stations):
-        center = _abdomen_point(t)
-        ahead = _abdomen_point(min(1, t + .01))
-        behind = _abdomen_point(max(0, t - .01))
-        tangent = _normalize(tuple(a - b for a, b in zip(ahead, behind)))
-        up = _normalize((0, -tangent[2], tangent[1]))
-        if up[2] < 0:
-            up = _scale(up, -1)
-        scale = _abdomen_scale(t) * factor
-        ring = []
-        for j in range(ABDOMEN_SIDES):
-            angle = math.tau * j / ABDOMEN_SIDES + math.pi / ABDOMEN_SIDES
-            wobble = 1 + (.025 * rng.uniform(-1, 1) if 0 < t < .95 else 0)
-            lateral = ABDOMEN_RADII[0] * scale * wobble * math.cos(angle)
-            vertical = ABDOMEN_RADII[1] * scale * wobble * math.sin(angle)
-            ring.append(_add(_add(center, (lateral, 0, 0)), _scale(up, vertical)))
-        rings.append(ring)
-        if index < len(stations) - 1:
-            band_rows.append(band_after)
-    vertices, faces = rings_mesh(rings)
+    """Eight-sided loft on six shape rings plus a point; band loops are linear
+    subdivisions of the shape rows (coplanar), so bands are colour only.
+    Returns vertices, faces and a per-face kind ('shell', 'band', 'border')."""
+    shape = [(t, _abdomen_ring(t, s)) for t, s in ABDOMEN_RINGS]
+    apex = ABDOMEN_TIP
+    rings, kinds = [], []
+    for t, kind in abdomen_loops():
+        for (t0, r0), nxt in zip(shape, shape[1:] + [(1.0, None)]):
+            t1 = nxt[0]
+            if t0 - 1e-9 <= t < t1 - 1e-9:
+                f = (t - t0) / (t1 - t0)
+                target = nxt[1] if nxt[1] is not None else [apex] * ABDOMEN_SIDES
+                rings.append([_lerp(p, q, f) for p, q in zip(r0, target)])
+                kinds.append(kind)
+                break
     n = ABDOMEN_SIDES
-    # Dark plates cover the back and flanks (tergites) only: seen from the
-    # front the ventral faces stay red, so the body never reads as a bee target.
-    dorsal = [math.sin(math.tau * (j + .5) / n + math.pi / n) > -1e-9 for j in range(n)]
-    flags = [False] + [band_rows[row] and dorsal[j] for row in range(len(rings) - 1) for j in range(n)] + [False]
-    return vertices, faces, flags
-
-
-def abdomen_face_heights():
-    """Per-face 0 (ventral) .. 1 (dorsal) height across the section, for the
-    belly shade; caps take their ring's mid height."""
-    n = ABDOMEN_SIDES
-    rows = len(abdomen_stations()) - 1
-    around = [(math.sin(math.tau * (j + .5) / n + math.pi / n) + 1) * .5 for j in range(n)]
-    return [.5] + [around[j] for _ in range(rows) for j in range(n)] + [.5]
+    vertices = [v for ring in rings for v in ring] + [apex]
+    top = len(vertices) - 1
+    faces, face_kinds = [tuple(reversed(range(n)))], ['shell']
+    for row in range(len(rings) - 1):
+        for j in range(n):
+            a, b = row * n + j, row * n + (j + 1) % n
+            faces.append((a, b, b + n, a + n))
+            face_kinds.append(kinds[row])
+    last = (len(rings) - 1) * n
+    for j in range(n):
+        faces.append((last + j, last + (j + 1) % n, top))
+        face_kinds.append(kinds[-1])
+    vertices, oriented = outward(vertices, faces)
+    return vertices, oriented, face_kinds
 
 
 def leg_points(side, index):
-    """Six longer legs, staggered laterally on the unchanged support plane."""
+    """Six longer legs, staggered laterally on the unchanged support plane
+    (bone joints: hip, knee, ankle, toe; the R4 bind Unity validates)."""
     y, dy = ((-.033, -.052), (.006, .012), (.042, .067))[index - 1]
     knee_x = (.097, .112, .089)[index - 1]
     knee_z = (.006, -.003, .002)[index - 1]
@@ -430,14 +509,25 @@ def leg_points(side, index):
             (side * (ankle_x + .012), y + dy + .006, -.1126))
 
 
+def visual_leg_points(side, index):
+    """r6 skin-only joints (hip, visible knee, visible ankle, toe): the knee
+    82% down the bone femur, the foot LEG_FOOT_SPLAY times further out than
+    that knee (front view A), ankle/toe heights on the unchanged support."""
+    hip, knee, ankle, toe = leg_points(side, index)
+    visible_knee = _lerp(hip, knee, LEG_VISUAL_FEMUR)
+    foot_x = abs(visible_knee[0]) * LEG_FOOT_SPLAY
+    return (hip, visible_knee, (side * foot_x, ankle[1], ankle[2]),
+            (side * (foot_x + .012), toe[1], toe[2]))
+
+
 def _thorax_norm(point):
     return sum(((a - c) / r) ** 2 for a, c, r in zip(point, THORAX_CENTER, THORAX_RADII))
 
 
 def femur_root(hip, knee):
-    """Visual femur start: the hip bone head itself, or, where the r3 thorax
-    no longer contains it, the point on the femur line extended back into
-    the thorax (FEMUR_ROOT_DEPTH). Bones and weights are unchanged."""
+    """Visual femur start: the hip bone head itself, or, where the thorax
+    does not contain it, the point on the femur line extended back into the
+    thorax (FEMUR_ROOT_DEPTH). Bones and weights are unchanged."""
     back = _normalize(_sub(hip, knee))
     for step in range(121):
         point = _add(hip, _scale(back, step * .0005))
@@ -458,11 +548,15 @@ def thorax_exit(hip, knee):
 
 
 def _wing_frame(side):
-    span = _normalize(WING_SPAN)
-    hint = WING_CHORD_HINT
-    chord = _normalize(tuple(h - span[i] * _dot(hint, span) for i, h in enumerate(hint)))
-    twist = math.radians(WING_TWIST_DEGREES)
-    chord = _normalize(_add(_scale(chord, math.cos(twist)), _scale(_cross(span, chord), math.sin(twist))))
+    """(span, chord, normal) of the blade in the bind pose. r6: authored in
+    the stance pose (span up/back/out, membrane facing sideways, chord toward
+    the back and down) and carried back through the inverse stance rotation
+    Ry(+flap) @ Rz(-fold) (left wing; the right one mirrors)."""
+    span = _normalize(WING_STANCE_SPAN)
+    hint = WING_STANCE_NORMAL
+    normal = _normalize(_sub(hint, _scale(span, _dot(hint, span))))
+    chord = _normalize(_cross(span, normal))
+    span, chord = (_rot_y(_rot_z(v, -WING_STANCE_FOLD), WING_STANCE_FLAP) for v in (span, chord))
     normal = _cross(span, chord)
     if side < 0:
         span, chord, normal = ((-v[0], v[1], v[2]) for v in (span, chord, normal))
@@ -477,7 +571,7 @@ def wing_mesh(side):
     count = len(uv)
     top = []
     for index, (u, v) in enumerate(uv):
-        raise_ = WING_RIDGE_RAISE if index >= len(WING_OUTLINE) else 0
+        raise_ = WING_RIDGE_RAISE[index - len(WING_OUTLINE)] if index >= len(WING_OUTLINE) else 0
         top.append(_add(root, _add(_add(_scale(span, u), _scale(chord, v)), _scale(normal, raise_))))
     triangles = []
     for a, b, c in WING_TRIANGLES:
@@ -493,7 +587,7 @@ def wing_mesh(side):
 
 
 def _brow_mesh(side):
-    """Dark arched band lying on the upper shutter, just above its rolled lip.
+    """Dark arched band lying on the upper shutter (customization option).
 
     Inner end toward the snout, ~80 deg of arc seen from the front, only
     1.1 mm proud of the lid so the profile reads as a band, not a hook.
@@ -512,27 +606,38 @@ def _brow_mesh(side):
     return rings_mesh(rings)
 
 
-def _proboscis_line():
-    base = tuple(b + (b - m) * PROBOSCIS_ROOT_EXTENSION for b, m in zip(PROBOSCIS_BASE, MOUTH))
-    tangent = _normalize(_sub(MOUTH, base))
+def _proboscis_frame():
+    tangent = _normalize(_sub(MOUTH, PROBOSCIS_VISUAL_BASE))
     lateral = (1.0, 0.0, 0.0)
     up = _normalize(_cross(tangent, lateral))
     if up[2] < 0:
         up = _scale(up, -1)
-    return base, tangent, lateral, up
+    return tangent, lateral, up
 
 
-def snout_mesh():
-    """Faceted wedge between/below the eyes (~.45 eye diameter wide)."""
-    base, _, lateral, up = _proboscis_line()
+def proboscis_radius(t):
+    return PROBOSCIS_BASE_RADIUS + (PROBOSCIS_TIP_RADIUS - PROBOSCIS_BASE_RADIUS) * max(0.0, t)
+
+
+def proboscis_mesh():
+    """Snout + needle as one hexagonal cone (flat top), ending on Mouth."""
+    _, lateral, up = _proboscis_frame()
     rings = []
-    for t, half_width, top, bottom in SNOUT_STATIONS:
-        center = _lerp(base, MOUTH, t)
+    for t in PROBOSCIS_STATIONS:
+        center = MOUTH if t == 1.0 else _lerp(PROBOSCIS_VISUAL_BASE, MOUTH, t)
+        radius = proboscis_radius(t)
         ring = []
-        for a, b in SNOUT_SECTION:
-            ring.append(_add(center, _add(_scale(lateral, a * half_width), _scale(up, b * (top if b > 0 else bottom)))))
+        for j in range(PROBOSCIS_SIDES):
+            angle = math.tau * j / PROBOSCIS_SIDES + math.pi / PROBOSCIS_SIDES
+            ring.append(_add(center, _add(_scale(lateral, radius * math.cos(angle)), _scale(up, radius * math.sin(angle)))))
         rings.append(ring)
     return rings_mesh(rings)
+
+
+def proboscis_face_t(center):
+    """Fraction of a point along the visual cone (0 base, 1 Mouth)."""
+    axis = _sub(MOUTH, PROBOSCIS_VISUAL_BASE)
+    return _dot(_sub(center, PROBOSCIS_VISUAL_BASE), axis) / _dot(axis, axis)
 
 
 def pure_meshes():
@@ -540,11 +645,12 @@ def pure_meshes():
     band, so the customization option stays checked), for Blender-free checks."""
     abdomen = abdomen_mesh()
     meshes = [('Thorax', *thorax_mesh()), ('Head', *head_mesh()), ('Abdomen', abdomen[0], abdomen[1]),
-              ('Snout', *snout_mesh())]
+              ('Proboscis', *proboscis_mesh())]
     for side in (1, -1):
         meshes += [('Wing.' + str(side), *wing_mesh(side)), ('Brow.' + str(side), *_brow_mesh(side)),
-                   ('LidLip.' + str(side), *upper_lip_mesh(side)),
+                   ('EyeCap.' + str(side), *cap_mesh(side)),
                    ('Eye.' + str(side), *eye_mesh(side)), ('Pupil.' + str(side), *pupil_mesh(side))]
+        meshes += [(part + '.' + str(side), *collar_mesh(side, part)) for part in COLLAR_ARCS_DEGREES]
     return meshes
 
 
@@ -560,57 +666,57 @@ def _weighted_abdomen(obj):
             second.add([v.index], t, 'REPLACE')
 
 
-def _knuckle(tube, name, before, joint, after, radius, material, parent, child):
-    """Elongated hexagonal knuckle; its halves follow the two bones."""
+def _knuckle(tube, name, before, joint, after, radius, material, bone):
+    """Elongated hexagonal knuckle, rigid on one bone."""
     incoming = _normalize(_sub(joint, before))
     outgoing = _normalize(_sub(after, joint))
-    length = radius * 1.5
-    obj = tube(name, [_sub(joint, _scale(incoming, length)), joint, _add(joint, _scale(outgoing, length))],
-               [radius * .62, radius, radius * .62], [radius * .62, radius, radius * .62], material, parent, 6)
-    if child:
-        upper, lower = obj.vertex_groups[parent], obj.vertex_groups.new(name=child)
-        middle, last = list(range(6, 12)), list(range(12, 18))
-        upper.add(middle, .5, 'REPLACE')
-        lower.add(middle, .5, 'REPLACE')
-        upper.remove(last)
-        lower.add(last, 1.0, 'REPLACE')
-    return obj
+    length = radius * LEG_KNUCKLE_LENGTH
+    return tube(name, [_sub(joint, _scale(incoming, length)), joint, _add(joint, _scale(outgoing, length))],
+                [radius * .62, radius, radius * .62], [radius * .62, radius, radius * .62], material, bone, 6)
 
 
-SHADE_LAYER = 'Col'
-EYE_LOOKDEV_EMISSION = .35
+def _blend_rings(obj, first, second, fractions, sides):
+    """Ring k of a tube follows `second` by fractions[k] and `first` by the
+    rest (weights sum to one)."""
+    a, b = obj.vertex_groups.new(name=first), obj.vertex_groups.new(name=second)
+    for k, f in enumerate(fractions):
+        indices = list(range(k * sides, (k + 1) * sides))
+        if f < 1:
+            a.add(indices, 1 - f, 'REPLACE')
+        if f > 0:
+            b.add(indices, f, 'REPLACE')
 
 
-def _paint_belly_shade(bpy, thorax, head, abdomen):
-    """Per-face (flat, faceted) shade attribute on every mosquito mesh: white
-    everywhere except the lower ~40% of thorax, head and abdomen. Every mesh
-    gets the layer so the export join never fills a missing one with black."""
-    def paint(obj, factors):
-        layer = obj.data.color_attributes.new(SHADE_LAYER, 'FLOAT_COLOR', 'CORNER')
-        for poly, factor in zip(obj.data.polygons, factors):
-            for loop in poly.loop_indices:
-                layer.data[loop].color = (*factor, 1.0)
+# Look-dev self-light (Blender only; Unity's URP material has none): the
+# white reads as a faceted dome with its lower half light grey.
+EYE_LOOKDEV_EMISSION = .10
 
-    def by_height(obj):
-        # Face centre height within the mesh's full vertex extent.
-        low = min(v.co.z for v in obj.data.vertices)
-        high = max(v.co.z for v in obj.data.vertices)
-        return [shade_factor((p.center.z - low) / (high - low)) for p in obj.data.polygons]
 
-    painted = {thorax.name: by_height(thorax), head.name: by_height(head),
-               abdomen.name: [shade_factor(h) for h in abdomen_face_heights()]}
-    for obj in [o for o in bpy.context.scene.objects if o.type == 'MESH']:
-        paint(obj, painted.get(obj.name, [(1.0, 1.0, 1.0)] * len(obj.data.polygons)))
+def _paint_shell_tones(bpy, tone_materials, shell):
+    """r6: every face still on Mosquito_Shell becomes ShellShade when it
+    looks down; bands, borders and the proboscis tip keep their tones."""
+    shade = tone_materials[1]
+    for obj in bpy.context.scene.objects:
+        if obj.type != 'MESH' or shell.name not in obj.data.materials:
+            continue
+        if shade.name not in obj.data.materials:
+            obj.data.materials.append(shade)
+        slots = list(obj.data.materials)
+        base, low = slots.index(shell), slots.index(shade)
+        for poly in obj.data.polygons:
+            if poly.material_index == base and poly.normal.z < NORMAL_SHADE_Z:
+                poly.material_index = low
 
 
 def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
     import bpy
     c = Character('Mosquito')
-    # r3: matte shell (no pink sheen), belly shade by vertex colour.
-    shell = palette_material(material, 'Mosquito_Shell', 'shell', .90, specular=.20)
-    bands = palette_material(material, 'Mosquito_Abdomen', 'segment', .90, specular=.20)
-    for m in (shell, bands):
-        multiply_vertex_color(m, SHADE_LAYER)
+    # Matte shell; per-face tone materials (no vertex colour: URP/Lit ignores
+    # it); Mosquito_Shell is tone 0.
+    tone_materials = {k: palette_material(material, name, tone_hex(k), .90, specular=.20)
+                      for name, k in SHELL_TONES}
+    shell = tone_materials[0]
+    bands = palette_material(material, 'Mosquito_Abdomen', band_hex(), .90, specular=.20)
     dark = palette_material(material, 'Mosquito_Legs', 'legs', .86, specular=.25)
     joint = palette_material(material, 'Mosquito_LegJoint', 'joint', .80, specular=.30)
     eye = palette_material(material, 'Mosquito_EyeWhite', 'eye', .60)
@@ -618,12 +724,13 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
     # Preserve the exact name used by Unity's membrane shader branch. Blender
     # look-dev renders it blended with back faces culled (one layer, like
     # Unity's alpha material) instead of dithered hashing (grainy membrane).
-    wing = palette_material(material, 'Mosquito_Wing', 'wing', .85, alpha=.45)
-    if hasattr(wing, 'surface_render_method'):
-        wing.surface_render_method = 'BLENDED'
-    wing.use_backface_culling = True
-    vein = palette_material(material, 'Mosquito_WingVein', 'vein', .80)
-    edge = palette_material(material, 'Mosquito_WingEdge', 'wing_edge', .80)
+    wing = palette_material(material, 'Mosquito_Wing', 'wing', .85, alpha=WING_ALPHA)
+    vein = palette_material(material, 'Mosquito_WingVein', 'vein', .80, alpha=VEIN_ALPHA)
+    edge = palette_material(material, 'Mosquito_WingEdge', 'wing_edge', .80, alpha=VEIN_ALPHA)
+    for m in (wing, vein, edge):
+        if hasattr(m, 'surface_render_method'):
+            m.surface_render_method = 'BLENDED'
+        m.use_backface_culling = m is wing
     wing_materials = {'vein': vein, 'wing_edge': edge}
     c.bone('Root', (0, 0, 0), (0, 0, .03), deform=False)
     c.bone('Thorax', THORAX, (0, -.035, .104), 'Root')
@@ -633,20 +740,23 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
     c.bone('Proboscis', PROBOSCIS_BASE, MOUTH, 'Head')
     for name, head, tail, parent in SOCKETS:
         c.bone(name, head, tail, parent, False)
-    thorax = mesh('Thorax', *thorax_mesh(), shell, 'Thorax')
-    head = mesh('Head', *head_mesh(), shell, 'Head')
-    vertices, faces, flags = abdomen_mesh()
+    mesh('Thorax', *thorax_mesh(), shell, 'Thorax')
+    mesh('Head', *head_mesh(), shell, 'Head')
+    vertices, faces, kinds = abdomen_mesh()
     abdomen = mesh('Abdomen', vertices, faces, shell)
     _weighted_abdomen(abdomen)
     abdomen.data.materials.append(bands)
-    for poly, band in zip(abdomen.data.polygons, flags):
-        poly.material_index = 1 if band else 0
-    # Snout wedge stays with the face; the finer needle follows Proboscis and
-    # still ends exactly at Socket.Mouth.
-    mesh('Snout', *snout_mesh(), shell, 'Head')
-    base = _proboscis_line()[0]
-    tube('Proboscis', [_lerp(base, MOUTH, t) for t, _ in NEEDLE_STATIONS], [r for _, r in NEEDLE_STATIONS],
-         [r for _, r in NEEDLE_STATIONS], shell, 'Proboscis', 6)
+    abdomen.data.materials.append(tone_materials[3])
+    slot = {'shell': 0, 'band': 1, 'border': 2}
+    for poly, kind in zip(abdomen.data.polygons, kinds):
+        poly.material_index = slot[kind]
+    # Snout and needle are one rigid cone on Proboscis (child of Head, never
+    # posed apart from it); its last ring sits on Socket.Mouth.
+    proboscis = mesh('Proboscis', *proboscis_mesh(), shell, 'Proboscis')
+    proboscis.data.materials.append(tone_materials[2])
+    for poly in proboscis.data.polygons:
+        if proboscis_face_t(tuple(poly.center)) >= PROBOSCIS_DARK_FROM:
+            poly.material_index = 1
     create_face(c, mesh=mesh, shell=shell, eye=eye, pupil=pupil)
     # Look-dev: faint self-light keeps the underside of the huge white readable
     # under the sheet's top key (same practice as the human eye whites).
@@ -666,41 +776,42 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
                   'Wing.' + side).visible_shadow = False
         for i in range(1, 4):
             points = leg_points(sign, i)
-            parent = 'Thorax'
+            _, knee, ankle, toe = visual_leg_points(sign, i)
             names = [f'Leg{i}{j + 1:02d}.{side}' for j in range(3)]
+            parent = 'Thorax'
             for j, name in enumerate(names):
                 c.bone(name, points[j], points[j + 1], parent)
                 parent = name
-                start, end = LEG_RADII[j]
-                if j == 0:
-                    # Femur from its visual root inside the thorax, full
-                    # width up to where it leaves the shell (the coxa).
-                    root = femur_root(points[0], points[1])
-                    coxa = thorax_exit(root, points[1])
-                    tube('Limb_' + name, [root, coxa, points[1]], [start, start, end], [start, start, end],
-                         dark, name, 6)
-                elif j == 1:
-                    tube('Limb_' + name, [points[1], points[2]], [start, end], [start, end], dark, name, 6)
-                    # Second dark ring at mid tibia: skin only, no bone.
-                    ring = _lerp(points[1], points[2], TIBIA_RING_T)
-                    along = _scale(_normalize(_sub(points[2], points[1])), TIBIA_RING_RADIUS * 1.1)
-                    r = TIBIA_RING_RADIUS
-                    tube('LegRing_' + name, [_sub(ring, along), ring, _add(ring, along)], [r * .66, r, r * .66],
-                         [r * .66, r, r * .66], joint, name, 6)
-                if j < 2:
-                    _knuckle(tube, 'LegJoint_' + name, points[j], points[j + 1], points[j + 2],
-                             LEG_JOINT_RADII[j], joint, name, names[j + 1])
-                else:
-                    # Tarsus: maroon, then a dark foot whose end ring keeps
-                    # the r1 toe radius so the support plane is unchanged.
-                    split = _lerp(points[2], points[3], LEG_FOOT_START)
-                    tube('Limb_' + name, [points[2], split], [start, end], [start, end], dark, name, 6)
-                    tube('LegFoot_' + name, [split, points[3]], [end * 1.15, LEG_TOE_RADIUS],
-                         [end * 1.15, LEG_TOE_RADIUS], joint, name, 6)
+            femur, tibia, tarsus = names
+            (f0, f1), (t0, t1), (s0, s1) = LEG_RADII
+            # Femur from its visual root inside the thorax to the visible knee
+            # (on the bone line, 82% down): rigid on the femur bone.
             root = femur_root(points[0], points[1])
             coxa = thorax_exit(root, points[1])
-            _knuckle(tube, 'LegCoxa_' + names[0], root, coxa, points[1], LEG_COXA_RADIUS, joint, names[0], None)
-    _paint_belly_shade(bpy, thorax, head, abdomen)
+            tube('Limb_' + femur, [root, coxa, knee], [f0, f0, f1], [f0, f0, f1], dark, femur, 6)
+            _knuckle(tube, 'LegCoxa_' + femur, root, coxa, knee, LEG_COXA_RADIUS, joint, femur)
+            _knuckle(tube, 'LegJoint_' + femur, coxa, knee, ankle, LEG_KNEE_RADIUS, joint, femur)
+            # Visible tibia opening outward: femur-rigid at the knee, tarsus-
+            # rigid at the foot (planted by the surface IK), blended between.
+            centers = [_lerp(knee, ankle, s) for s in TIBIA_STATIONS]
+            radii = [t0 + (t1 - t0) * s for s in TIBIA_STATIONS]
+            limb = tube('Limb_' + tibia, centers, radii, radii, dark, None, 6)
+            _blend_rings(limb, femur, tarsus, TIBIA_STATIONS, 6)
+            along = _scale(_normalize(_sub(ankle, knee)), TIBIA_RING_RADIUS * 1.1)
+            middle = _lerp(knee, ankle, TIBIA_RING_T)
+            r = TIBIA_RING_RADIUS
+            ring = tube('LegRing_' + tibia, [_sub(middle, along), middle, _add(middle, along)],
+                        [r * .66, r, r * .66], [r * .66, r, r * .66], joint, None, 6)
+            spread = math.dist(knee, ankle)
+            _blend_rings(ring, femur, tarsus, [TIBIA_RING_T + d * r * 1.1 / spread for d in (-1, 0, 1)], 6)
+            # Ankle, tarsus and dark foot: rigid on the tarsus bone; the toe
+            # keeps the support plane.
+            _knuckle(tube, 'LegJoint_' + tibia, knee, ankle, toe, LEG_ANKLE_RADIUS, joint, tarsus)
+            split = _lerp(ankle, toe, LEG_FOOT_START)
+            tube('Limb_' + tarsus, [ankle, split], [s0, s1], [s0, s1], dark, tarsus, 6)
+            tube('LegFoot_' + tarsus, [split, toe], [s1 * 1.15, LEG_TOE_RADIUS],
+                 [s1 * 1.15, LEG_TOE_RADIUS], joint, tarsus, 6)
+    _paint_shell_tones(bpy, tone_materials, shell)
     c.bind()
     mouth = c.rig.data.bones['Socket.Mouth'].head_local
     c.contact = {
@@ -711,9 +822,19 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
         'surface_rotation_contract': 'local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation',
         'geometry_revision': REVISION,
         'palette_srgb_hex': dict(PALETTE_HEX),
-        'belly_shade': {'vertex_color_layer': SHADE_LAYER, 'lower_fraction': BELLY_SHADE_FRACTION,
-                        'lowest_multiplier_linear': list(belly_shade()),
-                        'unity_note': 'URP/Lit ignores vertex colour; a vertex-colour multiply is needed to show it'},
+        'shell_tones': {'materials_srgb_hex': {name: tone_hex(k) for name, k in SHELL_TONES},
+                        'abdomen_band_srgb_hex': band_hex(), 'abdomen_band_border_material': 'Mosquito_ShellDeep',
+                        'proboscis_tip_material': 'Mosquito_ShellDark',
+                        'shade_rule': 'faces on Mosquito_Shell whose normal z < %.2f use Mosquito_ShellShade' % NORMAL_SHADE_Z,
+                        'unity_note': ('per-face materials, no vertex colour; the runtime Mosquito colour binding '
+                                       'covers Mosquito_Shell/Mosquito_Abdomen only, so tinting must also scale '
+                                       'Mosquito_ShellShade/ShellDark/ShellDeep to keep a recoloured body faceted')},
+        'wing_vein_alpha': VEIN_ALPHA,
+        'wing_vein_unity_note': ('Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder '
+                                 'only makes Mosquito_Wing transparent, so Unity draws them opaque until its '
+                                 'membrane branch also covers the MosquitoVeins renderer'),
+        'leg_skin_note': ('leg bones are the unchanged R4 bind; the visible knee/foot (A stance) are skin only: '
+                          'tibia skin blends femur -> tarsus, foot rigid on the tarsus'),
         'face': facial_contract(),
         'proboscis_descent_degrees': math.degrees(math.atan2(PROBOSCIS_BASE[2], abs(MOUTH[1] - PROBOSCIS_BASE[1]))),
         'art_acceptance': 'pending real render, complete clips, Unity and independent review',

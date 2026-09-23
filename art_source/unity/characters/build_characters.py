@@ -242,18 +242,29 @@ def human():
         return m
     # Base colours are tuned so the sheet render reads like the sketch.
     # Round 3: skin darker and less orange (render ~#D8915C lit / #BE7A4B
-    # shade), warm cream dots (UI-06), bright pompom (Human_Piping, now only on
-    # the pompom), darker rolled cap band, navy slipper upper on a #2A3050 sole.
-    m={'skin':palette('Human_Skin','#BF7C4D',.82),'pajamas':palette('Human_Pajamas','#2D4F9A',.88),
-       'trim':palette('Human_Piping','#F5F2EC',.90),'sole':palette('Human_SlipperSole','#2A3050',.92),
-       'white':palette('Character_EyeWhite','#F8F3EF',.55),'dark':palette('Character_Expression','#16110F',.92),
-       'shirt':palette('Human_Shirt','#E4D5B9',.90),'dots':palette('Human_PajamaDots','#E9DDCB',.88),
-       'cap':palette('Human_Nightcap','#A41E1C',.95),'band':palette('Human_NightcapBand','#961B1B',.95),
-       'hair':palette('Human_Hair','#3A2619',.85),'slipper':palette('Human_Slipper','#1F2D66',.90)}
-    # Blender look-dev only: a faint self-light keeps the underside of the huge
-    # eyeballs and of the pompom white under the top key (the audit/Unity
-    # palette is unchanged).
-    for key,strength in (('white',.55),('trim',.85)):
+    # shade), bright pompom (Human_Piping, now only on the pompom), darker
+    # rolled cap band.
+    # Round 4: eye white #F0F0F4 with its lower third on Human_EyeWhiteShade
+    # (URP ignores vertex colours), bluish-white dots, slipper upper on a dark
+    # sole, shirt a touch darker so the lit sleeve does not clip.
+    # Round 5 (art director): the palette returns to the style-guide values
+    # because URP renders darker than this sheet (skin #C98B5A, shirt #E8DCC5,
+    # cap #C8322E); the eye shade is a light #E2E4EC on the lowest ~14% only;
+    # dots #C9D5EE; dark-navy slippers #25306A on a #15182E sole; the 30 mm
+    # band is a clearly darker #8E1A18.
+    # Round 6 (art director): cream dots #E6DCC8 that tie in with the T-shirt
+    # (UI-06 screen 5) and a #1E2440 slipper sole.
+    m={'skin':palette('Human_Skin','#C98B5A',.82),'pajamas':palette('Human_Pajamas','#2D4F9A',.88),
+       'trim':palette('Human_Piping','#F5F2EC',.90),'sole':palette('Human_SlipperSole','#1E2440',.92),
+       'white':palette('Character_EyeWhite','#F0F0F4',.55),'dark':palette('Character_Expression','#16110F',.92),
+       'eyeshade':palette('Human_EyeWhiteShade','#E2E4EC',.60),
+       'shirt':palette('Human_Shirt','#E8DCC5',.92),'dots':palette('Human_PajamaDots','#E6DCC8',.88),
+       'cap':palette('Human_Nightcap','#C8322E',.95),'band':palette('Human_NightcapBand','#8E1A18',.95),
+       'hair':palette('Human_Hair','#3A2619',.85),'slipper':palette('Human_Slipper','#25306A',.90)}
+    # Blender look-dev only: a faint self-light keeps the huge eyeballs and the
+    # pompom white under the top key while the eye facets stay visible (the
+    # audit/Unity palette is unchanged).
+    for key,strength in (('white',.30),('eyeshade',.30),('trim',.85)):
         node=next(n for n in m[key].node_tree.nodes if n.type=='BSDF_PRINCIPLED')
         node.inputs['Emission Color'].default_value=node.inputs['Base Color'].default_value
         node.inputs['Emission Strength'].default_value=strength
@@ -289,15 +300,20 @@ def human():
         # -15% long), thicker thumb, and a bind pose that already holds the relaxed
         # idle curl (~35 deg at the tip) along each finger's own flexion axis.
         from author_motion import FINGER_JOINT_ANGLES,FINGER_REST_AMOUNT,THUMB_CURL_FACTOR
-        parts=[tube('Palm.'+side,[(s*x,0,1.15) for x in [.687,.710,.735,.755,.780,.812,.842]],
-                    [.034,.034,.034,.041,.056,.063,.060],
-                    [.025,.024,.021,.021,.026,.028,.025],skin,'Hand.'+side,12)]
+        # Round 5: robust fist-like hands, +25% length/width about the wrist
+        # (x=.75); palm thickness only +4% so the clap contact gap holds.
+        # Round 6: +10% longer beyond the wrist (palm and fingers), same width.
+        HAND=1.25;HAND_LENGTH=1.10;wrist=.75
+        grow=lambda x:wrist+HAND*(x-wrist)*(HAND_LENGTH if x>wrist else 1)
+        parts=[tube('Palm.'+side,[(s*grow(x),0,1.15) for x in [.687,.710,.735,.755,.780,.812,.842]],
+                    [HAND*v for v in (.034,.034,.034,.041,.056,.063,.060)],
+                    [1.04*v for v in (.025,.024,.021,.021,.026,.028,.025)],skin,'Hand.'+side,12)]
         paths=[]
         inward=Vector((0,-1,0))
         for digit,zoff,length,spread in [('Index',.038,.104,.05),('Middle',.010,.116,.012),('Ring',-.019,.106,-.03),
                                          ('Little',-.047,.082,-.08),('Thumb',.045,.070,None)]:
-            length*=.85*.85
-            start=Vector((s*(.830 if digit!='Thumb' else .785),0,1.15+zoff))
+            length*=.85*.85*HAND*HAND_LENGTH
+            start=Vector((s*grow(.830 if digit!='Thumb' else .785),0,1.15+zoff*HAND))
             base=Vector((s,0,.72 if digit=='Thumb' else math.tan(spread))).normalized()
             factor=THUMB_CURL_FACTOR if digit=='Thumb' else 1
             lengths=[length*.43,length*.32,length*.25]; points=[start]
@@ -311,6 +327,7 @@ def human():
             radii=([.0255,.0203,.0155,.0101] if digit=='Thumb' else
                    [.0137,.0130,.0109,.0074] if digit=='Little' else
                    [.0158,.0137,.0123,.0088])
+            radii=[1.15*r for r in radii]
             parts.append(tube(digit+'.'+side,points,radii,radii,skin,'Hand.'+side,8))
         bpy.ops.object.select_all(action='DESELECT')
         for p in parts: p.select_set(True)
@@ -332,10 +349,11 @@ def human():
             for bone,value in weight.items():groups[bone].add([i],value,'REPLACE')
         for poly in hand.data.polygons: poly.use_smooth=False
         c.finger_paths[side]=paths
-    # Continuous trouser seat joins the legs above the crotch (visible 0.10 m
-    # between the crotch and the raised T-shirt hem, under the waistband).
-    tube('TrouserSeat',[(0,0,z) for z in [.672,.692,.73,.80]],
-         [.118,.150,.160,.150],[.052,.068,.078,.080],m['pajamas'],'Hips',12)
+    # Round 4: the trouser legs meet under the waistband; the seat is a boxy
+    # filler recessed behind them (no dark crotch panel). Hip-front dots are
+    # authored on the leg tops (author_human_joints.dots).
+    from author_human_joints import hip_block
+    hip_block(mesh,m)
     torso(mesh,tube,m)
     head_and_cap(c,mesh,tube,ellipsoid,m)
     from author_human_facial import eyelids

@@ -1,5 +1,7 @@
 """Anatomical hand weighting without Blender dependencies.
 Smoothing respects finger/joint regions and physical neighbor distance.
+v0.3.0 round 5: the hands are 25% larger, so the finger-base neighbourhood
+and the palm web reach scale with them (HAND_SCALE).
 """
 import math
 
@@ -7,6 +9,9 @@ import math
 def sub(a,b):return tuple(x-y for x,y in zip(a,b))
 def dot(a,b):return sum(x*y for x,y in zip(a,b))
 def clamp(x):return max(0.0,min(1.0,x))
+
+
+HAND_SCALE=1.25
 
 
 def hand_weights(positions,edges,paths,side):
@@ -43,13 +48,13 @@ def hand_weights(positions,edges,paths,side):
         # phalanges. A thumb vertex cannot borrow a straight finger's chain.
         if amount<.85 and digit!='Thumb':
             for other,other_chain in chains.items():
-                if other!='Thumb' and math.dist(start,other_chain[0][1])<.036:
+                if other!='Thumb' and math.dist(start,other_chain[0][1])<.036*HAND_SCALE:
                     allowed.add(other_chain[0][0])
         # The broad thumb web joins the palm before the straight fingers have
         # left it. Preserve that continuous region instead of introducing a
         # hard nearest-chain boundary through its skin.
         region=digit
-        palm_edge=max(abs(chain[0][1][0]) for key,chain in chains.items() if key!='Thumb')+.026
+        palm_edge=max(abs(chain[0][1][0]) for key,chain in chains.items() if key!='Thumb')+.026*HAND_SCALE
         if abs(position[0])<palm_edge:
             allowed={palm}|{chain[0][0] for chain in chains.values()}|{bone[0] for bone in chains['Thumb']}
             region='PalmWeb'
