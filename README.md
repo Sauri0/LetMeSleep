@@ -47,10 +47,11 @@ solo está **ENTRENAMIENTO**, con bots, en los cinco mapas y los tres modos
 ## Estado
 
 La 0.3.0 acerca el juego a los bocetos de arte: interfaz nueva, personajes
-rediseñados, personalización, mapas con nueva ambientación y decoración,
-animaciones nuevas y correcciones online. Se compila con Unity 6000.3.24f1 para
-Windows x64 como build de **release** (sin Development Build). El ZIP trae
-`BUILD.json` con el commit de origen y el SHA-256 de cada archivo.
+rediseñados, personalización rediseñada, mapas con nueva ambientación y
+correcciones online. Las animaciones son las de la 0.2.0 sobre los personajes
+nuevos y los mapas conservan su decoración anterior. Es para Windows x64
+(Unity 6000.3.24f1); el ZIP trae `BUILD.json` con el commit de origen y el
+SHA-256 de cada archivo.
 
 Lo que todavía **no** está verificado, y por eso es una versión de prueba:
 

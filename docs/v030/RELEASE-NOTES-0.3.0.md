@@ -1,13 +1,17 @@
 <!--
 Texto para la release v0.3.0 de GitHub (gh release create ... --notes-file este archivo).
-Antes de publicar, el integrador confirma que cada punto de "Novedades" está en el commit
-que se compila (ola 2 incluida) y borra lo que no haya entrado. Los comentarios HTML no se
-ven en la release.
+Los comentarios HTML no se ven en la release. Antes de publicar, el integrador hace la
+auditoría de afirmaciones de docs/v030/RELEASE-0.3.0-PASOS.md (paso 4) sobre ESTE archivo,
+docs/player/PRUEBA-V0.3.0.md (va dentro del ZIP) y README.md: cada novedad tiene que estar
+en el sourceCommit del build. El punto "Build de release" sólo queda si el recibo dice
+profile=release y releaseProblems=[], package-v030.ps1 terminó bien y walkthrough.json
+(paso 9) tiene pass=true; si no, se borra.
 -->
 # Let me sleep 0.3.0 — versión de prueba
 
-La 0.3.0 acerca todo el juego a los bocetos de arte: interfaz, personajes,
-personalización, mapas y animaciones nuevas, más correcciones del online.
+La 0.3.0 acerca el juego a los bocetos de arte: interfaz, personajes y
+personalización rediseñados, mapas con nueva ambientación y correcciones del
+online.
 
 ## Descargar e instalar
 
@@ -33,22 +37,22 @@ controles: `GUIA-DE-PRUEBA.md` dentro del ZIP.
 - **Personajes nuevos**, low-poly con ojos grandes: el humano en pijama (remera
   crema y pantalón azul con lunares), pantuflas y gorro de dormir rojo, y un
   mosquito rediseñado.
-- **Personalización** con vista previa del personaje antes de aplicar.
-- **Mapas con nueva ambientación y decoración** en los cinco escenarios (Casa
-  del patio, Campamento del pinar, Puerto del faro, Isla del laguito y Yate a la
-  deriva): luz cálida, faroles con halo, fuego y ventanas encendidas de noche.
-  El menú y la sala también tienen escena nueva.
-- **Animaciones nuevas** de los personajes, con cuatro formas de andar del
-  humano.
+- **Personalización rediseñada**: pestañas HUMANO y MOSQUITO, el personaje en
+  grande para girarlo arrastrando, vista previa de frente, espalda y lado, y
+  botones ALEATORIO y DESHACER.
+- **Mapas con nueva ambientación** en los cinco escenarios (Casa del patio,
+  Campamento del pinar, Puerto del faro, Isla del laguito y Yate a la deriva):
+  luz cálida, faroles con halo, fuego y ventanas encendidas de noche. El menú y
+  la sala también tienen escena nueva.
 - **Online más robusto**: la sala se resincroniza sola después de un corte del
-  enlace, quien se reconecta dentro de 30 segundos recupera su lugar, pueden
-  entrar amigos mientras se muestran los resultados, la ronda termina bien si se
-  va un equipo entero y los avisos de la sala dicen lo que pasó de verdad (por
-  ejemplo, que la sala se llenó mientras te reconectabas).
+  enlace entre dos jugadores, pueden entrar amigos mientras se muestran los
+  resultados, la ronda termina bien si se va un equipo entero y los avisos de la
+  sala dicen lo que pasó de verdad (por ejemplo, que la sala se llenó mientras
+  te reconectabas).
 - La 0.3.0 no se mezcla con la 0.2.0: cada versión tiene sus propias salas.
-- **Build de release**: ya no aparece la marca "Development Build", el juego no
-  abre el puerto de diagnóstico de Unity y el paquete no trae símbolos de
-  depuración ni archivos internos de compilación.
+- **Build de release**: sin la marca "Development Build", sin el puerto de
+  conexión del profiler de Unity y sin símbolos de depuración ni archivos
+  internos de compilación en el ZIP.
 
 ## Limitaciones conocidas
 
@@ -58,6 +62,8 @@ controles: `GUIA-DE-PRUEBA.md` dentro del ZIP.
 - Sin launcher ni actualización automática.
 - Ejecutable sin firma digital (aviso de SmartScreen).
 - No se garantizan 60 FPS en todas las PCs.
+- Las animaciones son las de la 0.2.0 sobre los personajes nuevos, y los mapas
+  conservan su decoración anterior.
 
 ## Contanos cómo te fue
 

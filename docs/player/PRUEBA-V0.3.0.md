@@ -82,21 +82,23 @@ para confirmarlo.
 
 ## Qué hay de nuevo en 0.3.0
 
-- **Interfaz nueva** según los bocetos: menú, entrenamiento, jugar online, sala,
-  personalización, HUD, pausa, resultados y ajustes.
+- **Interfaz nueva** según los bocetos: menú, entrenamiento, jugar online con
+  pestañas para crear sala o unirse, sala, personalización, HUD, pausa,
+  resultados y ajustes.
 - **Personajes rediseñados**, low-poly y con ojos grandes: el humano en pijama
   (remera crema, pantalón azul con lunares), pantuflas y gorro de dormir rojo, y
   un mosquito nuevo.
-- **Personalización** con vista del personaje antes de aplicar los cambios.
-- **Mapas con nueva ambientación y decoración**: luces cálidas, faroles, fuego y
-  ventanas encendidas de noche; el menú y la sala también cambiaron.
-- **Animaciones** nuevas para los personajes nuevos, con más formas de andar
-  del humano (lento, caminando, trotando y corriendo).
-- **Correcciones online**: la sala se resincroniza sola si se corta un enlace,
-  quien se reconecta vuelve a su lugar, pueden entrar amigos mientras se ven los
-  resultados, y la ronda termina bien aunque se vaya un equipo entero.
-- Es una versión **de release**: ya no muestra la marca "Development Build" ni
-  deja abierto el puerto de diagnóstico de Unity.
+- **Personalización rediseñada**: pestañas HUMANO y MOSQUITO, el personaje en
+  grande para girarlo arrastrando, vista previa de frente, espalda y lado, y
+  botones ALEATORIO y DESHACER.
+- **Mapas con nueva ambientación**: luz cálida, faroles con halo, fuego y
+  ventanas encendidas de noche en los cinco mapas; el menú y la sala también
+  cambiaron.
+- **Correcciones online**: la sala se resincroniza sola si se corta el enlace
+  entre dos jugadores, pueden entrar amigos mientras se ven los resultados, la
+  ronda termina bien aunque se vaya un equipo entero y los avisos de la sala
+  dicen lo que pasó de verdad (por ejemplo, que la sala se llenó mientras te
+  reconectabas).
 
 ## Limitaciones conocidas
 
@@ -106,6 +108,9 @@ para confirmarlo.
 - No hay launcher ni actualización automática: se instala desde el ZIP.
 - El ejecutable no está firmado (de ahí el aviso de SmartScreen).
 - No se garantizan 60 FPS en todas las PCs.
+- Los personajes nuevos usan las mismas animaciones que en la 0.2.0, y los
+  mapas conservan sus objetos de decoración de antes: lo nuevo es la
+  ambientación.
 - Es una versión de prueba: puede haber detalles de arte, colisiones o cámara
   sin terminar.
 
