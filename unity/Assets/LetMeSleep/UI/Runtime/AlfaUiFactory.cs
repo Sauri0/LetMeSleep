@@ -21,7 +21,7 @@ namespace LetMeSleep.UI
             this.feedback = feedback;
         }
 
-        internal bool HasComicFont => AlfaUiTheme.HasComicFont(dependencies);
+        internal bool HasDisplayFont => AlfaUiTheme.HasDisplayFont(dependencies);
 
         internal GameObject View(string name, Transform parent, bool opaque = true)
         {
@@ -133,6 +133,7 @@ namespace LetMeSleep.UI
             var node = Node(name, parent, typeof(TextMeshProUGUI), typeof(UnityEngine.UI.LayoutElement));
             var text = node.GetComponent<TextMeshProUGUI>();
             text.text = value ?? string.Empty;
+            size = Mathf.Max(size, AlfaUiTheme.MinTextSize);
             text.font = heading ? AlfaUiTheme.Display(dependencies) : AlfaUiTheme.Body(dependencies);
             text.fontSize = size;
             text.color = color;
@@ -142,8 +143,9 @@ namespace LetMeSleep.UI
             text.overflowMode = TextOverflowModes.Ellipsis;
             if (heading)
             {
-                text.fontStyle = FontStyles.Bold;
-                text.characterSpacing = 1.5f;
+                // The display face is already bold; synthetic bold only when it is missing.
+                text.fontStyle = HasDisplayFont ? FontStyles.Normal : FontStyles.Bold;
+                text.characterSpacing = AlfaUiTheme.DisplayTracking;
             }
             var layout = node.GetComponent<UnityEngine.UI.LayoutElement>();
             layout.minHeight = Mathf.Max(size * 1.25f, 24f);
@@ -151,49 +153,35 @@ namespace LetMeSleep.UI
             return text;
         }
 
-        /// <summary>Small uppercase field caption ("NOMBRE DE LA SALA").</summary>
-        internal TextMeshProUGUI Caption(Transform parent, string name, string value, float size = 17f)
+        /// <summary>Uppercase field caption ("NOMBRE DE LA SALA") in the display face.</summary>
+        internal TextMeshProUGUI Caption(Transform parent, string name, string value, float size = AlfaUiTheme.LabelSize)
         {
             var text = Text(parent, name, value, size, AlfaUiTheme.LabelInk, TextAlignmentOptions.Left, true);
-            text.characterSpacing = 1.2f;
+            text.characterSpacing = AlfaUiTheme.CaptionTracking;
             text.textWrappingMode = TextWrappingModes.NoWrap;
             return text;
         }
 
-        internal TextMeshProUGUI LogoText(Transform parent, string name, string value, float size, Color color,
-            TextAlignmentOptions alignment = TextAlignmentOptions.Left)
-        {
-            var text = Text(parent, name, value, size, color, alignment, true);
-            text.font = AlfaUiTheme.Logo(dependencies);
-            text.fontStyle = FontStyles.Normal;
-            text.characterSpacing = 0f;
-            return text;
-        }
-
         /// <summary>
-        /// Comic screen title (Bangers when available, bold Atkinson otherwise) with a soft ink drop shadow.
+        /// Panel / screen title in the upright condensed display face (UI-06 draws no comic face outside the
+        /// logo) with a soft ink drop shadow so it holds over the live scene.
         /// </summary>
-        internal TextMeshProUGUI Title(Transform parent, string name, string value, float size, Color? color = null,
+        internal TextMeshProUGUI Title(Transform parent, string name, string value, float size = AlfaUiTheme.PanelTitleSize, Color? color = null,
             TextAlignmentOptions alignment = TextAlignmentOptions.Left)
         {
             var text = Text(parent, name, value, size, color ?? AlfaUiTheme.Sheet100, alignment, true);
-            MakeComic(text, size);
+            MakeDisplay(text, size);
             return text;
         }
 
-        /// <summary>Switches a label to the comic display face with a shared shadowed material.</summary>
-        internal void MakeComic(TextMeshProUGUI text, float size = -1f)
+        /// <summary>Switches a label to the display face with the shared soft-shadow material.</summary>
+        internal void MakeDisplay(TextMeshProUGUI text, float size = -1f)
         {
             if (text == null) return;
-            if (!HasComicFont)
-            {
-                text.fontStyle = FontStyles.Bold;
-                return;
-            }
-            text.font = AlfaUiTheme.Logo(dependencies);
-            text.fontStyle = FontStyles.Normal;
-            text.characterSpacing = 2.2f;
-            if (size > 0f) text.fontSize = size;
+            text.font = AlfaUiTheme.Display(dependencies);
+            text.fontStyle = HasDisplayFont ? FontStyles.Normal : FontStyles.Bold;
+            text.characterSpacing = AlfaUiTheme.DisplayTracking;
+            if (size > 0f) text.fontSize = Mathf.Max(size, AlfaUiTheme.MinTextSize);
             var material = ShadowedMaterial(text.font);
             if (material != null) text.fontSharedMaterial = material;
         }
@@ -206,85 +194,100 @@ namespace LetMeSleep.UI
             if (material.HasProperty(ShaderUtilities.ID_UnderlayColor))
             {
                 material.EnableKeyword(ShaderUtilities.Keyword_Underlay);
-                material.SetColor(ShaderUtilities.ID_UnderlayColor, AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.72f));
-                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0.15f);
-                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.45f);
-                material.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.2f);
-                material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.1f);
+                material.SetColor(ShaderUtilities.ID_UnderlayColor, AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.6f));
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0.1f);
+                material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.35f);
+                material.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.1f);
+                material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.2f);
             }
             ShadowedMaterials[font] = material;
             return material;
         }
 
         /// <summary>
-        /// UI-06 wordmark: "LET ME" yellow and "SLEEP" blue in the comic face, thick ink outline and an
-        /// offset ink extrusion, followed by the yellow subtitle line.
+        /// UI-06 wordmark: the "LET ME / SLEEP" artwork (Resources/AlfaUiBrand/LogoWordmark, rendered by
+        /// docs/unity/ui/tools/build_ui_brand.py: rounded heavy letters, cream and sky gradients, 9 px ink outline,
+        /// 6 px extrusion), the cartoon mosquito next to "SLEEP" and the cream subtitle. The artwork is 2x the
+        /// 1080p size. Without it, the words fall back to the display face in the same colours.
         /// </summary>
-        internal RectTransform BrandLockup(Transform parent, string name, float height = 400f, string subtitle = "HUMANOS CONTRA MOSQUITOS")
+        internal RectTransform BrandLockup(Transform parent, string name, float width = 660f, string subtitle = "HUMANOS CONTRA MOSQUITOS")
         {
             var root = Node(name, parent, typeof(UnityEngine.UI.LayoutElement));
-            var layout = root.GetComponent<UnityEngine.UI.LayoutElement>();
-            layout.minHeight = height;
-            layout.preferredHeight = height;
-            layout.flexibleWidth = 1f;
-
-            // Rects are taller than the glyphs on purpose: the lines overlap like the sketch without TMP reporting overflow.
-            var first = LogoText(root.transform, "LogoFirstLine", "LET ME", 150f, Color.white);
-            Anchor(first.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(44f, 0f), new Vector2(-44f, 210f));
-            var second = LogoText(root.transform, "LogoSecondLine", "SLEEP", 236f, Color.white);
-            Anchor(second.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, 1f), new Vector2(0f, -112f), new Vector2(0f, 320f));
-            foreach (var line in new[] { first, second })
+            var wordmarkSprite = BrandSprite("LogoWordmark");
+            var aspect = wordmarkSprite != null ? wordmarkSprite.rect.height / wordmarkSprite.rect.width : 0.47f;
+            var markHeight = width * aspect;
+            if (wordmarkSprite != null)
             {
-                line.textWrappingMode = TextWrappingModes.NoWrap;
-                line.overflowMode = TextOverflowModes.Overflow;
-                line.enableVertexGradient = true;
-                line.characterSpacing = 1f;
-                line.alignment = TextAlignmentOptions.TopLeft;
+                var mark = Node("Wordmark", root.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+                mark.sprite = wordmarkSprite;
+                mark.raycastTarget = false;
+                mark.preserveAspect = true;
+                Anchor(mark.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(width, markHeight));
             }
-            first.colorGradient = new VertexGradient(AlfaUiTheme.LogoYellowTop, AlfaUiTheme.LogoYellowTop,
-                AlfaUiTheme.LogoYellowBottom, AlfaUiTheme.LogoYellowBottom);
-            second.colorGradient = new VertexGradient(AlfaUiTheme.LogoBlueTop, AlfaUiTheme.LogoBlueTop,
-                AlfaUiTheme.LogoBlueBottom, AlfaUiTheme.LogoBlueBottom);
-            foreach (var line in new[] { first, second })
+            else
             {
-                // Per-text material instances: two wordmark lines only; they carry the thick outline and extrusion.
-                var material = line.fontMaterial;
-                line.outlineColor = AlfaUiTheme.Ink900;
-                line.outlineWidth = 0.42f;
-                if (material.HasProperty(ShaderUtilities.ID_UnderlayColor))
-                {
-                    material.EnableKeyword(ShaderUtilities.Keyword_Underlay);
-                    material.SetColor(ShaderUtilities.ID_UnderlayColor, AlfaUiTheme.WithAlpha(Color.black, 0.8f));
-                    material.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0.3f);
-                    material.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.8f);
-                    material.SetFloat(ShaderUtilities.ID_UnderlayDilate, 0.75f);
-                    material.SetFloat(ShaderUtilities.ID_UnderlaySoftness, 0.05f);
-                }
+                var first = Text(root.transform, "LogoFirstLine", "LET <size=75%>ME</size>", 132f, AlfaUiTheme.Hex("FFE4A8"), TextAlignmentOptions.TopLeft, true);
+                first.textWrappingMode = TextWrappingModes.NoWrap;
+                Anchor(first.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, 0f), new Vector2(width, 150f));
+                var second = Text(root.transform, "LogoSecondLine", "SLEEP", 176f, AlfaUiTheme.Hex("8ED2FA"), TextAlignmentOptions.TopLeft, true);
+                second.textWrappingMode = TextWrappingModes.NoWrap;
+                Anchor(second.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, -120f), new Vector2(width, 200f));
             }
 
-            var mosquito = Icon(root.transform, "MosquitoMark", AlfaUiIconKind.Mosquito, AlfaUiTheme.TeamMosquito);
-            var rect = mosquito.rectTransform;
-            rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(470f, -74f);
-            rect.sizeDelta = new Vector2(110f, 110f);
-            rect.localRotation = Quaternion.Euler(0f, 0f, -16f);
+            var mosquitoSprite = BrandSprite("LogoMosquito");
+            if (mosquitoSprite != null)
+            {
+                var mosquito = Node("LogoMosquito", root.transform, typeof(UnityEngine.UI.Image)).GetComponent<UnityEngine.UI.Image>();
+                mosquito.sprite = mosquitoSprite;
+                mosquito.preserveAspect = true;
+                mosquito.raycastTarget = false;
+                // Flying just right of "SLEEP", level with the top of its "P".
+                Anchor(mosquito.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0.5f, 0.5f),
+                    new Vector2(width + 44f, -markHeight * 0.34f), new Vector2(124f, 124f));
+                mosquito.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 8f);
+            }
 
+            var subtitleHeight = 0f;
             if (!string.IsNullOrEmpty(subtitle))
             {
-                var caption = Title(root.transform, "Subtitle", subtitle, 36f, AlfaUiTheme.Lamp400);
+                var caption = Text(root.transform, "Subtitle", subtitle, 30f, AlfaUiTheme.LogoCream, TextAlignmentOptions.TopLeft, true);
                 caption.textWrappingMode = TextWrappingModes.NoWrap;
-                caption.characterSpacing = 3f;
-                Anchor(caption.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 0f), new Vector2(40f, 0f), new Vector2(-40f, 52f));
+                caption.overflowMode = TextOverflowModes.Overflow;
+                caption.characterSpacing = 6f;
+                MakeDisplay(caption, 30f);
+                caption.characterSpacing = 6f;
+                subtitleHeight = 42f;
+                Anchor(caption.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f),
+                    new Vector2(width * 0.05f, -markHeight - 4f), new Vector2(width, subtitleHeight));
             }
-            return root.GetComponent<RectTransform>();
+            var layout = root.GetComponent<UnityEngine.UI.LayoutElement>();
+            layout.minHeight = layout.preferredHeight = markHeight + subtitleHeight + 4f;
+            layout.preferredWidth = width;
+            var rect = root.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(width, layout.preferredHeight);
+            return rect;
+        }
+
+        private static readonly Dictionary<string, Sprite> BrandSprites = new Dictionary<string, Sprite>();
+
+        internal static Sprite BrandSprite(string name)
+        {
+            if (BrandSprites.TryGetValue(name, out var cached) && cached != null) return cached;
+            var sprite = Resources.Load<Sprite>("AlfaUiBrand/" + name);
+            if (sprite == null)
+            {
+                var texture = Resources.Load<Texture2D>("AlfaUiBrand/" + name);
+                if (texture != null) sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
+            }
+            BrandSprites[name] = sprite;
+            return sprite;
         }
 
         internal static void QuietButton(UnityEngine.UI.Button button, float labelSize = 22f)
         {
             ApplyStyle(button, AlfaButtonStyle.Quiet);
             var label = button.GetComponentInChildren<TextMeshProUGUI>();
-            if (label != null) label.fontSize = labelSize;
+            if (label != null) label.fontSize = Mathf.Max(labelSize, AlfaUiTheme.MinTextSize);
         }
 
         internal UnityEngine.UI.Button Button(Transform parent, string name, string label, UnityAction callback,
@@ -320,9 +323,8 @@ namespace LetMeSleep.UI
             layout.minHeight = Mathf.Max(44f, height);
             layout.preferredHeight = height;
             layout.flexibleWidth = 1f;
-            var text = Text(node.transform, "Label", label, AlfaUiTheme.ButtonSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center);
-            text.fontStyle = FontStyles.Bold;
-            text.characterSpacing = 0.8f;
+            var text = Text(node.transform, "Label", label, AlfaUiTheme.ButtonSize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Center, true);
+            text.textWrappingMode = TextWrappingModes.NoWrap;
             var iconPlateSize = Mathf.Clamp(height - 20f, 30f, 46f);
             Fill(text.rectTransform, icon == AlfaUiIconKind.None ? 16f : iconPlateSize + 30f, 18f, 6f, 6f);
             RectTransform iconPlate = null;
@@ -416,19 +418,50 @@ namespace LetMeSleep.UI
             button.colors = AlfaUiTheme.TintColors(style);
             var labels = button.GetComponentsInChildren<TextMeshProUGUI>(true);
             foreach (var label in labels)
-                label.color = label.name == "Subtitle" ? AlfaUiTheme.WithAlpha(content, 0.78f) : content;
-            foreach (var symbol in button.GetComponentsInChildren<AlfaUiIcon>(true)) symbol.color = content;
+                label.color = label.name == "Subtitle" ? AlfaUiTheme.WithAlpha(content, 0.8f) : content;
+            // Swatch check marks keep their contrast colour against the swatch.
+            foreach (var symbol in button.GetComponentsInChildren<AlfaUiIcon>(true)) if (symbol.name != "SelectionMark") symbol.color = content;
+            if (surface != null) surface.ThickFrame = false;
             var motion = button.GetComponent<AlfaUiFocusMotion>();
-            if (motion != null) motion.SelectOnHover = style == AlfaButtonStyle.Menu;
+            if (motion != null)
+            {
+                motion.SelectOnHover = style == AlfaButtonStyle.Menu;
+                motion.CaptureContent();
+            }
         }
 
-        /// <summary>Puts a factory button label in the comic face (large CTAs and the main menu rail).</summary>
-        internal void ComicLabel(UnityEngine.UI.Button button, float size)
+        /// <summary>
+        /// Selection state for tabs, options and slots (UI-06): primary blue fill plus a 3-unit accent.blue
+        /// (#49B2FF) frame. Unselected controls return to <paramref name="unselected"/>. No text prefix.
+        /// </summary>
+        internal static void SetSelected(UnityEngine.UI.Button button, bool selected, AlfaButtonStyle unselected = AlfaButtonStyle.Tab)
+        {
+            if (button == null) return;
+            ApplyStyle(button, selected ? AlfaButtonStyle.Primary : unselected);
+            MarkSelectedFrame(button, selected);
+        }
+
+        /// <summary>3-unit accent.blue frame on any skinned surface (buttons, slot plates).</summary>
+        internal static void MarkSelectedFrame(Component target, bool selected)
+        {
+            var surface = target != null ? target.GetComponent<AlfaUiSurface>() : null;
+            if (surface == null) return;
+            surface.ThickFrame = selected;
+            if (selected)
+            {
+                surface.FrameColor = AlfaUiTheme.Sky400;
+                surface.FocusFrameColor = Color.Lerp(AlfaUiTheme.Sky400, Color.white, 0.45f);
+                surface.ShadowColor = AlfaUiTheme.WithAlpha(AlfaUiTheme.PrimaryHi, 0.45f);
+            }
+            surface.Refresh();
+        }
+
+        /// <summary>Puts a factory button label in the display face at a given size (menu rail 30, CTAs 34).</summary>
+        internal void StrongLabel(UnityEngine.UI.Button button, float size)
         {
             var label = button != null ? button.transform.Find("Label")?.GetComponent<TextMeshProUGUI>() : null;
             if (label == null) return;
-            MakeComic(label, size);
-            if (!HasComicFont) label.fontSize = Mathf.Min(size, AlfaUiTheme.ButtonSize + 2f);
+            MakeDisplay(label, size);
         }
 
         internal UnityEngine.UI.Button FeatureButton(Transform parent, string name, string title, string subtitle,
@@ -436,13 +469,14 @@ namespace LetMeSleep.UI
         {
             var button = Button(parent, name, title, callback, primary, destructive, height, icon);
             var titleText = button.GetComponentInChildren<TextMeshProUGUI>();
-            titleText.fontSize = 22f;
-            titleText.alignment = TextAlignmentOptions.Left;
+            titleText.fontSize = 25f;
+            titleText.alignment = TextAlignmentOptions.BottomLeft;
             var textLeft = Mathf.Clamp(height - 20f, 30f, 46f) + 30f;
-            Fill(titleText.rectTransform, textLeft, 16f, 7f, 32f);
-            var subtitleText = Text(button.transform, "Subtitle", subtitle, 16f, AlfaUiTheme.Moon200, TextAlignmentOptions.Left, true);
-            subtitleText.characterSpacing = 0.6f;
-            Fill(subtitleText.rectTransform, textLeft, 16f, 40f, 5f);
+            Fill(titleText.rectTransform, textLeft, 16f, 4f, height * 0.5f);
+            var subtitleText = Text(button.transform, "Subtitle", subtitle, AlfaUiTheme.MinTextSize, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft, true);
+            subtitleText.characterSpacing = 1f;
+            subtitleText.textWrappingMode = TextWrappingModes.NoWrap;
+            Fill(subtitleText.rectTransform, textLeft, 16f, height * 0.5f, 2f);
             var rail = Node("FocusRail", button.transform, typeof(UnityEngine.UI.Image));
             var railImage = rail.GetComponent<UnityEngine.UI.Image>();
             railImage.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Sky400, primary ? 0.9f : 0.0f);
@@ -470,6 +504,34 @@ namespace LetMeSleep.UI
             if (verticalFadeSprite != null) return verticalFadeSprite;
             verticalFadeSprite = FadeSprite("LMS UI vertical fade", false);
             return verticalFadeSprite;
+        }
+
+        private static Sprite linearFadeSprite;
+
+        /// <summary>Opaque at the left edge, fading linearly to transparent at the right edge.</summary>
+        internal static Sprite LinearFadeSprite()
+        {
+            if (linearFadeSprite != null) return linearFadeSprite;
+            const int length = 256;
+            var texture = new Texture2D(length, 4, TextureFormat.RGBA32, false, true)
+            {
+                name = "LMS UI linear fade",
+                hideFlags = HideFlags.HideAndDontSave,
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp
+            };
+            var pixels = new Color32[length * 4];
+            for (var i = 0; i < length; i++)
+            {
+                var alpha = (byte)Mathf.RoundToInt(255f * (1f - i / (length - 1f)));
+                for (var j = 0; j < 4; j++) pixels[j * length + i] = new Color32(255, 255, 255, alpha);
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply(false, true);
+            linearFadeSprite = Sprite.Create(texture, new Rect(0f, 0f, length, 4), new Vector2(0.5f, 0.5f), 100f);
+            linearFadeSprite.name = texture.name;
+            linearFadeSprite.hideFlags = HideFlags.HideAndDontSave;
+            return linearFadeSprite;
         }
 
         private static Sprite FadeSprite(string name, bool horizontal)
@@ -524,7 +586,7 @@ namespace LetMeSleep.UI
             badge.GetComponent<UnityEngine.UI.LayoutElement>().flexibleWidth = 0f;
             var symbol = Icon(badge, "Symbol", icon, color);
             Fill(symbol.rectTransform, 8f, 8f, 8f, 8f);
-            Title(row, "Label", label, 36f, AlfaUiTheme.Sheet100);
+            Title(row, "Label", label, AlfaUiTheme.PanelTitleSize, AlfaUiTheme.Sheet100);
             return row;
         }
 
@@ -565,7 +627,7 @@ namespace LetMeSleep.UI
             Fill(placeholderText.rectTransform);
             placeholderText.fontStyle = FontStyles.Italic;
             placeholderText.textWrappingMode = TextWrappingModes.NoWrap;
-            var valueText = Text(viewport.transform, "Text", string.Empty, code ? 26f : AlfaUiTheme.BodySize,
+            var valueText = Text(viewport.transform, "Text", string.Empty, code ? 28f : AlfaUiTheme.BodySize,
                 code ? AlfaUiTheme.Lamp400 : AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
             Fill(valueText.rectTransform);
             valueText.textWrappingMode = TextWrappingModes.NoWrap;
@@ -590,10 +652,18 @@ namespace LetMeSleep.UI
             input.selectionColor = AlfaUiTheme.WithAlpha(AlfaUiTheme.Sky400, 0.45f);
             input.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Automatic };
             input.targetGraphic = image;
-            input.colors = AlfaUiTheme.TintColors(AlfaButtonStyle.Secondary);
+            input.colors = FieldColors();
             var motion = node.AddComponent<AlfaUiFocusMotion>();
             motion.Bind(null, null, surface);
             return input;
+        }
+
+        /// <summary>Tint block for fields (inputs, toggles, dropdowns): these keep a dimmed look when disabled.</summary>
+        private static UnityEngine.UI.ColorBlock FieldColors()
+        {
+            var colors = AlfaUiTheme.TintColors(AlfaButtonStyle.Secondary);
+            colors.disabledColor = new Color(0.62f, 0.66f, 0.74f, 0.6f);
+            return colors;
         }
 
         internal UnityEngine.UI.Slider Slider(Transform parent, string name, float min, float max, UnityAction<float> callback)
@@ -687,12 +757,12 @@ namespace LetMeSleep.UI
             var toggle = box.GetComponent<UnityEngine.UI.Toggle>();
             toggle.targetGraphic = boxImage;
             toggle.graphic = checkImage;
-            toggle.colors = AlfaUiTheme.TintColors(AlfaButtonStyle.Secondary);
+            toggle.colors = FieldColors();
             toggle.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Automatic };
             if (callback != null) toggle.onValueChanged.AddListener(callback);
             var motion = box.AddComponent<AlfaUiFocusMotion>();
             motion.Bind(null, null, surface);
-            Text(row, "Label", label, AlfaUiTheme.BodySize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left);
+            Text(row, "Label", label, AlfaUiTheme.BodySize, AlfaUiTheme.Sheet100, TextAlignmentOptions.Left, true);
             return toggle;
         }
 
@@ -811,7 +881,7 @@ namespace LetMeSleep.UI
             dropdown.template = templateRect;
             dropdown.itemText = itemLabel;
             dropdown.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.Automatic };
-            dropdown.colors = AlfaUiTheme.TintColors(AlfaButtonStyle.Secondary);
+            dropdown.colors = FieldColors();
             dropdown.options.Clear();
             if (options != null)
                 for (var i = 0; i < options.Count; i++) dropdown.options.Add(new TMP_Dropdown.OptionData(options[i]));
@@ -823,7 +893,7 @@ namespace LetMeSleep.UI
             return dropdown;
         }
 
-        internal RectTransform ScrollView(Transform parent, string name, out RectTransform content, float preferredHeight)
+        internal RectTransform ScrollView(Transform parent, string name, out RectTransform content, float preferredHeight, bool scrollbar = false)
         {
             var root = Node(name, parent, typeof(UnityEngine.UI.Image), typeof(AlfaUiSurface), typeof(UnityEngine.UI.ScrollRect), typeof(UnityEngine.UI.LayoutElement));
             var rootImage = root.GetComponent<UnityEngine.UI.Image>();
@@ -863,37 +933,66 @@ namespace LetMeSleep.UI
             scroll.vertical = true;
             scroll.movementType = UnityEngine.UI.ScrollRect.MovementType.Clamped;
             scroll.scrollSensitivity = 32f;
+            if (scrollbar)
+            {
+                // Visible only when the content overflows; the viewport gives it room then (UI-06 lists).
+                var bar = Node("Scrollbar", root.transform, typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Scrollbar));
+                var barRect = bar.GetComponent<RectTransform>();
+                Anchor(barRect, new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-4f, 0f), new Vector2(8f, -12f));
+                var track = bar.GetComponent<UnityEngine.UI.Image>();
+                track.sprite = AlfaUiSkin.Fill(6f);
+                track.type = UnityEngine.UI.Image.Type.Sliced;
+                track.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.7f);
+                var slide = Node("Sliding Area", bar.transform);
+                Fill(slide.GetComponent<RectTransform>(), 1f, 1f, 1f, 1f);
+                var handle = Node("Handle", slide.transform, typeof(UnityEngine.UI.Image));
+                var handleImage = handle.GetComponent<UnityEngine.UI.Image>();
+                handleImage.sprite = AlfaUiSkin.Fill(6f);
+                handleImage.type = UnityEngine.UI.Image.Type.Sliced;
+                handleImage.color = AlfaUiTheme.WithAlpha(AlfaUiTheme.Sky400, 0.85f);
+                Fill(handle.GetComponent<RectTransform>());
+                var scrollbarComponent = bar.GetComponent<UnityEngine.UI.Scrollbar>();
+                scrollbarComponent.handleRect = handle.GetComponent<RectTransform>();
+                scrollbarComponent.targetGraphic = handleImage;
+                scrollbarComponent.direction = UnityEngine.UI.Scrollbar.Direction.BottomToTop;
+                scrollbarComponent.navigation = new UnityEngine.UI.Navigation { mode = UnityEngine.UI.Navigation.Mode.None };
+                scroll.verticalScrollbar = scrollbarComponent;
+                scroll.verticalScrollbarVisibility = UnityEngine.UI.ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
+                scroll.verticalScrollbarSpacing = 6f;
+            }
             return root.GetComponent<RectTransform>();
         }
 
         /// <summary>
-        /// UI-06 list row: inset well, white title, secondary subtitle and a coloured status bar on the right.
+        /// UI-06 list row: inset well, white title in the display face, secondary subtitle and, when it carries
+        /// real state (ready / not ready), a coloured status bar on the right.
         /// </summary>
         internal RectTransform ListRow(Transform parent, string name, AlfaUiIconKind icon, string title, string subtitle,
-            Color status, float height = 64f)
+            Color status, float height = 74f, bool statusBar = true)
         {
             var row = Inset(parent, name, height);
             row.GetComponent<UnityEngine.UI.LayoutElement>().minHeight = height;
             if (icon != AlfaUiIconKind.None)
             {
                 var symbol = Icon(row, "RowIcon", icon, AlfaUiTheme.Sky400);
-                Anchor(symbol.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(30f, 30f));
+                Anchor(symbol.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f, 0f), new Vector2(32f, 32f));
             }
-            var left = icon == AlfaUiIconKind.None ? 16f : 56f;
-            var titleText = Text(row, "RowTitle", title, 20f, AlfaUiTheme.Sheet100, TextAlignmentOptions.BottomLeft, true);
+            var left = icon == AlfaUiIconKind.None ? 18f : 62f;
+            var right = statusBar ? 26f : 14f;
+            var titleText = Text(row, "RowTitle", title, 24f, AlfaUiTheme.Sheet100, TextAlignmentOptions.BottomLeft, true);
             titleText.textWrappingMode = TextWrappingModes.NoWrap;
-            titleText.characterSpacing = 0.4f;
-            Anchor(titleText.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 1f), new Vector2(0f, 0f), new Vector2(left, 0f), new Vector2(-left - 22f, -6f));
-            var subtitleText = Text(row, "RowSubtitle", subtitle, 16f, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft);
+            Anchor(titleText.rectTransform, new Vector2(0f, 0.5f), new Vector2(1f, 1f), new Vector2(0f, 0f), new Vector2(left, -1f), new Vector2(-left - right, -4f));
+            var subtitleText = Text(row, "RowSubtitle", subtitle, AlfaUiTheme.MinTextSize, AlfaUiTheme.Moon200, TextAlignmentOptions.TopLeft);
             subtitleText.textWrappingMode = TextWrappingModes.NoWrap;
-            Anchor(subtitleText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0.5f), new Vector2(0f, 1f), new Vector2(left, 0f), new Vector2(-left - 22f, -6f));
+            Anchor(subtitleText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0.5f), new Vector2(0f, 1f), new Vector2(left, 1f), new Vector2(-left - right, -4f));
             var bar = Node("StatusBar", row, typeof(UnityEngine.UI.Image));
             var barImage = bar.GetComponent<UnityEngine.UI.Image>();
             barImage.sprite = AlfaUiSkin.Fill(6f);
             barImage.type = UnityEngine.UI.Image.Type.Sliced;
             barImage.color = status;
             barImage.raycastTarget = false;
-            Anchor(bar.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-8f, 0f), new Vector2(6f, -18f));
+            Anchor(bar.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-9f, 0f), new Vector2(6f, -20f));
+            bar.SetActive(statusBar);
             return row;
         }
 
@@ -1015,6 +1114,9 @@ namespace LetMeSleep.UI
         private bool pressed;
         private float amount;
         private UnityEngine.UI.Selectable selectable;
+        private bool? shownInteractable;
+        private readonly List<KeyValuePair<UnityEngine.UI.Graphic, float>> content = new List<KeyValuePair<UnityEngine.UI.Graphic, float>>();
+        private readonly List<KeyValuePair<AlfaUiIcon, float>> icons = new List<KeyValuePair<AlfaUiIcon, float>>();
 
         /// <summary>Menu rails move keyboard selection with the pointer so exactly one item reads as selected.</summary>
         internal bool SelectOnHover { get; set; }
@@ -1033,6 +1135,50 @@ namespace LetMeSleep.UI
         {
             accent = graphic;
             accentBase = graphic != null ? graphic.color : Color.clear;
+        }
+
+        /// <summary>
+        /// Records label/icon opacity after a style change so that the disabled look (flat navy, content at
+        /// 50 %) can be applied and removed without losing authored alpha.
+        /// </summary>
+        internal void CaptureContent()
+        {
+            content.Clear();
+            icons.Clear();
+            foreach (var label in GetComponentsInChildren<TMPro.TextMeshProUGUI>(true)) content.Add(new KeyValuePair<UnityEngine.UI.Graphic, float>(label, label.color.a));
+            foreach (var symbol in GetComponentsInChildren<AlfaUiIcon>(true)) icons.Add(new KeyValuePair<AlfaUiIcon, float>(symbol, symbol.color.a));
+            shownInteractable = null;
+            RefreshInteractable();
+        }
+
+        private void RefreshInteractable()
+        {
+            if (selectable == null) selectable = GetComponent<UnityEngine.UI.Selectable>();
+            if (!(selectable is UnityEngine.UI.Button)) return;
+            var interactable = selectable.IsInteractable();
+            if (shownInteractable == interactable) return;
+            shownInteractable = interactable;
+            if (surface != null)
+            {
+                surface.Disabled = !interactable;
+                surface.Refresh();
+            }
+            AlfaUiTheme.DisabledColors(out _, out _, out _, out var disabledAlpha);
+            var factor = interactable ? 1f : disabledAlpha;
+            foreach (var pair in content)
+            {
+                if (pair.Key == null) continue;
+                var color = pair.Key.color;
+                color.a = pair.Value * factor;
+                pair.Key.color = color;
+            }
+            foreach (var pair in icons)
+            {
+                if (pair.Key == null) continue;
+                var color = pair.Key.color;
+                color.a = pair.Value * factor;
+                pair.Key.color = color;
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -1055,9 +1201,16 @@ namespace LetMeSleep.UI
             Apply(0f);
         }
 
+        private void OnEnable()
+        {
+            shownInteractable = null;
+            RefreshInteractable();
+        }
+
         private void Update()
         {
             if (selectable == null) selectable = GetComponent<UnityEngine.UI.Selectable>();
+            RefreshInteractable();
             var interactable = selectable != null && selectable.IsInteractable();
             var focused = SelectOnHover ? selected : pointerInside || selected;
             var target = interactable && focused ? (pressed ? 0.7f : 1f) : 0f;

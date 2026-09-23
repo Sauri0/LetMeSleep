@@ -5,17 +5,19 @@ using UnityEngine.UI;
 namespace LetMeSleep.UI
 {
     /// <summary>
-    /// Procedural v0.3 skin: one runtime atlas with rounded fills, 2-unit inner rings, soft shadows and
-    /// circles at 2x density (200 px per unit against the 100 px reference). Everything shares a single
+    /// Procedural v0.3 skin: one runtime atlas with rounded fills, 2-unit frame rings, 3-unit selection rings,
+    /// soft shadows and circles at 2x density (200 px per unit against the 100 px reference). Everything shares a single
     /// texture so panels, buttons, frames and shadows batch together, and nothing needs an imported
     /// asset, .meta file or scene reference.
     /// </summary>
     internal static class AlfaUiSkin
     {
         internal const float PixelsPerUnit = 200f;
-        private const int AtlasSize = 512;
+        private const int AtlasSize = 1024;
         private const int Gutter = 2;
         private const int RingStrokePx = 4;     // 2 canvas units.
+        private const int ThickRingStrokePx = 6; // 3 canvas units: selection frame (UI-06 accent.blue 3 px).
+        private const int LargeCircleSize = 256; // big glows and portraits: no visible upscaling blur.
         private const int ShadowFeatherPx = 14; // 7 canvas units of soft falloff.
         internal static readonly int[] Radii = { 14, 12, 8, 6 };
 
@@ -50,6 +52,8 @@ namespace LetMeSleep.UI
 
         internal static Sprite Fill(float radius) => Get("fill" + RadiusKey(radius));
         internal static Sprite Ring(float radius) => Get("ring" + RadiusKey(radius));
+        internal static Sprite ThickRing(float radius) => Get("ringthick" + RadiusKey(radius));
+        internal static Sprite LargeCircle() => Get("circle-large");
         internal static Sprite Circle() => Get("circle");
         internal static Sprite CircleRing() => Get("circle-ring");
 
@@ -100,8 +104,15 @@ namespace LetMeSleep.UI
                     var d = RoundedBox(x, y, s, 0, radiusPx);
                     return Mathf.Clamp01(0.5f - d) * Mathf.Clamp01(0.5f + d + RingStrokePx);
                 }));
+                var thickBorder = Mathf.Max(border, ThickRingStrokePx + 4);
+                plan.Add(("ringthick" + r, thickBorder * 2 + 4, thickBorder, 0, (x, y, s) =>
+                {
+                    var d = RoundedBox(x, y, s, 0, radiusPx);
+                    return Mathf.Clamp01(0.5f - d) * Mathf.Clamp01(0.5f + d + ThickRingStrokePx);
+                }));
             }
             plan.Add(("circle", 68, 0, 0, (x, y, s) => Mathf.Clamp01(0.5f - (Vector2.Distance(new Vector2(x, y), new Vector2(s * .5f, s * .5f)) - (s * .5f - 2f)))));
+            plan.Add(("circle-large", LargeCircleSize, 0, 0, (x, y, s) => Mathf.Clamp01(0.5f - (Vector2.Distance(new Vector2(x, y), new Vector2(s * .5f, s * .5f)) - (s * .5f - 2f)))));
             plan.Add(("circle-ring", 68, 0, 0, (x, y, s) =>
             {
                 var d = Vector2.Distance(new Vector2(x, y), new Vector2(s * .5f, s * .5f)) - (s * .5f - 2f);
@@ -209,6 +220,10 @@ namespace LetMeSleep.UI
         internal Color GradientTop = Color.white;
         internal Color GradientBottom = Color.white;
         internal Color FrameColor = Color.clear;
+        /// <summary>3-unit selection frame instead of the 2-unit border.</summary>
+        internal bool ThickFrame;
+        /// <summary>Non-interactable control: flat disabled navy regardless of intent (see AlfaUiTheme.DisabledColors).</summary>
+        internal bool Disabled;
         internal Color ShadowColor = Color.clear;
         internal Vector2 ShadowOffset = new Vector2(0f, -AlfaUiTheme.ShadowOffset);
         internal Color FocusFrameColor = Color.clear;
@@ -243,8 +258,16 @@ namespace LetMeSleep.UI
             Output.Clear();
             vh.GetUIVertexStream(Source);
 
-            var top = FocusRecolorsFill ? Color.Lerp(GradientTop, FocusGradientTop, focus) : GradientTop;
-            var bottom = FocusRecolorsFill ? Color.Lerp(GradientBottom, FocusGradientBottom, focus) : GradientBottom;
+            var focusAmount = Disabled ? 0f : focus;
+            var top = FocusRecolorsFill ? Color.Lerp(GradientTop, FocusGradientTop, focusAmount) : GradientTop;
+            var bottom = FocusRecolorsFill ? Color.Lerp(GradientBottom, FocusGradientBottom, focusAmount) : GradientBottom;
+            var frameColor = Color.Lerp(FrameColor, FocusFrameColor, focusAmount);
+            var shadowColor = Color.Lerp(ShadowColor, FocusShadowColor, focusAmount);
+            if (Disabled)
+            {
+                AlfaUiTheme.DisabledColors(out top, out bottom, out frameColor, out _);
+                shadowColor = AlfaUiTheme.WithAlpha(ShadowColor, ShadowColor.a * 0.5f);
+            }
             var height = Mathf.Max(0.001f, rect.height);
             for (var i = 0; i < Source.Count; i++)
             {
@@ -256,11 +279,11 @@ namespace LetMeSleep.UI
 
             if (skinned)
             {
-                var shadow = Color.Lerp(ShadowColor, FocusShadowColor, focus);
+                var shadow = shadowColor;
                 if (shadow.a > 0.003f && AlfaUiSkin.TryRegion("shadow" + RadiusKey, out var shadowRegion))
                 {
                     var spread = shadowRegion.InsetUnits;
-                    var focusLift = Vector2.Lerp(ShadowOffset, Vector2.zero, focus);
+                    var focusLift = Vector2.Lerp(ShadowOffset, Vector2.zero, focusAmount);
                     var shadowRect = new Rect(rect.xMin - spread + focusLift.x, rect.yMin - spread + focusLift.y,
                         rect.width + spread * 2f, rect.height + spread * 2f);
                     AlfaUiSkin.AppendSliced(Output, shadowRect, shadowRegion, shadow);
@@ -269,8 +292,8 @@ namespace LetMeSleep.UI
             Output.AddRange(Source);
             if (skinned)
             {
-                var frame = Color.Lerp(FrameColor, FocusFrameColor, focus);
-                if (frame.a > 0.003f && AlfaUiSkin.TryRegion("ring" + RadiusKey, out var ringRegion))
+                var frame = frameColor;
+                if (frame.a > 0.003f && AlfaUiSkin.TryRegion((ThickFrame ? "ringthick" : "ring") + RadiusKey, out var ringRegion))
                     AlfaUiSkin.AppendSliced(Output, rect, ringRegion, frame);
             }
             vh.Clear();

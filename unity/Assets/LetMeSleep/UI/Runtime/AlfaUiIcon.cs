@@ -46,7 +46,8 @@ namespace LetMeSleep.UI
         ChevronDown,
         Key,
         Microphone,
-        Info
+        Info,
+        Close
     }
 
     [DisallowMultipleComponent]

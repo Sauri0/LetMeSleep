@@ -21,7 +21,7 @@ for folder in [OUT.parent, OUT]:
 ALFA_KINDS = ['Online','Human','Customize','Mosquito','Audio','Video','Controls','Training','Back','Exit','Settings','Play','Ready']
 # v0.3 (UI-06) pictograms. Same conventions: white RGBA silhouettes, 128 px, tinted at runtime.
 V030_KINDS = ['Gear','House','Enter','Map','Lock','Wifi','Warning','Invite','Crown','Refresh','ChevronLeft','ChevronRight',
-              'ChevronDown','Key','Microphone','Info','Copy','Clock']
+              'ChevronDown','Key','Microphone','Info','Copy','Clock','Close']
 import sys
 REQUESTED = [a for a in sys.argv[1:] if not a.startswith('-')] or (ALFA_KINDS + V030_KINDS)
 for kind in REQUESTED:
@@ -141,6 +141,9 @@ for kind in REQUESTED:
     elif kind=='Copy':
         d.rounded_rectangle((14*S,12*S,82*S,90*S),radius=12*S,outline='white',width=10*S)
         d.rounded_rectangle((42*S,38*S,116*S,118*S),radius=12*S,fill='white')
+    elif kind=='Close':
+        line([(26,26),(102,102)],15); line([(102,26),(26,102)],15)
+        for x,y in [(26,26),(102,102),(102,26),(26,102)]: head(x,y,7)
     elif kind=='Clock':
         d.ellipse((10*S,10*S,118*S,118*S),outline='white',width=11*S)
         line([(64,64),(64,30)],10); line([(64,64),(88,78)],10); head(64,64,8)

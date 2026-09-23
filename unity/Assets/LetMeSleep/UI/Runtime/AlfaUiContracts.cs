@@ -140,6 +140,15 @@ namespace LetMeSleep.UI
 
     public interface ISpectatorActions { void SpectateNext(); }
 
+    /// <summary>
+    /// Optional, implemented next to <see cref="IMenuActions"/>: the waiting-room character of a member, so the
+    /// UI can float that player's name over it (UI-06 screen 3). Return false when the member has no avatar.
+    /// </summary>
+    public interface ILobbyPresenceSource
+    {
+        bool TryGetLobbyAvatar(string memberId, out Transform avatar, out Camera camera);
+    }
+
     public interface IRoomModeActions
     {
         void SetRoomMode(string modeId);
@@ -270,6 +279,8 @@ namespace LetMeSleep.UI
         public bool RulesPending { get; }
         public string ModeId { get; }
         public int RoundSeconds { get; }
+        /// <summary>Seconds until the round starts on its own, when the room runs a start countdown; null otherwise.</summary>
+        public int? StartCountdownSeconds { get; }
 
         public LobbyUiState(
             bool isOwner,
@@ -285,8 +296,10 @@ namespace LetMeSleep.UI
             bool canExplore = false,
             bool startPending = false,
             bool isWaiting = true,
-            bool rulesPending = false, string modeId = GameModes.Blood, int roundSeconds = 180)
+            bool rulesPending = false, string modeId = GameModes.Blood, int roundSeconds = 180, int? startCountdownSeconds = null)
         {
+            if (startCountdownSeconds.HasValue && startCountdownSeconds.Value < 0) throw new ArgumentOutOfRangeException(nameof(startCountdownSeconds));
+            StartCountdownSeconds = startCountdownSeconds;
             ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode.");
             if (roundSeconds < 30 || roundSeconds > 1800) throw new ArgumentOutOfRangeException(nameof(roundSeconds));
             RoundSeconds = roundSeconds;
