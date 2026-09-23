@@ -628,6 +628,29 @@ namespace LetMeSleep.UI
         }
     }
 
+    /// <summary>
+    /// How one player of the round looks, for the results figures (UI-06 9: each winner with their own colours).
+    /// Human: skin and pajama trousers; mosquito: body colour. Colours the caller does not know stay null.
+    /// </summary>
+    public sealed class ResultsFigureUiState
+    {
+        public AlfaRole Role { get; }
+        public Color? SkinColor { get; }
+        public Color? PajamaColor { get; }
+        public Color? MosquitoColor { get; }
+        /// <summary>True for the local player (drawn in the middle of the winning group).</summary>
+        public bool IsLocal { get; }
+
+        public ResultsFigureUiState(AlfaRole role, Color? skinColor = null, Color? pajamaColor = null, Color? mosquitoColor = null, bool isLocal = false)
+        {
+            Role = role;
+            SkinColor = skinColor;
+            PajamaColor = pajamaColor;
+            MosquitoColor = mosquitoColor;
+            IsLocal = isLocal;
+        }
+    }
+
     public sealed class ResultsUiState
     {
         public string ModeId { get; }
@@ -646,11 +669,14 @@ namespace LetMeSleep.UI
         /// <summary>Players on each team this round (the results scoreboard); -1 when unknown.</summary>
         public int HumansCount { get; }
         public int MosquitoesCount { get; }
+        /// <summary>The look of the round's players (any order; the UI draws up to three per team); may be empty.</summary>
+        public IReadOnlyList<ResultsFigureUiState> Figures { get; }
 
         public ResultsUiState(MatchOutcome outcome, bool isTraining, bool isOwner, float bloodCurrent,
             float bloodTarget, float elapsedSeconds, string reason = "", AlfaRole trainingRole = AlfaRole.Human, string modeId = GameModes.Blood, string mapId = RoomRules.AlfaMap, int tasksCompleted = 0, int tasksGoal = 0, int mosquitoesAlive = 0,
-            int humansCount = -1, int mosquitoesCount = -1)
+            int humansCount = -1, int mosquitoesCount = -1, IEnumerable<ResultsFigureUiState> figures = null)
         {
+            Figures = Array.AsReadOnly((figures ?? Enumerable.Empty<ResultsFigureUiState>()).Where(item => item != null).ToArray());
             HumansCount = humansCount < 0 ? -1 : humansCount;
             MosquitoesCount = mosquitoesCount < 0 ? -1 : mosquitoesCount;
             ModeId = GameModes.IsValid(modeId) ? modeId : throw new ArgumentException("Unknown game mode."); MapId = mapId; TasksCompleted = tasksCompleted; TasksGoal = tasksGoal; MosquitoesAlive = mosquitoesAlive;
