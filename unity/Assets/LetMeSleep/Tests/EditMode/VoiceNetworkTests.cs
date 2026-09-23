@@ -49,12 +49,13 @@ namespace LetMeSleep.Tests.EditMode
             Assert.That(jitter.AcceptAudio(5, 1, one, 0), Is.True);
             Assert.That(jitter.AcceptAudio(5, 3, three, 0.01), Is.True);
             Assert.That(jitter.AcceptAudio(5, 1, one, 0.02), Is.False);
-            Assert.That(jitter.TryDequeue(0.059, out _, out _), Is.False);
-            Assert.That(jitter.TryDequeue(0.060, out byte[] first, out bool firstConcealed), Is.True);
+            double p = VoiceJitterBuffer.PrebufferSeconds;
+            Assert.That(jitter.TryDequeue(p - 0.001, out _, out _), Is.False);
+            Assert.That(jitter.TryDequeue(p, out byte[] first, out bool firstConcealed), Is.True);
             Assert.That(first, Is.EqualTo(one)); Assert.That(firstConcealed, Is.False);
-            Assert.That(jitter.TryDequeue(0.080, out byte[] concealed, out bool wasConcealed), Is.True);
+            Assert.That(jitter.TryDequeue(p + 0.020, out byte[] concealed, out bool wasConcealed), Is.True);
             Assert.That(concealed, Is.EqualTo(one)); Assert.That(wasConcealed, Is.True);
-            Assert.That(jitter.TryDequeue(0.100, out byte[] third, out bool thirdConcealed), Is.True);
+            Assert.That(jitter.TryDequeue(p + 0.040, out byte[] third, out bool thirdConcealed), Is.True);
             Assert.That(third, Is.EqualTo(three)); Assert.That(thirdConcealed, Is.False);
             Assert.That(jitter.TryDequeue(0.320, out _, out _), Is.False);
             Assert.That(jitter.IsActive, Is.True, "An idle network interval is not an authenticated End packet.");
@@ -224,11 +225,53 @@ namespace LetMeSleep.Tests.EditMode
         }
 
         [Test]
+        public void JitterBuffer_ReorderedFrameInsideTheGraceWindowIsPlayedNotConcealed()
+        {
+            byte[] one = FilledPayload(1), two = FilledPayload(2), three = FilledPayload(3);
+            var jitter = new VoiceJitterBuffer();
+            double p = VoiceJitterBuffer.PrebufferSeconds;
+            Assert.That(jitter.AcceptAudio(5, 1, one, 0), Is.True);
+            Assert.That(jitter.TryDequeue(p, out byte[] first, out _), Is.True);
+            Assert.That(first, Is.EqualTo(one));
+            Assert.That(jitter.AcceptAudio(5, 3, three, p + 0.001), Is.True);
+            Assert.That(jitter.TryDequeue(p + 0.010, out _, out _), Is.False, "Frame 2 may still arrive: wait inside the reorder grace.");
+            Assert.That(jitter.AcceptAudio(5, 2, two, p + 0.015), Is.True);
+            Assert.That(jitter.TryDequeue(p + 0.016, out byte[] second, out bool concealed), Is.True);
+            Assert.That(second, Is.EqualTo(two)); Assert.That(concealed, Is.False);
+            Assert.That(jitter.TryDequeue(p + 0.017, out byte[] third, out _), Is.True, "After the prebuffer frames flow as they arrive (the playout owns timing).");
+            Assert.That(third, Is.EqualTo(three));
+        }
+
+        [Test]
+        public void Session_RaisesStreamClosedAfterTheLastFrameOfAnEndedStream()
+        {
+            double now = 0;
+            using var transport = new FakeTransport("peer-a");
+            using var session = new VoiceOnlineSession(transport, () => now);
+            session.UpdateRound(new VoiceRoundContext(1, 2, 3, true, true, new[] { new VoicePeerRoute("peer-a", 4, true, true, false) }));
+            var closed = new List<uint>();
+            int frames = 0;
+            session.StreamClosed += closed.Add;
+            session.FrameDecoded += _ => frames++;
+            byte[] payload = new VoiceImaAdpcmCodec().Encode(Sine(300, 0.2f));
+            transport.Receive("peer-a", VoiceWireCodec.Encode(new VoicePacket(VoicePacketKind.Audio, 1, 2, 4, 1, 1, payload)));
+            transport.Receive("peer-a", VoiceWireCodec.Encode(new VoicePacket(VoicePacketKind.Audio, 1, 2, 4, 1, 2, payload)));
+            transport.Receive("peer-a", VoiceWireCodec.Encode(new VoicePacket(VoicePacketKind.End, 1, 2, 4, 1, 3, Array.Empty<byte>())));
+            now = VoiceJitterBuffer.PrebufferSeconds + 0.001; session.Tick(now);
+            Assert.That(frames, Is.EqualTo(2));
+            Assert.That(closed, Is.EqualTo(new[] { 4u }), "The playout drains and fades on StreamClosed.");
+            now += 0.02; session.Tick(now);
+            Assert.That(closed.Count, Is.EqualTo(1), "Raised once per stream.");
+        }
+
+        [Test]
         public void SpatialPolicy_UsesApprovedRoleDistancesOcclusionAndEliminatedCohorts()
         {
             var origin = Float3.Zero;
             Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, false, origin, PlayerRole.Mosquito, false,
-                new Float3(3.9f, 0, 0), false).Gain, Is.EqualTo(1).Within(.0001));
+                new Float3(2f, 0, 0), false).Gain, Is.EqualTo(1).Within(.0001), "0 dB at the 2 m reference.");
+            Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, false, origin, PlayerRole.Mosquito, false,
+                new Float3(3.9f, 0, 0), false).Gain, Is.InRange(.55f, .7f), "Natural fall-off, no flat plateau.");
             Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, false, origin, PlayerRole.Human, false,
                 new Float3(12f, 0, 0), false).Audible, Is.False);
             Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Mosquito, false, origin, PlayerRole.Human, false,
@@ -237,8 +280,8 @@ namespace LetMeSleep.Tests.EditMode
                 new Float3(12f, 0, 0), false).Audible, Is.True);
             var blocked = VoiceSpatialPolicy.Evaluate(PlayerRole.Human, true, origin, PlayerRole.Human, true,
                 new Float3(4f, 0, 0), true);
-            Assert.That(blocked.Gain, Is.EqualTo(VoiceSpatialPolicy.OccludedGain).Within(.0001));
-            Assert.That(blocked.LowPassHertz, Is.EqualTo(VoiceSpatialPolicy.OccludedLowPassHertz));
+            Assert.That(blocked.Gain, Is.EqualTo(VoiceSpatialPolicy.DistanceGain(4f, 12f) * VoiceSpatialPolicy.OccludedGain).Within(.0001));
+            Assert.That(blocked.LowPassHertz, Is.EqualTo(VoiceSpatialPolicy.OccludedLowPassHertz).Within(1f));
             Assert.That(VoiceSpatialPolicy.Evaluate(PlayerRole.Human, true, origin, PlayerRole.Human, false,
                 new Float3(1f, 0, 0), false).Audible, Is.False);
         }

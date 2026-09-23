@@ -1,0 +1,26 @@
+{
+  "name": "LetMeSleep.Tests.VoiceEvidence",
+  "rootNamespace": "LetMeSleep.Tests.VoiceEvidence",
+  "references": [
+    "LetMeSleep.Tests.AudioEvidence",
+    "LetMeSleep.Audio",
+    "LetMeSleep.Core",
+    "LetMeSleep.Gameplay",
+    "LetMeSleep.Online",
+    "LetMeSleep.Bootstrap"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

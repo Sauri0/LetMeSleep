@@ -622,7 +622,7 @@ namespace LetMeSleep.UI
             if (hudVoice != null)
             {
                 string status = state.LocalMuted ? "VOZ SILENCIADA" : state.Transmitting ? "HABLANDO" :
-                    !state.DeviceAvailable ? "VOZ · ELEGÍ MICRÓFONO" : "PTT " + state.BindingLabel;
+                    !state.DeviceAvailable ? "VOZ · SIN MICRÓFONO" : "PTT " + state.BindingLabel;
                 hudVoice.text = state.InRoom ? status : string.Empty;
                 hudVoice.color = state.Transmitting ? AlfaUiTheme.StatusOk : state.LocalMuted || !state.DeviceAvailable ? AlfaUiTheme.StatusWarn : AlfaUiTheme.Moon200;
                 if (hudVoiceChip != null) hudVoiceChip.SetActive(state.InRoom);

@@ -1,0 +1,53 @@
+{
+  "_comment": "Numeric targets for Let me sleep v0.3.0 audio. Asset-level targets are measured with unity faders (0 dB); capture-level targets are measured on the listener mix recorded with the game's default preference volumes (Master .8, Music .5, Effects .85, Voice .8).",
+  "asset": {
+    "music_integrated_lufs": -18.0,
+    "music_tolerance_lu": 1.5,
+    "ambience_integrated_lufs": [-30.0, -24.0],
+    "sfx_true_peak_max_dbtp": -1.0,
+    "sting_true_peak_max_dbtp": -1.0,
+    "ui_short_term_lufs": [-24.0, -16.0],
+    "loop_seam_jump_ratio_max": 4.0,
+    "loop_seam_level_step_max_db": 1.5,
+    "abrupt_edge_dbfs": -45.0,
+    "noise_floor_max_dbfs": -60.0,
+    "clicks_max": 0,
+    "cue_variant_spread_max_db": 3.0
+  },
+  "capture": {
+    "master_true_peak_max_dbtp": -1.0,
+    "clipping_samples_max": 0,
+    "pan_lr_min_db_at_90": 9.0,
+    "front_back_min_difference_db": 2.0,
+    "distance_drop_1_to_10m_min_db": 14.0,
+    "distance_monotonic": true,
+    "occlusion_min_db": 6.0,
+    "occlusion_extra_hf_cut_min_db": 6.0,
+    "interior_edt_increase_min_ms": 150.0,
+    "interior_late_to_early_increase_min_db": 10.0,
+    "doppler_min_cents_at_5mps": 15.0,
+    "pan_tracking_min_r": 0.8,
+    "footstep_material_centroid_min_ratio": 1.25,
+    "footstep_repetition_similarity_max": 0.98,
+    "map_ambience_similarity_max": 0.97,
+    "local_emitter_min_rise_db": 3.0,
+    "transition_clicks_max": 0,
+    "transition_hard_stops_max": 0,
+    "residual_silence_max_dbfs": -70.0,
+    "ui_over_music_min_db": 3.0,
+    "sting_over_bed_min_db": 3.0,
+    "max_simultaneous_audible_voices": 32
+  },
+  "voice": {
+    "lr_min_db_at_90": 9.0,
+    "occlusion_min_db": 6.0,
+    "occlusion_extra_hf_cut_min_db": 6.0,
+    "interior_edt_increase_min_ms": 150.0,
+    "dropout_ms_max": 0.0,
+    "start_latency_max_ms": 200.0,
+    "clicks_max": 0,
+    "mosquito_f0_ratio": [1.2, 1.4],
+    "clear_distance_m": 4.0,
+    "level_at_1m_vs_reference_max_db": 1.0
+  }
+}
