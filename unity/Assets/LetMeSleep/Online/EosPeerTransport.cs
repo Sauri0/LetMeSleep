@@ -7,7 +7,7 @@ using Epic.OnlineServices.P2P;
 namespace LetMeSleep.Online
 {
     /// <summary>Bounded authenticated datagrams. Consumers must copy the receive segment before returning.</summary>
-    public sealed class EosPeerTransport : IDisposable
+    public sealed class EosPeerTransport : IDisposable, IRoomLink
     {
         public const int MaximumPacketBytes = 1170;
         public const byte MaximumChannel = 4;
@@ -80,6 +80,8 @@ namespace LetMeSleep.Online
             if (result != Result.Success) ReportIssue(memberId, "Send" + channel + ":" + result, now);
             return result;
         }
+
+        void IRoomLink.SendPacket(string memberId, byte channel, ArraySegment<byte> data, bool reliable) => Send(memberId, channel, data, reliable);
 
         public void Poll()
         {

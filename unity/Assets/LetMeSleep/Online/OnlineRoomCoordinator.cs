@@ -10,9 +10,10 @@ namespace LetMeSleep.Online
     public sealed class OnlineRoomCoordinator : IDisposable
     {
         private const byte Hello = 1, View = 2, Ready = 3, Rejected = 4;
-        private readonly EosConnection connection;
-        private readonly EosLobbySession lobby;
-        private readonly EosPeerTransport transport;
+        /// <summary>A joined guest repeats its Hello this often; the host answers a known member with its current view.</summary>
+        public const double ViewRefreshSeconds = 5;
+        private readonly IRoomLobby lobby;
+        private readonly IRoomLink transport;
         private readonly MessageFraming frames = new MessageFraming();
         private readonly RoomMessageLimiter limits = new RoomMessageLimiter();
         private readonly string playerName;
@@ -26,22 +27,39 @@ namespace LetMeSleep.Online
         public event Action<string> MemberReconnected;
 
         public OnlineRoomCoordinator(EosConnection connection, EosLobbySession lobby, EosPeerTransport transport, string playerName)
+            : this((IRoomLobby)lobby, transport, playerName) { }
+        public OnlineRoomCoordinator(IRoomLobby lobby, IRoomLink transport, string playerName)
         {
-            this.connection = connection; this.lobby = lobby; this.transport = transport; this.playerName = playerName;
+            this.lobby = lobby ?? throw new ArgumentNullException(nameof(lobby));
+            this.transport = transport ?? throw new ArgumentNullException(nameof(transport));
+            this.playerName = playerName;
             transport.PacketReceived += ReceivePacket;
+            // EOS flushes queued reliable packets when a link closes: a re-established link resynchronizes the view.
+            transport.PeerStateChanged += PeerRouteChanged;
             frames.MessageReceived += ReceiveMessage;
             lobby.Changed += MembershipChanged;
             MembershipChanged();
         }
+        private string LocalId => lobby.LocalMemberId;
         public void Tick(double monotonicSeconds)
         {
             clock = monotonicSeconds;
             if (!disposed && hostRoom != null && lobby.State == LobbyState.Connected && lobby.IsOwner
                 && hostRoom.ExpireReservations(clock)) Publish();
-            if (disposed || lobby.State != LobbyState.Connected || lobby.IsOwner || Current != null) return;
+            if (disposed || lobby.State != LobbyState.Connected || lobby.IsOwner) return;
+            if (Current != null)
+            {
+                // Slow resync: a view dropped without a link event (full send queue) is recovered within seconds.
+                if (clock - lastHello >= ViewRefreshSeconds) SendHello();
+                return;
+            }
             if (awaitingSince < 0) awaitingSince = clock;
             if (clock - awaitingSince > 25) { Error = "RoomHandshakeTimedOut"; return; }
             if (clock - lastHello < 1) return;
+            SendHello();
+        }
+        private void SendHello()
+        {
             lastHello = clock;
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
             RoomWireCodec.WriteText(writer, RoomSession.Protocol, 64); RoomWireCodec.WriteText(writer, playerName, 96);
@@ -53,7 +71,7 @@ namespace LetMeSleep.Online
             Error = "";
             if (lobby.IsOwner)
             {
-                var result = hostRoom.SetReady(connection.LocalUserId.ToString(), ready); Publish(); return result;
+                var result = hostRoom.SetReady(LocalId, ready); Publish(); return result;
             }
             using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
             writer.Write(ready); writer.Write(Current.Revision); writer.Write(Current.Rules.HumanCount ?? 0); writer.Write(Current.Rules.RoundSeconds); writer.Write(Current.Rules.BloodQuota);
@@ -62,22 +80,22 @@ namespace LetMeSleep.Online
         public RoomError SetRules(RoomRules rules)
         {
             if (hostRoom == null || !lobby.IsOwner) return RoomError.NotOwner;
-            var error = hostRoom.ChangeRules(connection.LocalUserId.ToString(), rules); Publish(); return error;
+            var error = hostRoom.ChangeRules(LocalId, rules); Publish(); return error;
         }
         public RoomError StartRound()
         {
             if (hostRoom == null || !lobby.IsOwner) return RoomError.NotOwner;
-            var error = hostRoom.StartRound(connection.LocalUserId.ToString()); Publish(); return error;
+            var error = hostRoom.StartRound(LocalId); Publish(); return error;
         }
         public RoomError FinishRound()
         {
             if (hostRoom == null || !lobby.IsOwner) return RoomError.NotOwner;
-            var error = hostRoom.FinishRound(connection.LocalUserId.ToString()); Publish(); return error;
+            var error = hostRoom.FinishRound(LocalId); Publish(); return error;
         }
         public RoomError ReturnToLobby()
         {
             if (hostRoom == null || !lobby.IsOwner) return RoomError.NotOwner;
-            var error = hostRoom.ReturnToWaiting(connection.LocalUserId.ToString()); Publish(); return error;
+            var error = hostRoom.ReturnToWaiting(LocalId); Publish(); return error;
         }
         private void MembershipChanged()
         {
@@ -90,7 +108,7 @@ namespace LetMeSleep.Online
                 return;
             }
             if (lobby.IsOwner && hostRoom == null)
-                hostRoom = new RoomSession(connection.LocalUserId.ToString(), playerName, new SeededRandom(Guid.NewGuid().GetHashCode()));
+                hostRoom = new RoomSession(LocalId, playerName, new SeededRandom(Guid.NewGuid().GetHashCode()));
             if (hostRoom != null)
             {
                 foreach (var member in hostRoom.Snapshot().Members)
@@ -98,14 +116,23 @@ namespace LetMeSleep.Online
                 Publish();
             }
         }
-        // A (re)established P2P link has no queued room traffic: EOS flushes reliable packets on close.
+        // A (re)established P2P link has no queued room traffic: EOS flushes reliable packets on close, so a view
+        // published while the link was down (for example the switch to Playing) is lost. Both sides resynchronize:
+        // the host sends its current view, and a guest asks for it with a Hello (a known member just gets the view back).
         private void PeerRouteChanged(string peer, string state)
         {
-            if (disposed || lobby.State != LobbyState.Connected || state == null || state.StartsWith("Closed:", StringComparison.Ordinal)) return;
-            if (lobby.IsOwner && hostRoom != null && Current != null && peer != connection.LocalUserId?.ToString()
-                && Current.Members.Any(member => member.Id == peer) && lobby.Contains(peer))
-                Send(peer, View, RoomWireCodec.Encode(Current));
-            else if (!lobby.IsOwner && peer == lobby.OwnerId && Current == null) lastHello = -10;
+            if (disposed || lobby.State != LobbyState.Connected || string.IsNullOrEmpty(peer) || state == null
+                || state.StartsWith("Closed:", StringComparison.Ordinal) || !lobby.Contains(peer)) return;
+            if (lobby.IsOwner)
+            {
+                if (hostRoom != null && Current != null && peer != LocalId && Current.Members.Any(member => member.Id == peer))
+                    Send(peer, View, RoomWireCodec.Encode(Current));
+            }
+            else if (peer == lobby.OwnerId)
+            {
+                if (Current == null) lastHello = -10; // The waiting handshake retries on the next Tick.
+                else SendHello();
+            }
         }
         private void ReceivePacket(string peer, byte channel, ArraySegment<byte> packet)
         {
@@ -116,7 +143,7 @@ namespace LetMeSleep.Online
             if (disposed || !lobby.Contains(peer)) return;
             if (kind == View && !lobby.IsOwner && peer == lobby.OwnerId)
             {
-                if (RoomWireCodec.TryDecode(payload, peer, out var view) && (Current == null || view.Revision > Current.Revision) && view.Members.Any(m => m.Id == connection.LocalUserId.ToString()))
+                if (RoomWireCodec.TryDecode(payload, peer, out var view) && (Current == null || view.Revision > Current.Revision) && view.Members.Any(m => m.Id == LocalId))
                 { Current = view; Error = ""; RoomChanged?.Invoke(view); }
                 return;
             }
@@ -165,12 +192,12 @@ namespace LetMeSleep.Online
             Current = hostRoom.Snapshot();
             byte[] data = RoomWireCodec.Encode(Current);
             foreach (var member in Current.Members)
-                if (member.Id != connection.LocalUserId.ToString() && lobby.Contains(member.Id)) Send(member.Id, View, data);
+                if (member.Id != LocalId && lobby.Contains(member.Id)) Send(member.Id, View, data);
             RoomChanged?.Invoke(Current);
         }
         private void Send(string peer, byte kind, byte[] data)
         {
-            foreach (var packet in frames.Encode(kind, data)) transport.Send(peer, 0, new ArraySegment<byte>(packet), true);
+            foreach (var packet in frames.Encode(kind, data)) transport.SendPacket(peer, 0, new ArraySegment<byte>(packet), true);
         }
         public void Dispose()
         {

@@ -10,7 +10,7 @@ namespace LetMeSleep.Online
     public enum LobbyState { Idle, Creating, Joining, Connected, Leaving, Closed, Failed }
 
     /// <summary>EOS membership/discovery only. Gameplay rules remain in RoomSession.</summary>
-    public sealed class EosLobbySession : IDisposable
+    public sealed class EosLobbySession : IDisposable, IRoomLobby
     {
         private const string Prefix = "LMSU1-";
         private const string Alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -30,6 +30,7 @@ namespace LetMeSleep.Online
         public string OwnerId { get; private set; } = "";
         public string ErrorCode { get; private set; } = "";
         public bool IsOwner => connection.LocalUserId != null && OwnerId == connection.LocalUserId.ToString();
+        public string LocalMemberId => connection.LocalUserId?.ToString();
         public event Action Changed;
 
         public EosLobbySession(EosConnection connection)
