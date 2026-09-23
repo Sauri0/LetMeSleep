@@ -45,6 +45,16 @@ Round 7 (review): a shorter nightcap tail puts the pompom behind the ear at
 ear-lobe height (no longer under the jaw or on the shoulder), and the mouth
 cavity is wound toward its axis after the global normal pass so Unity's
 back-face culling keeps it (an open mouth no longer shows the background).
+Round 8 (art director r6 + integration review r2): a wide, rounded head
+(~374 mm at the eye line instead of 302, a rounded V to a flat 130 mm chin,
+a convex face whose nose-mouth line stands ahead of the turned-back cheek
+planes, a skull ~20 mm deeper at the back, a jaw line that runs back almost
+level to the jaw angle instead of a wedge); ears out to the wider skull and
+20% larger; pupils +32% in radius, 6 mm further in and 4 mm up; eye-white
+facet normals bent toward forward-up (no emission in Unity any more, so the
+lower half is lit instead of glowing at night); a 38 mm folded cuff on the
+nightcap and a pompom 60 mm further back at z 1.50; the nape hair line 40 mm
+higher.
 Geometry and skin weights only; stable rig/socket coordinates are supplied by
 the caller (eyes stay centred on Socket.Eye z=1.53 for Unity).
 """
@@ -80,59 +90,61 @@ def weighted(obj, rows):
 
 # ---------------------------------------------------------------- head shape
 # 14 radial columns: c0 front centre, c1..c6 around +X, c7 back centre and
-# c8..c13 mirrored on -X. Each ring lists the +X half (x, y); -Y is the front.
+# c8..c13 mirrored on -X. Each ring lists the +X half; -Y is the front.
 COLS=14
-# Round 6 (art director): rounded-box face. The chin drops 45 mm (1.345 ->
-# 1.300) while the mouth stays at 1.40 (mouth-to-chin ~100 mm, ~0.65 eye
-# diameters as in the PER-01 faces). The cheek walls are vertical from the
-# temples down to a jaw ring at z 1.39, then a jaw bevel runs to a flat
-# 150 mm chin; the round-5 full-width cheekbone ring (hexagon) is gone.
+# Round 8 (art director r6, "cabeza demasiado estrecha y alta"): the round-6
+# box (302 mm at the eyes, vertical cheek walls) is replaced by a wide,
+# rounded head read from the PER-01 faces: ~374 mm at the eye line (the same
+# 132 mm globes now leave ~50 mm of skin outside each eye), a rounded V from
+# just under the eyes to a flat 130 mm chin (half widths ~.187 @1.53,
+# .175 @1.455, .145 @1.41, .105 @1.35, .065 @1.30), a convex face whose
+# nose-mouth line stands ~26 mm ahead of the cheek edge with the outer
+# fifth of the face turned back, and a skull ~20 mm deeper at the back
+# between the eyes and the crown. Socket.Eye stays at 1.53, the chin at 1.30
+# and the mouth at 1.40. The lower rings carry their own z per column: the
+# jaw line rises from the chin to the nape (profile V instead of a wedge).
 CHIN_Z=1.300
 MOUTH_Z=1.400
-JAW_Z=1.390
-# Head underside (x, y, z) per +X column: the flat chin at the front rises
-# under the jaw toward the nape, so the back of the head stays short and the
-# neck (narrower than the chin) emerges from it. c7 clears the neck back.
-CHIN_HALF=[(0,-.130,1.300),(.036,-.130,1.300),(.075,-.130,1.300),(.100,-.098,1.312),
-           (.094,-.040,1.330),(.074,.008,1.345),(.054,.050,1.356),(0,.071,1.360)]
-# Jaw ring on the side/back columns c3..c7 (mirrored): bottom of the vertical
-# cheek walls and the rounded occiput above the nape.
-JAW_HALF={3:(.137,-.121,1.390),4:(.149,-.036,1.390),5:(.140,.042,1.394),6:(.090,.102,1.400),7:(0,.114,1.404)}
-# Round 6: the skull is ~15% narrower at the eyes/temples (c4 .188 -> .151,
-# ~302 mm) so the two 132 mm globes cover ~87% of the face width.
+# (name, Jaw weight at the front, 8 half points (x, y, z) c0..c7). The mouth
+# ring's c0/c1 are replaced by the lip pairs (the slit between them).
 HEAD_RINGS=[
-    # Cheek ring: c0..c2 share one frontal plane with the chin (flat face).
-    ('cheek',1.455,[(0,-.138),(.032,-.138),(.086,-.138),(.137,-.124),(.150,-.034),(.145,.066),(.092,.122),(0,.132)]),
-    # Eye line: c1/c2 recessed into a shallow socket behind the globes.
-    ('eye',  1.530,[(0,-.137),(.030,-.130),(.088,-.124),(.138,-.113),(.151,-.030),(.146,.078),(.094,.138),(0,.148)]),
-    ('brow', 1.600,[(0,-.135),(.036,-.1345),(.088,-.131),(.134,-.112),(.148,-.028),(.143,.082),(.092,.142),(0,.152)]),
-    ('band', 1.640,[(0,-.125),(.040,-.1245),(.088,-.118),(.127,-.098),(.140,-.026),(.135,.076),(.088,.131),(0,.142)]),
-    ('crown',1.685,[(0,-.097),(.036,-.096),(.074,-.090),(.100,-.072),(.116,-.017),(.111,.058),(.069,.100),(0,.110)]),
-    ('top',  1.712,[(0,-.060),(.027,-.059),(.048,-.054),(.065,-.042),(.073,-.006),(.070,.040),(.044,.066),(0,.073)]),
+    ('chin', 1.00,[(0,-.140,1.300),(.022,-.139,1.300),(.065,-.130,1.302),(.094,-.090,1.310),
+                   (.110,-.028,1.322),(.100,.030,1.340),(.066,.068,1.354),(0,.084,1.362)]),
+    ('jaw',  .80,[(0,-.152,1.347),(.022,-.151,1.347),(.074,-.141,1.350),(.108,-.108,1.354),
+                  (.130,-.048,1.362),(.130,.036,1.376),(.088,.094,1.392),(0,.113,1.398)]),
+    ('mouth',.30,[(0,-.157,1.400),(.020,-.156,1.400),(.078,-.146,1.410),(.121,-.127,1.413),
+                  (.147,-.074,1.418),(.150,.024,1.424),(.102,.112,1.430),(0,.132,1.433)]),
+    ('cheek',0.0,[(0,-.158,1.455),(.024,-.157,1.455),(.084,-.147,1.455),(.140,-.118,1.456),
+                  (.174,-.052,1.458),(.176,.052,1.460),(.120,.132,1.462),(0,.150,1.463)]),
+    ('eye',  0.0,[(0,-.140,1.530),(.030,-.131,1.530),(.090,-.124,1.530),(.160,-.098,1.530),
+                  (.187,-.030,1.530),(.182,.082,1.530),(.120,.152,1.530),(0,.166,1.530)]),
+    ('brow', 0.0,[(0,-.136,1.600),(.036,-.1355,1.600),(.090,-.132,1.600),(.152,-.104,1.600),
+                  (.185,-.026,1.600),(.180,.090,1.600),(.118,.162,1.600),(0,.176,1.600)]),
+    ('band', 0.0,[(0,-.127,1.640),(.040,-.1265,1.640),(.092,-.121,1.640),(.141,-.097,1.640),
+                  (.175,-.024,1.640),(.171,.086,1.640),(.113,.156,1.640),(0,.170,1.640)]),
+    ('crown',0.0,[(0,-.099,1.685),(.038,-.098,1.685),(.080,-.092,1.685),(.118,-.073,1.685),
+                  (.146,-.018,1.685),(.142,.066,1.685),(.094,.122,1.685),(0,.136,1.685)]),
+    ('top',  0.0,[(0,-.061,1.712),(.029,-.060,1.712),(.055,-.055,1.712),(.078,-.043,1.712),
+                  (.090,-.006,1.712),(.087,.044,1.712),(.056,.078,1.712),(0,.088,1.712)]),
 ]
-HEAD_APEX=(0,.004,1.724)
+HEAD_APEX=(0,.006,1.726)
 # Small mouth slit: 40 mm wide, 4 mm open at the centre and 3 mm at the
-# corners, which drop 2 mm (worried mouth of PER-01/PER-04).
+# corners, which drop 2 mm (worried mouth of PER-01/PER-04), on the convex
+# front (lip y from the mouth ring's c0/c1).
 MOUTH_HALF=.020
 LIP_Z={'lower':(MOUTH_Z-.0015,MOUTH_Z-.0037),'upper':(MOUTH_Z+.0025,MOUTH_Z-.0007)}
-JAW_WEIGHT={'chin':1.0,'jaw':.30,'mouth':.30,'lower':.70,'upper':0.0}
+LIP_JAW={'lower':.70,'upper':0.0}
+# Underside fan centre, hidden inside the neck.
+HEAD_UNDER=(0,-.035,1.322)
 
 
 def mirror(half):
     return list(half)+[(-p[0],)+tuple(p[1:]) for p in reversed(half[1:7])]
 
 
-def frontal_y(z):
-    """The flat front plane of the lower face (cheek c0..c2 down to the chin)."""
-    return CHIN_HALF[0][1]+(HEAD_RINGS[0][2][0][1]-CHIN_HALF[0][1])*(z-CHIN_Z)/(HEAD_RINGS[0][1]-CHIN_Z)
-
-
-# Outline rings used only to aim the hair/cap rays (x, y per column); the
-# actual surface is always found on the authored skull triangles.
-STRUCTURE=[(CHIN_Z,mirror([(x,y) for x,y,_ in CHIN_HALF])),
-           (JAW_Z,mirror([(0,frontal_y(JAW_Z)),(.034,frontal_y(JAW_Z)),(.080,frontal_y(JAW_Z))]
-                         +[JAW_HALF[c][:2] for c in range(3,8)]))]
-STRUCTURE+=[(z,mirror(half)) for _,z,half in HEAD_RINGS]
+# Outline rings used only to aim the hair/cap rays (x, y per column at the
+# ring's front height); the surface is always found on the skull triangles.
+STRUCTURE=[(half[0][2],[(p[0],p[1]) for p in mirror(half)]) for _,_,half in HEAD_RINGS]
 
 
 def ring_at(z):
@@ -213,10 +225,11 @@ def front_y(tris, x, z):
     return best
 
 
-# Cheek/temple quads above the cheekbone are split into triangles (PER-04
-# facets). (lower ring name, first +X column of the quad) -> triangulate.
+# Quads split into triangles for PER-04 facets: (lower ring name, first +X
+# column of the quad). Round 8: the V jaw, the cheeks and the temples.
 TRIANGULATED={(ring,column) for ring,columns in [
-    ('cheek',range(2,6)),('eye',range(3,6)),('brow',range(3,6))] for column in columns}
+    ('jaw',range(2,5)),('mouth',range(2,6)),('cheek',range(3,6)),('eye',range(3,6)),('brow',range(3,6))]
+    for column in columns}
 
 
 def skull(mesh, skin, dark):
@@ -225,71 +238,43 @@ def skull(mesh, skin, dark):
     def add(point, amount):
         verts.append(tuple(point));jaw.append(amount);return len(verts)-1
 
-    # Lower face: head underside ring, the flat-front mouth vertices, the jaw
-    # ring and the cheek ring. Every +X face is authored once and mirrored
-    # (c -> 14 - c).
-    chin={}
-    for c,(x,y,z) in enumerate(CHIN_HALF):
-        amount=JAW_WEIGHT['chin']*jaw_factor(y)
-        chin[c]=add((x,y,z),amount)
-        if 0<c<7:chin[14-c]=add((-x,y,z),amount)
-    lips={}
-    for key in ('lower','upper'):
-        centre,corner=LIP_Z[key];amount=JAW_WEIGHT[key]
-        lips[(key,0)]=add((0,frontal_y(centre),centre),amount*jaw_factor(frontal_y(centre)))
-        lips[(key,1)]=add((MOUTH_HALF,frontal_y(corner),corner),amount*jaw_factor(frontal_y(corner)))
-        lips[(key,13)]=add((-MOUTH_HALF,frontal_y(corner),corner),amount*jaw_factor(frontal_y(corner)))
-    cheek_half=HEAD_RINGS[0][2]
-    mx=(CHIN_HALF[2][0]+cheek_half[2][0])/2
-    mouth={2:add((mx,frontal_y(MOUTH_Z),MOUTH_Z),JAW_WEIGHT['mouth']*jaw_factor(frontal_y(MOUTH_Z))),
-           12:add((-mx,frontal_y(MOUTH_Z),MOUTH_Z),JAW_WEIGHT['mouth']*jaw_factor(frontal_y(MOUTH_Z)))}
-    jawring={}
-    for c,(x,y,z) in JAW_HALF.items():
-        amount=JAW_WEIGHT['jaw']*jaw_factor(y)
-        jawring[c]=add((x,y,z),amount)
-        if c<7:jawring[14-c]=add((-x,y,z),amount)
     rings=[];names=[]
-    for key,z,half in HEAD_RINGS:
-        rings.append([add((x,y,z),0.0) for x,y in mirror(half)]);names.append(key)
-    cheek=rings[0]
-    K=lambda c:cheek[c%COLS]
-    C=lambda c:chin[c%COLS]
-    J=lambda c:jawring[c%COLS]
-    L=lambda key,c:lips[(key,c)]
-    half_faces=[
-        (C(0),C(1),L('lower',1),L('lower',0)),                 # flat front under the mouth
-        (C(1),C(2),mouth[2],L('lower',1)),
-        (L('lower',1),mouth[2],L('upper',1)),                  # mouth corner
-        (L('upper',1),mouth[2],K(2),K(1)),                     # flat front over the mouth
-        (L('upper',0),L('upper',1),K(1),K(0)),
-        # Front corner: chin-corner bevel and the cheek front plane.
-        (C(2),C(3),J(3)),(C(2),J(3),mouth[2]),(mouth[2],J(3),K(3)),(mouth[2],K(3),K(2)),
-        # Vertical cheek walls (jaw ring -> cheek ring) over the jaw bevel.
-        (J(3),J(4),K(4),K(3)),(C(3),C(4),J(4),J(3)),
-        (J(4),J(5),K(5),K(4)),(C(4),C(5),J(5),J(4)),
-        (J(5),J(6),K(6),K(5)),(C(5),C(6),J(6),J(5)),
-        (J(6),J(7),K(7),K(6)),(C(6),C(7),J(7),J(6))]
-    flip={chin[c]:chin[(14-c)%COLS] for c in range(COLS)}
-    flip.update({cheek[c]:cheek[(14-c)%COLS] for c in range(COLS)})
-    flip.update({lips[(k,1)]:lips[(k,13)] for k in ('lower','upper')})
-    flip.update({lips[(k,0)]:lips[(k,0)] for k in ('lower','upper')})
-    flip.update({mouth[2]:mouth[12]})
-    flip.update({jawring[c]:jawring[(14-c)%COLS] for c in jawring})
-    # Non-planar underside: a fan around a centre vertex hidden by the neck.
-    under=add((0,-.035,1.322),JAW_WEIGHT['chin']*jaw_factor(-.035))
+    lips={}
+    for name,weight,half in HEAD_RINGS:
+        ring=[]
+        for c,(x,y,z) in enumerate(mirror(half)):
+            if name=='mouth' and c in (0,1,13):
+                ring.append(None)
+                continue
+            ring.append(add((x,y,z),weight*jaw_factor(y)))
+        if name=='mouth':
+            for key,(centre,corner) in LIP_Z.items():
+                y0=half[0][1];y1=half[1][1]
+                amount=LIP_JAW[key]
+                lips[(key,0)]=add((0,y0,centre),amount*jaw_factor(y0))
+                lips[(key,1)]=add((MOUTH_HALF,y1,corner),amount*jaw_factor(y1))
+                lips[(key,13)]=add((-MOUTH_HALF,y1,corner),amount*jaw_factor(y1))
+        rings.append(ring);names.append(name)
+    under=add(HEAD_UNDER,HEAD_RINGS[0][1]*jaw_factor(HEAD_UNDER[1]))
+    chin=rings[0]
     faces=[(under,chin[(c+1)%COLS],chin[c]) for c in range(COLS)]
-    for face in half_faces:
-        faces.append(face)
-        mirrored_face=tuple(reversed([flip[i] for i in face]))
-        if sorted(mirrored_face)!=sorted(face):faces.append(mirrored_face)
-    for (name,a),b in zip(zip(names,rings),rings[1:]):
+    mouth_index=names.index('mouth')
+    for r,(name,a,b) in enumerate(zip(names,rings,rings[1:])):
+        # Below the mouth ring the lower lip replaces its front columns; above
+        # it, the upper lip (the slit stays open between them).
+        if r+1==mouth_index:b=[lips[('lower',c)] if b[c] is None else b[c] for c in range(COLS)]
+        if r==mouth_index:a=[lips[('upper',c)] if a[c] is None else a[c] for c in range(COLS)]
         for j in range(COLS):
             k=(j+1)%COLS
             column=j if j<7 else 13-j
             if (name,column) in TRIANGULATED:
-                if j<7:faces+= [(a[j],a[k],b[k]),(a[j],b[k],b[j])]
-                else:faces+= [(a[j],a[k],b[j]),(a[k],b[k],b[j])]
+                if j<7:faces+=[(a[j],a[k],b[k]),(a[j],b[k],b[j])]
+                else:faces+=[(a[j],a[k],b[j]),(a[k],b[k],b[j])]
             else:faces.append((a[j],a[k],b[k],b[j]))
+    # Mouth corners: the lower and upper lip corner meet the mouth ring's c2.
+    m=rings[mouth_index]
+    faces.append((lips[('lower',1)],m[2],lips[('upper',1)]))
+    faces.append((lips[('upper',13)],m[12],lips[('lower',13)]))
     apex=add(HEAD_APEX,0.0)
     top=rings[-1]
     faces+=[(top[j],top[(j+1)%COLS],apex) for j in range(COLS)]
@@ -298,7 +283,7 @@ def skull(mesh, skin, dark):
     # Dark oral cavity behind the slit, sharing the lip weights.
     outline=[lips[('upper',13)],lips[('upper',0)],lips[('upper',1)],lips[('lower',1)],lips[('lower',0)],lips[('lower',13)]]
     front=[verts[i] for i in outline];amounts=[jaw[i] for i in outline]
-    back=[(x*.8,-.109,z) for x,y,z in front]
+    back=[(x*.8,MOUTH_CAVITY_BACK_Y,z) for x,y,z in front]
     n=len(front)
     cavity=mesh('MouthCavity',front+back,[(i,(i+1)%n,(i+1)%n+n,i+n) for i in range(n)]+[tuple(range(2*n-1,n-1,-1))],dark)
     weighted(cavity,[{'Head':1-a,'Jaw':a} for a in amounts+amounts])
@@ -309,7 +294,9 @@ def skull(mesh, skin, dark):
 # global normals_make_consistent(inside=False) turned it outward (into the
 # head), so Unity's back-face culling removed it and an open mouth showed
 # the scene behind the head. Its walls and back cap must face the cup axis.
-MOUTH_CAVITY_BOUNDS=((-.03,.03),(-.15,-.10),(1.37,1.43))
+# Round 8: the convex face puts the lips at y ~-.151; the cup is 36 mm deep.
+MOUTH_CAVITY_BACK_Y=-.115
+MOUTH_CAVITY_BOUNDS=((-.03,.03),(-.17,-.10),(1.37,1.43))
 
 
 def orient_mouth_cavity(obj):
@@ -338,6 +325,39 @@ def orient_mouth_cavity(obj):
     return {'faces':len(faces),'flipped':flipped,'vertices':len(ids)}
 
 
+# Round 8 (integration review r2): the eye whites no longer emit in Unity (they
+# glowed like lanterns on the dark night figure). Their lower facets face the
+# ground and only get ambient light, which read as dark bags under the eyes,
+# so every eye-white face keeps its own flat normal bent EYE_NORMAL_BEND of
+# the way toward forward-up: each facet stays a distinct plane, but the lower
+# half is lit by the same key as the face. Custom split normals, exported in
+# the FBX corner normals (Unity imports them); zero vectors keep the auto
+# (flat) normal on every other face.
+EYE_WHITE_MATERIALS=('Character_EyeWhite','Human_EyeWhiteShade')
+EYE_NORMAL_BEND=.62
+EYE_NORMAL_TARGET=(0,-1,.40)
+
+
+def bend_eye_white_normals(obj):
+    """Run AFTER the winding passes on HumanHead (see build_characters.export)."""
+    if obj.name!='HumanHead':return None
+    me=obj.data
+    slots={i for i,m in enumerate(me.materials) if m and m.name in EYE_WHITE_MATERIALS}
+    target=Vector(EYE_NORMAL_TARGET).normalized()
+    normals=[(0.0,0.0,0.0)]*len(me.loops)
+    faces=0;lowest=1.0
+    for polygon in me.polygons:
+        if polygon.material_index not in slots:continue
+        bent=(polygon.normal*(1-EYE_NORMAL_BEND)+target*EYE_NORMAL_BEND).normalized()
+        lowest=min(lowest,bent.z)
+        for loop in polygon.loop_indices:normals[loop]=tuple(bent)
+        faces+=1
+    assert faces>0,'No eye-white faces on HumanHead'
+    me.normals_split_custom_set(normals)
+    me.update()
+    return {'faces':faces,'bend':EYE_NORMAL_BEND,'target':list(target),'lowest_normal_z':round(lowest,4)}
+
+
 # ---------------------------------------------------------------- eyes
 EYE_SEGMENTS=16
 # Round 5: ring latitudes (degrees from the top). The bottom cap starts at
@@ -346,12 +366,17 @@ EYE_SEGMENTS=16
 EYE_LATITUDES=(0,30,60,90,115,136,180)
 # Round 5: pupil 0.28 of the eye width (37 mm), vertically centred and 4 mm
 # toward the nose (parallel gaze, no cross-eye).
-PUPIL_HALF=(.0185,.0185)
-PUPIL_INSET=.004
+# Round 8 (art director r6): radius +32% (49 mm) and 6 mm further toward the
+# nose and 4 mm up (10 mm in, 4 mm up in total): the slightly cross-eyed,
+# startled look of the PER-01 faces. The centroid stays ~9 deg off the Eye
+# bone's forward (Unity's facial gate allows 16).
+PUPIL_HALF=(.0245,.0245)
+PUPIL_INSET=.010
+PUPIL_RAISE=.004
 
 
 def pupil_direction(side_sign):
-    return Vector((-side_sign*PUPIL_INSET/EYE_RADIUS,-1,0)).normalized()
+    return Vector((-side_sign*PUPIL_INSET/EYE_RADIUS,-1,PUPIL_RAISE/EYE_RADIUS)).normalized()
 
 
 def faceted_ball(mesh, name, center, radii, material, bone, segments, latitudes, shade=None):
@@ -505,8 +530,10 @@ def eyes(mesh, tris, white, dark, skin, shade=None):
 # cup (outer rim, sunken bowl, back shell) so the 3/4 view shows the PER-04 C.
 # Round 6: moved in with the narrower skull (side wall x ~.148 at the ear);
 # the rim stands ~20 mm off the head.
-EAR_CENTER=(.156,.030,1.492)
-EAR_SIZE=(.038,.050)          # half depth (y) and half height (z) of the rim
+# Round 8 (art director r6): out with the wider skull (side wall x ~.180 at
+# the ear), the rim edge at x ~.205, and 20% larger.
+EAR_CENTER=(.193,.030,1.492)
+EAR_SIZE=(.0456,.060)         # half depth (y) and half height (z) of the rim
 EAR_OUT=.012                  # rim distance outside the centre plane
 
 
@@ -549,8 +576,10 @@ HAIR_TOP=1.634
 # cap band (z 1.574) and stands 14 mm off the skin; then the line over the
 # ear and a clean nape ~20 mm above the jaw ring. Every integer skull column
 # is sampled so the slab never cuts a skull crease.
+# Round 8: over the wider, deeper skull the round-6 nape (z ~1.425) made the
+# back of the head one dark helmet; the nape line rises ~40 mm.
 HAIR_BOTTOM={3.64:1.574,3.82:1.574,4.00:1.574,4.25:1.556,4.60:1.551,5.00:1.536,
-             5.30:1.505,5.65:1.470,6.00:1.446,6.35:1.432,6.70:1.426,7.00:1.424}
+             5.30:1.515,5.65:1.495,6.00:1.478,6.35:1.468,6.70:1.463,7.00:1.462}
 HAIR_ROWS=[(0.0,.0090),(.17,.0100),(.34,.0100),(.51,.0100),(.68,.0100),(.84,.0098),(1.0,.0080)]
 SIDEBURN_COLUMNS=(3.6,4.05)
 SIDEBURN_THICKNESS=1.4
@@ -579,13 +608,17 @@ def hair(mesh, tris, hair_mat):
 # above the larger eyes/brows, 11 mm proud, darker than the cap body.
 # Round 6: the band is 12 mm lower (bottom 1.622), almost touching the brows
 # (UI-06 screen 4).
-BAND_PROFILE=[(-.002,1.622),(.009,1.6235),(.0125,1.637),(.009,1.6505),(-.002,1.652)]
+# Round 8 (art director r6): the band reads as a folded cuff: 38 mm tall
+# (bottom unchanged, clear of the brows), 10 mm proud, and the crown starts
+# tucked behind its top lip (Human_NightcapBand #8E2220).
+BAND_PROFILE=[(-.002,1.622),(.007,1.6235),(.010,1.641),(.007,1.6585),(-.002,1.660)]
 # Round 5: soft low-poly fabric, 5 horizontal rings from band to apex
 # (UI-06 screen 1) instead of 12+ ribbed rings. Round 6: a little puffier
-# over the narrower skull.
-CROWN=[(1.646,.0135),(1.674,.0290),(1.699,.0400)]
-CROWN_DOME=[(1.729,.82),(1.751,.48)]
-CROWN_APEX_Z=1.764
+# over the narrower skull. Round 8: less puff over the wider skull, so the
+# cuff stays the proudest ring.
+CROWN=[(1.658,.0040),(1.682,.0160),(1.705,.0260)]
+CROWN_DOME=[(1.732,.82),(1.754,.48)]
+CROWN_APEX_Z=1.766
 # Soft tail (UI-06 screens 1/4): flops over the top-left of the crown and
 # falls down the LEFT side of the head, outside the ear, to a pompom at jaw
 # height beside the face. Round 5: 7 sections (large soft facets). Round 6:
@@ -596,11 +629,15 @@ CROWN_APEX_Z=1.764
 # tail is ~110 mm shorter and ends further back and out: the pompom sits
 # behind the ear at ear-lobe height, its bottom (z ~1.393) above the side
 # jaw ring (1.39) and ~40 mm outside the ear rim.
-CAP_TAIL=[((0.020,.024,1.672),.078),((0.100,.042,1.688),.072),((0.170,.066,1.660),.062),
-          ((0.220,.092,1.604),.050),((0.244,.112,1.542),.036),((0.250,.122,1.500),.022),
-          ((0.250,.126,1.482),.013)]
-POMPOM_CENTER=(.250,.128,1.455)
-POMPOM_RADIUS=.0624
+# Round 8 (art director r6, review r1/r2): the tail falls ~45 deg back and
+# out from the crown and the pompom hangs behind the ear at z 1.50, 60 mm
+# further back than round 7 (UI-06 screens 1 and 4): clear of the wider
+# ears, never under the jaw, and ~50 mm off the skull behind the ear.
+CAP_TAIL=[((0.020,.030,1.676),.080),((0.095,.062,1.694),.072),((0.155,.104,1.668),.060),
+          ((0.192,.144,1.620),.048),((0.212,.170,1.570),.034),((0.220,.182,1.540),.021),
+          ((0.221,.184,1.526),.012)]
+POMPOM_CENTER=(.222,.188,1.500)
+POMPOM_RADIUS=.0600
 
 
 def loft(mesh, name, spine, material, bone, sides=10):

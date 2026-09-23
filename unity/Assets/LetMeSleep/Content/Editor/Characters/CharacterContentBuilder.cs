@@ -248,9 +248,10 @@ namespace LetMeSleep.Content.Characters.Editor
             var color = source.color;
             bool wing = IsWingMaterial(source.name);
             bool membrane = source.name == "Mosquito_Wing";
-            // Membranes have two physical faces; cull back to avoid doubling opacity. Veins and the
-            // leading edge keep their authored translucency (opaque if the palette forgot an alpha).
-            if (membrane) color.a = .42f;
+            // Membranes have two physical faces; cull back to avoid doubling opacity. Every wing surface
+            // keeps its authored translucency (the art-directed membrane alpha, .50 in v0.3.0 round 8);
+            // a palette that forgot the alpha falls back to a translucent default instead of opaque.
+            if (membrane && color.a >= .999f) color.a = .5f;
             else if (wing && color.a >= .999f) color.a = .55f;
             material.SetColor("_BaseColor", color);
             material.SetFloat("_Smoothness", wing ? .15f : 1 - source.roughness);
@@ -276,22 +277,16 @@ namespace LetMeSleep.Content.Characters.Editor
             SetKeyword(material, "_ENVIRONMENTREFLECTIONS_OFF", wing);
             SetKeyword(material, "_RECEIVE_SHADOWS_OFF", wing);
             material.SetShaderPassEnabled("ShadowCaster", !wing);
-            // Human eye whites: the sketch eyes are clean white spheres, but their lower half faces the ground
-            // and only receives ambient light, so URP renders it dark grey (the Blender look-dev used the same
-            // faint self-light). A weak emission of their own colour keeps them white in shade; at night the
-            // eyes stay visible on the dark figure.
-            bool eyeWhite = IsEyeWhiteMaterial(source.name);
-            // Material colours are stored in sRGB and linearised for rendering: scale in linear space.
-            var emission = eyeWhite ? (new Color(color.r, color.g, color.b).linear * EyeWhiteEmission).gamma : Color.black;
-            emission.a = 1;
-            material.SetColor("_EmissionColor", emission);
-            // URP rebuilds _EMISSION from the AnyEmissive GI flags when the material is imported (see
-            // AlfaHouseDressing.PersistAuthoredEmission): the keyword alone would be discarded.
-            material.globalIlluminationFlags = eyeWhite ? MaterialGlobalIlluminationFlags.BakedEmissive : MaterialGlobalIlluminationFlags.EmissiveIsBlack;
-            if (eyeWhite) UnityEditor.MaterialEditor.FixupEmissiveFlag(material);
-            SetKeyword(material, "_EMISSION", eyeWhite);
-            Require(!eyeWhite || (material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.AnyEmissive) != 0,
-                "Eye white lost its emissive GI flags: " + source.name);
+            // No character material emits. v0.3.0 round 8: the human eye whites used to emit 25% of their
+            // colour so their ground-facing lower half did not render dark grey, but at night that made the
+            // eyes ~7x brighter than the face (lanterns on a black figure). They are lit like the skin now:
+            // a high albedo, and the FBX bends their facet normals toward forward-up
+            // (author_human_geometry.bend_eye_white_normals) so the lower half catches the key light.
+            material.SetColor("_EmissionColor", Color.black);
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+            SetKeyword(material, "_EMISSION", false);
+            Require((material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.AnyEmissive) == 0,
+                "Character material must not emit: " + source.name);
             // Detail strips sort after the membrane they lie on, independent of renderer distance.
             // URP re-derives renderQueue from _Surface + _QueueOffset when it validates a material.
             int queueOffset = wing && !membrane ? 1 : 0;
@@ -300,14 +295,6 @@ namespace LetMeSleep.Content.Characters.Editor
             EditorUtility.SetDirty(material);
             return material;
         }
-
-        /// <summary>Fraction of an eye white's own (linear) colour it emits (see UpsertMaterial).</summary>
-        private const float EyeWhiteEmission = .25f;
-
-        /// <summary>Human eye whites, including the lower-globe shade. The mosquito's stay unlit: glowing
-        /// eyes would give away a mosquito hiding in the dark.</summary>
-        private static bool IsEyeWhiteMaterial(string name) => name == "Character_EyeWhite"
-            || name == "Human_EyeWhiteShade";
 
         /// <summary>Every translucent wing surface: membrane, veins and leading edge (WingEdge*).</summary>
         private static bool IsWingMaterial(string name) => name == "Mosquito_Wing"

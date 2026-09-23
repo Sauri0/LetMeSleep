@@ -160,7 +160,7 @@
       0
     ],
     "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
-    "geometry_revision": "mosquito-sketch-r6-source",
+    "geometry_revision": "mosquito-sketch-r8-source",
     "palette_srgb_hex": {
       "shell": "#9E2228",
       "segment": "#6E1418",
@@ -168,7 +168,7 @@
       "joint": "#140A0A",
       "eye": "#FAFAF8",
       "pupil": "#141218",
-      "wing": "#D8D2F2",
+      "wing": "#CCC4F6",
       "vein": "#C3C3E6",
       "wing_edge": "#DAD5F2"
     },
@@ -186,7 +186,7 @@
       "unity_note": "per-face materials, no vertex colour; the runtime Mosquito colour binding covers Mosquito_Shell/Mosquito_Abdomen only, so tinting must also scale Mosquito_ShellShade/ShellDark/ShellDeep to keep a recoloured body faceted"
     },
     "wing_vein_alpha": 0.35,
-    "wing_vein_unity_note": "Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder only makes Mosquito_Wing transparent, so Unity draws them opaque until its membrane branch also covers the MosquitoVeins renderer",
+    "wing_vein_unity_note": "Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder renders every wing material transparent with its authored alpha (membrane first, veins and edge sorted after it) and rejects opaque wing materials",
     "leg_skin_note": "leg bones are the unchanged R4 bind; the visible knee/foot (A stance) are skin only: tibia skin blends femur -> tarsus, foot rigid on the tarsus",
     "face": {
       "revision": "mosquito-facial-controls-v1",
@@ -216,16 +216,16 @@
       },
       "eye_radii_source_m": [
         0.0355,
-        0.03,
+        0.027,
         0.0366
       ],
-      "eye_white_forward_offset_source_m": 0.014,
+      "eye_white_forward_offset_source_m": 0.0155,
       "lid_radii_source_m": {
         "x": 0.04,
         "yz": 0.048,
         "lower_inset": 0.0005
       },
-      "lid_geometry_revision": "mosquito-sketch-r7-closed-rim",
+      "lid_geometry_revision": "mosquito-sketch-r8-jittered-shells",
       "lid_rest_edges_degrees_about_x_from_front": {
         "upper_front_center_to_pole": [
           66.0,
@@ -244,9 +244,9 @@
           0.0018,
           0.0095
         ],
-        "depth_source_m": 0.0433991453289253,
-        "inward_yaw_degrees": 2,
-        "down_pitch_degrees": 2.1
+        "depth_source_m": 0.04193492824901375,
+        "inward_yaw_degrees": 6,
+        "down_pitch_degrees": 4
       },
       "bone_tail_direction_source": [
         1,
@@ -453,19 +453,19 @@
     "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
   },
   "bounds_min": [
-    -0.2490209937095642,
+    -0.2026892900466919,
     -0.1904340386390686,
     -0.11370769143104553
   ],
   "bounds_max": [
-    0.2490209937095642,
+    0.2026892900466919,
     0.22623825073242188,
-    0.32047712802886963
+    0.2728801667690277
   ],
   "dimensions": [
-    0.4980419874191284,
+    0.4053785800933838,
     0.4166722893714905,
-    0.43418481945991516
+    0.38658785820007324
   ],
   "sockets": [
     "Socket.Mouth",
@@ -506,6 +506,14 @@
     }
   ],
   "blend_shapes": {},
+  "eye_interior_normals": {
+    "faces": 784,
+    "radii_m": [
+      0.03,
+      0.0495
+    ],
+    "facing_threshold": -0.25
+  },
   "bone_names": [
     "Root",
     "Thorax",
@@ -1203,10 +1211,10 @@
     {
       "name": "Mosquito_Wing",
       "color": {
-        "r": 0.8470588326454163,
-        "g": 0.8235294222831726,
-        "b": 0.9490196108818054,
-        "a": 0.3799999952316284
+        "r": 0.800000011920929,
+        "g": 0.7686274647712708,
+        "b": 0.9647058844566345,
+        "a": 0.5
       },
       "roughness": 0.8500000238418579
     },

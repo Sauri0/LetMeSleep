@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 3731480269050756391}
   - component: {fileID: 7329421078306969587}
   - component: {fileID: 3535108475877258862}
-  - component: {fileID: 1275806963368566200}
+  - component: {fileID: 5461315725737544219}
   m_Layer: 0
   m_Name: LMS_HumanMenu
   m_TagString: Untagged
@@ -417,7 +417,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &1275806963368566200
+--- !u!114 &5461315725737544219
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: human-v030-r7-facial
-  SourceSha256: 852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca
+  SourceSha256: f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:

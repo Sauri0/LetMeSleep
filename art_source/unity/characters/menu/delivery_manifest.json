@@ -1,6 +1,6 @@
 {
-  "status": "v0.3.0 sketch human (round 7, review corrections: the mouth cavity faces its own axis so back-face culling keeps it (an open mouth no longer shows the scene behind the head) and a ~110 mm shorter nightcap tail puts the pompom behind the ear at ear-lobe height (bottom z ~1.393, above the side jaw ring); round 6 (art-director corrections): rounded-box face with the chin 45 mm lower at 1.300 (mouth 1.40, Socket.Eye 1.53), vertical cheek walls to a jaw bevel and a flat 150 mm chin, skull ~15% narrower at the eyes (~302 mm, globes cover ~87%), 20 mm 3D wedge brows under a 12 mm lower cap band, block sideburns (no temple fringe strands), close-fitting sleeves (arm + 15 mm, 100% UpperArm) under a ~17 deg shoulder line, straight 8-sided arm prisms (-10%), +10% longer hands with a loose idle fist, thick closed slippers on a 20 mm #1E2440 sole, 23-24 cream #E6DCC8 45 mm dots per leg incl. back of thighs and seat) regenerated from art_source human base; native numeric gates passed; Unity import and artistic approval pending",
-  "selected_raw_directory": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu",
+  "status": "v0.3.0 sketch human (round 8, art director r6 + integration review r2): wide rounded head (~374 mm at the eye line, rounded V to a flat 130 mm chin at 1.300, convex face with turned-back cheek planes, skull ~20 mm deeper, level jaw line), ears out and +20%, pupils +32% radius 10 mm in and 4 mm up, eye-white facet normals bent toward forward-up (no emission in Unity), a 38 mm folded nightcap cuff (#B02A27 cap, #8E2220 cuff) with the pompom 60 mm further back at z 1.50, cone sleeves, a warm #E2C9A4 T-shirt with Human_ShirtShade side/hem planes and a 20 mm longer hem, trouser legs +12% from the knee down with a 40 mm cuff, ~58 mm dots, the forearm flattened into the palm (no wrist cap); round 7: mouth cavity faces its axis; regenerated from the art_source human base; native numeric gates passed; Unity import and artistic approval pending",
+  "selected_raw_directory": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r8c\\menu",
   "clips": {
     "MenuSeatedIdle": 8.0,
     "MenuLook": 4.0,
@@ -124,10 +124,10 @@
   "review_images": "review/*.png: exact sofa and production flyswatter, Blender control lighting",
   "known_visual_issues": [
     "Round 6 hands are 10% longer beyond the wrist (width, palm thickness and bones hierarchy unchanged, Socket.Grip unchanged); the fist sits ~10 mm further out than Socket.Grip: check the tool mount in the Unity menu scene",
-    "Round 6 sleeves follow UpperArm rigidly from the shoulder joint (only the top ring blends with Chest): check the shoulder crease when the arm is raised (MenuSwat, Swat, Clap)",
-    "Round 6 slippers are closed, wider (~266 mm) and 138 mm tall at the toe; the trouser cuff enters the dome: check cuff/slipper clipping on the menu floor and in walk/run",
-    "Round 7 nightcap pompom sits behind the ear (min vertex distance to HumanBody ~0.20 m in every combat clip, was ~0.08 m); confirm it clears the sofa/pillow during MenuLook/MenuSwat in Unity",
-    "Round 6 dots: back-of-thigh dots stay at z<=.61 and two seat dots sit on the Hips-weighted leg tops (z~.716); seat interior count reported below",
+    "Round 8 cone sleeves (arm + 42 mm at the hem) follow UpperArm rigidly from the shoulder joint: check the shoulder crease and the sleeve hem against the torso when the arm is raised (MenuSwat, Swat, Clap)",
+    "Round 8 trouser legs are 12% wider from the knee down with a 40 mm cuff that enters the closed slipper dome: check cuff/slipper clipping on the menu floor and in walk/run",
+    "Round 8 nightcap pompom hangs behind the ear at z 1.50 (min vertex distance to HumanBody ~0.24 m in every combat clip, ~0.26 m in the menu clips); confirm it clears the sofa/pillow during MenuLook/MenuSwat in Unity",
+    "Round 8 dots: ~58 mm on the legs, the two seat dots keep ~45 mm and the near-hip row stays on the front half; seat interior count reported below",
     "No full moving sequence or Unity approval yet"
   ],
   "file_sha256": {
@@ -158,10 +158,10 @@
     "evidence/menu-roundtrip-motion-process.json": "c315281cfd0e07cbc60bbb504a7001ad8ef7134bb45a2d9013c6bc1ee33cbf37",
     "evidence/menu-roundtrip-motion.err.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "evidence/menu-roundtrip-motion.log": "30a2b4d1101a2665363b72c32d535d7150126c61b1da3c0165a374ca0863485a",
-    "LMS_HumanMenu.blend": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
-    "LMS_HumanMenu.fbx": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca",
-    "menu_audit.json": "818aeb76866fd43fac6daf23de75193ef881d273b356222d350807d0eba50e1d",
-    "menu_motion_audit.json": "291a89a74b2ed6a08fa003ada34d53676b316bf3eca0c730de15043c9a13bc5f",
+    "LMS_HumanMenu.blend": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d",
+    "LMS_HumanMenu.fbx": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466",
+    "menu_audit.json": "2c00fe487c47d5d241480fb4d5c56d9c1fd61c546e11eb2af2981934c5b9a391",
+    "menu_motion_audit.json": "a73d82fc3a658c3127957a507ebad753424e32b0770a7695d9e7d3fc7652fee7",
     "review/reaction.json": "678cd4d3fc43b5cffffd371b1f7336b7739d98546122191ed459eba2a3b0a2ce",
     "review/reaction.png": "7f0318ca4f141fcfd1a0d3785c34024727d3063d5a43a73605778b8a00072c05",
     "review/seated_front.json": "a08acad9c7d01b5c91ce8b0eb0bf5fdebb220b6349f9c98c5bf07a80d81833ec",
@@ -172,16 +172,16 @@
     "review/seated_three_quarter.png": "d22d42a898475a374c50be73093ca927539584ddb420abf2d92d191eef740abd"
   },
   "v030_regeneration": {
-    "round": "human-r7",
-    "source": "art_source/unity/characters/human/LMS_Human_alpha.blend (build_characters.py --species Human, 15-clip base; snapshot .validation/v030-human-r7/base15)",
+    "round": "human-r8",
+    "source": "art_source/unity/characters/human/LMS_Human_alpha.blend (build_characters.py --species Human, 15-clip base; snapshot .validation/v030-human-r8c/base15)",
     "checks": {
       "verify_human_menu": true,
       "audit_human_facial": true,
       "audit_human_joints": true
     },
     "check_reports": {
-      "facial_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu\\facial_audit.json",
-      "joint_audit": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\menu\\joint_audit.json"
+      "facial_audit": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r8c\\menu\\facial_audit.json",
+      "joint_audit": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r8c\\menu\\joint_audit.json"
     },
     "legacy_evidence": "evidence/ and review/ images/logs describe the previous (pre-v0.3.0) pajama-jacket geometry and were not regenerated"
   }

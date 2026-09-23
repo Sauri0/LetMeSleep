@@ -57,6 +57,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Human_ShirtShade
+    second: {fileID: 2100000, guid: d2b51411c25bd284ca2bd279fb692131, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Human_Skin
     second: {fileID: 2100000, guid: 5b9924e791cb4014ba7287df8a4cee71, type: 2}
   - first:

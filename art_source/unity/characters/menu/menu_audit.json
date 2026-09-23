@@ -118,9 +118,9 @@
   "tool_grip_validated": false,
   "seat_skin_contact_validated": false,
   "visual_approval": false,
-  "base_blend_sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
-  "base_fbx_sha256": "7c34bf6315ac4463f46773fde96942023ef7f8d9ccbd30b2a5dd9fb88cc4c8ba",
-  "base_audit_sha256": "0bfd627377f858bb109c8b1d2d482b3326e1fae8787d0b1bd9d380d9d5a297dd",
+  "base_blend_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+  "base_fbx_sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+  "base_audit_sha256": "6d45df81da7efd906fc8f59b1c580ba3186d7b649a2befc15703083802609c9a",
   "bind_bones": [
     {
       "name": "Root",
@@ -1127,9 +1127,9 @@
     {
       "name": "Human_EyeWhiteShade",
       "color": {
-        "r": 0.886274516582489,
-        "g": 0.8941176533699036,
-        "b": 0.9254902005195618,
+        "r": 0.9019607901573181,
+        "g": 0.9098039269447327,
+        "b": 0.9333333373069763,
         "a": 1.0
       },
       "roughness": 0.6000000238418579
@@ -1147,9 +1147,9 @@
     {
       "name": "Human_Nightcap",
       "color": {
-        "r": 0.7843137383460999,
-        "g": 0.19607843458652496,
-        "b": 0.18039216101169586,
+        "r": 0.6901960968971252,
+        "g": 0.16470588743686676,
+        "b": 0.15294118225574493,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1158,8 +1158,8 @@
       "name": "Human_NightcapBand",
       "color": {
         "r": 0.5568627715110779,
-        "g": 0.10196078568696976,
-        "b": 0.0941176488995552,
+        "g": 0.13333334028720856,
+        "b": 0.125490203499794,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1167,9 +1167,9 @@
     {
       "name": "Human_PajamaDots",
       "color": {
-        "r": 0.9019607901573181,
-        "g": 0.8627451062202454,
-        "b": 0.7843137383460999,
+        "r": 0.8627451062202454,
+        "g": 0.8470588326454163,
+        "b": 0.8078431487083435,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1197,9 +1197,19 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.9098039269447327,
-        "g": 0.8627451062202454,
-        "b": 0.772549033164978,
+        "r": 0.886274516582489,
+        "g": 0.7882353067398071,
+        "b": 0.6431372761726379,
+        "a": 1.0
+      },
+      "roughness": 0.9200000166893005
+    },
+    {
+      "name": "Human_ShirtShade",
+      "color": {
+        "r": 0.7686274647712708,
+        "g": 0.6627451181411743,
+        "b": 0.5137255191802979,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1244,7 +1254,8 @@
         "Human_Pajamas",
         "Human_PajamaDots",
         "Human_SlipperSole",
-        "Human_Slipper"
+        "Human_Slipper",
+        "Human_ShirtShade"
       ]
     },
     {
@@ -1278,8 +1289,8 @@
       ]
     }
   ],
-  "triangles": 17864,
-  "vertices": 9182,
+  "triangles": 17780,
+  "vertices": 9138,
   "blend_shapes": {
     "HumanHead": [
       "Blink25.L",
@@ -1394,7 +1405,7 @@
   "combat_clips_modified": false,
   "geometry_source_note": "Coherent generated crown-fixed base; geometry unchanged by menu authoring",
   "files_sha256": {
-    "LMS_HumanMenu.blend": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
-    "LMS_HumanMenu.fbx": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca"
+    "LMS_HumanMenu.blend": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d",
+    "LMS_HumanMenu.fbx": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466"
   }
 }

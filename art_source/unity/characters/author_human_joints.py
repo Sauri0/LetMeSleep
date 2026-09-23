@@ -24,6 +24,14 @@ shoulder line sloping ~17 deg from the collar, and a slimmer chest, so the
 idle arms no longer carry T-shaped sleeve wings; straight 8-sided arm prisms
 tapering to the wrist (upper arm radius -10%); 45 mm cream #E6DCC8 dots, 23
 per leg including the back of the thighs and the seat.
+Round 8 (art director r6 + integration review r2): cone sleeves opening ~20
+deg (arm + 20 mm at the shoulder joint to arm + 42 mm at the hem, 125 mm
+long, top ring 20 mm lower inside the shoulder); the T-shirt hem 20 mm lower
+with 10 mm more flare and Human_ShirtShade on the side planes under the arms
+and on the hem; trouser legs 12% wider from the knee down with a 40 mm cuff;
+~58 mm 5-7 sided dots that are skipped rather than shrunk into overlaps; the
+forearm flattens into the palm and closes inside it (no end cap showing as a
+dark crescent at the wrist).
 """
 import math
 from mathutils import Vector
@@ -180,14 +188,18 @@ def dots(mesh, leg, rings_z, side, material, sides=12):
     # Round 6: diameter +25% (~45 mm), 23 per leg: seven rows up to the hip,
     # plus two dots on the back of the seat (UI-06 screen 5; the back view
     # was empty above mid-thigh).
-    rows=[(.180,3,'all'),(.262,4,'all'),(.344,3,'all'),(.426,4,'all'),(.508,3,'all'),(.582,3,'all'),
+    # Round 8 (art director r6): ~58 mm dots (radius .0285) with 5-7 sides; the
+    # lowest row sits 15 mm higher so no dot runs under the rolled cuff, and a
+    # dot that cannot keep 10 mm from its neighbours at >= 72% of its size is
+    # left out instead of shrunk into an overlapping sliver.
+    rows=[(.178,3,'all'),(.262,4,'all'),(.350,3,'all'),(.428,4,'all'),(.508,3,'all'),(.584,3,'all'),
           (.662,3,'front'),(.716,2,'back')]
     for row,(z0,per_row,zone) in enumerate(rows):
         base=row*2.39996+seed
         for k in range(per_row):
             a0=base+k*2*math.pi/per_row+(_hash(row,k,seed,1)-.5)*.9
-            z=z0+(_hash(row,k,seed,2)-.5)*.030
-            radius=.0222*(.92+.16*_hash(row,k,seed,3))
+            z=z0+(_hash(row,k,seed,2)-.5)*.024
+            radius=.0285*(.92+.16*_hash(row,k,seed,3))
             if zone=='back':
                 # Tube frame: angle 3pi/2 is +Y (back). These sit on the
                 # Hips-weighted leg tops over the seat, which stay above the
@@ -195,17 +207,24 @@ def dots(mesh, leg, rings_z, side, material, sides=12):
                 # the thigh does not (it rests on the cushion).
                 a0=1.5*math.pi+(k-.5)*.80+(_hash(row,k,seed,1)-.5)*.2
                 z=z0+(_hash(row,k,seed,2)-.5)*.008
+                # Round 8: the seat dots keep the round-6 size (~45 mm): a
+                # 58 mm dot reaches down into the mixed hip/thigh band.
+                radius=.0222*(.92+.16*_hash(row,k,seed,3))
             point,_,leg_radius=surface(a0,z)
             # Front row near the hip: front/sides only (see above).
-            if zone=='front' and point.y>-.01:continue
+            # Round 8: the larger dots wrap further round the thigh, so the
+            # near-hip row keeps its centres on the front half (y < -.035).
+            if zone=='front' and point.y>-.035:continue
+            wanted=radius
             for other_a,other_z,other_r,_ in placed:
                 arc=((a0-other_a+math.pi)%(2*math.pi)-math.pi)*leg_radius
                 distance=math.hypot(arc,z-other_z)
-                if distance<radius+other_r+.010:radius=max(.015,distance-other_r-.010)
+                if distance<radius+other_r+.010:radius=distance-other_r-.010
+            if radius<.72*wanted:continue
             placed.append((a0,z,radius,leg_radius))
     verts=[];faces=[]
     for index,(a0,z0,radius,leg_radius) in enumerate(placed):
-        count=6+int(_hash(index,seed,7,0)*2)
+        count=5+min(2,int(_hash(index,seed,7,0)*3))  # round 8: 5-7 sides
         spin=_hash(index,seed,8,0)*2*math.pi
         outline=[]
         for q in range(count):
@@ -214,11 +233,14 @@ def dots(mesh, leg, rings_z, side, material, sides=12):
             outline.append((reach*math.cos(angle),reach*math.sin(angle)))
         local=[(0.0,0.0)]+[(x*.5,y*.5) for x,y in outline]+outline
         base=len(verts)
-        for lift in (.0025,-.0020):
+        # Round 8: 3.5 mm proud (was 2.5) so the larger dots bridge the leg's
+        # facet creases without the cloth poking through their middle.
+        for lift in (.0035,-.0020):
             for x,y in local:
                 point,normal,_=surface(a0+x/leg_radius,z0+y)
-                # Back of the thigh (seated on the menu cushion): flatter dot.
-                scale=.5 if normal.y>.5 and z0>.52 else 1.0
+                # Back of the thigh (seated on the menu cushion): flatter dot
+                # (1.26 mm proud, as before).
+                scale=.36 if normal.y>.5 and z0>.52 else 1.0
                 verts.append(tuple(point+normal*lift*scale))
         layer=len(local);mid=1;out=1+count
         for q in range(count):
@@ -251,20 +273,29 @@ def clothing(mesh, tube, side, sign, m):
     # slope) and blends with Chest; from the shoulder joint the ring radius is
     # the arm radius + 15 mm (.052 + .015) and the hem is 115 mm along the
     # UpperArm axis (x .250 -> .365), folded in by a short inner lip.
-    outer=[(.190,.082,.046,-.010),(.222,.072,.061,-.003),(.250,.067,.067,0),(.290,.067,.067,0),
-           (.330,.0665,.0665,0),(.365,.066,.066,0)]
-    rings=[section(*row) for row in outer]+[section(.360,.059,.059),section(.346,.057,.057)]
+    # Round 8 (art director r6): the close sleeve read as a square shoulder pad.
+    # Now a cone that opens ~20 deg: the top ring sits 20 mm lower inside the
+    # torso shoulder, the ring radius grows from arm + 20 mm at the shoulder
+    # joint to arm + 42 mm at the hem, 125 mm along UpperArm (x .250 -> .375).
+    outer=[(.190,.080,.040,-.020),(.222,.072,.054,-.010),(.250,.072,.062,-.004),(.290,.077,.070,-.002),
+           (.330,.084,.079,-.001),(.375,.093,.090,0)]
+    rings=[section(*row) for row in outer]+[section(.370,.086,.083),section(.356,.082,.079)]
     if sign<0:rings=[list(reversed(r)) for r in rings]
     sleeve=loft_rings(mesh,'Sleeve.'+side,rings,m['shirt'])
     assign(sleeve,[sleeve_weights(v.co,side) for v in sleeve.data.vertices])
-    facet(sleeve,(.0015,.0025),lambda co:(co.x,0,arm_z(abs(co.x))),lambda co:.200<abs(co.x)<.355,7.3+sign)
+    facet(sleeve,(.0015,.0025),lambda co:(co.x,0,arm_z(abs(co.x))),lambda co:.200<abs(co.x)<.365,7.3+sign)
     # Bare arm. Round 6: straight 8-sided prisms, the upper arm radius -10%
     # (58 -> 52 mm) with no biceps/forearm bulge, tapering evenly from the
     # elbow to the wrist, whose end enters the (longer) palm.
-    xs=[.275,.330,.400,.470,.520,.570,.620,.665,.695,.715]
+    # Round 8 (review r2, wrist seam): the flat end cap of the forearm stood
+    # ~6 mm proud of the thinner welded palm (HandSkin is its own mesh) and
+    # showed as a dark crescent at the wrist. The last stations now flatten
+    # into the palm and close to a small tip inside it, so only the plain
+    # intersection of two lit surfaces remains.
+    xs=[.275,.330,.400,.470,.520,.570,.620,.665,.695,.712,.728]
     arm=tube('Arm.'+side,[(sign*x,0,arm_z(x)) for x in xs],
-             [.0520,.0518,.0512,.0503,.0495,.0478,.0458,.0432,.0400,.0370],
-             [.0520,.0518,.0512,.0503,.0495,.0470,.0442,.0408,.0362,.0322],m['skin'],sides=8)
+             [.0520,.0518,.0512,.0503,.0495,.0478,.0458,.0432,.0395,.0340,.0220],
+             [.0520,.0518,.0512,.0503,.0495,.0470,.0442,.0400,.0300,.0205,.0120],m['skin'],sides=8)
     assign(arm,[arm_weights(v.co,side) for v in arm.data.vertices])
     # Dotted pajama trousers (UI-06 screen 5): straight legs 15% wider than
     # round 2 (depth unchanged so the seated thigh keeps clear of the cushion),
@@ -277,14 +308,17 @@ def clothing(mesh, tube, side, sign, m):
     # the thigh has no horizontal shading band.
     rings=[(.100,0,.122),(.200,0,.122),(.32,0,.122),(.375,0,.121),(.410,-.002,.120),(.440,-.004,.119),
            (.470,-.002,.117),(.505,0,.114),(.60,0,.106),(.70,0,.096),(.78,0,.091)]
+    # Round 8 (art director r6, UI-06 screen 5): 12% wider from the knee down
+    # (width only: the seated thigh depth over the menu cushion is unchanged).
     leg=tube('PajamaLeg.'+side,[(sign*x,y,z) for z,y,x in rings],
-        [.080,.080,.080,.080,.081,.082,.082,.081,.081,.084,.087],
+        [.0896,.0896,.0896,.0896,.0907,.0918,.0918,.0875,.081,.084,.087],
         [.076,.076,.077,.078,.080,.084,.082,.080,.078,.075,.074],m['pajamas'],sides=12)
     assign(leg,[leg_weights(v.co,side) for v in leg.data.vertices])
     dots(mesh,leg,[z for z,y,x in rings],side,m['dots'])
-    # Rolled cuff: 65 mm tall, 9 mm proud of the leg, bottom edge at 70 mm.
-    cuff=tube('TrouserCuff.'+side,[(sign*.122,0,z) for z in [.070,.075,.130,.135]],
-              [.084,.089,.089,.085],[.080,.085,.085,.081],m['pajamas'],'LowerLeg.'+side,12)
+    # Rolled cuff: 9 mm proud of the leg, bottom edge at 70 mm. Round 8: a
+    # 40 mm hem (was 65) on the 12% wider leg.
+    cuff=tube('TrouserCuff.'+side,[(sign*.122,0,z) for z in [.070,.075,.105,.110]],
+              [.094,.100,.100,.095],[.080,.085,.085,.081],m['pajamas'],'LowerLeg.'+side,12)
     return cuff
 
 
@@ -315,11 +349,14 @@ def torso(mesh, tube, m):
     # Round 6: slimmer chest (.212 -> .200) and a straight shoulder line
     # falling ~17 deg from the collar (x .106, z 1.243) to the shoulder corner
     # (x .198, z 1.200), where the close-fitting sleeve takes over.
-    sections=[(.792,.177,.090),(.905,.182,.100),(1.035,.192,.112),(1.150,.200,.115),
+    # Round 8 (art director r6): the hem hangs 20 mm lower with 10 mm more
+    # flare (a loose pajama T), and Human_ShirtShade #C4A983 covers the side
+    # planes under the arms and the hem band: the faceted folds of PER-04.
+    sections=[(.792,.180,.093),(.905,.182,.100),(1.035,.192,.112),(1.150,.200,.115),
               (1.188,.200,.112),(1.205,.197,.108),(1.2167,.188,.104),(1.2234,.170,.100),
               (1.2326,.140,.095),(1.243,.106,.089)]
     count=12
-    rings=[boxy(.168,.080,count,.806)]+[boxy(.176,.088,count,.776)]
+    rings=[boxy(.176,.088,count,.786)]+[boxy(.186,.098,count,.756)]
     rings+=[boxy(a,b,count,z,3.2 if z<1.20 else 2.6) for z,a,b in sections]
     shirt=loft_rings(mesh,'Shirt',rings,m['shirt'])
     def body_weights(position):
@@ -328,6 +365,13 @@ def torso(mesh, tube, m):
         return {name:value for name,value in {'Hips':wh,'Spine':1-wh-wc,'Chest':wc}.items() if value>0}
     assign(shirt,[body_weights(v.co) for v in shirt.data.vertices])
     facet(shirt,(.002,.003),lambda co:(0,0,co.z),lambda co:.85<co.z<1.19,3.1)
+    if 'shirtshade' in m:
+        shirt.data.materials.append(m['shirtshade'])
+        for polygon in shirt.data.polygons:
+            z=polygon.center.z;n=polygon.normal
+            side=abs(n.x)>.80 and .86<z<1.13
+            hem=z<.800
+            if side or hem:polygon.material_index=1
     # Elastic pajama waistband under the hem: flat front almost flush with the
     # hem so it is not a dark shadowed belt (<=5% darker than the trousers).
     count=16

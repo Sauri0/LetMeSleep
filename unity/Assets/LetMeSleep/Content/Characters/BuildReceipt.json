@@ -1,8 +1,8 @@
 {
     "builder": "v030-characters-9-review-eyes",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "7823f733a399b6fd1361dbc3de651698f298fd61e77992307a411e7e1c10f707",
-    "builderDigest": "fb72a646c5b62a1d090b3fd63e9d10e7d01c11e487a2f013bef109c0d14fbc52",
+    "sourceDigest": "bfe5eaf4afa87d4457aca41971fcc1643c3b7fc14226d129096166d22b7d6bae",
+    "builderDigest": "81878aa483c3e27ddb4ae66d7d9007097db6dbb889d4467927296422e275973a",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -54,6 +54,10 @@
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Shirt.mat",
             "guid": "662940dab54789841b3dc4c879735834"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_ShirtShade.mat",
+            "guid": "d2b51411c25bd284ca2bd279fb692131"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Skin.mat",
@@ -163,7 +167,7 @@
     "validations": [
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
-            "triangles": 17864,
+            "triangles": 17780,
             "renderers": 5,
             "bones": 65,
             "clips": 17,
@@ -407,7 +411,7 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
-            "triangles": 17864,
+            "triangles": 17780,
             "renderers": 5,
             "bones": 65,
             "clips": 17,

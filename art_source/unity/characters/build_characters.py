@@ -176,14 +176,20 @@ class Character:
             bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
             bpy.ops.mesh.normals_make_consistent(inside=False); bpy.ops.object.mode_set(mode='OBJECT')
             obj.select_set(False)
-        lid_winding=None;mouth_winding=None
+        lid_winding=None;mouth_winding=None;eye_normals=None
         if self.species=='Human':
             from author_human_facial import orient_lid_faces
-            from author_human_geometry import orient_mouth_cavity
+            from author_human_geometry import orient_mouth_cavity,bend_eye_white_normals
             for obj in meshes:
                 if obj.name=='HumanHead':
                     lid_winding=orient_lid_faces(self,obj)
                     mouth_winding=orient_mouth_cavity(obj)
+                    eye_normals=bend_eye_white_normals(obj)
+        eye_interiors=None
+        if self.species=='Mosquito':
+            from author_mosquito_face import light_eye_interiors
+            for obj in meshes:
+                if obj.name=='MosquitoSkin':eye_interiors=light_eye_interiors(obj)
         audit={'species':self.species,'mesh_count':len(meshes),'bones':len(self.rig.data.bones),
                'triangles':0,'vertices':0,'unweighted_vertices':0,'bad_weight_sums':0,
                'degenerate_triangles':0,'nonfinite_vertices':0,'clips':self.clips,'curl':self.curl,'contact':self.contact}
@@ -209,6 +215,9 @@ class Character:
             audit['facial_contract']=getattr(self,'facial_contract',{})
             audit['eyelid_winding']=lid_winding
             audit['mouth_cavity_winding']=mouth_winding
+            audit['eye_white_normals']=eye_normals
+        if self.species=='Mosquito':
+            audit['eye_interior_normals']=eye_interiors
         audit['bone_names']=[b.name for b in self.rig.data.bones]
         audit['bind_bones']=[{'name':b.name,'parent':b.parent.name if b.parent else '',
                               'head_blender_m':list(b.head_local),'tail_blender_m':list(b.tail_local)} for b in self.rig.data.bones]
@@ -264,17 +273,25 @@ def human():
     # band is a clearly darker #8E1A18.
     # Round 6 (art director): cream dots #E6DCC8 that tie in with the T-shirt
     # (UI-06 screen 5) and a #1E2440 slipper sole.
+    # Round 8 (art director r6): the nightcap base drops to #B02A27 so the
+    # lit cap reads ~#C8322E (it rendered pink #F04B49) with a #8E2220 cuff;
+    # a warm beige T-shirt #E2C9A4 (it read cold white) with Human_ShirtShade
+    # #C4A983 on the side planes under the arms and on the hem; paler #DCD8CE
+    # dots. The eye whites keep a high albedo (#F0F0F4, shade #E6E8EE).
     m={'skin':palette('Human_Skin','#C98B5A',.82),'pajamas':palette('Human_Pajamas','#2D4F9A',.88),
        'trim':palette('Human_Piping','#F5F2EC',.90),'sole':palette('Human_SlipperSole','#1E2440',.92),
        'white':palette('Character_EyeWhite','#F0F0F4',.55),'dark':palette('Character_Expression','#16110F',.92),
-       'eyeshade':palette('Human_EyeWhiteShade','#E2E4EC',.60),
-       'shirt':palette('Human_Shirt','#E8DCC5',.92),'dots':palette('Human_PajamaDots','#E6DCC8',.88),
-       'cap':palette('Human_Nightcap','#C8322E',.95),'band':palette('Human_NightcapBand','#8E1A18',.95),
+       'eyeshade':palette('Human_EyeWhiteShade','#E6E8EE',.60),
+       'shirt':palette('Human_Shirt','#E2C9A4',.92),'shirtshade':palette('Human_ShirtShade','#C4A983',.92),
+       'dots':palette('Human_PajamaDots','#DCD8CE',.88),
+       'cap':palette('Human_Nightcap','#B02A27',.95),'band':palette('Human_NightcapBand','#8E2220',.95),
        'hair':palette('Human_Hair','#3A2619',.85),'slipper':palette('Human_Slipper','#25306A',.90)}
-    # Blender look-dev only: a faint self-light keeps the huge eyeballs and the
-    # pompom white under the top key while the eye facets stay visible (the
-    # audit/Unity palette is unchanged).
-    for key,strength in (('white',.30),('eyeshade',.30),('trim',.85)):
+    # Blender look-dev only: a faint self-light keeps the pompom white under
+    # the top key (the audit/Unity palette is unchanged). Round 8: the eye
+    # whites have none, like Unity (no emission; bent normals light their
+    # lower half, see author_human_geometry.bend_eye_white_normals), so the
+    # sheet shows what the game will.
+    for key,strength in (('trim',.85),):
         node=principled(m[key])
         node.inputs['Emission Color'].default_value=node.inputs['Base Color'].default_value
         node.inputs['Emission Strength'].default_value=strength

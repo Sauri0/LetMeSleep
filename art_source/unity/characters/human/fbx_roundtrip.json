@@ -1,14 +1,14 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
-    "source_audit_sha256": "a06a1214accdaa65b32a42e372a352172543a14dbf499c67d032043e203609be",
+    "fbx_sha256": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453",
+    "source_audit_sha256": "7be207c8da16fe435fe526681747cb2125c308bca0fe23190897384a8aaf50a4",
     "dimensions": [
       1.9442545771598816,
-      0.42527371644973755,
-      1.7640000685782482
+      0.48310934007167816,
+      1.7660000428290417
     ],
-    "triangles": 17864,
+    "triangles": 17780,
     "bones": 65,
     "actions": [
       "Key|LMS_HumanRig|Human_Blink",

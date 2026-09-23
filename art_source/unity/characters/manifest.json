@@ -23,8 +23,8 @@
       "species": "Human",
       "mesh_count": 5,
       "bones": 65,
-      "triangles": 17864,
-      "vertices": 9182,
+      "triangles": 17780,
+      "vertices": 9138,
       "unweighted_vertices": 0,
       "bad_weight_sums": 0,
       "degenerate_triangles": 0,
@@ -190,13 +190,13 @@
       ],
       "bounds_max": [
         0.9720883369445801,
-        0.18427348136901855,
-        1.7640000581741333
+        0.24210910499095917,
+        1.7660000324249268
       ],
       "dimensions": [
         1.9442545771598816,
-        0.42527347803115845,
-        1.7640000581741333
+        0.48310910165309906,
+        1.7660000324249268
       ],
       "sockets": [
         "Socket.Eye",
@@ -217,7 +217,8 @@
             "Human_Pajamas",
             "Human_PajamaDots",
             "Human_SlipperSole",
-            "Human_Slipper"
+            "Human_Slipper",
+            "Human_ShirtShade"
           ]
         },
         {
@@ -365,6 +366,16 @@
         "faces": 7,
         "flipped": 7,
         "vertices": 12
+      },
+      "eye_white_normals": {
+        "faces": 192,
+        "bend": 0.62,
+        "target": [
+          0.0,
+          -0.9284767508506775,
+          0.371390700340271
+        ],
+        "lowest_normal_z": -0.2667
       },
       "bone_names": [
         "Root",
@@ -1356,6 +1367,7 @@
         "Human_Pajamas",
         "Human_Piping",
         "Human_Shirt",
+        "Human_ShirtShade",
         "Human_Skin",
         "Human_Slipper",
         "Human_SlipperSole"
@@ -1384,9 +1396,9 @@
         {
           "name": "Human_EyeWhiteShade",
           "color": {
-            "r": 0.886274516582489,
-            "g": 0.8941176533699036,
-            "b": 0.9254902005195618,
+            "r": 0.9019607901573181,
+            "g": 0.9098039269447327,
+            "b": 0.9333333373069763,
             "a": 1.0
           },
           "roughness": 0.6000000238418579
@@ -1404,9 +1416,9 @@
         {
           "name": "Human_Nightcap",
           "color": {
-            "r": 0.7843137383460999,
-            "g": 0.19607843458652496,
-            "b": 0.18039216101169586,
+            "r": 0.6901960968971252,
+            "g": 0.16470588743686676,
+            "b": 0.15294118225574493,
             "a": 1.0
           },
           "roughness": 0.949999988079071
@@ -1415,8 +1427,8 @@
           "name": "Human_NightcapBand",
           "color": {
             "r": 0.5568627715110779,
-            "g": 0.10196078568696976,
-            "b": 0.0941176488995552,
+            "g": 0.13333334028720856,
+            "b": 0.125490203499794,
             "a": 1.0
           },
           "roughness": 0.949999988079071
@@ -1424,9 +1436,9 @@
         {
           "name": "Human_PajamaDots",
           "color": {
-            "r": 0.9019607901573181,
-            "g": 0.8627451062202454,
-            "b": 0.7843137383460999,
+            "r": 0.8627451062202454,
+            "g": 0.8470588326454163,
+            "b": 0.8078431487083435,
             "a": 1.0
           },
           "roughness": 0.8799999952316284
@@ -1454,9 +1466,19 @@
         {
           "name": "Human_Shirt",
           "color": {
-            "r": 0.9098039269447327,
-            "g": 0.8627451062202454,
-            "b": 0.772549033164978,
+            "r": 0.886274516582489,
+            "g": 0.7882353067398071,
+            "b": 0.6431372761726379,
+            "a": 1.0
+          },
+          "roughness": 0.9200000166893005
+        },
+        {
+          "name": "Human_ShirtShade",
+          "color": {
+            "r": 0.7686274647712708,
+            "g": 0.6627451181411743,
+            "b": 0.5137255191802979,
             "a": 1.0
           },
           "roughness": 0.9200000166893005
@@ -1657,7 +1679,7 @@
           0
         ],
         "surface_rotation_contract": "local +Y outward normal, forward projected tangent; runtime validation belongs to Gameplay/Presentation",
-        "geometry_revision": "mosquito-sketch-r6-source",
+        "geometry_revision": "mosquito-sketch-r8-source",
         "palette_srgb_hex": {
           "shell": "#9E2228",
           "segment": "#6E1418",
@@ -1665,7 +1687,7 @@
           "joint": "#140A0A",
           "eye": "#FAFAF8",
           "pupil": "#141218",
-          "wing": "#D8D2F2",
+          "wing": "#CCC4F6",
           "vein": "#C3C3E6",
           "wing_edge": "#DAD5F2"
         },
@@ -1683,7 +1705,7 @@
           "unity_note": "per-face materials, no vertex colour; the runtime Mosquito colour binding covers Mosquito_Shell/Mosquito_Abdomen only, so tinting must also scale Mosquito_ShellShade/ShellDark/ShellDeep to keep a recoloured body faceted"
         },
         "wing_vein_alpha": 0.35,
-        "wing_vein_unity_note": "Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder only makes Mosquito_Wing transparent, so Unity draws them opaque until its membrane branch also covers the MosquitoVeins renderer",
+        "wing_vein_unity_note": "Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder renders every wing material transparent with its authored alpha (membrane first, veins and edge sorted after it) and rejects opaque wing materials",
         "leg_skin_note": "leg bones are the unchanged R4 bind; the visible knee/foot (A stance) are skin only: tibia skin blends femur -> tarsus, foot rigid on the tarsus",
         "face": {
           "revision": "mosquito-facial-controls-v1",
@@ -1713,16 +1735,16 @@
           },
           "eye_radii_source_m": [
             0.0355,
-            0.03,
+            0.027,
             0.0366
           ],
-          "eye_white_forward_offset_source_m": 0.014,
+          "eye_white_forward_offset_source_m": 0.0155,
           "lid_radii_source_m": {
             "x": 0.04,
             "yz": 0.048,
             "lower_inset": 0.0005
           },
-          "lid_geometry_revision": "mosquito-sketch-r7-closed-rim",
+          "lid_geometry_revision": "mosquito-sketch-r8-jittered-shells",
           "lid_rest_edges_degrees_about_x_from_front": {
             "upper_front_center_to_pole": [
               66.0,
@@ -1741,9 +1763,9 @@
               0.0018,
               0.0095
             ],
-            "depth_source_m": 0.0433991453289253,
-            "inward_yaw_degrees": 2,
-            "down_pitch_degrees": 2.1
+            "depth_source_m": 0.04193492824901375,
+            "inward_yaw_degrees": 6,
+            "down_pitch_degrees": 4
           },
           "bone_tail_direction_source": [
             1,
@@ -1950,19 +1972,19 @@
         "fall_contact_policy": "evaluated mesh minimum at authored support plane; native landing/transition review pending"
       },
       "bounds_min": [
-        -0.2490209937095642,
+        -0.2026892900466919,
         -0.1904340386390686,
         -0.11370769143104553
       ],
       "bounds_max": [
-        0.2490209937095642,
+        0.2026892900466919,
         0.22623825073242188,
-        0.32047712802886963
+        0.2728801667690277
       ],
       "dimensions": [
-        0.4980419874191284,
+        0.4053785800933838,
         0.4166722893714905,
-        0.43418481945991516
+        0.38658785820007324
       ],
       "sockets": [
         "Socket.Mouth",
@@ -2003,6 +2025,14 @@
         }
       ],
       "blend_shapes": {},
+      "eye_interior_normals": {
+        "faces": 784,
+        "radii_m": [
+          0.03,
+          0.0495
+        ],
+        "facing_threshold": -0.25
+      },
       "bone_names": [
         "Root",
         "Thorax",
@@ -2700,10 +2730,10 @@
         {
           "name": "Mosquito_Wing",
           "color": {
-            "r": 0.8470588326454163,
-            "g": 0.8235294222831726,
-            "b": 0.9490196108818054,
-            "a": 0.3799999952316284
+            "r": 0.800000011920929,
+            "g": 0.7686274647712708,
+            "b": 0.9647058844566345,
+            "a": 0.5
           },
           "roughness": 0.8500000238418579
         },
@@ -2889,12 +2919,12 @@
       "bytes": 8925
     },
     "author_human_geometry.py": {
-      "sha256": "af958c70b1167c499f81ae3d4b41df974220eb2b7faa7ee0eb7aff603b52c36f",
-      "bytes": 38085
+      "sha256": "eb55f5397c5f8620459c09661c2022d863e2776cc2c627043c4e325d1d7db550",
+      "bytes": 40368
     },
     "author_human_joints.py": {
-      "sha256": "d02a8c4d547e7913a47e2e32f3a2366a8e349881a8c91dc1c3bd5ee5a5a38767",
-      "bytes": 19367
+      "sha256": "f1b399b2d096c930177b33b3c31e953aa06a5a580046de26128ee882e583421b",
+      "bytes": 22291
     },
     "author_human_locomotion.py": {
       "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
@@ -2905,12 +2935,12 @@
       "bytes": 3215
     },
     "author_mosquito_face.py": {
-      "sha256": "5a58c6614b5ff4133c319a6502686a25b1bb3e43a80160558a603d0becd7297c",
-      "bytes": 31972
+      "sha256": "b328c03bca6c8cb120897d75779e90c464f8825516e7cfef19d431e892e82547",
+      "bytes": 38531
     },
     "author_mosquito_geometry.py": {
-      "sha256": "4d0a6d0a3da53fb04c41a1abc2ef35c9c8bd2611784cdbfbf6eaa02debc045a6",
-      "bytes": 43234
+      "sha256": "8a578aff55ff1f7e19f8a324e9daed3c7444fe865d50e40d12e6fc268faec730",
+      "bytes": 44805
     },
     "author_mosquito_motion.py": {
       "sha256": "3e549810b2670041580c98f2e7b3884c2e9d1375dc8527e679483304642e7acc",
@@ -2921,8 +2951,8 @@
       "bytes": 15688
     },
     "build_characters.py": {
-      "sha256": "38cd431d0fedb1bc358961c60ea1f7d24db97bb7fe79c5a8a3b9988756cdcf0c",
-      "bytes": 26343
+      "sha256": "b496e8c25d7424b793c0808d8b8ee1a640068a2e2599235a7cc76e95986f143c",
+      "bytes": 27386
     },
     "build_mosquito_candidate.py": {
       "sha256": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
@@ -2993,8 +3023,8 @@
       "bytes": 9253
     },
     "render_portrait.py": {
-      "sha256": "7f6935c731ed25040fcc1f1c77c5fee736f1c342534953da8b4966a20a8725b0",
-      "bytes": 10638
+      "sha256": "c7b2fcc16d06a62063e60ea0ddcf80879a1592a78c094ee5632b7b42756d7f07",
+      "bytes": 13160
     },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
@@ -3041,28 +3071,28 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
-      "bytes": 1419063
+      "sha256": "7aafc391b523fdcc0a0b919466df45000dde50b45457a69442f8ad6693dbee2c",
+      "bytes": 1416013
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
-      "bytes": 10117996
+      "sha256": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453",
+      "bytes": 10122396
     },
     "menu/LMS_HumanMenu.blend": {
-      "sha256": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
-      "bytes": 1308523
+      "sha256": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d",
+      "bytes": 1311452
     },
     "menu/LMS_HumanMenu.fbx": {
-      "sha256": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca",
-      "bytes": 4207468
+      "sha256": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466",
+      "bytes": 4211852
     },
     "mosquito/LMS_Mosquito_alpha.blend": {
-      "sha256": "f4359e7d70b73481c34623f49415652b04a3fee5c80a7ab2488c2f080593f9d1",
-      "bytes": 840296
+      "sha256": "6f11d10e63e3a1c181f1694e0d697db56277d77c42a5d23b0fd479ad7d0d21cb",
+      "bytes": 849576
     },
     "mosquito/LMS_Mosquito_alpha.fbx": {
-      "sha256": "e6b7fb0f141209d82a37486371a48326e4e74b99b880bf869f77e421aeb8e0c6",
-      "bytes": 4492108
+      "sha256": "5ed6929e3b795996392dd565179a505b304d3c477ea6469bb8c55d5e1c24f606",
+      "bytes": 4528524
     },
     "diagnostics/gameplay-e9d15e7/gait_feasibility.py": {
       "sha256": "16c56ca800da9b2ab1fd3456e4c79b4b9cb23d7d9460b4c198ee4181bfb838a1",
@@ -3272,535 +3302,79 @@
       "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
       "bytes": 6097
     },
-    ".validation/v030-human-r7/base15/LMS_Human_alpha.blend": {
-      "sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
-      "bytes": 1224656
+    ".validation/v030-human-r8c/base15/LMS_Human_alpha.blend": {
+      "sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+      "bytes": 1217452
     },
-    ".validation/v030-human-r7/base15/LMS_Human_alpha.fbx": {
-      "sha256": "7c34bf6315ac4463f46773fde96942023ef7f8d9ccbd30b2a5dd9fb88cc4c8ba",
-      "bytes": 8713916
+    ".validation/v030-human-r8c/base15/LMS_Human_alpha.fbx": {
+      "sha256": "23561b19f3c49160416ec0ca5e6430bb42195aa749a469acd05d02927c8fc6ce",
+      "bytes": 8718316
     },
-    ".validation/v030-human-r7/gait/LMS_Human_alpha.blend": {
-      "sha256": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
-      "bytes": 1419063
+    ".validation/v030-human-r8c/gait/LMS_Human_alpha.blend": {
+      "sha256": "7aafc391b523fdcc0a0b919466df45000dde50b45457a69442f8ad6693dbee2c",
+      "bytes": 1416013
     },
-    ".validation/v030-human-r7/gait/LMS_Human_alpha.fbx": {
-      "sha256": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2",
-      "bytes": 10117996
+    ".validation/v030-human-r8c/gait/LMS_Human_alpha.fbx": {
+      "sha256": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453",
+      "bytes": 10122396
     },
-    ".validation/v030-human-r7/menu/LMS_HumanMenu.blend": {
-      "sha256": "3adf2557f71dade498639c00d8e4e2088fa57da2cd6e1b167877e40554097840",
-      "bytes": 1308523
+    ".validation/v030-human-r8c/menu/LMS_HumanMenu.blend": {
+      "sha256": "2477551668f2582f66a4aafd101a71cf2ea158c1c8a1d5c388d58688d001c36d",
+      "bytes": 1311452
     },
-    ".validation/v030-human-r7/menu/LMS_HumanMenu.fbx": {
-      "sha256": "852b3dca118f6390181aa4c945226fd9bcac2ee024cac0529c79919ee61f96ca",
-      "bytes": 4207468
+    ".validation/v030-human-r8c/menu/LMS_HumanMenu.fbx": {
+      "sha256": "f493f8134e99127086829082843140eaf1a6b84d783fca07d5b54f6926aaf466",
+      "bytes": 4211852
     },
-    ".validation/v030-human-r7/gait/source-snapshot/audit_human_joints.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/audit_human_joints.py": {
       "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
       "bytes": 9247
     },
-    ".validation/v030-human-r7/gait/source-snapshot/audit_human_locomotion.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/audit_human_locomotion.py": {
       "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
       "bytes": 16584
     },
-    ".validation/v030-human-r7/gait/source-snapshot/author_human_facial.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/author_human_facial.py": {
       "sha256": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
       "bytes": 8925
     },
-    ".validation/v030-human-r7/gait/source-snapshot/author_human_locomotion.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/author_human_locomotion.py": {
       "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
       "bytes": 3798
     },
-    ".validation/v030-human-r7/gait/source-snapshot/author_motion.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/author_motion.py": {
       "sha256": "8960411741191166f1cede92e5518e0180a3629a917519f3a58fb5db541e6e56",
       "bytes": 15688
     },
-    ".validation/v030-human-r7/gait/source-snapshot/build_characters.py": {
-      "sha256": "38cd431d0fedb1bc358961c60ea1f7d24db97bb7fe79c5a8a3b9988756cdcf0c",
-      "bytes": 26343
+    ".validation/v030-human-r8c/gait/source-snapshot/build_characters.py": {
+      "sha256": "232b0fa686fa30171cb2234c9f41e21e20a5a1f742ec97d827e3218dae089fbd",
+      "bytes": 27050
     },
-    ".validation/v030-human-r7/gait/source-snapshot/compare_fbx_winding_repair.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/compare_fbx_winding_repair.py": {
       "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
       "bytes": 4074
     },
-    ".validation/v030-human-r7/gait/source-snapshot/export_human_locomotion.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/export_human_locomotion.py": {
       "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
       "bytes": 6996
     },
-    ".validation/v030-human-r7/gait/source-snapshot/human_locomotion_contract.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/human_locomotion_contract.py": {
       "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
       "bytes": 4202
     },
-    ".validation/v030-human-r7/gait/source-snapshot/human_menu_contract.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/human_menu_contract.py": {
       "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
       "bytes": 4923
     },
-    ".validation/v030-human-r7/gait/source-snapshot/inspect_fbx_morph_regions.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/inspect_fbx_morph_regions.py": {
       "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
       "bytes": 7021
     },
-    ".validation/v030-human-r7/gait/source-snapshot/repair_human_lid_winding.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/repair_human_lid_winding.py": {
       "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
       "bytes": 6097
     },
-    ".validation/v030-human-r7/gait/source-snapshot/verify_human_menu.py": {
-      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
-      "bytes": 9365
-    },
-    ".validation/v030-human-r6/base15/LMS_Human_alpha.blend": {
-      "sha256": "81307d90cb02d39c549512f22a45c303842cfdb38284b40edba97810be00e582",
-      "bytes": 1224646
-    },
-    ".validation/v030-human-r6/base15/LMS_Human_alpha.fbx": {
-      "sha256": "1bb5956865adf199d05bb918a9f7e15a1693fd704f7f178d895d7445126c94ac",
-      "bytes": 8713932
-    },
-    ".validation/v030-human-r6/gait/LMS_Human_alpha.blend": {
-      "sha256": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
-      "bytes": 1419002
-    },
-    ".validation/v030-human-r6/gait/LMS_Human_alpha.fbx": {
-      "sha256": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b",
-      "bytes": 10118012
-    },
-    ".validation/v030-human-r6/menu/LMS_HumanMenu.blend": {
-      "sha256": "a69bf286b0fe488092777be6961feeef89f7f27f103a0c7dd71865e3f5e15f88",
-      "bytes": 1308487
-    },
-    ".validation/v030-human-r6/menu/LMS_HumanMenu.fbx": {
-      "sha256": "3c56ce47e54d54f60a60971e309ea7ba2c20ec1d77d84523b270a366030a5b77",
-      "bytes": 4207484
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/audit_human_joints.py": {
-      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
-      "bytes": 9247
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/audit_human_locomotion.py": {
-      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
-      "bytes": 16584
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/author_human_facial.py": {
-      "sha256": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
-      "bytes": 8925
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/author_motion.py": {
-      "sha256": "8960411741191166f1cede92e5518e0180a3629a917519f3a58fb5db541e6e56",
-      "bytes": 15688
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/build_characters.py": {
-      "sha256": "33b80015d80a47f9639c9c705a5b80200fd9a6b3a2a788484de4993e3273e124",
-      "bytes": 25999
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/compare_fbx_winding_repair.py": {
-      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
-      "bytes": 4074
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/export_human_locomotion.py": {
-      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
-      "bytes": 6996
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/human_menu_contract.py": {
-      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
-      "bytes": 4923
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/inspect_fbx_morph_regions.py": {
-      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
-      "bytes": 7021
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/repair_human_lid_winding.py": {
-      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
-      "bytes": 6097
-    },
-    ".validation/v030-human-r6/gait/source-snapshot/verify_human_menu.py": {
-      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
-      "bytes": 9365
-    },
-    ".validation/v030-human-r5/base15/LMS_Human_alpha.blend": {
-      "sha256": "1f0bb24b2ff7db6db63e7642c580ee33339f3dcf29d32ed261cc085361a32276",
-      "bytes": 1202746
-    },
-    ".validation/v030-human-r5/base15/LMS_Human_alpha.fbx": {
-      "sha256": "68a3459b385475afd726614d1d9fbbe8933cfa85b2ddd909b2ca449f73efde95",
-      "bytes": 8679484
-    },
-    ".validation/v030-human-r5/gait/LMS_Human_alpha.blend": {
-      "sha256": "53b3c804437a023b2d3c2f71e71b2e59bef13dec92711697c78d2df380f3018a",
-      "bytes": 1392452
-    },
-    ".validation/v030-human-r5/gait/LMS_Human_alpha.fbx": {
-      "sha256": "12741aac8b21992f05ad78f3a5cbe8ee99014aba2221674c255a9d637f477ae7",
-      "bytes": 10083676
-    },
-    ".validation/v030-human-r5/menu/LMS_HumanMenu.blend": {
-      "sha256": "32dfdb932ef05bb37bfb92a0895a7b9e538150f6ab522a03423cf176c13d2d39",
-      "bytes": 1274077
-    },
-    ".validation/v030-human-r5/menu/LMS_HumanMenu.fbx": {
-      "sha256": "a9f88cdc202f0edf5af67506ceadae15c424063d8e04ac1efecdfb76fa7696b8",
-      "bytes": 4170812
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/audit_human_joints.py": {
-      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
-      "bytes": 9247
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/audit_human_locomotion.py": {
-      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
-      "bytes": 16584
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/author_human_facial.py": {
-      "sha256": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
-      "bytes": 8925
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/author_motion.py": {
-      "sha256": "35ba3e723b2fc4da691f64b42b448ca976fba60c61f36a82eba3bebfa7a1d23c",
-      "bytes": 15187
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/build_characters.py": {
-      "sha256": "2b60b7edd547c0af4dbbc7bb397babf5c5c19d9c793286389dc6b67275eac69c",
-      "bytes": 25729
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/compare_fbx_winding_repair.py": {
-      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
-      "bytes": 4074
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/export_human_locomotion.py": {
-      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
-      "bytes": 6996
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/human_menu_contract.py": {
-      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
-      "bytes": 4923
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/inspect_fbx_morph_regions.py": {
-      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
-      "bytes": 7021
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/repair_human_lid_winding.py": {
-      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
-      "bytes": 6097
-    },
-    ".validation/v030-human-r5/gait/source-snapshot/verify_human_menu.py": {
-      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
-      "bytes": 9365
-    },
-    ".validation/v030-human-r4/base15/LMS_Human_alpha.blend": {
-      "sha256": "12b2d0a1f575628e1aca2ebf3f5d0e3cad6868ee1ba221f36ba6ca0ce34d1402",
-      "bytes": 1039091
-    },
-    ".validation/v030-human-r4/base15/LMS_Human_alpha.fbx": {
-      "sha256": "72b649b9e808c5564974e42e9099c8de890f668cfed1bd2bb59c1c2a934504c3",
-      "bytes": 8637852
-    },
-    ".validation/v030-human-r4/gait/LMS_Human_alpha.blend": {
-      "sha256": "6ebb626db291c1127ff50e28106b0e6732b0d1b33f09b637d44df097833ea38d",
-      "bytes": 1235278
-    },
-    ".validation/v030-human-r4/gait/LMS_Human_alpha.fbx": {
-      "sha256": "f64ff7ef4850f1f42916211ad0100f7710e75698a31211c35a1411e77053ba16",
-      "bytes": 10042892
-    },
-    ".validation/v030-human-r4/menu/LMS_HumanMenu.blend": {
-      "sha256": "cb90ca444eaf1cb233371a77a37039af696e1e53ad3817e291ad368890b4aeb4",
-      "bytes": 1223982
-    },
-    ".validation/v030-human-r4/menu/LMS_HumanMenu.fbx": {
-      "sha256": "66c5f0540bd50d5e3b1446a507d289362a23b42602b76eeb8d206b9ea6b453c2",
-      "bytes": 4129212
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/audit_human_joints.py": {
-      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
-      "bytes": 9247
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/audit_human_locomotion.py": {
-      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
-      "bytes": 16584
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/author_human_facial.py": {
-      "sha256": "472e8b343c5786abbe6d5448e3a9efbdb69953ab5d51691b9d8110589289806f",
-      "bytes": 8646
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/author_motion.py": {
-      "sha256": "4d31176de9c0a847bcfdcfe2b54a89d21bfcb955674885033278a95be843ef0a",
-      "bytes": 13775
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/build_characters.py": {
-      "sha256": "fec4319571ee6e343a7676fb1ef4e46cc415f2de602821737ac100f14bb1f100",
-      "bytes": 25093
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/compare_fbx_winding_repair.py": {
-      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
-      "bytes": 4074
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/export_human_locomotion.py": {
-      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
-      "bytes": 6996
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/human_menu_contract.py": {
-      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
-      "bytes": 4923
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/inspect_fbx_morph_regions.py": {
-      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
-      "bytes": 7021
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/repair_human_lid_winding.py": {
-      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
-      "bytes": 6097
-    },
-    ".validation/v030-human-r4/gait/source-snapshot/verify_human_menu.py": {
-      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
-      "bytes": 9365
-    },
-    ".validation/v030-human-r3/base15/LMS_Human_alpha.blend": {
-      "sha256": "19828be4d0013df3184808b461b352b9cf4ebb8bdf52bfff2da16f61349d6597",
-      "bytes": 1048090
-    },
-    ".validation/v030-human-r3/base15/LMS_Human_alpha.fbx": {
-      "sha256": "e79aa481b4f5d97ae6d37f15bc8550ffb1bddeb1ab6757098ff273d5a853086e",
-      "bytes": 8635788
-    },
-    ".validation/v030-human-r3/gait/LMS_Human_alpha.blend": {
-      "sha256": "fd4be0bb67bdb3b6742505211bd3639cae5be9eefd205adae2452a4349e5cead",
-      "bytes": 1244328
-    },
-    ".validation/v030-human-r3/gait/LMS_Human_alpha.fbx": {
-      "sha256": "2087e1d849496b860f0ec53c414dc09d9a0018344407c62e443f301c2996e302",
-      "bytes": 10040828
-    },
-    ".validation/v030-human-r3/menu/LMS_HumanMenu.blend": {
-      "sha256": "16c1d5b63c015345f9014d4e07ec5083b7ecb6820c5050761c3616c85a3f5fd5",
-      "bytes": 1235631
-    },
-    ".validation/v030-human-r3/menu/LMS_HumanMenu.fbx": {
-      "sha256": "c550d6b216af4fdc25cab6439655e390cb2c9d10bfc7999554453f057b4f8ce1",
-      "bytes": 4127276
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/audit_human_joints.py": {
-      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
-      "bytes": 9247
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/audit_human_locomotion.py": {
-      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
-      "bytes": 16584
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/author_human_facial.py": {
-      "sha256": "894f8f398c338924ae0b624a75d156e53df71e7263f654301960453791795e1d",
-      "bytes": 8432
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/author_motion.py": {
-      "sha256": "4d31176de9c0a847bcfdcfe2b54a89d21bfcb955674885033278a95be843ef0a",
-      "bytes": 13775
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/build_characters.py": {
-      "sha256": "9390005c502d02128a68d902db15f328635475d1b2c5e094dda8cb2bfee83984",
-      "bytes": 24818
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/compare_fbx_winding_repair.py": {
-      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
-      "bytes": 4074
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/export_human_locomotion.py": {
-      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
-      "bytes": 6996
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/human_menu_contract.py": {
-      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
-      "bytes": 4923
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/inspect_fbx_morph_regions.py": {
-      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
-      "bytes": 7021
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/repair_human_lid_winding.py": {
-      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
-      "bytes": 6097
-    },
-    ".validation/v030-human-r3/gait/source-snapshot/verify_human_menu.py": {
-      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
-      "bytes": 9365
-    },
-    ".validation/v030-human-r2/base15/LMS_Human_alpha.blend": {
-      "sha256": "43f4ba5897a5f94a22b9c05f1751e86a229156c7e2a4e99638dc5d021aa3d445",
-      "bytes": 1023513
-    },
-    ".validation/v030-human-r2/base15/LMS_Human_alpha.fbx": {
-      "sha256": "82b13e56699c0fec1585569b5dfb97168d144085500614993923001df2439765",
-      "bytes": 8614540
-    },
-    ".validation/v030-human-r2/gait/LMS_Human_alpha.blend": {
-      "sha256": "4ded266087a296e53f5ef970d78b5111fc2829c35d7426233df947bdcb710f69",
-      "bytes": 1220346
-    },
-    ".validation/v030-human-r2/gait/LMS_Human_alpha.fbx": {
-      "sha256": "2fa67524dd33c650de80cf8396fdf4956c71ea28149b2ea314044981dbd03645",
-      "bytes": 10019820
-    },
-    ".validation/v030-human-r2/menu/LMS_HumanMenu.blend": {
-      "sha256": "6d17a4d2789661445760f00a4f46191b1c4e9899f949b59167a3cc0f1e7436a2",
-      "bytes": 1205213
-    },
-    ".validation/v030-human-r2/menu/LMS_HumanMenu.fbx": {
-      "sha256": "3e8dc9db87ca62d4b05ce64af1ee2e5e09acb99dc06e70584b854079027b2c44",
-      "bytes": 4106044
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/audit_human_joints.py": {
-      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
-      "bytes": 9247
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/audit_human_locomotion.py": {
-      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
-      "bytes": 16584
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/author_human_facial.py": {
-      "sha256": "f6e9d0829a6e2c9defa0fd8d46bb583a97d57b65b2c852e50c3e481f91d8048f",
-      "bytes": 8274
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/author_motion.py": {
-      "sha256": "4d31176de9c0a847bcfdcfe2b54a89d21bfcb955674885033278a95be843ef0a",
-      "bytes": 13775
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/build_characters.py": {
-      "sha256": "f99248646ad2b2ee69e51ddccadf7826381e279596c51ad9a1ce5cf41ad6b502",
-      "bytes": 24475
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/compare_fbx_winding_repair.py": {
-      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
-      "bytes": 4074
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/export_human_locomotion.py": {
-      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
-      "bytes": 6996
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/human_menu_contract.py": {
-      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
-      "bytes": 4923
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/inspect_fbx_morph_regions.py": {
-      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
-      "bytes": 7021
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/repair_human_lid_winding.py": {
-      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
-      "bytes": 6097
-    },
-    ".validation/v030-human-r2/gait/source-snapshot/verify_human_menu.py": {
-      "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
-      "bytes": 9365
-    },
-    ".validation/v030-human-r1/base15/LMS_Human_alpha.blend": {
-      "sha256": "f416dc08c90beaa0d7945985f4e26a04aa09b82297193b5cf3136d08134e26a8",
-      "bytes": 1004753
-    },
-    ".validation/v030-human-r1/base15/LMS_Human_alpha.fbx": {
-      "sha256": "2e2aa5125f64652d1483780169aba1dc8763051af755d18b465c2a822a7f3440",
-      "bytes": 8543740
-    },
-    ".validation/v030-human-r1/gait/LMS_Human_alpha.blend": {
-      "sha256": "3b26484d16192a753cdb890f7fad8ca6adba23ac0109d537d2995381de2d74e7",
-      "bytes": 1196004
-    },
-    ".validation/v030-human-r1/gait/LMS_Human_alpha.fbx": {
-      "sha256": "1c74de6986e5bea7634fc26abf56c2894127b5860d22eae99c611b2db251baee",
-      "bytes": 9952972
-    },
-    ".validation/v030-human-r1/menu/LMS_HumanMenu.blend": {
-      "sha256": "66e43afeb385a22c93130f77fb7be211b2095b2aa0e27c738caee51db4baa8cd",
-      "bytes": 1175610
-    },
-    ".validation/v030-human-r1/menu/LMS_HumanMenu.fbx": {
-      "sha256": "59a80b99bbfa7ebd544b941abb3dbaf87eec5405f6501347a7ea4fd367c05432",
-      "bytes": 4047868
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/audit_human_joints.py": {
-      "sha256": "9ba584e4a12d0373875f98f92bd80db6e77bed8cd3bff029d5d0b57d2f743cfb",
-      "bytes": 9247
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/audit_human_locomotion.py": {
-      "sha256": "a916e4522577d129d7dd75eddb72f1e667da9d8a13236c91d5aa6cd279d3a37c",
-      "bytes": 16584
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/author_human_facial.py": {
-      "sha256": "f6e9d0829a6e2c9defa0fd8d46bb583a97d57b65b2c852e50c3e481f91d8048f",
-      "bytes": 8274
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/author_human_locomotion.py": {
-      "sha256": "cf6ccafe3feadb843bb6a2bb3e929ffc3110d4f3e40bf9297eb3ead27215e8b0",
-      "bytes": 3798
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/author_motion.py": {
-      "sha256": "1f85fb7bdd1449c9f59c3ad2a326d983ef1c94fd0e7d6fc925335022718621c1",
-      "bytes": 13399
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/build_characters.py": {
-      "sha256": "c0537d43cd1be0d6d640fb84c12593a56041744ee7428f76ac5c31859bbcd031",
-      "bytes": 23320
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/compare_fbx_winding_repair.py": {
-      "sha256": "17aff5f124a06a08aed67c4bf52ad7a7927d1ebe002d8657e30305412be83471",
-      "bytes": 4074
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/export_human_locomotion.py": {
-      "sha256": "cd94017653cd107ad4eff40efce44cc8dd92bcbac73bdbda1236530a51b12c6b",
-      "bytes": 6996
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/human_locomotion_contract.py": {
-      "sha256": "8e7a53c91f971322763dc91eebe0301ff6a2847ab80e7e6178981493d179ed15",
-      "bytes": 4202
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/human_menu_contract.py": {
-      "sha256": "8987d4de676e0bbc772401dcfaab5fa44fa312875c1fd8bf827cb92c16a24532",
-      "bytes": 4923
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/inspect_fbx_morph_regions.py": {
-      "sha256": "b9382d2b23fae91387f33e46620f5f1fe43b530f0446c24c591cc5d8a63da264",
-      "bytes": 7021
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/repair_human_lid_winding.py": {
-      "sha256": "5a3aa9a73cce01be6168ecd9f0f3792bdf70e78bec63849c70dafccd0e4408c5",
-      "bytes": 6097
-    },
-    ".validation/v030-human-r1/gait/source-snapshot/verify_human_menu.py": {
+    ".validation/v030-human-r8c/gait/source-snapshot/verify_human_menu.py": {
       "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
       "bytes": 9365
     }

@@ -16,10 +16,11 @@ horizontally; its top sits <top_px> rows below the top edge, or lower if the wid
                nightcap down to the shins (head in the upper third); results show the whole figure.
   Mosquito.png 1092 x 592 (the card aspect, so the card shows it whole), top 18.
   HumanWinner  1024 x 1024, top 16, pose "cheer": both fists up (the arm aim of the UI's own
-               AlfaRolePortrait.RaiseArms), tight fists, brows lifted, the jaw dropped in a shout
-               (the dark mouth cavity shows), chest and head tipped back a little. The pupils stay on the
-               Eye bones' rest aim: they are decals on the faceted globes and sink into its facets
-               when turned far.
+               AlfaRolePortrait.RaiseArms), tight fists continuing the forearm with the palms turned
+               toward the head, brows lifted, a wide open smile (render-only lip-corner edit, the jaw
+               dropped), chest and head tipped back a little; shot and lit from the mirrored
+               front-right so the pompom hangs hidden behind the head, the head turned 4 deg and the
+               eyes a further 12 deg toward the viewer (round 8, review r2).
 """
 import math
 import sys
@@ -41,6 +42,8 @@ height_px = int(args[5]) if len(args) > 5 else width
 top_px = float(args[6]) if len(args) > 6 else 16
 pose = args[7] if len(args) > 7 else 'idle'
 human = kind == 'human'
+# Round 8: the cheer is shot (and lit) from the front-right mirror of the idle portraits.
+MIRROR = -1 if pose == 'cheer' else 1
 out.parent.mkdir(parents=True, exist_ok=True)
 
 scene = bpy.context.scene
@@ -121,6 +124,10 @@ def cheer():
     freeze_pose()
     turn_about('Chest', (1, 0, 0), -6)      # lean back a little (source -Y is the front)
     turn_about('Head', (1, 0, 0), -6)       # chin up
+    # Review r2: the pompom peeked out as a loose white sliver between the head and the raised left
+    # arm. The cheer is shot from the front-RIGHT (MIRROR), so the pompom hangs behind the head on
+    # the far side (a ray probe sees none of its vertices), and the head turns 4 deg toward it.
+    turn_about('Head', (0, 0, 1), MIRROR * 4)
     for side, s in (('L', 1), ('R', -1)):
         # Same arm aim as the UI's AlfaRolePortrait.RaiseArms (up, a little out and forward).
         aim('UpperArm.' + side, (s * .34, -.08, .93))
@@ -140,9 +147,40 @@ def cheer():
         brow = rig.pose.bones['Brow.' + side]
         brow.matrix = Matrix.Translation((0, 0, .005)) @ brow.matrix
         bpy.context.view_layer.update()
+        # Review r2: the fists read as claws with a bent wrist; the hand now continues the forearm
+        # and turns its palm 40 deg toward the head, so the curled fingers face the viewer.
+        aim('Hand.' + side, (s * .18, -.05, .97))
+        turn_about('Hand.' + side, (s * .18, -.05, .97), -s * 40)
+        # Review r2: the pupils looked up-left, away from the viewer. With the head already turned
+        # 4 deg, both eyes turn a further 12 deg toward the camera and 8 deg down (runtime limit 22).
+        turn_about('Eye.' + side, (1, 0, 0), 8)
+        turn_about('Eye.' + side, (0, 0, 1), MIRROR * 12)
+    # Review r2: the small round 'o' read as fright. A wide open smile (a 'D' on its side): the lip
+    # corners move 12 mm out and 6 mm up and follow the jaw only 30%, so the upper lip curves up and
+    # the dropped lower lip makes the bottom. Render-only edit of the unsaved scene.
+    head = scene.objects['HumanHead']
+    jaw_group = head.vertex_groups['Jaw'].index
+    head_group = head.vertex_groups['Head'].index
+    basis = head.data.shape_keys.key_blocks['Basis'].data if head.data.shape_keys else None
+    for vertex in head.data.vertices:
+        x, y, z = vertex.co
+        if .018 < abs(x) < .022 and -.165 < y < -.145 and 1.394 < z < 1.401:
+            lower = z < 1.398
+            vertex.co = (x * 1.6, y, z + .006)
+            if basis is not None:
+                # With shape keys the evaluated mesh starts from the Basis key (the blink keys do
+                # not move the lips, and they stay at weight 0 here).
+                basis[vertex.index].co = vertex.co
+            if lower:
+                for group in vertex.groups:
+                    if group.group == jaw_group:
+                        group.weight = .30
+                    elif group.group == head_group:
+                        group.weight = .70
+    head.data.update()
     jaw = rig.pose.bones['Jaw']
     jaw.rotation_mode = 'XYZ'
-    jaw.rotation_euler = (-.34, 0, 0)      # a wide cheering shout (Hit opens it by .18 rad)
+    jaw.rotation_euler = (-.30, 0, 0)      # an open cheering smile (Hit opens it by .18 rad)
     bpy.context.view_layer.update()
 
 
@@ -183,9 +221,9 @@ def light(name, kind_, direction, energy, color, radius=0.0):
 # Source frame: front is -Y, the character's left (.L) is +X. The camera sits front-left like the
 # three-quarter sheet view; the warm key comes from the camera side and above, the cool rim from
 # behind on the opposite side, a faint warm fill keeps the eye whites and dark legs readable.
-light('PortraitKey', 'SUN', (0.9, -1.0, 1.25), 4.2, (1.0, 0.83, 0.62), 6)
-light('PortraitRim', 'SUN', (-1.0, 0.9, 0.55), 7.0, (0.50, 0.64, 1.0), 3)
-light('PortraitFill', 'SUN', (-1.0, -0.6, 0.15), 1.1, (1.0, 0.92, 0.85), 12)
+light('PortraitKey', 'SUN', (MIRROR * 0.9, -1.0, 1.25), 4.2, (1.0, 0.83, 0.62), 6)
+light('PortraitRim', 'SUN', (MIRROR * -1.0, 0.9, 0.55), 7.0, (0.50, 0.64, 1.0), 3)
+light('PortraitFill', 'SUN', (MIRROR * -1.0, -0.6, 0.15), 1.1, (1.0, 0.92, 0.85), 12)
 
 camera_data = bpy.data.cameras.new('PortraitCamera')
 camera_data.type = 'PERSP'
@@ -195,7 +233,7 @@ camera = bpy.data.objects.new('PortraitCamera', camera_data)
 scene.collection.objects.link(camera)
 scene.camera = camera
 
-yaw = math.radians(34)
+yaw = math.radians(MIRROR * 34)
 # Slightly low camera (contrapicado): eye below the figure's middle, looking up at the target.
 target = center + Vector((0, 0, height * (0.06 if human else 0.04)))
 camera_height = low.z + height * (0.33 if human else 0.30)

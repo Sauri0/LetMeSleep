@@ -2,8 +2,8 @@
   "species": "Human",
   "mesh_count": 5,
   "bones": 65,
-  "triangles": 17864,
-  "vertices": 9182,
+  "triangles": 17780,
+  "vertices": 9138,
   "unweighted_vertices": 0,
   "bad_weight_sums": 0,
   "degenerate_triangles": 0,
@@ -187,13 +187,13 @@
   ],
   "bounds_max": [
     0.9720883369445801,
-    0.18427348136901855,
-    1.7640000581741333
+    0.24210910499095917,
+    1.7660000324249268
   ],
   "dimensions": [
     1.9442545771598816,
-    0.42527347803115845,
-    1.7640000581741333
+    0.48310910165309906,
+    1.7660000324249268
   ],
   "sockets": [
     "Socket.Eye",
@@ -214,7 +214,8 @@
         "Human_Pajamas",
         "Human_PajamaDots",
         "Human_SlipperSole",
-        "Human_Slipper"
+        "Human_Slipper",
+        "Human_ShirtShade"
       ]
     },
     {
@@ -362,6 +363,16 @@
     "faces": 7,
     "flipped": 7,
     "vertices": 12
+  },
+  "eye_white_normals": {
+    "faces": 192,
+    "bend": 0.62,
+    "target": [
+      0.0,
+      -0.9284767508506775,
+      0.371390700340271
+    ],
+    "lowest_normal_z": -0.2667
   },
   "bone_names": [
     "Root",
@@ -1353,6 +1364,7 @@
     "Human_Pajamas",
     "Human_Piping",
     "Human_Shirt",
+    "Human_ShirtShade",
     "Human_Skin",
     "Human_Slipper",
     "Human_SlipperSole"
@@ -1381,9 +1393,9 @@
     {
       "name": "Human_EyeWhiteShade",
       "color": {
-        "r": 0.886274516582489,
-        "g": 0.8941176533699036,
-        "b": 0.9254902005195618,
+        "r": 0.9019607901573181,
+        "g": 0.9098039269447327,
+        "b": 0.9333333373069763,
         "a": 1.0
       },
       "roughness": 0.6000000238418579
@@ -1401,9 +1413,9 @@
     {
       "name": "Human_Nightcap",
       "color": {
-        "r": 0.7843137383460999,
-        "g": 0.19607843458652496,
-        "b": 0.18039216101169586,
+        "r": 0.6901960968971252,
+        "g": 0.16470588743686676,
+        "b": 0.15294118225574493,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1412,8 +1424,8 @@
       "name": "Human_NightcapBand",
       "color": {
         "r": 0.5568627715110779,
-        "g": 0.10196078568696976,
-        "b": 0.0941176488995552,
+        "g": 0.13333334028720856,
+        "b": 0.125490203499794,
         "a": 1.0
       },
       "roughness": 0.949999988079071
@@ -1421,9 +1433,9 @@
     {
       "name": "Human_PajamaDots",
       "color": {
-        "r": 0.9019607901573181,
-        "g": 0.8627451062202454,
-        "b": 0.7843137383460999,
+        "r": 0.8627451062202454,
+        "g": 0.8470588326454163,
+        "b": 0.8078431487083435,
         "a": 1.0
       },
       "roughness": 0.8799999952316284
@@ -1451,9 +1463,19 @@
     {
       "name": "Human_Shirt",
       "color": {
-        "r": 0.9098039269447327,
-        "g": 0.8627451062202454,
-        "b": 0.772549033164978,
+        "r": 0.886274516582489,
+        "g": 0.7882353067398071,
+        "b": 0.6431372761726379,
+        "a": 1.0
+      },
+      "roughness": 0.9200000166893005
+    },
+    {
+      "name": "Human_ShirtShade",
+      "color": {
+        "r": 0.7686274647712708,
+        "g": 0.6627451181411743,
+        "b": 0.5137255191802979,
         "a": 1.0
       },
       "roughness": 0.9200000166893005
@@ -1492,21 +1514,21 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
-    "LMS_Human_alpha.fbx": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2"
+    "LMS_Human_alpha.blend": "7aafc391b523fdcc0a0b919466df45000dde50b45457a69442f8ad6693dbee2c",
+    "LMS_Human_alpha.fbx": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "5300747a9b7a542355c214691b59fff5c0caadc9723fa3d4ff4aaa22f07dc597",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r7\\base15",
+    "baseline_blend_sha256": "b85f2ca0a7d70031d665cb7a6a3b362371e62cf4dd67941af2ba3fc719813913",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-chars\\art_source\\unity\\characters\\.validation\\v030-human-r8c\\base15",
     "scene_before": {
-      "meshes": "34357247904c88230a7c49392da1193d2107936e479022c0b81e42cfb39f6076",
+      "meshes": "361404de497667ae192f9121d5664e7dfe3e2c7ef54a4069ef97e5ab150f2084",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
+      "winding": "83702fd4db5fe03da39f2e3fa810c3613845aaec98068e9c8ca754fa256cc84f"
     },
     "scene_after": {
-      "meshes": "34357247904c88230a7c49392da1193d2107936e479022c0b81e42cfb39f6076",
+      "meshes": "361404de497667ae192f9121d5664e7dfe3e2c7ef54a4069ef97e5ab150f2084",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
-      "winding": "f475a1cde2fb82f59b9eb1e252b73cb9378619f216854b0a42293465ac168c1a"
+      "winding": "83702fd4db5fe03da39f2e3fa810c3613845aaec98068e9c8ca754fa256cc84f"
     },
     "actions_before": {
       "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
@@ -1560,8 +1582,8 @@
       "Human_Turn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "6242933aa69a3eb6905fc850a44895d9d7f507216cbd96b172f07d972bf59f5a",
-      "LMS_Human_alpha.fbx": "4f0225c1e4c57a0ac1de0539905d96c93a7f378d60e09928b60f4312614db2d2"
+      "LMS_Human_alpha.blend": "7aafc391b523fdcc0a0b919466df45000dde50b45457a69442f8ad6693dbee2c",
+      "LMS_Human_alpha.fbx": "df60c8bad8270e7235dbec75a788f49e6d62a3b59512bb1a1b94a06c03cc5453"
     },
     "author": {
       "clips": [

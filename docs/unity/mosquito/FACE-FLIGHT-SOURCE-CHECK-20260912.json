@@ -31,16 +31,16 @@
     },
     "eye_radii_source_m": [
       0.0355,
-      0.03,
+      0.027,
       0.0366
     ],
-    "eye_white_forward_offset_source_m": 0.014,
+    "eye_white_forward_offset_source_m": 0.0155,
     "lid_radii_source_m": {
       "x": 0.04,
       "yz": 0.048,
       "lower_inset": 0.0005
     },
-    "lid_geometry_revision": "mosquito-sketch-r7-closed-rim",
+    "lid_geometry_revision": "mosquito-sketch-r8-jittered-shells",
     "lid_rest_edges_degrees_about_x_from_front": {
       "upper_front_center_to_pole": [
         66.0,
@@ -59,9 +59,9 @@
         0.0018,
         0.0095
       ],
-      "depth_source_m": 0.0433991453289253,
-      "inward_yaw_degrees": 2,
-      "down_pitch_degrees": 2.1
+      "depth_source_m": 0.04193492824901375,
+      "inward_yaw_degrees": 6,
+      "down_pitch_degrees": 4
     },
     "bone_tail_direction_source": [
       1,
@@ -188,121 +188,121 @@
     {
       "name": "Lid/1/True/0",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/1/False/0",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.25",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.25",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.5",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.5",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/1/True/0.75",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/1/False/0.75",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/1/True/1",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/1/False/1",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.25",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.25",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.5",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.5",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/-1/True/0.75",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/-1/False/0.75",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     },
     {
       "name": "Lid/-1/True/1",
       "vertices": 116,
-      "faces": 128,
+      "faces": 212,
       "errors": []
     },
     {
       "name": "Lid/-1/False/1",
       "vertices": 88,
-      "faces": 96,
+      "faces": 156,
       "errors": []
     }
   ],
@@ -320,7 +320,7 @@
       0.875,
       1
     ],
-    "max_excess_over_outermost_cover_m": -0.00019928851906433204,
+    "max_excess_over_outermost_cover_m": -9.405682128278692e-05,
     "failures": [],
     "failure_count": 0
   },
