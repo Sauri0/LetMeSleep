@@ -470,8 +470,12 @@ namespace LetMeSleep.Presentation.Gameplay
                 opponentNear), now);
             if (moodRig && moodRig.IsConfigured)
             {
-                // The first-person camera rides on the local human's head: its moods never pitch or roll it.
-                moodRig.MoodHeadPoseEnabled = !(localActor && proxy.Role == PlayerRole.Human);
+                // The first-person camera rides on the local human's head: its moods never pitch or roll it, and
+                // (round 4, measured in the maps: +2 to +8 cm of crouched eye) neither does the look-at, which only
+                // served the hidden first-person head. The eyes still track.
+                bool cameraOnHead = localActor && proxy.Role == PlayerRole.Human;
+                moodRig.MoodHeadPoseEnabled = !cameraOnHead;
+                if (cameraOnHead) moodRig.SetHeadTrackingEnabled(false);
                 moodRig.SetMood(result.Mood, result.Weight, result.Mood == FacialMood.Yawning ? .35f : .12f);
             }
             // The policy opens a yawn on one evaluation; the body clip keeps retrying while the face still yawns

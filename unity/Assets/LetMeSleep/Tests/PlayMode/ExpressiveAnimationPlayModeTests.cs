@@ -822,6 +822,8 @@ namespace LetMeSleep.Tests.PlayMode
             binding.BindLocomotion(gait);
             var eye = view.GetAnchor("CameraEye");
             Assert.That(eye, Is.Not.Null);
+            // With the facial rig looking up at something (the in-game look-at lifted the crouched eye 2-8 cm).
+            Assert.That(VisualAttentionFactory.TryInstall(view.gameObject, false, out var rig, out var reason), Is.True, reason);
             bool Moving(float t) => (t > .8f && t < 1.9f) || (t > 2.8f && t < 3.4f);
             uint tick = 1; float z = 0, highest = 0, lowest = float.MaxValue, highestAt = 0;
             int starts = 0, stops = 0; bool wasMoving = false, sneaked = false, heldStill = false;
@@ -837,6 +839,7 @@ namespace LetMeSleep.Tests.PlayMode
                     binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), moving ? new Vector3(0, 0, 1.55f) : Vector3.zero, true, 1), tick++);
                     nextSend += 1f / 30f;
                 }
+                rig.SetLookPoint(view.transform.position + new Vector3(0, 2.6f, 1.2f));
                 yield return null;
                 view.RefreshAnchors();
                 if (binding.UsingLocomotion) sneaked = true;
@@ -854,6 +857,7 @@ namespace LetMeSleep.Tests.PlayMode
             Assert.That(highest, Is.LessThanOrEqualTo(.92f), $"The crouched eye never rises toward standing (highest at t={highestAt:F2} s).");
             Assert.That(lowest, Is.GreaterThan(.78f), "The crouched eye stays near the authority's 0.89 m aim eye.");
             Assert.That(binding.VisualCrouch, Is.EqualTo(1f).Within(.01f));
+            Assert.That(rig.HeadTrackingEnabled, Is.False, "The local human's head never turns under its camera.");
             Object.Destroy(fixture);
         }
 
