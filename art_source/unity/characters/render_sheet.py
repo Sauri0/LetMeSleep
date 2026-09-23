@@ -1,6 +1,6 @@
 """Render a comparison sheet (front / three-quarter / side / back) of a character .blend.
 
-Usage: blender --background <file.blend> --python render_sheet.py -- <out_dir> <prefix> [human|mosquito]
+Usage: blender --background --factory-startup <file.blend> --python render_sheet.py -- <out_dir> <prefix> [human|mosquito] [Action_Name] [phase 0..1]
 EEVEE, flat slate-blue background like the user sketches. Never saves the scene.
 """
 import math
@@ -33,10 +33,22 @@ for obj in [o for o in scene.objects if o.type in {'LIGHT', 'CAMERA'}]:
 
 meshes = [o for o in scene.objects if o.type == 'MESH' and o.visible_get()]
 rig = next((o for o in scene.objects if o.type == 'ARMATURE'), None)
-if rig and rig.animation_data:
+action_name = args[3] if len(args) > 3 else None
+action_phase = float(args[4]) if len(args) > 4 else 0.0
+if rig:
+    rig.animation_data_create()
     rig.animation_data.action = None
     for b in rig.pose.bones:
         b.matrix_basis.identity()
+    if action_name:
+        # Optional pose, e.g. Human_Idle 0.0 renders the relaxed idle instead of the bind T-pose.
+        action = bpy.data.actions[action_name]
+        rig.animation_data.action = action
+        if hasattr(action, 'slots') and len(action.slots) == 1:
+            rig.animation_data.action_slot = action.slots[0]
+        start, end = action.frame_range
+        frame = start + (end - start) * action_phase
+        scene.frame_set(int(frame), subframe=frame - int(frame))
 bpy.context.view_layer.update()
 
 pts = []
