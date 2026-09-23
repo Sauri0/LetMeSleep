@@ -105,7 +105,9 @@ GameObject:
   - component: {fileID: 4885229714814820998}
   - component: {fileID: 3732719119732265235}
   - component: {fileID: 2608018652447596919}
-  - component: {fileID: 4684883039862670507}
+  - component: {fileID: 221630984346289921}
+  - component: {fileID: 1260710483398505298}
+  - component: {fileID: 1264006282587745602}
   m_Layer: 0
   m_Name: LMS_Mosquito
   m_TagString: Untagged
@@ -176,22 +178,37 @@ MonoBehaviour:
     MaterialIndex: 0
     Category: Mosquito
     Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 1
     Category: Mosquito
     Shade: 0.177
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 2
     Category: Mosquito
     Shade: 0.352
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 3
     Category: Mosquito
     Shade: 0.424
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 8789935923613130652}
     MaterialIndex: 4
     Category: Mosquito
     Shade: 0.352
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   Motions:
   - Id: 0
     StateName: Base Layer.Idle
@@ -279,7 +296,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.055
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4684883039862670507
+--- !u!114 &221630984346289921
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -293,7 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: mosquito-v030-r7-facial
-  SourceSha256: 178083ae85128f3d4784d7046dba2a67c0ed244ede3537de80384ae746b32602
+  SourceSha256: 685f491bd820f50197e74ec696b5fd0c84221e243f45ea0ba3bac29448b17928
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:
@@ -336,6 +353,40 @@ MonoBehaviour:
     EyeYawLimit: 12
     EyePitchLimit: 10
     ManualEvaluation: 0
+--- !u!114 &1260710483398505298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732549400642992898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb45704dae4bbb4468f6977a9d5b31e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationHost
+  Role: 1
+  View: {fileID: 3732719119732265235}
+  RigId: lms.mosquito.v030
+  ExpectedVisualScale: {x: 0.5, y: 0.5, z: 0.5}
+  PartsRoot: {fileID: 1658354788325813371}
+  OwnedBaseRenderers:
+  - {fileID: 8789935923613130652}
+  - {fileID: 3820084007829755480}
+  - {fileID: 2435733221056538835}
+  ColorChannels: []
+--- !u!114 &1264006282587745602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3732549400642992898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927feed84aca92643b9f1462e0a90b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterModularVisualAssembler
 --- !u!1 &4024415261323466181
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +448,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1837316653378405775}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4401474010231441177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1658354788325813371}
+  m_Layer: 0
+  m_Name: CustomizationParts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1658354788325813371
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4401474010231441177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5833783383147978916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4964649298357772712
 GameObject:
@@ -465,6 +547,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2220078670369983165}
+  - {fileID: 1658354788325813371}
   m_Father: {fileID: 4885229714814820998}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7214826076517560811
@@ -1948,6 +2031,11 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 483916dd41effed479826b9930069204, type: 3}
   m_PrefabInstance: {fileID: 6532432029445127236}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &2435733221056538835 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -330264535312853865, guid: 483916dd41effed479826b9930069204, type: 3}
+  m_PrefabInstance: {fileID: 6532432029445127236}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3031180172305016740 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1101352087733183520, guid: 483916dd41effed479826b9930069204, type: 3}
@@ -1961,6 +2049,11 @@ Transform:
 --- !u!4 &3313260214081239263 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8600974574425392283, guid: 483916dd41effed479826b9930069204, type: 3}
+  m_PrefabInstance: {fileID: 6532432029445127236}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3820084007829755480 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8044685093511506460, guid: 483916dd41effed479826b9930069204, type: 3}
   m_PrefabInstance: {fileID: 6532432029445127236}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &3956834057499680370 stripped

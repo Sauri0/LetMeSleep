@@ -30,6 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7599799878027015182}
+  - {fileID: 6510282861695071399}
   m_Father: {fileID: 1148042351287699800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1636930950111187044
@@ -93,6 +94,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 813667628332102615}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2813120780485380379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6510282861695071399}
+  m_Layer: 0
+  m_Name: CustomizationParts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6510282861695071399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2813120780485380379}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5209091549246475499}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3668799760416489222
 GameObject:
@@ -299,7 +331,9 @@ GameObject:
   - component: {fileID: 1148042351287699800}
   - component: {fileID: 6399267936585410066}
   - component: {fileID: 7854026478028426998}
-  - component: {fileID: 5077685824302025322}
+  - component: {fileID: 760445748317825428}
+  - component: {fileID: 5672696125103732779}
+  - component: {fileID: 2369087629431850181}
   m_Layer: 0
   m_Name: LMS_Human
   m_TagString: Untagged
@@ -376,22 +410,44 @@ MonoBehaviour:
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 2322434122650286657}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7948600991889706432}
     MaterialIndex: 1
     Category: Skin
     Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7948600991889706432}
     MaterialIndex: 2
     Category: Pajamas
     Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
+  - Renderer: {fileID: 7948600991889706432}
+    MaterialIndex: 4
+    Category: Pajamas
+    Shade: 0.193
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   - Renderer: {fileID: 7340666564473348143}
     MaterialIndex: 0
     Category: Skin
     Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    Hidden: 0
   Motions:
   - Id: 0
     StateName: Base Layer.Idle
@@ -505,7 +561,7 @@ CapsuleCollider:
   m_Height: 1.72
   m_Direction: 1
   m_Center: {x: 0, y: 0.86, z: 0}
---- !u!114 &5077685824302025322
+--- !u!114 &760445748317825428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -519,7 +575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: human-v030-r7-facial
-  SourceSha256: 2e4fbcdece1177e72d551fb8e148b3878df9161eb0b3f3450fd4acbf89e8d4b6
+  SourceSha256: 96871c02c4344325ed8293f6146bf5c0a1bdfb6fc9c52274a125ff9120cca562
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:
@@ -550,6 +606,81 @@ MonoBehaviour:
     EyeYawLimit: 22
     EyePitchLimit: 15
     ManualEvaluation: 0
+--- !u!114 &5672696125103732779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410320189168980418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb45704dae4bbb4468f6977a9d5b31e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterCustomizationHost
+  Role: 0
+  View: {fileID: 6399267936585410066}
+  RigId: lms.human.v030
+  ExpectedVisualScale: {x: 1, y: 1, z: 1}
+  PartsRoot: {fileID: 6510282861695071399}
+  OwnedBaseRenderers:
+  - {fileID: 7948600991889706432}
+  - {fileID: 1329330042654496620}
+  ColorChannels:
+  - Renderer: {fileID: 7340666564473348143}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 7340666564473348143}
+    MaterialIndex: 2
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0.3
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 7340666564473348143}
+    MaterialIndex: 3
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0.3
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 7340666564473348143}
+    MaterialIndex: 4
+    ColorSlotId: human.hair_color
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: human.headwear
+  - Renderer: {fileID: 8688976865872343376}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
+  - Renderer: {fileID: 2322434122650286657}
+    MaterialIndex: 0
+    ColorSlotId: human.skin
+    Shade: 0
+    Alpha: 0
+    LuminanceFloor: 0
+    HiddenWhileSlotSelected: 
+--- !u!114 &2369087629431850181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8410320189168980418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 927feed84aca92643b9f1462e0a90b9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LetMeSleep.Content.Characters::LetMeSleep.Content.Characters.CharacterModularVisualAssembler
 --- !u!1 &8619799857603203350
 GameObject:
   m_ObjectHideFlags: 0
