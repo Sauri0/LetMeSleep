@@ -1,4 +1,5 @@
 using System;
+using LetMeSleep.Online;
 
 namespace LetMeSleep.Bootstrap
 {
@@ -20,5 +21,16 @@ namespace LetMeSleep.Bootstrap
         public void Begin(string room, int nextRound) { roomKey = room ?? string.Empty; round = nextRound; }
 
         public void Reset() { roomKey = string.Empty; round = -1; }
+    }
+
+    public static class RoomTeardownPolicy
+    {
+        /// <summary>
+        /// True when the room this client had joined is gone without the player leaving it: the lobby closed
+        /// (host left) or failed after membership (e.g. authentication lost). Failures while joining keep the
+        /// join screen and its error instead.
+        /// </summary>
+        public static bool ShouldTearDown(LobbyState state, bool intentionalLeave, bool joinedRoom)
+            => !intentionalLeave && (state == LobbyState.Closed || (state == LobbyState.Failed && joinedRoom));
     }
 }

@@ -49,6 +49,7 @@ namespace LetMeSleep.Bootstrap
         private bool quiescing;
         // Keyed by room code and round: every new room numbers its rounds from 1 again.
         private readonly ActiveRoundTracker activeRound = new ActiveRoundTracker();
+        private bool roomJoined;
         private RoomPhase lastPhase = RoomPhase.Closed;
         private SpawnActor[] activeRoster;
         private AlfaRole trainingRole;
@@ -150,7 +151,7 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             ResetRoomState();
             pendingOnline = false;
-            StopVoiceRoom(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
+            StopVoiceRoom(); StopGame(); StopLobbyMovement(); room?.Dispose(); transport?.Dispose(); lobby?.Dispose();
             lobby = new EosLobbySession(connection); transport = new EosPeerTransport(connection, lobby);
             transport.PeerStateChanged += ObservePlaytestPeer;
             transport.DeliveryIssue += ObservePlaytestDelivery;
@@ -168,12 +169,21 @@ namespace LetMeSleep.Bootstrap
             if (quiescing) return;
             RecordPlaytest("Lobby",lobby.State.ToString());
             SyncVoiceContext();
-            if (lobby.State == LobbyState.Closed && !intentionalLeave)
-            { StopVoiceRoom(); StopGame(); StopLobbyMovement(); ResetRoomState(); LoadMap(false); ui.ShowJoinRoom(); if(closingError.Length>0) ShowOnlineError(closingError); else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed)); }
+            if (lobby.State == LobbyState.Connected) roomJoined = true;
+            if (RoomTeardownPolicy.ShouldTearDown(lobby.State, intentionalLeave, roomJoined))
+            {
+                // The room is gone without the player leaving (host left, or the lobby failed after joining).
+                bool failed = lobby.State == LobbyState.Failed;
+                StopVoiceRoom(); StopGame(); StopLobbyMovement(); ResetRoomState(); LoadMap(false);
+                menuAudio.gameObject.SetActive(true); menuAudio.EnterMenu(); ui.ShowJoinRoom();
+                if (failed) { lastError = lobby.ErrorCode; ShowOnlineError("Se perdió la conexión con la sala (" + lobby.ErrorCode + "). Volvé a intentarlo."); }
+                else if (closingError.Length > 0) ShowOnlineError(closingError);
+                else ui.PresentOnline(new OnlineUiState(OnlineOperationPhase.RoomClosed));
+            }
         }
         private void ResetRoomState()
         {
-            activeRound.Reset(); lastPhase = RoomPhase.Closed; initializedRoomMap = false;
+            activeRound.Reset(); lastPhase = RoomPhase.Closed; initializedRoomMap = false; roomJoined = false;
         }
         public void CancelOnline()
         {
