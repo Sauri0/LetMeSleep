@@ -51,6 +51,63 @@ namespace LetMeSleep.Tests.EditMode
             }
         }
 
+        [TestCase(.040f, 1)] [TestCase(.025f, 2)] [TestCase(.010f, 6)] [TestCase(.002f, 7)]
+        public void ExpensiveStepsOnlyRunWhatFitsInTheFrameBudget(float stepCost, int expected)
+        {
+            var clock = new FixedStepClock();
+            clock.ReportStepCost(stepCost);
+            Assert.That(clock.Advance(.25f, out int dropped), Is.EqualTo(expected));
+            Assert.That(dropped, Is.Zero, "Unrun debt stays pending inside the bound; nothing is dropped yet.");
+        }
+
+        [Test]
+        public void SustainedOverloadKeepsFramesShortAndShedsSimulatedTime()
+        {
+            // Each tick costs 40 ms (the host cannot keep up with 30 Hz). Frame time = 10 ms of rendering + ticks run.
+            var adaptive = new FixedStepClock();
+            float worstAdaptive = 0; long adaptiveTicks = 0; double adaptiveSeconds = 0;
+            float delta = 1f / 60;
+            for (int frame = 0; frame < 300; frame++)
+            {
+                int steps = adaptive.Advance(delta, out _);
+                for (int i = 0; i < steps; i++) adaptive.ReportStepCost(.04f);
+                delta = .01f + steps * .04f; worstAdaptive = Math.Max(worstAdaptive, delta);
+                adaptiveTicks += steps; adaptiveSeconds += delta;
+                Assert.That(adaptive.Accumulated, Is.LessThanOrEqualTo(adaptive.MaximumDebtSeconds));
+            }
+            Assert.That(worstAdaptive, Is.LessThanOrEqualTo(.05f + 1e-4f), "One 40 ms tick per frame: about 20 FPS instead of multi-tick frames.");
+            Assert.That(adaptive.DroppedTicks, Is.GreaterThan(0), "Time the host cannot simulate is shed and reported.");
+            Assert.That(adaptiveTicks + adaptive.DroppedTicks + adaptive.Accumulated * 30, Is.EqualTo(adaptiveSeconds * 30).Within(1),
+                "Every elapsed tick is simulated, dropped or still pending.");
+
+            // Without cost feedback the same host stretches frames to the step cap (the spiral the bound only limits).
+            var blind = new FixedStepClock();
+            float worstBlind = 0; delta = 1f / 60;
+            for (int frame = 0; frame < 300; frame++)
+            {
+                int steps = blind.Advance(delta, out _);
+                delta = .01f + steps * .04f; worstBlind = Math.Max(worstBlind, delta);
+            }
+            Assert.That(worstBlind, Is.GreaterThan(.25f));
+        }
+
+        [Test]
+        public void CheapStepsKeepTheFullCatchUpAndInvalidCostsAreIgnored()
+        {
+            var clock = new FixedStepClock();
+            foreach (float cost in new[] { float.NaN, -1f, float.PositiveInfinity }) clock.ReportStepCost(cost);
+            Assert.That(clock.AverageStepCostSeconds, Is.Zero);
+            clock.ReportStepCost(.001f);
+            Assert.That(clock.StepLimit, Is.EqualTo(FixedStepClock.DefaultMaximumStepsPerFrame));
+            Assert.That(clock.Advance(.21f, out _), Is.EqualTo(6));
+            // A single slow tick does not throttle at once: the cost is smoothed.
+            clock.ReportStepCost(.05f);
+            Assert.That(clock.StepLimit, Is.GreaterThan(1));
+            clock.Reset();
+            Assert.That(clock.AverageStepCostSeconds, Is.Zero);
+            Assert.That(clock.StepLimit, Is.EqualTo(FixedStepClock.DefaultMaximumStepsPerFrame));
+        }
+
         [TestCase(float.NaN)] [TestCase(-1f)] [TestCase(0f)]
         public void InvalidOrEmptyDeltaNeverSteps(float delta)
         {
@@ -84,6 +141,7 @@ namespace LetMeSleep.Tests.EditMode
             Assert.Throws<ArgumentOutOfRangeException>(() => new FixedStepClock(0));
             Assert.Throws<ArgumentOutOfRangeException>(() => new FixedStepClock(1f / 30, 1f / 60));
             Assert.Throws<ArgumentOutOfRangeException>(() => new FixedStepClock(1f / 30, .25f, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new FixedStepClock(1f / 30, .25f, 8, 0));
         }
     }
 }

@@ -129,7 +129,13 @@ namespace LetMeSleep.Gameplay.Unity
             {
                 // Round length stays in ticks; debt beyond the clock's bound is dropped rather than replayed.
                 int steps = hostClock.Advance(Time.unscaledDeltaTime, out int dropped);
-                for (int step = 0; step < steps; step++) TickHost();
+                for (int step = 0; step < steps; step++)
+                {
+                    // The measured cost lets the clock run fewer ticks per frame when ticks are expensive.
+                    long started = System.Diagnostics.Stopwatch.GetTimestamp();
+                    TickHost();
+                    hostClock.ReportStepCost((float)((System.Diagnostics.Stopwatch.GetTimestamp() - started) / (double)System.Diagnostics.Stopwatch.Frequency));
+                }
                 ReportDroppedTicks(dropped);
             }
             else if (!IsHost && CaptureLocalInput)

@@ -167,7 +167,12 @@ namespace LetMeSleep.Gameplay.Unity
             {
                 // Bounded debt: a stall must not replay seconds of waiting-room movement in bursts.
                 int steps = stepClock.Advance(Time.unscaledDeltaTime, out _);
-                for (int step = 0; step < steps; step++) StepLocalAndHost();
+                for (int step = 0; step < steps; step++)
+                {
+                    long started = System.Diagnostics.Stopwatch.GetTimestamp();
+                    StepLocalAndHost();
+                    stepClock.ReportStepCost((float)((System.Diagnostics.Stopwatch.GetTimestamp() - started) / (double)System.Diagnostics.Stopwatch.Frequency));
+                }
             }
             RenderRemotes();
         }
