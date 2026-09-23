@@ -119,16 +119,30 @@ namespace LetMeSleep.Gameplay
         private readonly GameplayRoundConfig config;
         private readonly IGameplayModeWorld world;
         private readonly Dictionary<uint, Personal> people = new Dictionary<uint, Personal>();
+        private readonly int slotsPerPerson;
         public int Completed { get; private set; }
-        public int Opportunities { get; }
-        public int Goal { get; }
+        public int Opportunities { get; private set; }
+        public int Goal { get; private set; }
         public TaskRules(GameplayRoundConfig config, IReadOnlyList<SpawnActor> roster, IGameplayModeWorld world)
         {
             this.config = config; this.world = world;
-            int slots = 1 + (int)((config.RoundDurationTicks - config.ModeRules.TaskDeadlineTicks) / config.ModeRules.TaskCadenceTicks);
+            slotsPerPerson = 1 + (int)((config.RoundDurationTicks - config.ModeRules.TaskDeadlineTicks) / config.ModeRules.TaskCadenceTicks);
             foreach (var human in roster.Where(a => a.Role == PlayerRole.Human).OrderBy(a => a.ActorId)) people.Add(human.ActorId, new Personal { PersonalDeadline = config.ModeRules.TaskDeadlineTicks });
-            Opportunities = slots * people.Count;
-            Goal = config.ConfiguredTasksGoal == 0 ? (2 * Opportunities + 2) / 3 : Math.Min(config.ConfiguredTasksGoal, Opportunities);
+            Opportunities = slotsPerPerson * people.Count;
+            Goal = GoalFor(Opportunities);
+        }
+        private int GoalFor(int opportunities) => config.ConfiguredTasksGoal == 0 ? (2 * opportunities + 2) / 3 : Math.Min(config.ConfiguredTasksGoal, opportunities);
+        // A departed human's unfinished and future opportunities stop counting toward the collective goal.
+        // Completed work and slots it already finished (completed or missed) remain counted.
+        public void RemovePerson(uint actorId, uint tick)
+        {
+            if (!people.TryGetValue(actorId, out var p)) return;
+            people.Remove(actorId);
+            int current = (int)Math.Min(int.MaxValue, tick / config.ModeRules.TaskCadenceTicks);
+            int finished = Math.Min(slotsPerPerson, current);
+            if (current < slotsPerPerson && p.Slot == current && p.Finished) finished++;
+            Opportunities = Math.Max(0, Opportunities - (slotsPerPerson - finished));
+            Goal = GoalFor(Opportunities);
         }
         public TaskAssignment Capture(uint actorId)
         {

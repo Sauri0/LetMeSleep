@@ -430,6 +430,40 @@ namespace LetMeSleep.Tests.EditMode
             Step(a, 35); Assert.That(Actor(a).LivesRemaining, Is.EqualTo(2));
             Assert.That(a.DrainEvents().Count(e => e.Kind == GameplayEventKind.HelpEnded && e.SourceActorId == 4), Is.EqualTo(1));
         }
+        // 30 s, cadence 300, deadline 240: three task slots per human.
+        [Test] public void DepartedHumanNoLongerCountsTowardTheCollectiveGoal()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondHuman: true); Step(a);
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(6)); Assert.That(a.CaptureSnapshot().TasksGoal, Is.EqualTo(4));
+            a.RemoveActor(3, ActorRemovalReason.Left);
+            var state = a.CaptureSnapshot();
+            Assert.That(a.IsRunning, Is.True);
+            Assert.That(state.ViableTaskOpportunities, Is.EqualTo(3), "Only the remaining human's slots stay reachable.");
+            Assert.That(state.TasksGoal, Is.LessThanOrEqualTo(state.TasksCompleted + 3), "The goal must remain reachable by the humans still playing.");
+            Assert.That(state.TasksGoal, Is.EqualTo(2));
+            // The remaining human completes every slot and wins, instead of a guaranteed TasksMissed.
+            for (int slot = 0; slot < 3; slot++)
+            {
+                for (int guard = 0; guard < 900 && a.IsRunning && (a.CapturePrivate(1).TaskAssignment == null || a.CapturePrivate(1).TaskAssignment.Status != TaskAssignmentStatus.Active); guard++) Step(a);
+                for (int i = 0; i < 4; i++) { Use(a); Step(a); }
+            }
+            Step(a, 900 - (int)a.CurrentTick);
+            Assert.That(a.CaptureSnapshot().TasksCompleted, Is.EqualTo(3));
+            Assert.That(a.CaptureSnapshot().Result, Is.EqualTo(RoundEndReason.TasksMet));
+        }
+        [Test] public void DepartedHumanKeepsCompletedAndPastOpportunities()
+        {
+            var a = Start(new World(), GameModes.Tasks, secondHuman: true, goal: 5);
+            for (int i = 0; i < 4; i++) { Use(a, 3); Step(a); }
+            Assert.That(a.CaptureSnapshot().TasksCompleted, Is.EqualTo(1));
+            a.RemoveActor(3, ActorRemovalReason.Disconnected);
+            var state = a.CaptureSnapshot();
+            Assert.That(state.TasksCompleted, Is.EqualTo(1), "Completed work is never taken away.");
+            Assert.That(state.ViableTaskOpportunities, Is.EqualTo(4), "Its finished slot stays counted; its future slots are dropped.");
+            Assert.That(state.TasksGoal, Is.EqualTo(4), "A configured goal is capped by the remaining opportunities.");
+            a.RemoveActor(2, ActorRemovalReason.Left);
+            Assert.That(a.CaptureSnapshot().ViableTaskOpportunities, Is.EqualTo(4), "Mosquito departures do not change task opportunities.");
+        }
     }
 }
 

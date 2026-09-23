@@ -658,6 +658,7 @@ namespace LetMeSleep.Gameplay
         {
             if (!actors.TryGetValue(actorId, out var leaving)) return;
             DropAllTools(leaving); actors.Remove(actorId);
+            if (leaving.Spawn.Role == PlayerRole.Human && IsRunning) taskRules?.RemovePerson(actorId, tick);
             foreach (var id in toolEffects.Where(p => p.Value.Snapshot.SourceActorId == actorId).Select(p => p.Key).ToArray()) toolEffects.Remove(id);
             foreach (var a in actors.Values.Where(a => a.Bite.HasValue && a.Bite.Value.VictimId == actorId)) Detach(a);
             Synchronize();
