@@ -13,7 +13,7 @@ namespace LetMeSleep.Tests.EditMode
         [Test]
         public void ReleaseProtocolAndWireSchemasRejectAlpha()
         {
-            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-020-4"));
+            Assert.That(RoomSession.Protocol, Is.EqualTo("lms-unity-030-1"));
             Assert.That(RoomWireCodec.Version, Is.EqualTo(3));
             Assert.That(GameplayWireCodec.Version, Is.EqualTo(5));
 
@@ -22,6 +22,10 @@ namespace LetMeSleep.Tests.EditMode
 
             Assert.That(room.Join("old-client", "Old", "lms-unity-094-alfa-2"),
                 Is.EqualTo(RoomError.IncompatibleVersion));
+            Assert.That(room.Join("v020-client", "V020", "lms-unity-020-4"),
+                Is.EqualTo(RoomError.IncompatibleVersion), "0.2.0 and 0.3.0 must not mix in one room.");
+            Assert.That(LobbyJoinPolicy.ValidateJoined("guest", "owner", "lms-unity-020-4", 16, false, false, true),
+                Is.EqualTo(LobbyCandidateRejection.IncompatibleVersion), "A 0.2.0 lobby bucket is rejected after join-by-code.");
             Assert.That(room.Snapshot().Revision, Is.EqualTo(before.Revision));
             Assert.That(room.Snapshot().Members.Count, Is.EqualTo(before.Members.Count));
             Assert.That(room.Join("current-client", "Current", RoomSession.Protocol), Is.EqualTo(RoomError.None));
