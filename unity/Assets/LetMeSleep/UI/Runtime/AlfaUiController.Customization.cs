@@ -73,6 +73,8 @@ namespace LetMeSleep.UI
         private CharacterPreviewOrbit previewOrbit;
         private GameObject customizationPreviewUnavailable;
         private GameObject customizationApproximateChip;
+        private UnityEngine.UI.Button customizationFlightButton;
+        private TextMeshProUGUI customizationFlightLabel;
         private TextMeshProUGUI customizationCategoryTitle;
         private TextMeshProUGUI customizationSelectionLabel;
         private TextMeshProUGUI customizationStatus;
@@ -134,6 +136,7 @@ namespace LetMeSleep.UI
         private string basicMosquitoCategory = MosquitoBodyCategory;
         private string builtModularCategoriesKey = string.Empty;
         private string builtModularOptionsKey = string.Empty;
+        private string modularSnapKey = string.Empty;
         private int selectedPreviewAngle = -1;
         private readonly System.Random customizationRandom = new System.Random();
 
@@ -460,6 +463,19 @@ namespace LetMeSleep.UI
             var resetPlate = reset.transform.Find("IconPlate") as RectTransform;
             if (resetPlate != null) Anchor(resetPlate, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, resetPlate.sizeDelta);
 
+            // UI-06 6 "VISTA PREVIA EN VUELO" (mosquito only): the insect rises over the pedestal in its hover loop;
+            // pressed again it perches ("VOLVER A POSAR").
+            customizationFlightButton = factory.Button(viewport.transform, "PreviewFlightButton", "VISTA PREVIA EN VUELO",
+                ToggleFlightPreview, AlfaButtonStyle.Secondary, 52f, AlfaUiIconKind.Play);
+            customizationFlightLabel = customizationFlightButton.transform.Find("Label").GetComponent<TextMeshProUGUI>();
+            customizationFlightLabel.enableAutoSizing = true;
+            customizationFlightLabel.fontSizeMin = AlfaUiTheme.MinTextSize;
+            customizationFlightLabel.fontSizeMax = 22f;
+            customizationFlightLabel.textWrappingMode = TextWrappingModes.NoWrap;
+            Anchor((RectTransform)customizationFlightButton.transform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f),
+                new Vector2(-14f, 74f), new Vector2(330f, 52f));
+            customizationFlightButton.gameObject.SetActive(false);
+
             // Honest, discreet: while the viewer approximates modular parts it says so in a corner chip.
             var chip = factory.Panel(viewport.transform, "PreviewApproximate", AlfaUiTheme.WithAlpha(AlfaUiTheme.Ink900, 0.72f), -1f, -1f, AlfaUiTheme.SmallRadius);
             AlfaUiFactory.SetSurface(chip, frame: Color.clear, shadow: Color.clear);
@@ -491,6 +507,23 @@ namespace LetMeSleep.UI
             selectedPreviewAngle = index;
             for (var i = 0; i < previewAngleButtons.Length; i++)
                 if (previewAngleButtons[i] != null) MarkOption(previewAngleButtons[i], i == index);
+        }
+
+        private void ToggleFlightPreview()
+        {
+            if (previewOrbit == null) return;
+            previewOrbit.SetFlightPreview(!previewOrbit.FlightPreview);
+            UpdateFlightButton();
+        }
+
+        private void UpdateFlightButton()
+        {
+            if (customizationFlightButton == null) return;
+            var mosquito = EditedCustomizationRole() == AlfaRole.Mosquito;
+            var usable = mosquito && previewOrbit != null && previewOrbit.IsBound && customizationState != null && !customizationState.IsReadOnly;
+            customizationFlightButton.gameObject.SetActive(usable);
+            if (!usable) return;
+            customizationFlightLabel.text = previewOrbit.FlightPreview ? "VOLVER A POSAR" : "VISTA PREVIA EN VUELO";
         }
 
         private void RefreshPreviewAvailability()
@@ -932,7 +965,11 @@ namespace LetMeSleep.UI
             foreach (var slot in slots)
             {
                 var button = modularCategoryRoot.Find("ModularCategory_" + slot.WireSlotId)?.GetComponent<UnityEngine.UI.Button>();
-                if (button != null) AlfaUiFactory.SetSelected(button, string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal));
+                if (button == null) continue;
+                AlfaUiFactory.SetSelected(button, string.Equals(slot.SlotId, modularSelectedSlotId, StringComparison.Ordinal));
+                var group = button.GetComponent<CanvasGroup>();
+                if (group == null) group = button.gameObject.AddComponent<CanvasGroup>();
+                group.alpha = ModularSlotApplies(slot) ? 1f : 0.5f;
             }
         }
 
@@ -969,6 +1006,7 @@ namespace LetMeSleep.UI
             var title = CategoryIcon(slot) == AlfaUiIconKind.Wings ? "ESTILO DE ALAS" : slot.Label.ToUpperInvariant();
             var selectedId = modularCustomizationDraft?.For(ToCustomizationRole(modularEditedRole)).OptionFor(slot.SlotId);
             var chosen = slot.TryOption(selectedId ?? string.Empty, out var option) ? option.Label : string.Empty;
+            if (!ModularSlotApplies(slot)) chosen = "no aplica";
             return string.IsNullOrWhiteSpace(chosen) ? Escape(title) : Escape(title) + "  <color=#A8B8D8>·  " + Escape(chosen.ToUpperInvariant()) + "</color>";
         }
 
@@ -1078,13 +1116,28 @@ namespace LetMeSleep.UI
         {
             if (slot == null || modularCustomizationDraft == null) return;
             string selectedOption = modularCustomizationDraft.For(ToCustomizationRole(modularEditedRole)).OptionFor(slot.SlotId);
+            var applies = ModularSlotApplies(slot);
             foreach (var option in slot.Options)
             {
                 if (!modularOptionButtons.TryGetValue("ModularOption_" + slot.WireSlotId + "_" + option.WireOptionId, out var button) || button == null) continue;
                 MarkOption(button, string.Equals(option.OptionId, selectedOption, StringComparison.Ordinal));
+                // A colour with nothing to tint (pajama colour with jeans, marking colour without markings) is shown
+                // dimmed and cannot be picked; it comes back as soon as a garment that uses it is chosen.
+                button.interactable = applies;
+            }
+            if (modularSections.TryGetValue(slot.SlotId, out var section) && section != null)
+            {
+                var group = section.GetComponent<CanvasGroup>();
+                if (group == null) group = section.gameObject.AddComponent<CanvasGroup>();
+                group.alpha = applies ? 1f : 0.45f;
             }
             if (modularSectionCaptions.TryGetValue(slot.SlotId, out var caption) && caption != null) caption.text = SectionTitle(slot);
         }
+
+        /// <summary>False when a colour category tints nothing the character wears with the draft (a UI hint).</summary>
+        private bool ModularSlotApplies(CustomizationSlotSnapshot slot) =>
+            slot == null || customizationState?.ColorSlotApplies == null || modularCustomizationDraft == null ||
+            customizationState.ColorSlotApplies(modularCustomizationDraft, ToCustomizationRole(modularEditedRole), slot.SlotId);
 
         /// <summary>Selected option: primary fill, 3-unit accent frame and a check mark (never colour alone).</summary>
         private static void MarkOption(UnityEngine.UI.Button button, bool selected)
@@ -1099,10 +1152,18 @@ namespace LetMeSleep.UI
         {
             var key = ((slot.SlotId ?? string.Empty) + " " + (slot.Label ?? string.Empty)).ToLowerInvariant();
             bool Has(params string[] words) => words.Any(word => key.Contains(word));
+            // A colour category shows the palette (the skin tone keeps its face): "COLOR DE ALAS" is not a wing style.
+            var visible = slot.Options.Where(option => option.Kind != CustomizationOptionKind.None).ToList();
+            if (visible.Count > 0 && visible.All(option => option.HasSwatch))
+                return Has("skin", "piel", "tono") ? AlfaUiIconKind.Face : AlfaUiIconKind.Palette;
             if (Has("wing", "ala")) return AlfaUiIconKind.Wings;
-            if (Has("eye", "ojo")) return AlfaUiIconKind.Eye;
+            if (Has("eye", "ojo", "glass", "lente", "anteojo")) return AlfaUiIconKind.Eye;
             if (Has("probosc", "trompa", "aguij", "sting")) return AlfaUiIconKind.Proboscis;
             if (Has("hat", "gorro", "gorra", "sombrero", "cap", "casco")) return AlfaUiIconKind.Hat;
+            if (Has("hair", "pelo", "peinado")) return AlfaUiIconKind.Face;
+            if (Has("pantal", "bottom", "jean")) return AlfaUiIconKind.Customize;
+            if (Has("mochila", "backpack")) return AlfaUiIconKind.Explore;
+            if (Has("accesor", "accessor")) return AlfaUiIconKind.Crown;
             if (Has("skin", "piel", "tono", "cara", "face")) return AlfaUiIconKind.Face;
             if (Has("shoe", "slipper", "pantufla", "calzado")) return AlfaUiIconKind.Slipper;
             if (Has("pajama", "pijama", "outfit", "ropa", "shirt", "remera", "camis")) return AlfaUiIconKind.Customize;
@@ -1327,6 +1388,9 @@ namespace LetMeSleep.UI
 
             customizationHumanButton.interactable = editable && !customizationSaveLatched;
             customizationMosquitoButton.interactable = editable && !customizationSaveLatched;
+            // What each tab changes in this build: the modular catalogue dresses the whole character.
+            SetTabSubtitle(customizationHumanButton, modular ? "PELO, ROPA Y ACCESORIOS" : "PIEL, ROPA Y ACCESORIOS");
+            SetTabSubtitle(customizationMosquitoButton, modular ? "ALAS, COLORES Y MÁS" : "CUERPO Y COLORES");
             SetRoleTabSelection(customizationHumanButton, human, AlfaRole.Human);
             SetRoleTabSelection(customizationMosquitoButton, !human, AlfaRole.Mosquito);
 
@@ -1357,6 +1421,8 @@ namespace LetMeSleep.UI
             }
 
             previewOrbit?.Show(role);
+            if (role != AlfaRole.Mosquito && previewOrbit != null && previewOrbit.FlightPreview) previewOrbit.SetFlightPreview(false);
+            UpdateFlightButton();
             RefreshPreviewAvailability();
             UpdateCustomizationPreview();
             if (customizationSaveLatched) customizationStatus.text = "Aplicando apariencia…";
@@ -1402,9 +1468,15 @@ namespace LetMeSleep.UI
             if (modular)
             {
                 if (!row.activeSelf) row.SetActive(true);
+                // Only a new list or a new panel height moves the viewport: a selection never changes the scroll.
+                var snapKey = builtModularOptionsKey + "|" + Mathf.RoundToInt(height);
+                if (snapKey == modularSnapKey) return;
+                modularSnapKey = snapKey;
                 previewRowLayout.preferredHeight = PreviewRowPreferred;
+                SnapModularOptionRows(content);
                 return;
             }
+            modularSnapKey = string.Empty;
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(content);
             var group = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
             var used = 0f;
@@ -1429,6 +1501,53 @@ namespace LetMeSleep.UI
                   UnityEngine.UI.LayoutUtility.GetPreferredHeight((RectTransform)row.transform.Find("PreviewCaption")) + thumbs.MaxUsefulHeight(content.rect.width)
                 : PreviewRowPreferred + PreviewExtraMaximum;
             previewRowLayout.preferredHeight = fits ? Mathf.Clamp(Mathf.Min(available, useful), PreviewRowMinimum, PreviewRowPreferred + PreviewExtraMaximum) : PreviewRowMinimum;
+        }
+
+        /// <summary>
+        /// Modular list: the scroll viewport ends at the bottom of a whole row of cards (with its labels) instead of
+        /// cutting the next row in half at the top of the list; the few units left over go to VISTA PREVIA. Scrolling
+        /// is unchanged (review r1: "Corto / Despeinado / Rulos" were cut at mid-height when the screen opened).
+        /// </summary>
+        private void SnapModularOptionRows(RectTransform content)
+        {
+            if (modularOptionScroll == null || modularOptionRoot == null || modularFieldsLayout == null) return;
+            modularFieldsLayout.flexibleHeight = 1f;
+            modularFieldsLayout.preferredHeight = -1f;
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(modularOptionRoot);
+            var viewport = modularOptionScroll.viewport;
+            float available = viewport != null ? viewport.rect.height : 0f;
+            if (available <= 1f) return;
+            const float margin = 4f;
+            float best = -1f;
+            float rootTop = modularOptionRoot.rect.yMax;
+            var corners = new Vector3[4];
+            foreach (Transform section in modularOptionRoot)
+            {
+                if (!section.gameObject.activeSelf) continue;
+                var grid = section.GetComponentInChildren<UnityEngine.UI.GridLayoutGroup>();
+                if (grid == null) continue;
+                ((RectTransform)grid.transform).GetWorldCorners(corners);
+                float gridTop = rootTop - modularOptionRoot.InverseTransformPoint(corners[1]).y + grid.padding.top;
+                int count = 0;
+                foreach (Transform child in grid.transform) if (child.gameObject.activeSelf) count++;
+                int columns = Mathf.Max(1, grid.constraintCount);
+                int rows = Mathf.CeilToInt(count / (float)columns);
+                for (int k = 0; k < rows; k++)
+                {
+                    float bottom = gridTop + k * (grid.cellSize.y + grid.spacing.y) + grid.cellSize.y;
+                    if (bottom + margin <= available && bottom > best) best = bottom;
+                }
+            }
+            if (best <= 0f) return;
+            float spare = available - (best + margin);
+            float fields = ((RectTransform)modularCustomizationFields.transform).rect.height;
+            float minimum = UnityEngine.UI.LayoutUtility.GetMinHeight((RectTransform)modularCustomizationFields.transform);
+            spare = Mathf.Min(spare, Mathf.Max(0f, fields - minimum));
+            if (spare < 2f) return;
+            modularFieldsLayout.flexibleHeight = 0f;
+            modularFieldsLayout.preferredHeight = fields - spare;
+            previewRowLayout.preferredHeight = PreviewRowPreferred + spare;
         }
 
         /// <summary>
@@ -1467,6 +1586,12 @@ namespace LetMeSleep.UI
             if (customizationRail != null && Mathf.Abs(customizationRail.rect.height - customizationLaidOutRailHeight) > 0.5f) LayoutCustomizationRail();
             var content = previewRowLayout != null ? (RectTransform)previewRowLayout.transform.parent : null;
             if (content != null && Mathf.Abs(content.rect.height - customizationLaidOutOptionsHeight) > 0.5f) LayoutCustomizationOptions();
+        }
+
+        private static void SetTabSubtitle(UnityEngine.UI.Button tab, string text)
+        {
+            var subtitle = tab != null ? tab.transform.Find("Subtitle")?.GetComponent<TextMeshProUGUI>() : null;
+            if (subtitle != null && subtitle.text != text) subtitle.text = text;
         }
 
         /// <summary>Role tab: HUMANO selected is primary blue, MOSQUITO selected is danger red; both with the 3-unit frame.</summary>

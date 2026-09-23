@@ -59,11 +59,17 @@ namespace LetMeSleep.Bootstrap
         private string combatFeedback = "";
         private double combatFeedbackUntil;
         private string LocalId => connection?.LocalUserId?.ToString() ?? "practice";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // Editor/dev only: a test that must own (and delete) its data folder points here at a subfolder of the
+        // --lms-validation-data directory it was given, so a full suite can share one validation directory.
+        private static string validationDataOverride;
+#endif
         private string DataPath
         {
             get
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                if (!string.IsNullOrEmpty(validationDataOverride)) return Path.GetFullPath(validationDataOverride);
                 // Isolate manual validation without starting the automated build probe.
                 // No resolution, input, screen capture or automatic exit is implied.
                 string[] args = Environment.GetCommandLineArgs();
@@ -91,7 +97,8 @@ namespace LetMeSleep.Bootstrap
             LoadPreferences();
             StartPlaytestJournal();
             ui = AlfaUiRuntime.Create(this, new AlfaUiDependencies(HeadingFont, BodyFont, preview:
-                new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab, ConfigurePreviewAttention)));
+                new CharacterPreviewSetup(PreviewCamera, PreviewStage, PreviewTexture, HumanPrefab, MosquitoPrefab, ConfigurePreviewAttention,
+                    DressLocalLook)));
             if (HiggsfieldMaps)
             {
                 var options = HiggsfieldMaps.Entries.Select(entry => new TrainingMapOption(entry.MapId, entry.DisplayName, HasTaskCatalog(entry.Prefab, entry.MapId))).ToArray();

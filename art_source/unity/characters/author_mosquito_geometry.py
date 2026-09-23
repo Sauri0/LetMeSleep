@@ -114,13 +114,25 @@ last 25% on Mosquito_ShellDark #6E1418 (bone, socket and tip vertex
 unchanged). (6) Abdomen: five bands on ring loops (30% of each segment,
 #6E1418 with a #611215 trailing border) and a waist 30% thinner. (7) Thorax
 10% wider and its back 12% taller (crest ~24 mm above the eye cups).
+
+Sketch r8 (art director r6, integration review r2): (1) the thorax volume moves
+back instead of up (hump .002, height radius .060 on the same base, depth
+radius .070 with the centre 10 mm further back, shoulders .05): the crest now
+sits ~4 mm over the eye cups, so the eyes are up and ahead of the body; (2)
+blades 20% smaller (WING_SCALE 1.20) with a #CCC4F6 alpha .50 membrane that
+Unity keeps (lavender, not grey); (3) eyes: see author_mosquito_face (a
+shallower white further ahead, a lower fixed lid, pupils 6 deg in / 4 deg
+down, jittered shell facets instead of concentric rings). The idle wing aim
+(WING_STANCE_*) is unchanged here: the open V of the idle wings belongs to the
+animation owner of author_mosquito_motion.stance(), which these constants
+mirror.
 """
 import math
 import random
 from author_mosquito_face import (create_face, facial_contract, outward, eye_mesh, pupil_mesh, eye_center,
                                   lid_front_degrees, upper_lid_point, collar_mesh, cap_mesh, COLLAR_ARCS_DEGREES)
 
-REVISION = 'mosquito-sketch-r6-source'
+REVISION = 'mosquito-sketch-r8-source'
 UNITY_SCALE = .5
 COLLISION_RADIUS = .055
 SURFACE_ROOT_OFFSET = .057
@@ -153,11 +165,13 @@ PALETTE_HEX = {
     'joint': '#140A0A',      # r6: knee knuckles, tibia rings, coxae, ankles, feet
     'eye': '#FAFAF8',
     'pupil': '#141218',
-    'wing': '#D8D2F2',       # lavender-white membrane, alpha WING_ALPHA
+    'wing': '#CCC4F6',       # r8: more saturated lavender membrane, alpha WING_ALPHA
     'vein': '#C3C3E6',       # veins, alpha VEIN_ALPHA
     'wing_edge': '#DAD5F2',  # outline in the membrane's tone, alpha VEIN_ALPHA
 }
-WING_ALPHA = .38
+# r8 (art director r6): .38 -> .50 so the membrane reads light lavender on
+# a dark background (it read grey); Unity keeps this authored alpha.
+WING_ALPHA = .50
 # r6: outline and veins at alpha .35 so they no longer read as a wireframe
 # (Blender look-dev renders them blended; Unity's CharacterContentBuilder only
 # makes Mosquito_Wing transparent today, see the audit unity_note).
@@ -216,11 +230,18 @@ def palette_material(material, name, key, roughness, alpha=None, specular=None):
 # back 12% taller (centre 7.5 mm up, height radius +7.5 mm, bottom unchanged)
 # so the crest clears the eye cups in profile by ~24 mm; 80-face geodesic
 # (was 180) with 9% vertex jitter: few big, slightly irregular planes.
-THORAX_CENTER, THORAX_RADII = (0, .008, .1315), (.075, .062, .0675)
-THORAX_HUMP_RISE, THORAX_HUMP_BACK = .009, .0051
+# r8 (art director r6): the dome over the eyes read as a helmet over goggles.
+# The volume moves back, not up: hump rise .009 -> .002, height radius .0675
+# -> .060 on the same base (centre z .1315 -> .124), depth radius .062 ->
+# .070 with the centre 10 mm further back (y .008 -> .018), shoulders .15 ->
+# .05: the crest sits ~4 mm above the eye cups (was ~28 mm), so the eyes are
+# up and ahead of the body (PER-07). Wing axillae (z .082) and Socket.Back
+# stay inside the volume.
+THORAX_CENTER, THORAX_RADII = (0, .018, .124), (.075, .070, .060)
+THORAX_HUMP_RISE, THORAX_HUMP_BACK = .002, .0051
 # Shoulders: the upper half widens (x * (1 + .15 * up)) so, seen from behind,
 # the crest covers the cup tops instead of forming a 'heart'.
-THORAX_SHOULDER = .15
+THORAX_SHOULDER = .05
 THORAX_FREQUENCY, THORAX_JITTER, THORAX_SEED = 2, .09, 31
 # Head: compact, mostly hidden between the eye cups; r6 a little wider (the
 # eyes moved 3.5 mm out) and lower, so its underside is the snout's root.
@@ -251,7 +272,9 @@ ABDOMEN_BAND_FRACTION, ABDOMEN_BORDER_FRACTION = .30, .25
 WING_STANCE_FOLD, WING_STANCE_FLAP = .24, .12
 WING_STANCE_SPAN = (.371, .641, .672)
 WING_STANCE_NORMAL = (.93, -.23, -.29)
-WING_SCALE = 1.50
+# r8 (art director r6): -20% (1.50 -> 1.20, leaf proportion unchanged): in
+# profile the blade was 1.43x the abdomen (PER-03 SIDE ~1.0, 3/4 ~1.3).
+WING_SCALE = 1.20
 # r6 lanceolate leaf: straight leading edge (0-4), widest at u ~.10 (~40% of
 # the span, +20% over the proximal 40%), long taper to the pointed tip; the
 # petiole (8) stays inside the thorax.
@@ -720,7 +743,10 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
     dark = palette_material(material, 'Mosquito_Legs', 'legs', .86, specular=.25)
     joint = palette_material(material, 'Mosquito_LegJoint', 'joint', .80, specular=.30)
     eye = palette_material(material, 'Mosquito_EyeWhite', 'eye', .60)
-    pupil = palette_material(material, 'Mosquito_Expression', 'pupil', .40)
+    # Round 9 (review r8): the glossy pupil (Unity smoothness .60) picked up
+    # the preview's reflections and read greyish brown; now matte like the
+    # human's (smoothness .08), so it stays black.
+    pupil = palette_material(material, 'Mosquito_Expression', 'pupil', .92)
     # Preserve the exact name used by Unity's membrane shader branch. Blender
     # look-dev renders it blended with back faces culled (one layer, like
     # Unity's alpha material) instead of dithered hashing (grainy membrane).
@@ -831,8 +857,8 @@ def create_mosquito(*, Character, material, tube, ellipsoid, strip, mesh):
                                        'Mosquito_ShellShade/ShellDark/ShellDeep to keep a recoloured body faceted')},
         'wing_vein_alpha': VEIN_ALPHA,
         'wing_vein_unity_note': ('Mosquito_WingVein/Mosquito_WingEdge carry alpha .35; CharacterContentBuilder '
-                                 'only makes Mosquito_Wing transparent, so Unity draws them opaque until its '
-                                 'membrane branch also covers the MosquitoVeins renderer'),
+                                 'renders every wing material transparent with its authored alpha (membrane '
+                                 'first, veins and edge sorted after it) and rejects opaque wing materials'),
         'leg_skin_note': ('leg bones are the unchanged R4 bind; the visible knee/foot (A stance) are skin only: '
                           'tibia skin blends femur -> tarsus, foot rigid on the tarsus'),
         'face': facial_contract(),

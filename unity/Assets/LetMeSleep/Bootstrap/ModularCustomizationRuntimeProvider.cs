@@ -100,5 +100,30 @@ namespace LetMeSleep.Bootstrap
             var assembler = view ? view.GetComponent<CharacterModularVisualAssembler>() : null;
             return assembler && assembler.TryApply(view, Catalog, selection, role, out error);
         }
+
+        /// <summary>
+        /// UI hint only: false when the Color slot tints nothing the role wears with this selection (the pajama colour
+        /// with jeans, the marking colour without markings). The colour stays in the selection either way.
+        /// </summary>
+        public bool ColorSlotApplies(AppearanceSelection selection, CustomizationRole role, string colorSlotId)
+        {
+            if (string.IsNullOrEmpty(colorSlotId) || !Snapshot.TrySlot(colorSlotId, out var colorSlot) || colorSlot.Role != role ||
+                !colorSlot.Options.Any(option => option.Kind == CustomizationOptionKind.Color)) return true;
+            var host = hosts.FirstOrDefault(item => item.Role == role);
+            var hostMetadata = host?.View ? host.View.GetComponent<CharacterCustomizationHost>() : null;
+            if (hostMetadata == null || !Snapshot.TryNormalize(selection, out var normalized, out _)) return true;
+            if ((hostMetadata.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
+                .Any(channel => channel != null && channel.ColorSlotId == colorSlotId)) return true;
+            foreach (var selected in normalized.For(role).Selections)
+            {
+                if (!Snapshot.TrySlot(selected.SlotId, out var slot) || !slot.TryOption(selected.OptionId, out var option) ||
+                    option.Kind == CustomizationOptionKind.None || option.Kind == CustomizationOptionKind.Color) continue;
+                if (!Catalog.TryGetAssets(slot.SlotId, option.OptionId, out var asset, out _) || !(asset is GameObject prefab)) continue;
+                var part = prefab.GetComponent<CharacterCustomizationPart>();
+                if (part != null && (part.ColorChannels ?? Array.Empty<CharacterCustomizationPart.ColorChannelBinding>())
+                        .Any(channel => channel != null && channel.ColorSlotId == colorSlotId)) return true;
+            }
+            return false;
+        }
     }
 }

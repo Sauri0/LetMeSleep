@@ -103,7 +103,8 @@ namespace LetMeSleep.Bootstrap
             previewModularAppearance = local.Copy();
             if (SavePreferences())
             {
-                customizationMessage = "La personalización se migró al catálogo modular.";
+                // The migration is silent for the player: the same look, now in the modular catalogue.
+                customizationMessage = string.Empty;
                 return true;
             }
 
@@ -157,7 +158,8 @@ namespace LetMeSleep.Bootstrap
                 localModularAppearanceDraft, modularEditedRole, message: customizationMessage,
                 modularPreviewAvailable: true,
                 thumbnailResolver: (slotId, optionId) => modularCustomizationRuntime.Catalog.TryGetAssets(
-                    slotId, optionId, out _, out var thumbnail) ? thumbnail : null);
+                    slotId, optionId, out _, out var thumbnail) ? thumbnail : null,
+                colorSlotApplies: modularCustomizationRuntime.ColorSlotApplies);
             return true;
         }
 
@@ -263,9 +265,14 @@ namespace LetMeSleep.Bootstrap
         {
             error = string.Empty;
             if (!instance || selection == null || modularCustomizationRuntime == null) return false;
+            PreparePreviewInstance(instance);
             var view = UnityComponents.OnSelfOrChildren<CharacterView>(instance);
             var role = editedRole == AlfaRole.Mosquito ? CustomizationRole.Mosquito : CustomizationRole.Human;
-            return view && modularCustomizationRuntime.TryApply(view, selection, role, out error);
+            if (!view || !modularCustomizationRuntime.TryApply(view, selection, role, out error)) return false;
+            // The viewer framed the authored body; fit it to the assembled parts (keeps the user's angle and zoom).
+            var orbit = ui ? ui.GetComponentInChildren<CharacterPreviewOrbit>(true) : null;
+            if (orbit && orbit.CurrentInstance == instance) orbit.Reframe();
+            return true;
         }
     }
 }

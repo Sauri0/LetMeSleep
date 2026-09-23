@@ -27,6 +27,7 @@ namespace LetMeSleep.Bootstrap
 
         private void TickAppearance(double now)
         {
+            DressFreshModularVisuals(now);
             if (now < appearanceAt) return;
             appearanceAt = now + 2;
             peerAppearanceState.Synchronize(room?.Current, lobby?.Code);
@@ -55,6 +56,34 @@ namespace LetMeSleep.Bootstrap
                 foreach(var actor in activeRoster)
                     if(game.World.Actors.TryGetValue(actor.ActorId,out var proxy)) ApplyLive(proxy.GetComponentInChildren<CharacterView>(),actor.OwnerPuid);
         }
+        private double freshVisualsAt;
+
+        /// <summary>
+        /// Modular appearances are applied as soon as a menu, lobby or gameplay actor appears (checked four times a
+        /// second) instead of at the next two-second appearance tick, so a new actor never shows the authored
+        /// default look (pajama and nightcap) before switching to its owner's outfit.
+        /// </summary>
+        private void DressFreshModularVisuals(double now)
+        {
+            if (!ModularCustomizationAvailable || now < freshVisualsAt) return;
+            freshVisualsAt = now + .25;
+            if (menuCharacters && menuCharacters.activeInHierarchy)
+                foreach (var view in menuCharacters.GetComponentsInChildren<CharacterView>()) DressIfFresh(view, LocalId);
+            if (lobbyMovement && room?.Current != null)
+                foreach (var member in room.Current.Members)
+                    if (lobbyMovement.TryGetVisual(member.Id, out var visual) && visual) DressIfFresh(visual.GetComponentInChildren<CharacterView>(), member.Id);
+            if (game && activeRoster != null)
+                foreach (var actor in activeRoster)
+                    if (game.World.Actors.TryGetValue(actor.ActorId, out var proxy) && proxy) DressIfFresh(proxy.GetComponentInChildren<CharacterView>(), actor.OwnerPuid);
+        }
+
+        private void DressIfFresh(CharacterView view, string owner)
+        {
+            if (!view) return;
+            var assembler = view.GetComponent<CharacterModularVisualAssembler>();
+            if (assembler && !assembler.HasAppliedParts) ApplyLive(view, owner);
+        }
+
         /// <summary>
         /// v0.3 results (UI-06 9): the colours of each player of the round, so every celebrating figure looks like
         /// its player (the local one from the saved look, peers from their published basic look, the rest default).
@@ -73,6 +102,33 @@ namespace LetMeSleep.Bootstrap
                     Pick(Skins, draft?.SkinColorId), Pick(Pajamas, draft?.PajamaColorId), Pick(MosquitoColors, draft?.MosquitoColorId), local);
             }).ToArray();
         }
+        /// <summary>UI studio subjects (the HUD face) wear the local player's published look.</summary>
+        private void DressLocalLook(UnityEngine.GameObject subject, AlfaRole role)
+        {
+            var view = subject ? subject.GetComponentInChildren<CharacterView>(true) : null;
+            if (view) ApplyLive(view, training ? "practice" : LocalId);
+        }
+
+        /// <summary>Opaque key of the published look of a role; empty while it is the default character.</summary>
+        private string LocalLookKey(AlfaRole role)
+        {
+            if (ModularCustomizationAvailable && publishedModularAppearance != null)
+            {
+                var customizationRole = role == AlfaRole.Mosquito ? CustomizationRole.Mosquito : CustomizationRole.Human;
+                var defaults = modularCustomizationRuntime.Snapshot.DefaultSelection().For(customizationRole);
+                var chosen = publishedModularAppearance.For(customizationRole);
+                var parts = chosen.Selections.OrderBy(item => item.SlotId, StringComparer.Ordinal)
+                    .Where(item => item.OptionId != defaults.OptionFor(item.SlotId))
+                    .Select(item => item.SlotId + "=" + item.OptionId).ToArray();
+                return string.Join("|", parts);
+            }
+            if (appearance == null) return string.Empty;
+            return role == AlfaRole.Mosquito
+                ? (appearance.MosquitoColorId == "red" ? string.Empty : appearance.MosquitoColorId)
+                : (appearance.SkinColorId == "warm" && appearance.PajamaColorId == "blue" ? string.Empty
+                    : appearance.SkinColorId + "/" + appearance.PajamaColorId);
+        }
+
         private void ApplyLive(CharacterView view,string owner)
         {
             if (!view) return;

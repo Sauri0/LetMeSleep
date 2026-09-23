@@ -118,11 +118,12 @@ namespace LetMeSleep.Editor
                         ?? throw new InvalidDataException("Missing shared menu palette " + m.name)).ToArray();
                     if (renderer is SkinnedMeshRenderer skin) skin.quality = SkinQuality.Bone4;
                 }
-                view.Colors = renderers.SelectMany(r => r.sharedMaterials.Select((m, i) => new CharacterView.ColorBinding
-                {
-                    Renderer = r, MaterialIndex = i,
-                    Category = m.name == "Human_Skin" ? "Skin" : m.name == "Human_Pajamas" ? "Pajamas" : null
-                })).Where(binding => binding.Category != null).ToArray();
+                // Same channels and shades as the game prefabs (v0.3.0 round 9: the Human_PantsShade hem is
+                // a darker shade of the pajama channel).
+                view.Colors = renderers.SelectMany(r => r.sharedMaterials.Select((m, i) =>
+                    LetMeSleep.Content.Characters.Editor.CharacterContentBuilder.TryColorBinding(m, out var category, out var shade)
+                        ? new CharacterView.ColorBinding { Renderer = r, MaterialIndex = i, Category = category, Shade = shade }
+                        : null)).Where(binding => binding != null).ToArray();
                 view.HeadRenderers = renderers.Where(r => r.name == "HumanHead" || r.name == "HumanNightcap").ToArray();
                 view.Motions = Array.Empty<CharacterView.MotionBinding>();
                 Object.DestroyImmediate(oldModel.gameObject);

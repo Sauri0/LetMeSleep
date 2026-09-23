@@ -176,14 +176,20 @@ class Character:
             bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
             bpy.ops.mesh.normals_make_consistent(inside=False); bpy.ops.object.mode_set(mode='OBJECT')
             obj.select_set(False)
-        lid_winding=None;mouth_winding=None
+        lid_winding=None;mouth_winding=None;eye_normals=None
         if self.species=='Human':
             from author_human_facial import orient_lid_faces
-            from author_human_geometry import orient_mouth_cavity
+            from author_human_geometry import orient_mouth_cavity,bend_eye_white_normals
             for obj in meshes:
                 if obj.name=='HumanHead':
                     lid_winding=orient_lid_faces(self,obj)
                     mouth_winding=orient_mouth_cavity(obj)
+                    eye_normals=bend_eye_white_normals(obj)
+        eye_interiors=None
+        if self.species=='Mosquito':
+            from author_mosquito_face import light_eye_interiors
+            for obj in meshes:
+                if obj.name=='MosquitoSkin':eye_interiors=light_eye_interiors(obj)
         audit={'species':self.species,'mesh_count':len(meshes),'bones':len(self.rig.data.bones),
                'triangles':0,'vertices':0,'unweighted_vertices':0,'bad_weight_sums':0,
                'degenerate_triangles':0,'nonfinite_vertices':0,'clips':self.clips,'curl':self.curl,'contact':self.contact}
@@ -209,6 +215,9 @@ class Character:
             audit['facial_contract']=getattr(self,'facial_contract',{})
             audit['eyelid_winding']=lid_winding
             audit['mouth_cavity_winding']=mouth_winding
+            audit['eye_white_normals']=eye_normals
+        if self.species=='Mosquito':
+            audit['eye_interior_normals']=eye_interiors
         audit['bone_names']=[b.name for b in self.rig.data.bones]
         audit['bind_bones']=[{'name':b.name,'parent':b.parent.name if b.parent else '',
                               'head_blender_m':list(b.head_local),'tail_blender_m':list(b.tail_local)} for b in self.rig.data.bones]
@@ -264,17 +273,31 @@ def human():
     # band is a clearly darker #8E1A18.
     # Round 6 (art director): cream dots #E6DCC8 that tie in with the T-shirt
     # (UI-06 screen 5) and a #1E2440 slipper sole.
+    # Round 8 (art director r6): the nightcap base drops to #B02A27 so the
+    # lit cap reads ~#C8322E (it rendered pink #F04B49) with a #8E2220 cuff;
+    # a warm beige T-shirt #E2C9A4 (it read cold white) with Human_ShirtShade
+    # #C4A983 on the side planes under the arms and on the hem; paler #DCD8CE
+    # dots. The eye whites keep a high albedo (#F0F0F4, shade #E6E8EE).
+    # Round 9 (review r8): the T-shirt clipped to a yellowish white in the
+    # customization preview and read cold grey in daylight maps; a slightly
+    # warmer, more saturated base #DFC195 (shade #C1A277) keeps the beige.
+    # Round 9 (art director r6 / review r8): the 40 mm trouser hem in
+    # Human_PantsShade #23407E (Unity tints it with the pajama channel, at the
+    # same relative shade).
     m={'skin':palette('Human_Skin','#C98B5A',.82),'pajamas':palette('Human_Pajamas','#2D4F9A',.88),
        'trim':palette('Human_Piping','#F5F2EC',.90),'sole':palette('Human_SlipperSole','#1E2440',.92),
        'white':palette('Character_EyeWhite','#F0F0F4',.55),'dark':palette('Character_Expression','#16110F',.92),
-       'eyeshade':palette('Human_EyeWhiteShade','#E2E4EC',.60),
-       'shirt':palette('Human_Shirt','#E8DCC5',.92),'dots':palette('Human_PajamaDots','#E6DCC8',.88),
-       'cap':palette('Human_Nightcap','#C8322E',.95),'band':palette('Human_NightcapBand','#8E1A18',.95),
+       'eyeshade':palette('Human_EyeWhiteShade','#E6E8EE',.60),
+       'shirt':palette('Human_Shirt','#DFC195',.92),'shirtshade':palette('Human_ShirtShade','#C1A277',.92),
+       'dots':palette('Human_PajamaDots','#DCD8CE',.88),'pantsshade':palette('Human_PantsShade','#23407E',.88),
+       'cap':palette('Human_Nightcap','#B02A27',.95),'band':palette('Human_NightcapBand','#8E2220',.95),
        'hair':palette('Human_Hair','#3A2619',.85),'slipper':palette('Human_Slipper','#25306A',.90)}
-    # Blender look-dev only: a faint self-light keeps the huge eyeballs and the
-    # pompom white under the top key while the eye facets stay visible (the
-    # audit/Unity palette is unchanged).
-    for key,strength in (('white',.30),('eyeshade',.30),('trim',.85)):
+    # Blender look-dev only: a faint self-light keeps the pompom white under
+    # the top key (the audit/Unity palette is unchanged). Round 8: the eye
+    # whites have none, like Unity (no emission; bent normals light their
+    # lower half, see author_human_geometry.bend_eye_white_normals), so the
+    # sheet shows what the game will.
+    for key,strength in (('trim',.85),):
         node=principled(m[key])
         node.inputs['Emission Color'].default_value=node.inputs['Base Color'].default_value
         node.inputs['Emission Strength'].default_value=strength
@@ -315,9 +338,13 @@ def human():
         # Round 6: +10% longer beyond the wrist (palm and fingers), same width.
         HAND=1.25;HAND_LENGTH=1.10;wrist=.75
         grow=lambda x:wrist+HAND*(x-wrist)*(HAND_LENGTH if x>wrist else 1)
+        # Round 9 (review r8, wrist seam): the palm's wrist end narrows (.035 x
+        # .021 at its cap, was .0425 x .026) so it starts inside the forearm tip
+        # (author_human_joints.ARM_*) and emerges within x .70-.712 all round:
+        # no flat tab of the palm above the seam on the thumb side.
         parts=[tube('Palm.'+side,[(s*grow(x),0,1.15) for x in [.687,.710,.735,.755,.780,.812,.842]],
-                    [HAND*v for v in (.034,.034,.034,.041,.056,.063,.060)],
-                    [1.04*v for v in (.025,.024,.021,.021,.026,.028,.025)],skin,'Hand.'+side,12)]
+                    [HAND*v for v in (.028,.031,.034,.041,.056,.063,.060)],
+                    [1.04*v for v in (.020,.022,.021,.021,.026,.028,.025)],skin,'Hand.'+side,12)]
         paths=[]
         inward=Vector((0,-1,0))
         for digit,zoff,length,spread in [('Index',.038,.104,.05),('Middle',.010,.116,.012),('Ring',-.019,.106,-.03),

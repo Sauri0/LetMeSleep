@@ -47,6 +47,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Human_PantsShade
+    second: {fileID: 2100000, guid: 8e7e9939a0252ea4d848ffa7122ae81a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Human_Piping
     second: {fileID: 2100000, guid: 173b87cf85b82ea4886a77373b87e9af, type: 2}
   - first:
@@ -54,6 +59,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Human_Shirt
     second: {fileID: 2100000, guid: 662940dab54789841b3dc4c879735834, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Human_ShirtShade
+    second: {fileID: 2100000, guid: d2b51411c25bd284ca2bd279fb692131, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

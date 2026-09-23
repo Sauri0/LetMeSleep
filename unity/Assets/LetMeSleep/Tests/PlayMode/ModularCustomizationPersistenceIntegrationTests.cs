@@ -59,9 +59,15 @@ namespace LetMeSleep.Tests.PlayMode
             ResetFixtureDirectory();
             WriteV1(PublishedLegacy(), PrivateLegacy());
 
-            AsyncOperation load = SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Single);
-            Assert.That(load, Is.Not.Null, SceneName + " must be enabled in Build Settings.");
-            while (!load.isDone) yield return null;
+            // The synthetic provider below replaces the scene's production one before its first LoadPreferences.
+            SceneManager.sceneLoaded += DetachSceneModularProvider;
+            try
+            {
+                AsyncOperation load = SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Single);
+                Assert.That(load, Is.Not.Null, SceneName + " must be enabled in Build Settings.");
+                while (!load.isDone) yield return null;
+            }
+            finally { SceneManager.sceneLoaded -= DetachSceneModularProvider; }
             yield return null;
 
             application = Object.FindFirstObjectByType<AlfaApplication>();
@@ -83,6 +89,17 @@ namespace LetMeSleep.Tests.PlayMode
                 application.PreviewTexture, humanPrefab, mosquitoPrefab));
             Invoke(application, "PresentPreferences");
             yield return null;
+        }
+
+        /// <summary>
+        /// v0.3.0: the build scene carries the production modular provider, so a schema-1 file migrates to schema 2 on
+        /// boot. This fixture installs its own synthetic provider; the scene's provider is detached after
+        /// Awake/OnEnable and before AlfaApplication.Start (sceneLoaded runs in between).
+        /// </summary>
+        private static void DetachSceneModularProvider(Scene scene, LoadSceneMode mode)
+        {
+            foreach (var root in scene.GetRootGameObjects())
+                foreach (var app in root.GetComponentsInChildren<AlfaApplication>(true)) app.ModularCustomizationProvider = null;
         }
 
         [UnityTearDown]

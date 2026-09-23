@@ -1,0 +1,1474 @@
+{
+  "schema": 1,
+  "revision": "modular-parts-v030-r2",
+  "species": "Mosquito",
+  "rig_id": "lms.mosquito.v030",
+  "rig_signature_sha256": "85d06d69cd4db0638e5f9b3ca5db8cd62237eb764e31873a99e31abf1adf76d4",
+  "blender": "5.2.1 LTS",
+  "bones": [
+    "Root",
+    "Thorax",
+    "Head",
+    "Proboscis",
+    "Socket.Mouth",
+    "Socket.AimForward",
+    "Pupil.L",
+    "LidUpper.L",
+    "LidLower.L",
+    "Pupil.R",
+    "LidUpper.R",
+    "LidLower.R",
+    "Abdomen01",
+    "Abdomen02",
+    "Socket.Back",
+    "Socket.CameraTarget",
+    "Socket.WingRoot.L",
+    "Socket.WingRoot.R",
+    "Wing.L",
+    "Leg101.L",
+    "Leg102.L",
+    "Leg103.L",
+    "Leg201.L",
+    "Leg202.L",
+    "Leg203.L",
+    "Leg301.L",
+    "Leg302.L",
+    "Leg303.L",
+    "Wing.R",
+    "Leg101.R",
+    "Leg102.R",
+    "Leg103.R",
+    "Leg201.R",
+    "Leg202.R",
+    "Leg203.R",
+    "Leg301.R",
+    "Leg302.R",
+    "Leg303.R",
+    "Socket.GroundContact"
+  ],
+  "bind_bones": [
+    {
+      "name": "Root",
+      "parent": "",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.0,
+        0.03
+      ]
+    },
+    {
+      "name": "Thorax",
+      "parent": "Root",
+      "head_blender_m": [
+        0.0,
+        0.015,
+        0.11
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.035,
+        0.104
+      ]
+    },
+    {
+      "name": "Head",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.0,
+        -0.041,
+        0.1
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.084,
+        0.105
+      ]
+    },
+    {
+      "name": "Proboscis",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0,
+        -0.096,
+        0.092
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.19,
+        0.0
+      ]
+    },
+    {
+      "name": "Socket.Mouth",
+      "parent": "Proboscis",
+      "head_blender_m": [
+        0.0,
+        -0.19,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.2,
+        0.0
+      ]
+    },
+    {
+      "name": "Socket.AimForward",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0,
+        -0.08,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.12,
+        0.0
+      ]
+    },
+    {
+      "name": "Pupil.L",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0405,
+        -0.067,
+        0.132
+      ],
+      "tail_blender_m": [
+        0.0525,
+        -0.067,
+        0.132
+      ]
+    },
+    {
+      "name": "LidUpper.L",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0405,
+        -0.067,
+        0.132
+      ],
+      "tail_blender_m": [
+        0.0525,
+        -0.067,
+        0.132
+      ]
+    },
+    {
+      "name": "LidLower.L",
+      "parent": "Head",
+      "head_blender_m": [
+        0.0405,
+        -0.067,
+        0.132
+      ],
+      "tail_blender_m": [
+        0.0525,
+        -0.067,
+        0.132
+      ]
+    },
+    {
+      "name": "Pupil.R",
+      "parent": "Head",
+      "head_blender_m": [
+        -0.0405,
+        -0.067,
+        0.132
+      ],
+      "tail_blender_m": [
+        -0.0285,
+        -0.067,
+        0.132
+      ]
+    },
+    {
+      "name": "LidUpper.R",
+      "parent": "Head",
+      "head_blender_m": [
+        -0.0405,
+        -0.067,
+        0.132
+      ],
+      "tail_blender_m": [
+        -0.0285,
+        -0.067,
+        0.132
+      ]
+    },
+    {
+      "name": "LidLower.R",
+      "parent": "Head",
+      "head_blender_m": [
+        -0.0405,
+        -0.067,
+        0.132
+      ],
+      "tail_blender_m": [
+        -0.0285,
+        -0.067,
+        0.132
+      ]
+    },
+    {
+      "name": "Abdomen01",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.0,
+        0.039,
+        0.105
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.11,
+        0.062
+      ]
+    },
+    {
+      "name": "Abdomen02",
+      "parent": "Abdomen01",
+      "head_blender_m": [
+        0.0,
+        0.11,
+        0.062
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.204,
+        -0.03
+      ]
+    },
+    {
+      "name": "Socket.Back",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.0,
+        0.015,
+        0.085
+      ],
+      "tail_blender_m": [
+        0.0,
+        0.015,
+        0.1
+      ]
+    },
+    {
+      "name": "Socket.CameraTarget",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.02,
+        0.0
+      ]
+    },
+    {
+      "name": "Socket.WingRoot.L",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.017,
+        0.0,
+        0.082
+      ],
+      "tail_blender_m": [
+        0.017,
+        -0.02,
+        0.082
+      ]
+    },
+    {
+      "name": "Socket.WingRoot.R",
+      "parent": "Thorax",
+      "head_blender_m": [
+        -0.017,
+        0.0,
+        0.082
+      ],
+      "tail_blender_m": [
+        -0.017,
+        -0.02,
+        0.082
+      ]
+    },
+    {
+      "name": "Wing.L",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.017,
+        0.0,
+        0.082
+      ],
+      "tail_blender_m": [
+        0.22,
+        0.065,
+        0.181
+      ]
+    },
+    {
+      "name": "Leg101.L",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.027,
+        -0.033,
+        0.099
+      ],
+      "tail_blender_m": [
+        0.097,
+        -0.0538,
+        0.006
+      ]
+    },
+    {
+      "name": "Leg102.L",
+      "parent": "Leg101.L",
+      "head_blender_m": [
+        0.097,
+        -0.0538,
+        0.006
+      ],
+      "tail_blender_m": [
+        0.107,
+        -0.085,
+        -0.1076
+      ]
+    },
+    {
+      "name": "Leg103.L",
+      "parent": "Leg102.L",
+      "head_blender_m": [
+        0.107,
+        -0.085,
+        -0.1076
+      ],
+      "tail_blender_m": [
+        0.119,
+        -0.079,
+        -0.1126
+      ]
+    },
+    {
+      "name": "Leg201.L",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.027,
+        0.006,
+        0.095
+      ],
+      "tail_blender_m": [
+        0.112,
+        0.0108,
+        -0.003
+      ]
+    },
+    {
+      "name": "Leg202.L",
+      "parent": "Leg201.L",
+      "head_blender_m": [
+        0.112,
+        0.0108,
+        -0.003
+      ],
+      "tail_blender_m": [
+        0.094,
+        0.018,
+        -0.1076
+      ]
+    },
+    {
+      "name": "Leg203.L",
+      "parent": "Leg202.L",
+      "head_blender_m": [
+        0.094,
+        0.018,
+        -0.1076
+      ],
+      "tail_blender_m": [
+        0.106,
+        0.024,
+        -0.1126
+      ]
+    },
+    {
+      "name": "Leg301.L",
+      "parent": "Thorax",
+      "head_blender_m": [
+        0.027,
+        0.042,
+        0.091
+      ],
+      "tail_blender_m": [
+        0.089,
+        0.0688,
+        0.002
+      ]
+    },
+    {
+      "name": "Leg302.L",
+      "parent": "Leg301.L",
+      "head_blender_m": [
+        0.089,
+        0.0688,
+        0.002
+      ],
+      "tail_blender_m": [
+        0.081,
+        0.109,
+        -0.1076
+      ]
+    },
+    {
+      "name": "Leg303.L",
+      "parent": "Leg302.L",
+      "head_blender_m": [
+        0.081,
+        0.109,
+        -0.1076
+      ],
+      "tail_blender_m": [
+        0.093,
+        0.115,
+        -0.1126
+      ]
+    },
+    {
+      "name": "Wing.R",
+      "parent": "Thorax",
+      "head_blender_m": [
+        -0.017,
+        0.0,
+        0.082
+      ],
+      "tail_blender_m": [
+        -0.22,
+        0.065,
+        0.181
+      ]
+    },
+    {
+      "name": "Leg101.R",
+      "parent": "Thorax",
+      "head_blender_m": [
+        -0.027,
+        -0.033,
+        0.099
+      ],
+      "tail_blender_m": [
+        -0.097,
+        -0.0538,
+        0.006
+      ]
+    },
+    {
+      "name": "Leg102.R",
+      "parent": "Leg101.R",
+      "head_blender_m": [
+        -0.097,
+        -0.0538,
+        0.006
+      ],
+      "tail_blender_m": [
+        -0.107,
+        -0.085,
+        -0.1076
+      ]
+    },
+    {
+      "name": "Leg103.R",
+      "parent": "Leg102.R",
+      "head_blender_m": [
+        -0.107,
+        -0.085,
+        -0.1076
+      ],
+      "tail_blender_m": [
+        -0.119,
+        -0.079,
+        -0.1126
+      ]
+    },
+    {
+      "name": "Leg201.R",
+      "parent": "Thorax",
+      "head_blender_m": [
+        -0.027,
+        0.006,
+        0.095
+      ],
+      "tail_blender_m": [
+        -0.112,
+        0.0108,
+        -0.003
+      ]
+    },
+    {
+      "name": "Leg202.R",
+      "parent": "Leg201.R",
+      "head_blender_m": [
+        -0.112,
+        0.0108,
+        -0.003
+      ],
+      "tail_blender_m": [
+        -0.094,
+        0.018,
+        -0.1076
+      ]
+    },
+    {
+      "name": "Leg203.R",
+      "parent": "Leg202.R",
+      "head_blender_m": [
+        -0.094,
+        0.018,
+        -0.1076
+      ],
+      "tail_blender_m": [
+        -0.106,
+        0.024,
+        -0.1126
+      ]
+    },
+    {
+      "name": "Leg301.R",
+      "parent": "Thorax",
+      "head_blender_m": [
+        -0.027,
+        0.042,
+        0.091
+      ],
+      "tail_blender_m": [
+        -0.089,
+        0.0688,
+        0.002
+      ]
+    },
+    {
+      "name": "Leg302.R",
+      "parent": "Leg301.R",
+      "head_blender_m": [
+        -0.089,
+        0.0688,
+        0.002
+      ],
+      "tail_blender_m": [
+        -0.081,
+        0.109,
+        -0.1076
+      ]
+    },
+    {
+      "name": "Leg303.R",
+      "parent": "Leg302.R",
+      "head_blender_m": [
+        -0.081,
+        0.109,
+        -0.1076
+      ],
+      "tail_blender_m": [
+        -0.093,
+        0.115,
+        -0.1126
+      ]
+    },
+    {
+      "name": "Socket.GroundContact",
+      "parent": "Root",
+      "head_blender_m": [
+        0.0,
+        0.0,
+        -0.114
+      ],
+      "tail_blender_m": [
+        0.0,
+        -0.02,
+        -0.114
+      ]
+    }
+  ],
+  "axes": {
+    "source_up": "+Z",
+    "source_forward": "-Y",
+    "fbx_axis_forward": "-Z",
+    "fbx_axis_up": "Y"
+  },
+  "parts": [
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.base",
+      "option": "base",
+      "fbx": "mosquito.base__base.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartBody",
+          "triangles": 5422,
+          "vertices": 2849,
+          "materials": [
+            "Mosquito_Shell",
+            "Mosquito_ShellShade",
+            "Mosquito_Abdomen",
+            "Mosquito_ShellDeep",
+            "Mosquito_EyeWhite",
+            "Mosquito_Expression",
+            "Mosquito_Legs",
+            "Mosquito_LegJoint"
+          ],
+          "bones": [
+            "Abdomen01",
+            "Abdomen02",
+            "Head",
+            "Leg101.L",
+            "Leg101.R",
+            "Leg103.L",
+            "Leg103.R",
+            "Leg201.L",
+            "Leg201.R",
+            "Leg203.L",
+            "Leg203.R",
+            "Leg301.L",
+            "Leg301.R",
+            "Leg303.L",
+            "Leg303.R",
+            "LidLower.L",
+            "LidLower.R",
+            "LidUpper.L",
+            "LidUpper.R",
+            "Pupil.L",
+            "Pupil.R",
+            "Thorax"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartBody",
+          "material": "Mosquito_Shell",
+          "slot": "mosquito.color",
+          "shade_reference": "",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartBody",
+          "material": "Mosquito_ShellShade",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartBody",
+          "material": "Mosquito_ShellDeep",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartBody",
+          "material": "Mosquito_Abdomen",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "Body, legs and the bone-driven eyes (Pupil/Lid bones) with the same geometry as the host.",
+      "sha256": "e635e9da900dc191fee44219cefc998bb6cda9df449ab297106cd66abdb184f0"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.wings",
+      "option": "clasicas",
+      "fbx": "mosquito.wings__clasicas.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartWings",
+          "triangles": 104,
+          "vertices": 56,
+          "materials": [
+            "Mosquito_Wing"
+          ],
+          "bones": [
+            "Wing.L",
+            "Wing.R"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        },
+        {
+          "name": "MosquitoPartWingVeins",
+          "triangles": 528,
+          "vertices": 288,
+          "materials": [
+            "Mosquito_WingEdge",
+            "Mosquito_WingVein"
+          ],
+          "bones": [
+            "Wing.L",
+            "Wing.R"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartWings",
+          "material": "Mosquito_Wing",
+          "slot": "mosquito.wing_color",
+          "shade_reference": "",
+          "alpha": 0.5
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "3ef263e0c8ddc210b182c085e40ade8b2aae07e6f135a486fc9b044ecd7c27d0"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.wings",
+      "option": "redondas",
+      "fbx": "mosquito.wings__redondas.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartWings",
+          "triangles": 224,
+          "vertices": 116,
+          "materials": [
+            "Mosquito_Wing"
+          ],
+          "bones": [
+            "Wing.L",
+            "Wing.R"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        },
+        {
+          "name": "MosquitoPartWingVeins",
+          "triangles": 512,
+          "vertices": 264,
+          "materials": [
+            "Mosquito_WingEdge",
+            "Mosquito_WingVein"
+          ],
+          "bones": [
+            "Wing.L",
+            "Wing.R"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartWings",
+          "material": "Mosquito_Wing",
+          "slot": "mosquito.wing_color",
+          "shade_reference": "",
+          "alpha": 0.5
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "0e337cf13a94cab2db9d4ced03150e77fdad7d70475497e2ea3321a9f650f959"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.wings",
+      "option": "largas",
+      "fbx": "mosquito.wings__largas.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartWings",
+          "triangles": 224,
+          "vertices": 116,
+          "materials": [
+            "Mosquito_Wing"
+          ],
+          "bones": [
+            "Wing.L",
+            "Wing.R"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        },
+        {
+          "name": "MosquitoPartWingVeins",
+          "triangles": 512,
+          "vertices": 264,
+          "materials": [
+            "Mosquito_WingEdge",
+            "Mosquito_WingVein"
+          ],
+          "bones": [
+            "Wing.L",
+            "Wing.R"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartWings",
+          "material": "Mosquito_Wing",
+          "slot": "mosquito.wing_color",
+          "shade_reference": "",
+          "alpha": 0.5
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "bef4ec70ed53f639a2443b5618343ae7124c56ebdced063075b98e3418315c98"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.proboscis",
+      "option": "estandar",
+      "fbx": "mosquito.proboscis__estandar.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartProboscis",
+          "triangles": 92,
+          "vertices": 48,
+          "materials": [
+            "Mosquito_Shell",
+            "Mosquito_ShellDark",
+            "Mosquito_ShellShade"
+          ],
+          "bones": [
+            "Proboscis"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_Shell",
+          "slot": "mosquito.color",
+          "shade_reference": "",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellShade",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellDark",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "5939035cabf345e5dffea9948b358014f02041c071e1a027eff9db381b7daecf"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.proboscis",
+      "option": "corta",
+      "fbx": "mosquito.proboscis__corta.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartProboscis",
+          "triangles": 92,
+          "vertices": 48,
+          "materials": [
+            "Mosquito_Shell",
+            "Mosquito_ShellDark",
+            "Mosquito_ShellShade"
+          ],
+          "bones": [
+            "Proboscis"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [
+        {
+          "anchor": "ProboscisTip",
+          "bone": "Socket.Mouth",
+          "point_blender_m": [
+            0.0,
+            -0.14784,
+            0.03332
+          ]
+        }
+      ],
+      "colors": [
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_Shell",
+          "slot": "mosquito.color",
+          "shade_reference": "",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellShade",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellDark",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "Tip 34% shorter than Socket.Mouth; ProboscisTip follows it.",
+      "sha256": "10b506248085e936c66fa5fa99dd0adbcd12249ebfc3bff1e7f23b981d2a6de3"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.proboscis",
+      "option": "larga",
+      "fbx": "mosquito.proboscis__larga.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartProboscis",
+          "triangles": 92,
+          "vertices": 48,
+          "materials": [
+            "Mosquito_Shell",
+            "Mosquito_ShellDark",
+            "Mosquito_ShellShade"
+          ],
+          "bones": [
+            "Proboscis"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [
+        {
+          "anchor": "ProboscisTip",
+          "bone": "Socket.Mouth",
+          "point_blender_m": [
+            0.0,
+            -0.2272,
+            -0.0294
+          ]
+        }
+      ],
+      "colors": [
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_Shell",
+          "slot": "mosquito.color",
+          "shade_reference": "",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellShade",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellDark",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "Tip 30% past Socket.Mouth; ProboscisTip follows it.",
+      "sha256": "9771067c31939555b8c4315490e9f4c601afc45cdf398fa2e8bbaa56d5d6728e"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.proboscis",
+      "option": "curva",
+      "fbx": "mosquito.proboscis__curva.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartProboscis",
+          "triangles": 92,
+          "vertices": 48,
+          "materials": [
+            "Mosquito_Shell",
+            "Mosquito_ShellDark",
+            "Mosquito_ShellShade"
+          ],
+          "bones": [
+            "Proboscis"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_Shell",
+          "slot": "mosquito.color",
+          "shade_reference": "",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellShade",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        },
+        {
+          "renderer": "MosquitoPartProboscis",
+          "material": "Mosquito_ShellDark",
+          "slot": "mosquito.color",
+          "shade_reference": "Mosquito_Shell",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "Hooked arc that still ends on Socket.Mouth.",
+      "sha256": "b72f0ea68264f8d0047d3abbe06e211d797adb04ee25f9d3df7033bd320a7ed5"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.markings",
+      "option": "anillos",
+      "fbx": "mosquito.markings__anillos.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartMarkings",
+          "triangles": 256,
+          "vertices": 128,
+          "materials": [
+            "Mosquito_Accent"
+          ],
+          "bones": [
+            "Abdomen01",
+            "Abdomen02"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartMarkings",
+          "material": "Mosquito_Accent",
+          "slot": "mosquito.accent_color",
+          "shade_reference": "",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "60a27dfac76402d33a3c9092d3c2d76b07dfb31f807e3fa10053f396ab45b075"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.markings",
+      "option": "rayas",
+      "fbx": "mosquito.markings__rayas.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartMarkings",
+          "triangles": 424,
+          "vertices": 216,
+          "materials": [
+            "Mosquito_Accent"
+          ],
+          "bones": [
+            "Abdomen01",
+            "Abdomen02"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartMarkings",
+          "material": "Mosquito_Accent",
+          "slot": "mosquito.accent_color",
+          "shade_reference": "",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "c113afcc50e464ba21bb4027849a1dea518266d6dd41c6ac379bea40ea778a8f"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.markings",
+      "option": "lunares",
+      "fbx": "mosquito.markings__lunares.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartMarkings",
+          "triangles": 300,
+          "vertices": 180,
+          "materials": [
+            "Mosquito_Accent"
+          ],
+          "bones": [
+            "Abdomen01",
+            "Abdomen02",
+            "Thorax"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [
+        {
+          "renderer": "MosquitoPartMarkings",
+          "material": "Mosquito_Accent",
+          "slot": "mosquito.accent_color",
+          "shade_reference": "",
+          "alpha": -1
+        }
+      ],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "c3eb986e12d26cff680feab6197163e6eb1cb86914d9309bf3826eebd05eeb43"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.accessory",
+      "option": "hoja",
+      "fbx": "mosquito.accessory__hoja.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartAccessory",
+          "triangles": 168,
+          "vertices": 90,
+          "materials": [
+            "Mosquito_Leaf",
+            "Mosquito_LeafUnder",
+            "Mosquito_LeafVein"
+          ],
+          "bones": [
+            "Head"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "cb25fd656d921ab0a513962c752496bbf26e8d9dced8d8e53131c348cd2efd52"
+    },
+    {
+      "role": "Mosquito",
+      "slot": "mosquito.accessory",
+      "option": "flor",
+      "fbx": "mosquito.accessory__flor.fbx",
+      "renderers": [
+        {
+          "name": "MosquitoPartAccessory",
+          "triangles": 120,
+          "vertices": 78,
+          "materials": [
+            "Mosquito_Petal",
+            "Mosquito_PetalUnder",
+            "Mosquito_FlowerCentre",
+            "Mosquito_LeafVein"
+          ],
+          "bones": [
+            "Head"
+          ],
+          "errors": [],
+          "first_person_head": false,
+          "hidden_when_slot_selected": "",
+          "shown_when_slot_selected": ""
+        }
+      ],
+      "anchor_offsets": [],
+      "colors": [],
+      "facial_impact": "None",
+      "note": "",
+      "sha256": "e4bfa7945fcf2f8e70dc717b624bbcc307aed7795447aa4f096dd45bf8c1e790"
+    }
+  ],
+  "material_palette": [
+    {
+      "name": "Mosquito_Abdomen",
+      "color": {
+        "r": 0.4313725531101227,
+        "g": 0.0784313753247261,
+        "b": 0.0941176488995552,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421,
+      "new": false
+    },
+    {
+      "name": "Mosquito_Accent",
+      "color": {
+        "r": 0.9490196108818054,
+        "g": 0.9215686321258545,
+        "b": 0.8666666746139526,
+        "a": 1.0
+      },
+      "roughness": 0.8799999952316284,
+      "new": true
+    },
+    {
+      "name": "Mosquito_Expression",
+      "color": {
+        "r": 0.0784313753247261,
+        "g": 0.07058823853731155,
+        "b": 0.0941176488995552,
+        "a": 1.0
+      },
+      "roughness": 0.9200000166893005,
+      "new": false
+    },
+    {
+      "name": "Mosquito_EyeWhite",
+      "color": {
+        "r": 0.9803921580314636,
+        "g": 0.9803921580314636,
+        "b": 0.9725490212440491,
+        "a": 1.0
+      },
+      "roughness": 0.6000000238418579,
+      "new": false
+    },
+    {
+      "name": "Mosquito_FlowerCentre",
+      "color": {
+        "r": 0.9490196108818054,
+        "g": 0.7254902124404907,
+        "b": 0.18039216101169586,
+        "a": 1.0
+      },
+      "roughness": 0.800000011920929,
+      "new": true
+    },
+    {
+      "name": "Mosquito_Leaf",
+      "color": {
+        "r": 0.4274509847164154,
+        "g": 0.7450980544090271,
+        "b": 0.2705882489681244,
+        "a": 1.0
+      },
+      "roughness": 0.800000011920929,
+      "new": true
+    },
+    {
+      "name": "Mosquito_LeafUnder",
+      "color": {
+        "r": 0.6509804129600525,
+        "g": 0.843137264251709,
+        "b": 0.47843137383461,
+        "a": 1.0
+      },
+      "roughness": 0.8500000238418579,
+      "new": true
+    },
+    {
+      "name": "Mosquito_LeafVein",
+      "color": {
+        "r": 0.23529411852359772,
+        "g": 0.47843137383461,
+        "b": 0.16470588743686676,
+        "a": 1.0
+      },
+      "roughness": 0.8500000238418579,
+      "new": true
+    },
+    {
+      "name": "Mosquito_LegJoint",
+      "color": {
+        "r": 0.0784313753247261,
+        "g": 0.03921568766236305,
+        "b": 0.03921568766236305,
+        "a": 1.0
+      },
+      "roughness": 0.800000011920929,
+      "new": false
+    },
+    {
+      "name": "Mosquito_Legs",
+      "color": {
+        "r": 0.16470588743686676,
+        "g": 0.10196078568696976,
+        "b": 0.10196078568696976,
+        "a": 1.0
+      },
+      "roughness": 0.8600000143051147,
+      "new": false
+    },
+    {
+      "name": "Mosquito_Petal",
+      "color": {
+        "r": 0.9647058844566345,
+        "g": 0.9529411792755127,
+        "b": 0.9176470637321472,
+        "a": 1.0
+      },
+      "roughness": 0.75,
+      "new": true
+    },
+    {
+      "name": "Mosquito_PetalUnder",
+      "color": {
+        "r": 1.0,
+        "g": 0.9686274528503418,
+        "b": 0.9254902005195618,
+        "a": 1.0
+      },
+      "roughness": 0.800000011920929,
+      "new": true
+    },
+    {
+      "name": "Mosquito_Shell",
+      "color": {
+        "r": 0.6196078658103943,
+        "g": 0.13333334028720856,
+        "b": 0.1568627506494522,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421,
+      "new": false
+    },
+    {
+      "name": "Mosquito_ShellDark",
+      "color": {
+        "r": 0.4313725531101227,
+        "g": 0.0784313753247261,
+        "b": 0.0941176488995552,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421,
+      "new": false
+    },
+    {
+      "name": "Mosquito_ShellDeep",
+      "color": {
+        "r": 0.3803921639919281,
+        "g": 0.07058823853731155,
+        "b": 0.08235294371843338,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421,
+      "new": false
+    },
+    {
+      "name": "Mosquito_ShellShade",
+      "color": {
+        "r": 0.5098039507865906,
+        "g": 0.10980392247438431,
+        "b": 0.12941177189350128,
+        "a": 1.0
+      },
+      "roughness": 0.8999999761581421,
+      "new": false
+    },
+    {
+      "name": "Mosquito_Wing",
+      "color": {
+        "r": 0.800000011920929,
+        "g": 0.7686274647712708,
+        "b": 0.9647058844566345,
+        "a": 0.5
+      },
+      "roughness": 0.8500000238418579,
+      "new": false
+    },
+    {
+      "name": "Mosquito_WingEdge",
+      "color": {
+        "r": 0.8549019694328308,
+        "g": 0.8352941274642944,
+        "b": 0.9490196108818054,
+        "a": 0.3499999940395355
+      },
+      "roughness": 0.800000011920929,
+      "new": false
+    },
+    {
+      "name": "Mosquito_WingVein",
+      "color": {
+        "r": 0.7647058963775635,
+        "g": 0.7647058963775635,
+        "b": 0.9019607901573181,
+        "a": 0.3499999940395355
+      },
+      "roughness": 0.800000011920929,
+      "new": false
+    }
+  ],
+  "source_sha256": {
+    "author_modular_parts.py": "d885dae475df73630d185b174e7f941fcd5ee1c69effedabe815f366c4f03ff1",
+    "build_characters.py": "d2154f0ea2c36e9de7fcf8e27d3067ba4d6d609a96a9ff050e72d9b55be6030b",
+    "author_human_geometry.py": "a5f355b31f9245b676dde3469fd96fd2167353cf1517318539684af763129789",
+    "author_human_joints.py": "296447f1a1981009d12f3a5b2b872848386666ac4b5f4fc0d8626b0b0b4a2329",
+    "author_human_facial.py": "9c0d9d7e81480feb46fab3b1861c72a4cd4331e6722a9f9082e0eab89ca2dc3d",
+    "author_mosquito_geometry.py": "2a3cf7a6080fdbe26fb171d5eb5c06d70f0e9445d6acbe5271cb8f7d6f705eb1",
+    "author_mosquito_face.py": "86e43f08c555fb07b3abe8ac60e6cc4aa71b5d1e8257cdd72b013c5d72bb7179"
+  },
+  "provenance": "Original procedural geometry for Let me sleep, authored from the user sketches PER-04..07 and UI-06; no external meshes or textures."
+}

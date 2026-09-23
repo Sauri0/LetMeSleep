@@ -115,6 +115,8 @@ namespace LetMeSleep.UI
             {
                 studio.transform.position = setup.Stage.position + StudioOffset + new Vector3(0f, 0f, 12f);
                 var subject = Spawn(setup, role, studio.transform, human ? 8f : 22f);
+                // The badge shows the player's own character: the published look (colours and modular parts).
+                setup.DressLocalLook?.Invoke(subject, role);
                 BakeSkinnedMeshes(subject);
                 if (!TryBounds(subject, out var bounds)) return null;
                 var head = FindBone(subject.transform, "Head");
@@ -129,10 +131,23 @@ namespace LetMeSleep.UI
                 }
                 else
                 {
-                    var size3 = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
-                    radius = size3 * 0.24f;
-                    focus = head != null ? head.position : bounds.center;
-                    focus.y -= radius * 0.12f;
+                    // The face: both big eyes (their pupil pivots are the globe centres) and the proboscis root. The
+                    // head bone sits at the neck, so framing on it showed the abdomen and cut the eyes.
+                    var left = FindBone(subject.transform, "Pupil.L");
+                    var right = FindBone(subject.transform, "Pupil.R");
+                    if (left != null && right != null)
+                    {
+                        var span = Vector3.Distance(left.position, right.position);
+                        radius = span * 1.35f;
+                        focus = (left.position + right.position) * 0.5f + Vector3.down * span * 0.25f;
+                    }
+                    else
+                    {
+                        var size3 = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
+                        radius = size3 * 0.24f;
+                        focus = head != null ? head.position : bounds.center;
+                        focus.y -= radius * 0.12f;
+                    }
                 }
                 target = NewTarget("LMS HUD face " + role, size, size);
                 Frame(camera, focus, radius * 2.1f, radius * 2.1f, 1f, 26f, radius * 3f);
@@ -286,21 +301,29 @@ namespace LetMeSleep.UI
                 var node = new GameObject(skin.name + "Baked", typeof(MeshFilter), typeof(MeshRenderer));
                 node.layer = PreviewLayer;
                 node.transform.SetParent(skin.transform, false);
-                // BakeMesh(useScale: true) already applied the renderer's world scale: cancel it on the snapshot.
-                var scale = skin.transform.lossyScale;
-                node.transform.localScale = new Vector3(SafeInverse(scale.x), SafeInverse(scale.y), SafeInverse(scale.z));
+                // BakeMesh(useScale: true) returns the posed mesh in the renderer's local space (the orbit's
+                // CollectCharacterPoints relies on the same), so the snapshot takes the renderer's transform as is. The
+                // old inverse scale drew the mosquito (VisualRoot 0.5) twice its size, far from its bones: the HUD
+                // head shot framed on the bones showed its legs and abdomen.
+                node.transform.localScale = Vector3.one;
                 node.GetComponent<MeshFilter>().sharedMesh = mesh;
                 var renderer = node.GetComponent<MeshRenderer>();
                 renderer.sharedMaterials = skin.sharedMaterials;
                 var block = new MaterialPropertyBlock();
                 skin.GetPropertyBlock(block);
                 renderer.SetPropertyBlock(block);
+                // Per-material colours (skin tone, clothes, body colour) are blocks on each material index.
+                for (var index = 0; index < skin.sharedMaterials.Length; index++)
+                {
+                    if (!skin.HasPropertyBlock()) break;
+                    block.Clear();
+                    skin.GetPropertyBlock(block, index);
+                    if (!block.isEmpty) renderer.SetPropertyBlock(block, index);
+                }
                 node.AddComponent<BakedMeshOwner>().Mesh = mesh;
                 skin.enabled = false;
             }
         }
-
-        private static float SafeInverse(float value) => Mathf.Abs(value) < 1e-6f ? 1f : 1f / value;
 
         private sealed class BakedMeshOwner : MonoBehaviour
         {

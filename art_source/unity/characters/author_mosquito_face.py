@@ -87,6 +87,29 @@ From the front the housing chamfer overlaps the collar/cap edge, so no slot
 is left open; blink rotations are unchanged and the cap/collar never stand
 outside every covering shell at any closure (check_mosquito_face.py rim gate).
 
+Review r8 (art director r6 item 3 and integration review r2): the lid read
+sleepy, the cup ribbed. The fixed cap starts at 52 deg on the centre column
+(75 deg at its sides, was 38/68: <= ~6% of the white covered from the front,
+edge following the ball), the pupils turn 6 deg in and 4 deg down (the comic
+cross-eyed look at the proboscis), the white is shallower (depth .027) and
+1.5 mm further ahead (see EYE_FORWARD_OFFSET), and every interior shell vertex
+slides along its own ellipsoid (LID_JITTER_*) with alternating diagonals, so
+the profile no longer shows 5-7 parallel rings. The collar edge drops to 98%
+of the housing inner layer to stay under the jittered facets at every
+closure; the cap's inner layer is found by a scan (its outer rows' rays can
+start outside the forward white).
+
+Review r9 (review r8 items 7 and 9: the top of the cup still showed parallel
+steps in profile, the upper front edge two sawtooth flaps, a row of black
+pixels ran along the side of the cup and a thin dark line under the lid edge):
+ten latitude rows instead of eight, the rim-adjacent columns jittered in
+latitude too (LID_JITTER_RIM_LATITUDE), a front-edge ramp that is smooth at
+the eye's equator (no tooth at x = 0), the inner layer of every shell ending
+with the outer one (no chamfer), and every non-outward face of the rim parts
+(edge walls, collar and cap rim faces) shaded with the radial normal
+(light_eye_interiors), checked by rasterised 1024 px rim views in
+check_mosquito_face.py.
+
 Lid pivots, bone names, axes and the 90 deg runtime closure are unchanged; every
 rest edge keeps upper - lower <= 170 deg so the rotated shutters plus the fixed
 housing still hide the white and the pupil when closed (check_mosquito_face.py),
@@ -97,22 +120,30 @@ and the lid vertex centroids still let Unity's FacialContentBuilder derive
 import math
 
 FACE_REVISION = 'mosquito-facial-controls-v1'
-LID_GEOMETRY_REVISION = 'mosquito-sketch-r7-closed-rim'
+LID_GEOMETRY_REVISION = 'mosquito-sketch-r9-smooth-rim'
 # Eye white, source metres (x lateral, y depth along the look axis, z up).
 # r6: depth .035 -> .030 (front view unchanged) so the white can sit further
 # ahead of the pivot inside the same closed-shutter radius.
-EYE_RADII = (.0355, .030, .0366)
+# r8 (art director r6): depth .030 -> .027 with the centre 1.5 mm further
+# ahead (offset .014 -> .0155) so the profile 'D' softens. The requested 3 mm
+# (.017, front kept at 44 mm) left the lateral equator vertices of the white
+# (and the pupil at the outer gaze limit) up to 1.2 mm outside the closed
+# faceted shutters (check_mosquito_face coverage); at .0155 every sample is
+# covered and the front of the white sits 42.5 mm from the pivot.
+EYE_RADII = (.0355, .027, .0366)
 EYE_SEGMENTS, EYE_RINGS = 10, 6
 # The white bulges out of its cup: its centre sits ahead (-Y) of the pivot the
 # shutters and the pupil rotate about (r5: 8 mm; r6: 14 mm; the white's front
 # stays 44 mm and the pupil front ~45 mm from the pivot, inside the closed
 # .048 shutters with their facet sag).
-EYE_FORWARD_OFFSET = .014
+EYE_FORWARD_OFFSET = .0155
 # Pupil: small flattened black disc sitting on the white, aimed forward.
 PUPIL_RADII = (.0087, .0018, .0095)
-PUPIL_INWARD_DEGREES = 2
+# r8 (art director r6): 6 deg in and 4 deg down: the comic, slightly
+# cross-eyed look at the proboscis of PER-07 / UI-06 (6).
+PUPIL_INWARD_DEGREES = 6
 # r4: pupil pitched down about the pivot (~1.5 mm lower on the white).
-PUPIL_DOWN_DEGREES = 2.1
+PUPIL_DOWN_DEGREES = 4
 PUPIL_EMBED = .0006
 PUPIL_SEGMENTS, PUPIL_RINGS = 8, 5
 # Closed shutters must clear the white (front ~.043 from the pivot) and the
@@ -137,11 +168,40 @@ HOUSING_RECESS = .0008
 # ~133 / ~-155 deg (closed ~43 / ~-65), so Unity still derives +90 / -90.
 UPPER_FRONT_CENTER, UPPER_FRONT_POLE, UPPER_BACK = 66.0, 70.0, 198.0
 LOWER_FRONT_CENTER, LOWER_FRONT_POLE, LOWER_BACK = -104.0, -100.0, -208.0
-LID_EDGE_RAMP_POWER = 1.0
+# r9: 2 (was 1): |sin|^1 had a kink at the eye's equator, a tooth in profile.
+LID_EDGE_RAMP_POWER = 2.0
 # r7: the inner layer of each shell ends this much further toward the front
 # than the outer layer, so the front-edge wall is a chamfer facing forward-up.
-LID_EDGE_CHAMFER_DEGREES = 2.0
-LID_LATITUDE_STEPS, UPPER_ARC_STEPS, LOWER_ARC_STEPS = 8, 7, 5
+# r9: 0 (the inner layer ends with the outer one; the edge wall is lit by
+# its bent normal instead, see light_eye_interiors).
+LID_EDGE_CHAMFER_DEGREES = 0.0
+# r9: 10 latitude rows (was 8): narrower facet bands on the cup in profile.
+LID_LATITUDE_STEPS, UPPER_ARC_STEPS, LOWER_ARC_STEPS = 10, 7, 5
+# r8 (art director r6, "copa con aspecto de fuelle"): the latitude rows of the
+# shells read as 5-7 parallel concentric rings (a ribbed helmet) in profile.
+# Every interior vertex (not the front/back edge columns, not the poles) moves
+# along its own ellipsoid by a deterministic fraction of a latitude step and
+# of an arc step; the radius is unchanged. Shutter, housing and both layers of
+# a shell share the pattern (it depends on row/column/shell only), so chord
+# sag and clearances stay as before; quads split on alternating diagonals.
+LID_JITTER_LATITUDE, LID_JITTER_PHI = .30, .25
+# The columns next to the rest edges stay regular: the fixed collar and cap sit
+# within ~1 mm of those facets (check_mosquito_face rim gate).
+LID_JITTER_EDGE_COLUMNS = 2
+# r9 (review r8: the top of the cup still showed three parallel steps in
+# profile and the upper front edge two sawtooth flaps): the columns next to the
+# rest edges (still regular in r8) now slide in latitude too, by this fraction
+# of a latitude step (the same as the interior; their arc position is kept); the front-edge ramp is smooth at the eye's equator
+# (LID_EDGE_RAMP_POWER 2: no kink, hence no tooth at x = 0) and the inner
+# layer of each shell ends with the outer one (LID_EDGE_CHAMFER_DEGREES 0).
+LID_JITTER_RIM_LATITUDE = .30
+
+
+def _lid_jitter(upper, row, col, channel):
+    """Deterministic value in [-1, 1] for a shell vertex (pattern shared by
+    the shutter, its housing and both layers)."""
+    value = math.sin((row * 12.9898 + col * 78.233 + (1 if upper else 2) * 37.719 + channel * 4.581) * 43758.5453)
+    return 2 * (value - math.floor(value)) - 1
 # r6 rim face (EyeCollar, Head): fills the crevice between the white and the
 # shutters' rim so the cup's dark inside never shows, lying in the shutters'
 # rest-edge surface (the upper edge angle above the pivot axis, the lower one
@@ -150,9 +210,14 @@ LID_LATITUDE_STEPS, UPPER_ARC_STEPS, LOWER_ARC_STEPS = 8, 7, 5
 # closed strips (sphere topology each): lateral/lower and medial/lower; the
 # top is the eyelid cap's. Inner edge 0.3 mm off the white, outer edge at 98.5%
 # (r6: 97%) of its housing's inner layer, so no shutter ever touches it.
-COLLAR_ARCS_DEGREES = {'EyeCollar': (-78.0, 64.0), 'EyeCollarInner': (116.0, 258.0)}
+# r8 (review r2, dark wedges at the top of each cup): the arcs run 12 deg
+# further up under the cap's lateral ends (was 64 / 116), closing the slot
+# between the cap end and the collar.
+COLLAR_ARCS_DEGREES = {'EyeCollar': (-78.0, 76.0), 'EyeCollarInner': (104.0, 258.0)}
 COLLAR_SEGMENTS = 16
-COLLAR_INNER_CLEARANCE, COLLAR_OUTER_FILL = .0003, .985
+# r8: .985 -> .980 of the housing inner layer: the jittered shells (LID_JITTER_*)
+# keep the collar edge >= 0.08 mm under every covering facet at all closures.
+COLLAR_INNER_CLEARANCE, COLLAR_OUTER_FILL = .0003, .980
 # r7: the collar sits this far behind the rest-edge surface (inside the
 # housing where it overlaps it, behind the housing's front chamfer).
 COLLAR_BEHIND_DEGREES = .6
@@ -166,7 +231,10 @@ COLLAR_THICKNESS = .0012
 # on the ball instead of a ring floating above it. It stays inside the
 # upper housing's inner layer (r7: 99%, was 96.5% of the lower housing), so
 # blinks never touch it.
-CAP_FRONT_DEGREES, CAP_FRONT_SIDE_DEGREES, CAP_FRONT_RAMP_POWER = 38.0, 68.0, 1.5
+# r8 (art director r6): the fixed lid cut the white with a straight line
+# (~13% covered) and read sleepy; 52 / 75 deg cover <= ~6% from the front with
+# an edge that follows the ball (round, alert eyes of PER-03 NEUTRAL).
+CAP_FRONT_DEGREES, CAP_FRONT_SIDE_DEGREES, CAP_FRONT_RAMP_POWER = 52.0, 75.0, 1.5
 CAP_BACK_DEGREES, CAP_MIN_RISE_DEGREES = 112.0, 6.0
 CAP_RISE_STEPS, CAP_BACK_STEPS = 3, 4
 CAP_X_EXTENT, CAP_ROWS = .030, 9
@@ -336,7 +404,18 @@ def lid_mesh(sign, upper, closure=0, recess=0):
             x, ring = rx * math.sin(latitude), math.cos(latitude)
             front = lid_front_degrees(upper, latitude) - polarity * chamfer
             for col in range(arc_steps + 1):
-                phi = math.radians(front + (back - front) * col / arc_steps)
+                lat, fraction = latitude, col / arc_steps
+                if LID_JITTER_EDGE_COLUMNS <= col <= arc_steps - LID_JITTER_EDGE_COLUMNS:
+                    # r8: interior vertices slide on the ellipsoid (see LID_JITTER_*).
+                    lat += LID_JITTER_LATITUDE * (math.pi / latitude_steps) * _lid_jitter(upper, row, col, 0)
+                    fraction += LID_JITTER_PHI / arc_steps * _lid_jitter(upper, row, col, 1)
+                elif 0 < col < arc_steps:
+                    # r9: the columns next to the rest edges slide in latitude
+                    # only (their arc position, hence the closed overlap and
+                    # the rim clearances, is unchanged).
+                    lat += LID_JITTER_RIM_LATITUDE * (math.pi / latitude_steps) * _lid_jitter(upper, row, col, 0)
+                phi = math.radians(front + (back - front) * fraction)
+                x, ring = rx * math.sin(lat), math.cos(lat)
                 layer.append((x, -radius * ring * math.cos(phi), radius * ring * math.sin(phi)))
         layer.append((rx, 0, 0))
         vertices.extend(_lid_world(sign, v, turn) for v in layer)
@@ -349,7 +428,11 @@ def lid_mesh(sign, upper, closure=0, recess=0):
     for row in range(latitude_steps - 2):
         for col in range(arc_steps):
             a = 1 + row * width + col
-            top.append((a, a + width, a + width + 1, a + 1))
+            # r8: alternating diagonals (checkerboard) instead of flat quads.
+            if (row + col) % 2 == 0:
+                top += [(a, a + width, a + width + 1), (a, a + width + 1, a + 1)]
+            else:
+                top += [(a, a + width, a + 1), (a + width, a + width + 1, a + 1)]
     start_last = 1 + (latitude_steps - 2) * width
     for col in range(arc_steps):
         top.append((start_last + col, size - 1, start_last + col + 1))
@@ -400,6 +483,21 @@ def _bisect(test, lo, hi, steps=40):
         mid = (lo + hi) * .5
         lo, hi = (mid, hi) if test(mid) else (lo, mid)
     return lo
+
+
+def _last_inside(test, hi, step=.0005):
+    """Exit parameter of a ray that may START outside the region (r8: with the
+    white further ahead and shallower, the pivot axis no longer lies inside it
+    near its lateral edge, and a plain bisection from 0 collapsed those cap
+    rows onto the pivot). Scans for the last inside sample, then bisects."""
+    last, t = None, 0.0
+    while t <= hi:
+        if test(t):
+            last = t
+        t += step
+    if last is None:
+        return 0.0
+    return _bisect(test, last, min(hi, last + step))
 
 
 def _rim_point(psi, t, behind=0.0):
@@ -478,13 +576,20 @@ def cap_mesh(sign):
         top = max(rim, front + CAP_MIN_RISE_DEGREES)
         columns_degrees = ([front + (top - front) * i / CAP_RISE_STEPS for i in range(CAP_RISE_STEPS + 1)]
                            + [top + (CAP_BACK_DEGREES - top) * i / CAP_BACK_STEPS for i in range(1, CAP_BACK_STEPS + 1)])
+        previous = None
         for degrees in columns_degrees:
             phi = math.radians(degrees)
             direction = (0.0, -math.cos(phi), math.sin(phi))
 
             def at(t):
                 return (x, t * direction[1], t * direction[2])
-            t_in = _bisect(lambda t: inside_white(at(t), CAP_INNER_CLEARANCE), 0.0, .07)
+            t_in = _last_inside(lambda t: inside_white(at(t), CAP_INNER_CLEARANCE), .07)
+            # r8: behind the (further forward) white the outer rows' rays miss
+            # it; the inner layer then keeps the last radius it had (hidden
+            # under the shutter) instead of collapsing onto the pivot.
+            if previous is not None and t_in < previous * .5:
+                t_in = previous
+            previous = t_in
             rise = _smooth((degrees - front) / (top - front))
             settle = _smooth((degrees - top) / CAP_RIM_TAPER_DEGREES)
             limit = ceiling + (CAP_BACK_FILL * section - ceiling) * settle
@@ -507,6 +612,79 @@ def cap_mesh(sign):
                 + [k * columns for k in reversed(range(1, CAP_ROWS - 1))])
     faces += [(b, a, a + size, b + size) for a, b in zip(boundary, boundary[1:] + boundary[:1])]
     return outward(vertices, faces)
+
+
+# r8 (integration review r2: black wedges at the top of each cup, dotted dark
+# lines on its lateral edge): from oblique views a few inward-facing surfaces
+# of the cup show through the rim slots (the collar's inner wall, the inner
+# layers of the shells near their edges). Facing the pivot, they only get
+# ambient light and read black at game scale. Every shell-material face of the
+# eye assembly (within the closed-shutter radius around a pivot) that faces
+# the pivot gets a custom split normal pointing radially outward, so wherever
+# it shows it is lit like the cup around it. Winding and geometry unchanged.
+EYE_INTERIOR_RADII = (.030, .0495)
+EYE_INTERIOR_FACING = -.25
+# r9 (review r8: a row of black pixels along the side of the cup and a thin
+# dark line under the lid edge and at the base of the white): those are the
+# thin edge walls of the shells (0.6 mm, facing along the shell, i.e. down
+# at the upper front edge and at the upper back edge seen from the side) and
+# the collar/cap rim faces, which lie edge-on in the rest-edge surface. At
+# game scale they alias into dotted dark lines. Every face of the eye rim
+# parts (shutters, housings, collars, cap: face attribute EYE_RIM_ATTRIBUTE,
+# set in create_face) that does not face outward (normal . radial below
+# EYE_RIM_FACING) now takes the radial normal too, so it shades like the cup
+# surface next to it; their geometry and winding are unchanged.
+EYE_RIM_ATTRIBUTE = 'lms_eye_rim'
+EYE_RIM_RADII = (.020, .0500)
+EYE_RIM_FACING = .50
+
+
+def tag_eye_rim(obj):
+    """Mark every face of an eye rim part (Blender object) for light_eye_interiors."""
+    attribute = obj.data.attributes.new(EYE_RIM_ATTRIBUTE, 'INT', 'FACE')
+    attribute.data.foreach_set('value', [1] * len(obj.data.polygons))
+    return obj
+
+
+def light_eye_interiors(obj):
+    """Run AFTER the export's normal consistency pass on MosquitoSkin."""
+    if obj.name != 'MosquitoSkin':
+        return None
+    from mathutils import Vector
+    me = obj.data
+    shells = {i for i, m in enumerate(me.materials) if m and m.name.startswith('Mosquito_Shell')}
+    rim_attribute = me.attributes.get(EYE_RIM_ATTRIBUTE)
+    rim = [0] * len(me.polygons)
+    if rim_attribute is not None:
+        rim_attribute.data.foreach_get('value', rim)
+    pivots = [Vector(eye_center(sign)) for sign in (1, -1)]
+    normals = [(0.0, 0.0, 0.0)] * len(me.loops)
+    changed = rim_changed = 0
+    for polygon in me.polygons:
+        if polygon.material_index not in shells:
+            continue
+        points = [me.vertices[i].co for i in polygon.vertices]
+        tagged = bool(rim[polygon.index])
+        low, high = EYE_RIM_RADII if tagged else EYE_INTERIOR_RADII
+        for pivot in pivots:
+            if not all(low <= (p - pivot).length <= high for p in points):
+                continue
+            radial = (polygon.center - pivot).normalized()
+            facing = polygon.normal.dot(radial)
+            if facing < (EYE_RIM_FACING if tagged else EYE_INTERIOR_FACING):
+                for loop in polygon.loop_indices:
+                    normals[loop] = tuple(radial)
+                changed += 1
+                rim_changed += facing >= EYE_INTERIOR_FACING
+            break
+    me.normals_split_custom_set(normals)
+    # The tag is a build-time marker only (not exported).
+    if rim_attribute is not None:
+        me.attributes.remove(rim_attribute)
+    me.update()
+    return {'faces': changed, 'rim_edge_faces': rim_changed, 'radii_m': list(EYE_INTERIOR_RADII),
+            'facing_threshold': EYE_INTERIOR_FACING, 'rim_radii_m': list(EYE_RIM_RADII),
+            'rim_facing_threshold': EYE_RIM_FACING, 'rim_tagged_faces': sum(rim)}
 
 
 def facial_contract():
@@ -558,16 +736,16 @@ def create_face(c, *, mesh, shell, eye, pupil, **_unused):
         for upper in (True, False):
             name = ('LidUpper.' if upper else 'LidLower.') + side
             vertices, faces = lid_mesh(sign, upper)
-            mesh(name, vertices, faces, shell, name)
+            tag_eye_rim(mesh(name, vertices, faces, shell, name))
             # A fixed rear housing prevents the white back of the eye becoming
             # exposed in profile when the articulated shutters rotate forward.
             vertices, faces = lid_mesh(sign, upper, recess=HOUSING_RECESS)
-            mesh('EyeHousing.' + name, vertices, faces, shell, 'Head')
+            tag_eye_rim(mesh('EyeHousing.' + name, vertices, faces, shell, 'Head'))
         # r6: one rim (the collar face in the rest-edge surface) and a fixed
         # eyelid cap over the top of the white; no rolled lip on the shutter.
         for part in COLLAR_ARCS_DEGREES:
-            mesh(part + '.' + side, *collar_mesh(sign, part), shell, 'Head')
-        mesh('EyeCap.' + side, *cap_mesh(sign), shell, 'Head')
+            tag_eye_rim(mesh(part + '.' + side, *collar_mesh(sign, part), shell, 'Head'))
+        tag_eye_rim(mesh('EyeCap.' + side, *cap_mesh(sign), shell, 'Head'))
 
 
 def apply_facial_pose(rig, yaw_degrees=0, pitch_degrees=0, blink_left=0, blink_right=0):

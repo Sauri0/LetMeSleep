@@ -60,6 +60,19 @@ namespace LetMeSleep.UI
         private UnityEngine.UI.Image hudRoleRing;
         private UnityEngine.UI.RawImage hudRoleFace;
         private readonly Dictionary<AlfaRole, Texture> hudFaces = new Dictionary<AlfaRole, Texture>();
+        // Look each cached face was made for; empty = the default character (the painted portrait serves).
+        private readonly Dictionary<AlfaRole, string> hudFaceLooks = new Dictionary<AlfaRole, string>();
+        private readonly Dictionary<AlfaRole, string> localLooks = new Dictionary<AlfaRole, string>();
+
+        /// <summary>
+        /// The local player's published look per role, as an opaque key (empty for the default character). A custom
+        /// look makes the objective badge render the player's own head instead of the painted default portrait.
+        /// </summary>
+        public void SetLocalLook(string humanLook, string mosquitoLook)
+        {
+            localLooks[AlfaRole.Human] = humanLook ?? string.Empty;
+            localLooks[AlfaRole.Mosquito] = mosquitoLook ?? string.Empty;
+        }
         private AlfaUiIcon hudScoreIcon;
         private UnityEngine.UI.Image hudBloodFill;
         private GameObject hudObjectiveBar;
@@ -672,9 +685,13 @@ namespace LetMeSleep.UI
         /// </summary>
         private void PresentHudFace(AlfaRole role)
         {
+            var look = localLooks.TryGetValue(role, out var chosenLook) ? chosenLook ?? string.Empty : string.Empty;
+            if (hudFaces.ContainsKey(role) && (!hudFaceLooks.TryGetValue(role, out var builtLook) || builtLook != look))
+                hudFaces.Remove(role);
             if (!hudFaces.TryGetValue(role, out var face))
             {
-                face = LoadRoleArt(role, string.Empty);
+                // A custom look is always rendered (dressed like the player); the painted art is the default one.
+                face = look.Length == 0 ? LoadRoleArt(role, string.Empty) : null;
                 var remember = true;
                 if (face == null)
                 {
@@ -691,7 +708,7 @@ namespace LetMeSleep.UI
                     // The rig is busy while customizing: try again later. Otherwise one attempt per role.
                     remember = !usable || screen != AlfaUiScreen.Customization;
                 }
-                if (remember) hudFaces[role] = face;
+                if (remember) { hudFaces[role] = face; hudFaceLooks[role] = look; }
             }
             var painted = face != null && face == LoadRoleArt(role, string.Empty);
             hudRoleFace.texture = face;

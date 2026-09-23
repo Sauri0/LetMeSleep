@@ -248,9 +248,10 @@ namespace LetMeSleep.Content.Characters.Editor
             var color = source.color;
             bool wing = IsWingMaterial(source.name);
             bool membrane = source.name == "Mosquito_Wing";
-            // Membranes have two physical faces; cull back to avoid doubling opacity. Veins and the
-            // leading edge keep their authored translucency (opaque if the palette forgot an alpha).
-            if (membrane) color.a = .42f;
+            // Membranes have two physical faces; cull back to avoid doubling opacity. Every wing surface
+            // keeps its authored translucency (the art-directed membrane alpha, .50 in v0.3.0 round 8);
+            // a palette that forgot the alpha falls back to a translucent default instead of opaque.
+            if (membrane && color.a >= .999f) color.a = .5f;
             else if (wing && color.a >= .999f) color.a = .55f;
             material.SetColor("_BaseColor", color);
             material.SetFloat("_Smoothness", wing ? .15f : 1 - source.roughness);
@@ -276,22 +277,16 @@ namespace LetMeSleep.Content.Characters.Editor
             SetKeyword(material, "_ENVIRONMENTREFLECTIONS_OFF", wing);
             SetKeyword(material, "_RECEIVE_SHADOWS_OFF", wing);
             material.SetShaderPassEnabled("ShadowCaster", !wing);
-            // Human eye whites: the sketch eyes are clean white spheres, but their lower half faces the ground
-            // and only receives ambient light, so URP renders it dark grey (the Blender look-dev used the same
-            // faint self-light). A weak emission of their own colour keeps them white in shade; at night the
-            // eyes stay visible on the dark figure.
-            bool eyeWhite = IsEyeWhiteMaterial(source.name);
-            // Material colours are stored in sRGB and linearised for rendering: scale in linear space.
-            var emission = eyeWhite ? (new Color(color.r, color.g, color.b).linear * EyeWhiteEmission).gamma : Color.black;
-            emission.a = 1;
-            material.SetColor("_EmissionColor", emission);
-            // URP rebuilds _EMISSION from the AnyEmissive GI flags when the material is imported (see
-            // AlfaHouseDressing.PersistAuthoredEmission): the keyword alone would be discarded.
-            material.globalIlluminationFlags = eyeWhite ? MaterialGlobalIlluminationFlags.BakedEmissive : MaterialGlobalIlluminationFlags.EmissiveIsBlack;
-            if (eyeWhite) UnityEditor.MaterialEditor.FixupEmissiveFlag(material);
-            SetKeyword(material, "_EMISSION", eyeWhite);
-            Require(!eyeWhite || (material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.AnyEmissive) != 0,
-                "Eye white lost its emissive GI flags: " + source.name);
+            // No character material emits. v0.3.0 round 8: the human eye whites used to emit 25% of their
+            // colour so their ground-facing lower half did not render dark grey, but at night that made the
+            // eyes ~7x brighter than the face (lanterns on a black figure). They are lit like the skin now:
+            // a high albedo, and the FBX bends their facet normals toward forward-up
+            // (author_human_geometry.bend_eye_white_normals) so the lower half catches the key light.
+            material.SetColor("_EmissionColor", Color.black);
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+            SetKeyword(material, "_EMISSION", false);
+            Require((material.globalIlluminationFlags & MaterialGlobalIlluminationFlags.AnyEmissive) == 0,
+                "Character material must not emit: " + source.name);
             // Detail strips sort after the membrane they lie on, independent of renderer distance.
             // URP re-derives renderQueue from _Surface + _QueueOffset when it validates a material.
             int queueOffset = wing && !membrane ? 1 : 0;
@@ -301,42 +296,69 @@ namespace LetMeSleep.Content.Characters.Editor
             return material;
         }
 
-        /// <summary>Fraction of an eye white's own (linear) colour it emits (see UpsertMaterial).</summary>
-        private const float EyeWhiteEmission = .25f;
-
-        /// <summary>Human eye whites, including the lower-globe shade. The mosquito's stay unlit: glowing
-        /// eyes would give away a mosquito hiding in the dark.</summary>
-        private static bool IsEyeWhiteMaterial(string name) => name == "Character_EyeWhite"
-            || name == "Human_EyeWhiteShade";
-
         /// <summary>Every translucent wing surface: membrane, veins and leading edge (WingEdge*).</summary>
         private static bool IsWingMaterial(string name) => name == "Mosquito_Wing"
             || name.StartsWith("Mosquito_WingVein", StringComparison.Ordinal)
             || name.StartsWith("Mosquito_WingEdge", StringComparison.Ordinal);
 
         // Customization channels. The nightcap, its band and pompom, shirt, dots and slippers keep
-        // their own palette materials, so only the skin, the pajama trousers and the mosquito shell tint.
+        // their own palette materials, so only the skin, the pajama trousers (and, v0.3.0 round 9, their
+        // darker Human_PantsShade hem) and the mosquito shell tint.
         private const string MosquitoReferenceMaterial = "Mosquito_Shell";
+        private const string PajamaReferenceMaterial = "Human_Pajamas";
+        private const string PajamaShadeMaterial = "Human_PantsShade";
         private static string ColorCategory(string material)
         {
             if (material == "Human_Skin") return "Skin";
-            if (material == "Human_Pajamas") return "Pajamas";
+            if (material == PajamaReferenceMaterial || material == PajamaShadeMaterial) return "Pajamas";
             if (material == "Mosquito_Abdomen" || material.StartsWith("Mosquito_Shell", StringComparison.Ordinal)) return "Mosquito";
             return null;
         }
 
+        /// <summary>The channel's reference material a shaded facet is measured against (null: none).</summary>
+        private static string ColorShadeReference(string material)
+        {
+            if (material.StartsWith("Mosquito_", StringComparison.Ordinal)) return MosquitoReferenceMaterial;
+            if (material == PajamaShadeMaterial) return PajamaReferenceMaterial;
+            return null;
+        }
+
         /// <summary>Darkening of an authored shade facet relative to its channel's reference colour, so a
-        /// recoloured shell keeps the sketch's lit/shade contrast (Mosquito_ShellShade/Dark/Deep, Abdomen).</summary>
+        /// recoloured shell keeps the sketch's lit/shade contrast (Mosquito_ShellShade/Dark/Deep, Abdomen) and a
+        /// recoloured pajama keeps its darker hem (Human_PantsShade).</summary>
         private static float ColorShade(SourceAudit audit, string material)
         {
-            if (!material.StartsWith("Mosquito_", StringComparison.Ordinal) || material == MosquitoReferenceMaterial) return 0;
-            var reference = audit.material_palette.SingleOrDefault(m => m.name == MosquitoReferenceMaterial);
+            string referenceName = ColorShadeReference(material);
+            if (referenceName == null || material == referenceName) return 0;
+            var reference = audit.material_palette.SingleOrDefault(m => m.name == referenceName);
             var shade = audit.material_palette.SingleOrDefault(m => m.name == material);
-            Require(reference != null && shade != null, "Mosquito customization palette missing " + material);
+            Require(reference != null && shade != null, "Customization palette missing " + material);
+            return ShadeBetween(reference.color, shade.color);
+        }
+
+        private static float ShadeBetween(Color reference, Color shade)
+        {
             float Luma(Color c) => .2126f * c.r + .7152f * c.g + .0722f * c.b;
-            float ratio = Luma(shade.color) / Mathf.Max(1e-4f, Luma(reference.color));
+            float ratio = Luma(shade) / Mathf.Max(1e-4f, Luma(reference));
             // Rounded so the prefab bytes stay stable across identical rebuilds.
             return Mathf.Round(Mathf.Clamp(1 - ratio, 0, .9f) * 1000) / 1000;
+        }
+
+        /// <summary>Customization binding of a shared palette material (Materials/&lt;name&gt;.mat) for builders that
+        /// work without the audit (LivingMenuContentBuilder): same channels and shades as the game prefabs.</summary>
+        public static bool TryColorBinding(Material material, out string category, out float shade)
+        {
+            category = material == null ? null : ColorCategory(material.name);
+            shade = 0;
+            if (category == null) return false;
+            string referenceName = ColorShadeReference(material.name);
+            if (referenceName != null && referenceName != material.name)
+            {
+                var reference = AssetDatabase.LoadAssetAtPath<Material>(OutputRoot + "/Materials/" + referenceName + ".mat");
+                Require(reference != null, "Customization palette missing " + referenceName);
+                shade = ShadeBetween(reference.GetColor("_BaseColor"), material.GetColor("_BaseColor"));
+            }
+            return true;
         }
 
         private static void SetKeyword(Material material, string keyword, bool enabled)
