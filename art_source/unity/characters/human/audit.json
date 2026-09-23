@@ -1541,12 +1541,12 @@
   "passed": true,
   "errors": [],
   "files_sha256": {
-    "LMS_Human_alpha.blend": "b7ffe864bdd1321ecf065ba25381cacd5b18bbc277146a359c60fb95bcd523ed",
-    "LMS_Human_alpha.fbx": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783"
+    "LMS_Human_alpha.blend": "728d25a318cdd4a967d329f1990b7d7340453bedc2d89085ef50bb0f585139b8",
+    "LMS_Human_alpha.fbx": "0571bf1139129b243df9aa3493de69b6840da0c515c2674992abb1a8e71dc6d8"
   },
   "locomotion_reauthoring": {
-    "baseline_blend_sha256": "0b07324e6a04281931e70cf72a5760d384cb724bc105407e2d205b7d3be5595b",
-    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-anim\\art_source\\unity\\characters\\.validation\\v030-anim-r3c\\base",
+    "baseline_blend_sha256": "15ce8386a77d191e15489cb459b35955e477cf67865da2ec9c061cc19a7c9344",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v030-anim\\art_source\\unity\\characters\\.validation\\v030-anim-r3d\\base",
     "scene_before": {
       "meshes": "8a3a0879acfd254ecb181611e2b256aca369e61499f568acbc6307ae54345cee",
       "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
@@ -1575,7 +1575,7 @@
       "Human_Run": "c21d41dd881da06d02dc8f1a812ba418ff38b7c548f080286cb59de75fc2c265",
       "Human_Swat": "77f7434f38aff7d2a92bb7e47560159474f7e3abd470f39a4e7f3c10aeee9804",
       "Human_Turn": "d1a236e8f6a80cdcc81f90953214848eb2a7a2a9cf815b6aff167bb6e456e073",
-      "Human_Victory": "d5e36c07e339592731b616b9130ec7bcc98e9908f097daa7c5af4e4252e147bf",
+      "Human_Victory": "14ecb4e3f8e400151dc32019909f393d309ec9a9f91476a2cad49bda99698677",
       "Human_Walk": "3d6f95370a39461ea2c6f24c1fccba831509b43016465181852a903968a8cddd",
       "Human_Yawn": "98304022b5c529e9d83aea04d0c100c4f7c3c3ddbb5be0272081d79637aacd23"
     },
@@ -1598,7 +1598,7 @@
       "Human_Swat": "77f7434f38aff7d2a92bb7e47560159474f7e3abd470f39a4e7f3c10aeee9804",
       "Human_Trot": "c6faa209d20600aec1b023f0734826ccb5b472e341d888e4f4f66159d02beb5d",
       "Human_Turn": "d1a236e8f6a80cdcc81f90953214848eb2a7a2a9cf815b6aff167bb6e456e073",
-      "Human_Victory": "d5e36c07e339592731b616b9130ec7bcc98e9908f097daa7c5af4e4252e147bf",
+      "Human_Victory": "14ecb4e3f8e400151dc32019909f393d309ec9a9f91476a2cad49bda99698677",
       "Human_Walk": "42c570fb2d6808b1f6a91a3cf5473e5b4ea8521172fafbed0adedccbf38d1c49",
       "Human_WalkSlow": "6ffaec705fc6c5447cc53c06d20edc20214ddeb7da478078f9835b74674f3e87",
       "Human_Yawn": "98304022b5c529e9d83aea04d0c100c4f7c3c3ddbb5be0272081d79637aacd23"
@@ -1624,8 +1624,8 @@
       "Human_Yawn"
     ],
     "files_sha256": {
-      "LMS_Human_alpha.blend": "b7ffe864bdd1321ecf065ba25381cacd5b18bbc277146a359c60fb95bcd523ed",
-      "LMS_Human_alpha.fbx": "5743e69a75c524df1f27cc47f2a7399b1abe9e79e6df2bfb90b594eed5dda783"
+      "LMS_Human_alpha.blend": "728d25a318cdd4a967d329f1990b7d7340453bedc2d89085ef50bb0f585139b8",
+      "LMS_Human_alpha.fbx": "0571bf1139129b243df9aa3493de69b6840da0c515c2674992abb1a8e71dc6d8"
     },
     "author": {
       "clips": [

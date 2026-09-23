@@ -58,7 +58,7 @@ namespace LetMeSleep.Presentation
                 case FacialMood.Surprised: return new FacialMoodShape { Upper = 0, Lower = 0, Tilt = -12, Pupil = .82f, BrowLift = .004f, BrowTilt = -12, Jaw = 13, Squint = 0, HeadPitch = -13, HeadRoll = 0, MouthOpen = .9f };
                 case FacialMood.Focused: return new FacialMoodShape { Upper = .25f, Lower = .44f, Tilt = 12, Pupil = .88f, BrowLift = -.004f, BrowTilt = 14, Jaw = 0, Squint = .30f, HeadPitch = 5, HeadRoll = 0, Frown = .45f };
                 case FacialMood.Dizzy: return new FacialMoodShape { Upper = .34f, Lower = .12f, Tilt = -6, Pupil = .95f, BrowLift = .002f, BrowTilt = -6, Jaw = 5, Dizzy = 1, Squint = .1f, HeadPitch = 0, HeadRoll = 0, MouthOpen = .35f };
-                case FacialMood.Excited: return new FacialMoodShape { Upper = 0, Lower = .34f, Tilt = -8, Pupil = 1.3f, BrowLift = .004f, BrowTilt = -6, Jaw = 14, Squint = .1f, HeadPitch = -5, HeadRoll = -8, Smile = .9f };
+                case FacialMood.Excited: return new FacialMoodShape { Upper = 0, Lower = .34f, Tilt = -8, Pupil = 1.3f, BrowLift = .004f, BrowTilt = -6, Jaw = 8, Squint = .1f, HeadPitch = -5, HeadRoll = -8, Smile = 1f };
                 case FacialMood.Yawning: return new FacialMoodShape { Upper = .88f, Lower = .30f, Tilt = -6, Pupil = 1f, BrowLift = .003f, BrowTilt = -4, Jaw = 24, Squint = 0, HeadPitch = -6, HeadRoll = 0, MouthOpen = 1 };
                 case FacialMood.Unconscious: return new FacialMoodShape { Upper = 1f, Lower = .4f, Tilt = 0, Pupil = 1f, BrowLift = 0, BrowTilt = 0, Jaw = 4, Squint = 0, HeadPitch = 0, HeadRoll = 0, MouthOpen = .25f };
                 default: return Neutral;

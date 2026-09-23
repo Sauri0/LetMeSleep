@@ -570,7 +570,8 @@ def human(c):
             for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
                 p.rotate(f'Thumb{i:02d}.{side}',(angle*(.95-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
         p.rotate('Neck',(-.04*up,0,0));p.rotate('Head',(-.10*up+.06*dip,0,.04*math.sin(TAU*t)))
-        p.rotate('Jaw',(-.26-.12*up,0,0));brows(.004+.004*up)
+        # Round 3: a wide grin rather than an O (the runtime Smile morph pulls the corners up and out).
+        p.rotate('Jaw',(-.14-.06*up,0,0));brows(.004+.004*up)
         return p.snapshot()
     sampled(c,'Victory',31,victory)
     c.contact['minimum_leg_reach_margin_m']=p.minimum_reach_margin
