@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using LetMeSleep.Online;
 using UnityEditor;
+using UnityEditor.Build.Player;
 using UnityEditor.Build.Reporting;
+using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace LetMeSleep.Editor
@@ -131,9 +135,9 @@ namespace LetMeSleep.Editor
         }
 
         /// <summary>What a public player must not contain (launcher-5, content-editor-build-1, architecture-1).</summary>
-        private static string[] ReleaseProblems(string output)
+        internal static string[] ReleaseProblems(string output)
         {
-            var problems = new System.Collections.Generic.List<string>();
+            var problems = new List<string>();
             string data = Path.Combine(output, "Let-me-sleep_Data");
             string bootConfig = Path.Combine(data, "boot.config");
             if (!File.Exists(bootConfig)) problems.Add("boot.config missing");
@@ -147,10 +151,119 @@ namespace LetMeSleep.Editor
                 foreach (string file in Directory.GetFiles(managed, "*.dll"))
                 {
                     string name = Path.GetFileName(file);
-                    if (name.StartsWith("Unity.Pipeline", StringComparison.OrdinalIgnoreCase) || name.StartsWith("UnityPipeline.", StringComparison.OrdinalIgnoreCase))
-                        problems.Add("development-only assembly " + name);
+                    if (IsDevelopmentOnlyAssembly(name)) problems.Add("development-only assembly " + name);
                 }
             return problems.ToArray();
+        }
+
+        /// <summary>
+        /// com.unity.pipeline (0.7.0-exp.1) runtime code: Unity.Pipeline.dll, Unity.Pipeline.IlInterpreter.dll and the
+        /// UnityPipeline.* Roslyn plugins are constrained to UNITY_EDITOR || DEVELOPMENT_BUILD || ENABLE_RUNTIME_PIPELINE.
+        /// Unity.Pipeline.Attributes.dll is not: the package keeps its inert attributes in an unconstrained assembly so
+        /// that release builds still compile, and a Mono player ships every compiled assembly whether referenced or not
+        /// (the 0.2.0 player even carries Unity.Timeline.dll). work/package-v030.ps1 applies the same rule.
+        /// </summary>
+        internal static bool IsDevelopmentOnlyAssembly(string fileName)
+        {
+            if (!fileName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(fileName, "Unity.Pipeline.Attributes.dll", StringComparison.OrdinalIgnoreCase))
+                return false;
+            return fileName.StartsWith("Unity.Pipeline", StringComparison.OrdinalIgnoreCase)
+                || fileName.StartsWith("UnityPipeline.", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Release preflight without building a player: compiles the player scripts as Release and as Development into
+        /// Temp/, predicts the managed plugins each profile copies (define constraints evaluated against the player
+        /// defines) and runs the release assembly rule over the Release set. Throws when the release set would be
+        /// rejected by BuildV030 or package-v030.ps1. Optional: --lms-release-assemblies-report &lt;file.json&gt;.
+        /// </summary>
+        public static void VerifyReleaseAssemblies()
+        {
+            string temp = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Temp", "LmsReleaseAssemblies");
+            if (Directory.Exists(temp)) Directory.Delete(temp, true);
+            var report = new ReleaseAssemblyReport { unity = Application.unityVersion, sourceCommit = Git("rev-parse HEAD"),
+                sourceDirty = SourceDirty(), target = BuildTarget.StandaloneWindows64.ToString() };
+            string[] playerDefines = PlayerDefines();
+            report.playerDefines = playerDefines;
+            report.releaseScripts = CompilePlayerScripts(Path.Combine(temp, "release"), ScriptCompilationOptions.None);
+            report.developmentScripts = CompilePlayerScripts(Path.Combine(temp, "development"), ScriptCompilationOptions.DevelopmentBuild);
+            report.releasePlugins = ManagedPlugins(new HashSet<string>(playerDefines, StringComparer.Ordinal));
+            report.developmentPlugins = ManagedPlugins(new HashSet<string>(playerDefines.Append("DEVELOPMENT_BUILD"), StringComparer.Ordinal));
+            report.releaseManaged = report.releaseScripts.Concat(report.releasePlugins).Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
+            report.developmentManaged = report.developmentScripts.Concat(report.developmentPlugins).Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
+            report.releaseProblems = report.releaseManaged.Where(IsDevelopmentOnlyAssembly).Select(name => "development-only assembly " + name).ToArray();
+            // Sanity: the rule must still see something in a Development set, or the check proves nothing.
+            report.developmentOnlyInDevelopment = report.developmentManaged.Where(IsDevelopmentOnlyAssembly).ToArray();
+            string[] args = Environment.GetCommandLineArgs();
+            int reportArg = Array.IndexOf(args, "--lms-release-assemblies-report");
+            string reportPath = reportArg >= 0 && reportArg + 1 < args.Length ? Path.GetFullPath(args[reportArg + 1]) : Path.Combine(temp, "report.json");
+            Directory.CreateDirectory(Path.GetDirectoryName(reportPath));
+            File.WriteAllText(reportPath, JsonUtility.ToJson(report, true));
+            Debug.Log("LMS_RELEASE_ASSEMBLIES release=" + report.releaseManaged.Length + " problems=" + report.releaseProblems.Length
+                + " attributes=" + report.releaseManaged.Contains("Unity.Pipeline.Attributes.dll", StringComparer.OrdinalIgnoreCase)
+                + " developmentOnlyInDevelopment=" + string.Join(",", report.developmentOnlyInDevelopment) + " report=" + reportPath);
+            if (report.releaseProblems.Length != 0)
+                throw new InvalidOperationException("The release player would carry development content: " + string.Join("; ", report.releaseProblems));
+        }
+
+        private static string[] CompilePlayerScripts(string folder, ScriptCompilationOptions options)
+        {
+            Directory.CreateDirectory(folder);
+            var result = PlayerBuildInterface.CompilePlayerScripts(new ScriptCompilationSettings { group = BuildTargetGroup.Standalone,
+                target = BuildTarget.StandaloneWindows64, options = options }, folder);
+            if (result.assemblies == null || result.assemblies.Count == 0)
+                throw new InvalidOperationException("Player script compilation failed (" + options + "): see the Editor log.");
+            return result.assemblies.Select(Path.GetFileName).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
+        }
+
+        /// <summary>Defines of a non-development Windows player compile (no UNITY_EDITOR*, no DEVELOPMENT_BUILD).</summary>
+        private static string[] PlayerDefines()
+        {
+            bool development = EditorUserBuildSettings.development;
+            try
+            {
+                EditorUserBuildSettings.development = false;
+                // All game code lives in asmdefs (there is no Assembly-CSharp): keep the defines every player
+                // assembly shares, which drops per-asmdef version defines.
+                var player = CompilationPipeline.GetAssemblies(AssembliesType.PlayerWithoutTestAssemblies);
+                if (player.Length == 0) throw new InvalidOperationException("No player assemblies.");
+                IEnumerable<string> shared = player[0].defines;
+                foreach (var assembly in player.Skip(1)) shared = shared.Intersect(assembly.defines, StringComparer.Ordinal);
+                return shared.Where(define => !define.StartsWith("UNITY_EDITOR", StringComparison.Ordinal) && define != "DEVELOPMENT_BUILD")
+                    .OrderBy(define => define, StringComparer.Ordinal).ToArray();
+            }
+            finally { EditorUserBuildSettings.development = development; }
+        }
+
+        // The Test Framework strips com.unity.ext.nunit from players (no earlier player carries nunit.framework.dll).
+        private static string[] ManagedPlugins(ISet<string> defines)
+            => PluginImporter.GetImporters(BuildTarget.StandaloneWindows64)
+                .Where(plugin => !plugin.isNativePlugin && plugin.assetPath.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
+                    && !plugin.assetPath.StartsWith("Packages/com.unity.ext.nunit/", StringComparison.Ordinal)
+                    && plugin.ShouldIncludeInBuild() && DefineConstraintsMet(plugin.DefineConstraints, defines))
+                .Select(plugin => Path.GetFileName(plugin.assetPath)).Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToArray();
+
+        /// <summary>Each entry must hold; an entry is an OR of AND terms, each a define or !define.</summary>
+        internal static bool DefineConstraintsMet(IEnumerable<string> constraints, ISet<string> defines)
+        {
+            foreach (string constraint in constraints ?? Enumerable.Empty<string>())
+            {
+                if (string.IsNullOrWhiteSpace(constraint)) continue;
+                bool met = constraint.Split(new[] { "||" }, StringSplitOptions.None).Any(alternative =>
+                    alternative.Split(new[] { "&&" }, StringSplitOptions.None).All(term =>
+                    {
+                        string define = term.Trim();
+                        bool negated = define.StartsWith("!", StringComparison.Ordinal);
+                        if (negated) define = define.Substring(1).Trim();
+                        return defines.Contains(define) != negated;
+                    }));
+                if (!met) return false;
+            }
+            return true;
         }
 
         // Compare normalized contents: Unity can rewrite line endings on dynamic font
@@ -170,6 +283,13 @@ namespace LetMeSleep.Editor
             if (!process.WaitForExit(120000)) { try { process.Kill(); } catch (InvalidOperationException) { } throw new TimeoutException("git " + arguments + " did not finish."); }
             if (process.ExitCode != 0) throw new InvalidOperationException("Cannot establish source provenance: " + error.Result);
             return output.Trim();
+        }
+        [Serializable] private sealed class ReleaseAssemblyReport
+        {
+            public string unity, sourceCommit, target;
+            public bool sourceDirty;
+            public string[] playerDefines, releaseScripts, developmentScripts, releasePlugins, developmentPlugins, releaseManaged, developmentManaged,
+                releaseProblems, developmentOnlyInDevelopment;
         }
         [Serializable] private sealed class Receipt
         {

@@ -39,6 +39,14 @@ function Test-Excluded([string]$relative) {
     foreach ($part in $parts) { if ($part -match $excludedDirectory) { return $true } }
     return $false
 }
+# Same rule as WindowsAlfaBuild.IsDevelopmentOnlyAssembly: com.unity.pipeline's runtime (Unity.Pipeline.dll,
+# Unity.Pipeline.IlInterpreter.dll, the UnityPipeline.* Roslyn plugins) is Development-only by define constraint.
+# Unity.Pipeline.Attributes.dll is unconstrained on purpose (inert attributes, so release builds compile) and every
+# non-Development Mono player carries it: it is allowed.
+function Test-DevelopmentOnlyAssembly([string]$name) {
+    if ($name -notlike '*.dll' -or $name -eq 'Unity.Pipeline.Attributes.dll') { return $false }
+    return ($name -like 'Unity.Pipeline*' -or $name -like 'UnityPipeline.*')
+}
 # Content that must not reach players even inside kept files (content-editor-build-1/2, launcher-5, architecture-1).
 function Get-ReleaseProblems([string]$root) {
     $problems = [System.Collections.Generic.List[string]]::new()
@@ -46,7 +54,7 @@ function Get-ReleaseProblems([string]$root) {
         $relative = [IO.Path]::GetRelativePath($root, $_.FullName).Replace('\', '/')
         if (Test-Excluded $relative) { return }
         if ($_.Name -like 'GfxPluginNativeRender*') { $problems.Add("native overlay helper $relative") }
-        if ($_.Name -like 'Unity.Pipeline*.dll' -or $_.Name -like 'UnityPipeline.*.dll') { $problems.Add("development-only assembly $relative") }
+        if (Test-DevelopmentOnlyAssembly $_.Name) { $problems.Add("development-only assembly $relative") }
         if ($relative -eq 'Let-me-sleep_Data/boot.config') {
             foreach ($line in Get-Content -LiteralPath $_.FullName) {
                 if ($line -match '^player-connection' -or ($line -match '^wait-for-native-debugger=' -and $line.Trim() -ne 'wait-for-native-debugger=0')) {
