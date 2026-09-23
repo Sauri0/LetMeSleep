@@ -106,9 +106,9 @@ function Save-GameCapture([int]$processId, [string]$path) {
 $steps = @(
     [ordered]@{ id = '01-menu'; instruction = 'Menú principal: tiene que decir 0.3.0 y NO tiene que aparecer "Development Build" en ninguna esquina.' }
     [ordered]@{ id = '02-training-human'; instruction = 'ENTRENAMIENTO -> elegí mapa y modo -> INICIAR en la tarjeta HUMANO. Movete (WASD), corré (Shift), saltá y golpeá (clic). Dejá el humano jugando en pantalla.' }
-    [ordered]@{ id = '03-training-mosquito'; instruction = 'Esc -> SALIR DEL ENTRENAMIENTO. ENTRENAMIENTO -> INICIAR en la tarjeta MOSQUITO. Volá (W), subí (Espacio), bajá (Ctrl) y posate (F). Dejá el mosquito jugando en pantalla.' }
-    [ordered]@{ id = '04-room-created'; instruction = 'Esc -> SALIR DEL ENTRENAMIENTO. JUGAR -> CREAR SALA, escribí un nombre y creá la sala. Esperá a ver la sala con su código (EOS).' }
-    [ordered]@{ id = '05-room-left'; instruction = 'SALIR DE LA SALA. Tenés que volver al menú o a JUGAR sin avisos de error.' }
+    [ordered]@{ id = '03-training-mosquito'; instruction = 'Esc -> SALIR DEL ENTRENAMIENTO -> SALIR. ENTRENAMIENTO -> INICIAR en la tarjeta MOSQUITO. Volá (W), subí (Espacio), bajá (Ctrl) y posate (F). Dejá el mosquito jugando en pantalla.' }
+    [ordered]@{ id = '04-room-created'; instruction = 'Esc -> SALIR DEL ENTRENAMIENTO -> SALIR. JUGAR -> CREAR SALA, escribí un nombre y creá la sala. Esperá a ver la sala con su código (EOS).' }
+    [ordered]@{ id = '05-room-left'; instruction = 'Esc -> SALIR DE LA SALA -> SALIR. Tenés que volver al menú sin avisos de error.' }
 )
 $exe = Join-Path $game 'Let-me-sleep.exe'
 $log = Join-Path $root 'player.log'
@@ -137,7 +137,7 @@ foreach ($step in $steps) {
     Save-Result
 }
 Write-Host ''
-Write-Host '[06-quit] Volvé al menú principal y cerrá el juego con SALIR.'
+Write-Host '[06-quit] En el menú principal: SALIR -> SALIR para cerrar el juego.'
 if (-not $process.WaitForExit(300000)) { $process.Kill(); $result.processExit = 'timeout (killed after 5 min)' } else { $result.processExit = $process.ExitCode }
 $quit = Read-Host '¿El juego se cerró con SALIR, sin cuelgues ni ventanas de error? (s/n)'
 $result.quitConfirmed = $quit -match '^\s*(s|si|sí|y|yes)\s*$'
