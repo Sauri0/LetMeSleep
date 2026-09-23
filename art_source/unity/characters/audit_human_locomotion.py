@@ -111,7 +111,7 @@ def audit_candidate(baseline, candidate):
         assert file_hash(candidate / name) == expected, ('Candidate changed', name)
     phases = sample_phases()
     preserved = receipt['preserved_action_names']
-    assert len(preserved) == 13
+    assert len(preserved) == len(receipt['actions_before']) - len(REPLACED) and len(preserved) >= 13
     # Compare actual FBX payloads as well as the saved-source invariants. New
     # animation payloads intentionally differ; geometry/morph/skin/winding do not.
     parser = importlib.import_module('io_scene_fbx.parse_fbx')
@@ -135,7 +135,7 @@ def audit_candidate(baseline, candidate):
         actions = {p['clip']: action_for_rig(p['clip']) for p in PROFILES}
         old_actions = {n: action_for_rig(n) for n in preserved}
         bone_actions = [a for a in bpy.data.actions if any(f.data_path.startswith('pose.bones[') for f in curves(a))]
-        assert len(bone_actions) == 17 and set(bone_actions) == set(actions.values()) | set(old_actions.values())
+        assert len(bone_actions) == len(preserved) + len(PROFILES) and set(bone_actions) == set(actions.values()) | set(old_actions.values())
         assert len(rig.data.bones) == 65
         head = next(o for o in meshes if o.name == 'HumanHead')
         assert len(head.data.shape_keys.key_blocks) == 9, 'Expected Basis and eight blink samples'

@@ -21,6 +21,11 @@ namespace LetMeSleep.Presentation
         [SerializeField, Min(0f)] private float collisionPadding = 0.015f;
         [SerializeField, Min(0f)] private float outwardDampingSeconds = 0.08f;
         [SerializeField, Min(0f)] private float rotationDampingSeconds = 0.05f;
+        // v0.3.0: the camera rides a little above the mosquito (along its own up axis) so the body sits
+        // under the central reticle instead of covering it; lift grows with the orbit distance (a constant
+        // ~12 deg) and fades out toward first person or a collapsed orbit. Collision sweeps include it.
+        [SerializeField, Min(0f)] private float framingSlope = 0.22f;
+        [SerializeField, Min(0f)] private float maximumFramingLift = 0.36f;
 
         private struct RenderState { public Renderer Renderer; public bool ForceOff; }
         private struct BodyPart { public Transform Bone; public Bounds Bounds; }
@@ -49,6 +54,10 @@ namespace LetMeSleep.Presentation
 
         public float DesiredDistance => desiredDistance;
         public float ResolvedDistance => smoothedDistance;
+        /// <summary>Camera-space upward offset of the orbit pivot for the requested distance.</summary>
+        public float FramingLift(float requestedDistance) =>
+            float.IsNaN(requestedDistance) || float.IsInfinity(requestedDistance) ? 0f :
+            Mathf.Min(maximumFramingLift, Mathf.Max(0f, requestedDistance) * framingSlope);
 
         private void Awake()
         {
@@ -69,7 +78,11 @@ namespace LetMeSleep.Presentation
 
             float radius = preset != null ? preset.CameraCollisionRadius : 0.08f;
             Vector3 anchorPosition = ResolveSafePoint(safeAnchor.position, radius);
-            Vector3 desiredPivot = pivot.position;
+            float maximum = preset != null ? preset.MosquitoMaximumDistance : 2.5f;
+            float requested = Mathf.Clamp(desiredDistance, 0f, maximum);
+            // The lift follows the orbit actually available last frame: when a wall collapses the orbit, the
+            // camera comes back down into the body (which then hides) instead of hovering over its own back.
+            Vector3 desiredPivot = pivot.position + smoothedRotation * Vector3.up * FramingLift(Mathf.Min(requested, smoothedDistance));
             firstPersonBlend=0;
             if(TryBodyBounds(out var body))
             {
@@ -84,8 +97,6 @@ namespace LetMeSleep.Presentation
             if (IsBlocked(resolvedPivot, radius))
                 resolvedPivot = anchorPosition;
 
-            float maximum = preset != null ? preset.MosquitoMaximumDistance : 2.5f;
-            float requested = Mathf.Clamp(desiredDistance, 0f, maximum);
             EffectiveRequestedDistance=requested;
             Vector3 desiredCamera = resolvedPivot - smoothedRotation * Vector3.forward * requested;
 

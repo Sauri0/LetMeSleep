@@ -16,7 +16,9 @@ errors=[]
 for species in species_list:
     for kind in ['blend','fbx']:
         actions=[a for a in report['actions'] if a['species']==species and a['format']==kind]
-        if len(actions)!=15:errors.append(f'{species}/{kind}: expected15clips, found{len(actions)}')
+        # v0.3.0: the source audit lists every authored clip (15 base + appended expressive clips).
+        expected=len(json.loads((ROOT/species.lower()/'audit.json').read_text())['clips'])
+        if len(actions)!=expected or expected<15:errors.append(f'{species}/{kind}: expected{expected}clips, found{len(actions)}')
         path=ROOT/species.lower()/f'LMS_{species}_alpha.{kind}'
         sha=hashlib.sha256(path.read_bytes()).hexdigest()
         for action in actions:

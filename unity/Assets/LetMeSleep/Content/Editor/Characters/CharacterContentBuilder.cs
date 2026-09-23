@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "v030-characters-9-review-eyes";
+        private const string BuilderVersion = "v030-characters-10-expressive-motion";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -30,6 +30,10 @@ namespace LetMeSleep.Content.Characters.Editor
             "Idle", "Hover", "Fly", "Brake", "PerchEnter", "PerchIdle", "SurfaceWalk", "BiteStart",
             "BiteLoop", "Detach", "Hit", "Fall", "Recover", "Land", "Bite"
         };
+        // v0.3.0 animation pass. Appended after every existing state so gameplay IDs stay stable:
+        // human 17 JumpAir, 18 FallAir, 19 CrouchWalk, 20 Yawn, 21 Victory; mosquito 15 StunnedLoop.
+        private static readonly string[] HumanExpressiveStates = { "JumpAir", "FallAir", "CrouchWalk", "Yawn", "Victory" };
+        private static readonly string[] MosquitoExpressiveStates = { "StunnedLoop" };
         private static readonly string[,] HumanAnchors = {
             { "CameraEye", "Socket.Eye" }, { "AimChest", "Socket.AimChest" },
             { "HandGrip_L", "Socket.Grip.L" }, { "HandGrip_R", "Socket.Grip.R" },
@@ -125,10 +129,11 @@ namespace LetMeSleep.Content.Characters.Editor
                 ImportModel(human); ImportModel(mosquito); ImportModel(tool);
                 var humanStates = HumanStatesFor(human);
                 var humanController = BuildController(human, humanStates);
-                var mosquitoController = BuildController(mosquito, MosquitoStates);
+                var mosquitoStates = MosquitoStatesFor(mosquito);
+                var mosquitoController = BuildController(mosquito, mosquitoStates);
                 BuildCharacter(human, humanController, humanStates, false);
                 BuildCharacter(human, humanController, humanStates, true);
-                BuildCharacter(mosquito, mosquitoController, MosquitoStates, false);
+                BuildCharacter(mosquito, mosquitoController, mosquitoStates, false);
                 BuildTool(tool);
                 AssetDatabase.SaveAssets();
                 receipt.validations = new[] {
@@ -353,7 +358,21 @@ namespace LetMeSleep.Content.Characters.Editor
                 Require(audit.clips.Count(c => c.name == name && c.loop && c.duration_seconds > 0) == 1,
                     "Incomplete human locomotion export: " + name);
             // Append only; existing gameplay IDs 0..14 and unrelated actions stay stable.
-            return HumanStates.Concat(new[] { "WalkSlow", "Trot" }).ToArray();
+            return AppendExpressive(audit, HumanStates.Concat(new[] { "WalkSlow", "Trot" }).ToArray(), HumanExpressiveStates);
+        }
+
+        private static string[] MosquitoStatesFor(SourceAudit audit) => AppendExpressive(audit, MosquitoStates, MosquitoExpressiveStates);
+
+        /// <summary>All-or-nothing: an older source without the expressive clips keeps its previous state list.</summary>
+        private static string[] AppendExpressive(SourceAudit audit, string[] states, string[] expressive)
+        {
+            int present = expressive.Count(name => audit.clips.Any(c => c.name == audit.species + "_" + name));
+            if (present == 0) return states;
+            Require(present == expressive.Length, "Incomplete expressive clip export for " + audit.species);
+            foreach (string name in expressive)
+                Require(audit.clips.Count(c => c.name == audit.species + "_" + name && c.duration_seconds > 0) == 1,
+                    "Invalid expressive clip " + audit.species + "_" + name);
+            return states.Concat(expressive).ToArray();
         }
 
         private static AnimatorController BuildController(SourceAudit audit, string[] states)

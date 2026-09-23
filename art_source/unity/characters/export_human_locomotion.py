@@ -53,7 +53,8 @@ def export_candidate(baseline, output, audit_after=False):
     bpy.ops.wm.open_mainfile(filepath=str(source))
     before = scene_fingerprint()
     actions_before = action_fingerprints()
-    assert len(actions_before) == 15 and set(actions_before) == {c['name'] for c in baseline_audit['clips']}
+    # 15 base actions plus any appended expressive clips; every one of them is preserved except the two replaced.
+    assert len(actions_before) >= 15 and set(actions_before) == {c['name'] for c in baseline_audit['clips']}
     assert REPLACED <= actions_before.keys()
     rigs = [o for o in bpy.context.scene.objects if o.type == 'ARMATURE']
     assert len(rigs) == 1 and len([o for o in bpy.context.scene.objects if o.type == 'MESH']) == 5
@@ -62,7 +63,7 @@ def export_candidate(baseline, output, audit_after=False):
     actions_after = action_fingerprints()
     assert before == after, 'Mesh/morph/weights/rig/winding changed'
     preserved = {name: value for name, value in actions_before.items() if name not in REPLACED}
-    assert len(preserved) == 13
+    assert len(preserved) == len(actions_before) - len(REPLACED)
     assert all(actions_after[name] == value for name, value in preserved.items()), 'Unrelated action changed'
     assert set(actions_after) == set(preserved) | {p['clip'] for p in PROFILES}
     assert all(actions_before[name] != actions_after[name] for name in REPLACED)

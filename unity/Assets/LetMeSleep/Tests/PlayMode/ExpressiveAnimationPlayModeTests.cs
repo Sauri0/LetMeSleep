@@ -1,0 +1,428 @@
+#if UNITY_EDITOR
+using System.Collections;
+using System.Collections.Generic;
+using LetMeSleep.Content.Characters;
+using LetMeSleep.Core;
+using LetMeSleep.Gameplay;
+using LetMeSleep.Gameplay.Unity;
+using LetMeSleep.Presentation;
+using LetMeSleep.Presentation.Gameplay;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.TestTools;
+using Ids = LetMeSleep.Presentation.Gameplay.CharacterMotionIds;
+using Object = UnityEngine.Object;
+
+namespace LetMeSleep.Tests.PlayMode
+{
+    /// <summary>v0.3.0 animation pass: jump/air states, wingbeat clock, secondary motion, strike layer,
+    /// elbow limit, moods and mosquito camera framing. Presentation only.</summary>
+    public sealed class ExpressiveAnimationPlayModeTests
+    {
+        private const string HumanPrefab = "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab";
+        private const string MosquitoPrefab = "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab";
+        private readonly List<Object> created = new List<Object>();
+
+        [UnityTearDown]
+        public IEnumerator Cleanup()
+        {
+            foreach (var item in created) if (item) Object.Destroy(item);
+            created.Clear();
+            yield return null;
+        }
+
+        // ------------------------------------------------------------------ pure policies
+
+        [Test]
+        public void MoodPolicyFollowsMosquitoStatesAndEvents()
+        {
+            var policy = new GameplayMoodPolicy();
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Flying, 0, near: false), Is.EqualTo(FacialMood.Neutral));
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Flying, 1, near: true), Is.EqualTo(FacialMood.Alert));
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.PreparingBite, 2), Is.EqualTo(FacialMood.Focused));
+            var feeding = policy.Evaluate(Frame(PlayerRole.Mosquito, LifeState.Biting), 3);
+            Assert.That(feeding.Mood, Is.EqualTo(FacialMood.Happy));
+            var later = policy.Evaluate(Frame(PlayerRole.Mosquito, LifeState.Biting), 5);
+            Assert.That(later.Weight, Is.GreaterThan(feeding.Weight), "The mosquito gets happier the longer it feeds.");
+            policy.Notify(GameplayEventKind.BiteEnded, true, false, 6);
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Flying, 6.5), Is.EqualTo(FacialMood.Excited));
+            policy.Notify(GameplayEventKind.MosquitoKnockedDown, true, false, 8);
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Flying, 8.1), Is.EqualTo(FacialMood.Surprised));
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Falling, 8.3), Is.EqualTo(FacialMood.Surprised));
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Stunned, 9), Is.EqualTo(FacialMood.Dizzy));
+            Assert.That(Mood(policy, PlayerRole.Mosquito, LifeState.Recovering, 10), Is.EqualTo(FacialMood.Sleepy));
+        }
+
+        [Test]
+        public void MoodPolicyHumanSleepsYawnsAndReactsToStrikesAndBites()
+        {
+            var policy = new GameplayMoodPolicy();
+            var calm = Frame(PlayerRole.Human, LifeState.Active);
+            Assert.That(policy.Evaluate(calm, 0).Mood, Is.EqualTo(FacialMood.Neutral));
+            Assert.That(policy.Evaluate(calm, 3).Mood, Is.EqualTo(FacialMood.Neutral));
+            Assert.That(policy.Evaluate(calm, GameplayMoodPolicy.IdleSleepySeconds + .1).Mood, Is.EqualTo(FacialMood.Sleepy));
+            int yawns = 0;
+            for (double t = 6.2; t < 30; t += .1)
+                if (policy.Evaluate(calm, t).StartYawn) yawns++;
+            Assert.That(yawns, Is.InRange(2, 3), "A long idle yawns about every ten seconds, once per yawn.");
+            var walking = new GameplayMoodPolicy.Frame(PlayerRole.Human, LifeState.Active, 1.5f, true, 0, false, false);
+            Assert.That(policy.Evaluate(walking, 31).Mood, Is.EqualTo(FacialMood.Neutral), "Moving wakes the human up.");
+            Assert.That(policy.Evaluate(calm, 33).Mood, Is.EqualTo(FacialMood.Neutral), "The idle timer restarts after moving.");
+
+            policy.Notify(GameplayEventKind.StrikeStarted, true, false, 40);
+            var striking = new GameplayMoodPolicy.Frame(PlayerRole.Human, LifeState.Active, 0, true, 0, true, false);
+            Assert.That(policy.Evaluate(striking, 40.1).Mood, Is.EqualTo(FacialMood.Angry));
+            policy.Notify(GameplayEventKind.StrikeImpact, true, false, 40.2);
+            Assert.That(policy.Evaluate(striking, 40.3).Mood, Is.EqualTo(FacialMood.Happy), "A successful swat is a happy one.");
+
+            policy.Notify(GameplayEventKind.BiteStarted, false, true, 50);
+            Assert.That(policy.Evaluate(calm, 50.2).Mood, Is.EqualTo(FacialMood.Surprised));
+            Assert.That(policy.Evaluate(calm, 51).Mood, Is.EqualTo(FacialMood.Angry));
+            Assert.That(policy.Evaluate(Frame(PlayerRole.Human, LifeState.Fainted), 60).Mood, Is.EqualTo(FacialMood.Unconscious));
+            Assert.That(policy.Evaluate(calm, double.NaN).Mood, Is.EqualTo(FacialMood.Neutral));
+        }
+
+        [Test]
+        public void WingbeatRateFollowsSpeedNotDistanceAndPhaseIsPerActor()
+        {
+            Assert.That(MosquitoWingbeat.FrequencyHz(0), Is.EqualTo(8f).Within(1e-4f));
+            Assert.That(MosquitoWingbeat.FrequencyHz(MosquitoWingbeat.MaximumSpeed), Is.EqualTo(12f).Within(1e-4f));
+            Assert.That(MosquitoWingbeat.FrequencyHz(100f), Is.EqualTo(12f).Within(1e-4f));
+            Assert.That(MosquitoWingbeat.FrequencyHz(float.NaN), Is.EqualTo(8f).Within(1e-4f));
+            // Authored Fly/Hover loops: 12 frames at 30 fps hold 3 wingbeats.
+            float loop = 12f / 30f;
+            for (float speed = 0; speed <= 3.8f; speed += .2f)
+            {
+                float hz = MosquitoWingbeat.Playback(speed, loop) * MosquitoWingbeat.WingbeatsPerLoop / loop;
+                Assert.That(hz, Is.InRange(8f - 1e-3f, 12f + 1e-3f));
+            }
+            var phases = new HashSet<float>();
+            for (uint id = 1; id <= 16; id++)
+            {
+                float phase = MosquitoWingbeat.InitialPhase(id);
+                Assert.That(phase, Is.InRange(0f, .9999999f));
+                Assert.That(MosquitoWingbeat.InitialPhase(id), Is.EqualTo(phase), "Deterministic per actor.");
+                phases.Add(Mathf.Round(phase * 100));
+            }
+            Assert.That(phases.Count, Is.GreaterThan(12), "A swarm does not flap in lockstep.");
+        }
+
+        [Test]
+        public void SecondaryMotionStaysFiniteAndConservesVolume()
+        {
+            var actor = Track(new GameObject("SecondaryActor"));
+            var rig = new GameObject("Rig").transform; rig.SetParent(actor.transform, false);
+            var root = new GameObject("Root").transform; root.SetParent(rig, false);
+            var abdomen = new GameObject("Abdomen01").transform; abdomen.SetParent(root, false);
+            var motion = new CharacterSecondaryMotion(PlayerRole.Mosquito, actor.transform, rig);
+            Assert.That(motion.SupportsSquash, Is.True);
+            motion.Kick(-.28f); motion.KickWobble(30f);
+            foreach (float dt in new[] { 1f / 60, 0f, -1f, float.NaN, float.PositiveInfinity, 10f, 1f / 144, .05f })
+            {
+                motion.Apply(new CharacterSecondaryMotion.Input { DeltaSeconds = dt, Biting = true, BitingSeconds = 2 });
+                var scale = root.localScale;
+                Assert.That(Finite(scale) && Finite(root.localRotation.eulerAngles) && Finite(abdomen.localScale), Is.True, "dt " + dt);
+                Assert.That(scale.x * scale.y * scale.z, Is.EqualTo(1f).Within(1e-4f), "Squash and stretch keeps volume.");
+            }
+            motion.Kick(float.NaN); motion.KickWobble(float.PositiveInfinity);
+            for (int i = 0; i < 240; i++) motion.Apply(new CharacterSecondaryMotion.Input { DeltaSeconds = 1f / 60 });
+            Assert.That(Mathf.Abs(motion.Squash), Is.LessThan(.01f), "The spring settles.");
+            Assert.That(abdomen.localScale.x, Is.LessThan(1.2f));
+            motion.Reset();
+            Assert.That(root.localScale, Is.EqualTo(Vector3.one));
+        }
+
+        [Test]
+        public void PoseCrossfadeBlendsFromTheLastCapturedPose()
+        {
+            var bone = Track(new GameObject("Bone")).transform;
+            var fade = new PoseCrossfade(new[] { bone });
+            fade.Begin(.2f);
+            Assert.That(fade.Active, Is.False, "Nothing to blend from before the first capture.");
+            bone.localPosition = Vector3.zero; fade.Apply(.016f);
+            bone.localPosition = Vector3.right; fade.Begin(.2f); fade.Apply(.1f);
+            Assert.That(bone.localPosition.x, Is.EqualTo(.5f).Within(1e-4f));
+            bone.localPosition = Vector3.right; fade.Apply(.2f);
+            Assert.That(bone.localPosition.x, Is.EqualTo(1f).Within(1e-4f));
+            Assert.That(fade.Active, Is.False);
+        }
+
+        [Test]
+        public void TwoBoneSolverRespectsTheInnerAngleLimit()
+        {
+            var upper = Track(new GameObject("Upper")).transform;
+            var lower = new GameObject("Lower").transform; lower.SetParent(upper, false); lower.localPosition = new Vector3(0, -.27f, 0);
+            var end = new GameObject("End").transform; end.SetParent(lower, false); end.localPosition = new Vector3(0, -.23f, 0);
+            lower.localRotation = Quaternion.Euler(10, 0, 0);
+            TwoBoneSolver.Solve(upper, lower, end, new Vector3(0, 0, 2), Vector3.forward, 150);
+            float angle = TwoBoneSolver.InnerAngle(upper.position, lower.position, end.position);
+            Assert.That(angle, Is.LessThanOrEqualTo(150.05f));
+            Assert.That(angle, Is.GreaterThan(140f));
+            Assert.That(Vector3.Distance(upper.position, end.position),
+                Is.EqualTo(TwoBoneSolver.MaximumReach(.27f, .23f, 150)).Within(1e-3f));
+        }
+
+        // ------------------------------------------------------------------ production prefabs
+
+        [Test]
+        public void ProductionControllersExposeTheAppendedExpressiveStates()
+        {
+            var human = Load(HumanPrefab).GetComponent<CharacterView>();
+            var mosquito = Load(MosquitoPrefab).GetComponent<CharacterView>();
+            AssertMotion(human, Ids.HumanJumpAir, "Base Layer.JumpAir", true);
+            AssertMotion(human, Ids.HumanFallAir, "Base Layer.FallAir", true);
+            AssertMotion(human, Ids.HumanCrouchWalk, "Base Layer.CrouchWalk", true);
+            AssertMotion(human, Ids.HumanYawn, "Base Layer.Yawn", false);
+            AssertMotion(human, Ids.HumanVictory, "Base Layer.Victory", true);
+            AssertMotion(human, Ids.HumanFall, "Base Layer.Fall", false);
+            AssertMotion(human, Ids.HumanTrot, "Base Layer.Trot", true);
+            AssertMotion(mosquito, Ids.MosquitoStunnedLoop, "Base Layer.StunnedLoop", true);
+            AssertMotion(mosquito, Ids.MosquitoBite, "Base Layer.Bite", false);
+            var mask = HumanLocomotionSetup.UpperBodyMask(human.Animator.transform);
+            Assert.That(mask, Is.Not.Null);
+            int chest = -1, leg = -1, active = 0;
+            for (int i = 0; i < mask.transformCount; i++)
+            {
+                string path = mask.GetTransformPath(i);
+                if (mask.GetTransformActive(i)) active++;
+                if (path.EndsWith("/Chest")) chest = i;
+                if (path.EndsWith("/UpperLeg.L")) leg = i;
+            }
+            Assert.That(chest, Is.GreaterThanOrEqualTo(0)); Assert.That(leg, Is.GreaterThanOrEqualTo(0));
+            Assert.That(mask.GetTransformActive(chest), Is.True); Assert.That(mask.GetTransformActive(leg), Is.False);
+            Assert.That(active, Is.GreaterThan(20).And.LessThan(mask.transformCount));
+            Object.DestroyImmediate(mask);
+        }
+
+        [UnityTest]
+        public IEnumerator HumanJumpUsesAirClipsAndLandsWithoutTheFaintClip()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true), 1);
+            yield return null;
+            binding.ApplySnapshot(HumanState(new Vector3(0, .2f, 0), new Vector3(0, 4.6f, 0), false), 2);
+            Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.HumanJumpAir));
+            Assert.That(binding.Secondary.Squash, Is.GreaterThan(.05f), "Take-off stretches.");
+            yield return null;
+            yield return new WaitForSecondsRealtime(.3f);
+            binding.ApplySnapshot(HumanState(new Vector3(0, .8f, 0), new Vector3(0, -3.5f, 0), false), 3);
+            Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.HumanFallAir));
+            Assert.That(binding.CurrentMotion, Is.Not.EqualTo(Ids.HumanFall), "The faint clip is never a jump descent.");
+            yield return new WaitForSecondsRealtime(.3f);
+            var info = view.Animator.GetCurrentAnimatorStateInfo(0);
+            Assert.That(info.IsName("Base Layer.Fall"), Is.False);
+            binding.ApplySnapshot(HumanState(Vector3.zero, Vector3.zero, true), 4);
+            Assert.That(binding.TemporaryMotion, Is.EqualTo(Ids.HumanLand), "Land plays on touchdown.");
+            Assert.That(binding.Secondary.Squash, Is.LessThan(-.05f), "Touchdown squashes.");
+            var rootBone = Find(view.Animator.transform, "Root");
+            float until = Time.realtimeSinceStartup + 1f;
+            while (Time.realtimeSinceStartup < until)
+            {
+                yield return null;
+                var scale = rootBone.localScale;
+                Assert.That(Finite(scale), Is.True);
+                Assert.That(scale.x * scale.y * scale.z, Is.EqualTo(1f).Within(2e-3f));
+            }
+            Assert.That(binding.TemporaryMotion, Is.EqualTo(-1), "Land is short.");
+            Object.Destroy(fixture);
+        }
+
+        [UnityTest]
+        public IEnumerator StrikeWhileWalkingKeepsTheGaitAndNeverLocksTheElbow()
+        {
+            var fixture = Human(false, out var proxy, out var view, out var binding);
+            Assert.That(HumanLocomotionSetup.TryConfigure(view, proxy.ActorId, out var gait), Is.True);
+            Assert.That(gait.SupportsStrikeLayer, Is.True); Assert.That(gait.SupportsCrouchWalk, Is.True);
+            binding.BindLocomotion(gait);
+            uint tick = 10; float z = 0;
+            var velocity = new Vector3(0, 0, 1.55f);
+            for (int i = 0; i < 20; i++)
+            {
+                z += 1.55f / 30f;
+                binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), velocity, true), tick++);
+                yield return new WaitForSecondsRealtime(1f / 30f);
+            }
+            Assert.That(binding.UsingLocomotion, Is.True, "Walking uses the gait graph.");
+            Vector3 origin = new Vector3(.25f, 1.25f, z + .45f), target = new Vector3(-.05f, 1.35f, z + .95f);
+            binding.ApplyEvent(new GameplayEvent(1, 1, 1, tick, GameplayEventKind.StrikeStarted, proxy.ActorId, 0, 1,
+                target.ToFloat(), Float3.Up));
+            Assert.That(binding.TemporaryMotion, Is.EqualTo(-1), "No full-body Swat while walking.");
+            float maximumElbow = 0, minimumLayer = 1;
+            for (int i = 0; i < 16; i++)
+            {
+                z += 1.55f / 30f;
+                var strike = new StrikeState(42, GameplayTools.Hands, 1, i < 3 ? StrikePhase.Windup : StrikePhase.Active,
+                    tick, origin.ToFloat(), target.ToFloat(), Float3.Up, Mathf.Clamp01(i / 18f));
+                binding.ApplySnapshot(HumanState(new Vector3(0, 0, z), velocity, true, strike: strike), tick++);
+                yield return new WaitForSecondsRealtime(1f / 30f);
+                Assert.That(binding.UsingLocomotion, Is.True, "Legs keep walking while striking (frame " + i + ").");
+                if (i > 4) minimumLayer = Mathf.Min(minimumLayer, gait.StrikeLayerWeight);
+                maximumElbow = Mathf.Max(maximumElbow, binding.LastElbowInnerDegrees);
+            }
+            Assert.That(minimumLayer, Is.GreaterThan(.5f), "The Swat plays on the upper-body layer.");
+            Assert.That(maximumElbow, Is.LessThanOrEqualTo(150.5f), "The striking elbow stays bent.");
+            Assert.That(binding.LastArmReachResidualMeters, Is.GreaterThanOrEqualTo(0));
+            Object.Destroy(fixture);
+        }
+
+        [UnityTest]
+        public IEnumerator StunnedMosquitoLoopsDizzyAndFlightTilts()
+        {
+            var root = Track(new GameObject("MosquitoFixture"));
+            var proxy = root.AddComponent<GameplayActorProxy>();
+            proxy.Initialize(new SpawnActor(9, "mosquito", PlayerRole.Mosquito, Float3.Zero));
+            var visual = Object.Instantiate(Load(MosquitoPrefab), root.transform);
+            var view = visual.GetComponent<CharacterView>();
+            var binding = visual.AddComponent<ActorVisualBinding>();
+            binding.Initialize(proxy, null, view, false);
+            uint tick = 1; float z = 0;
+            for (int i = 0; i < 20; i++)
+            {
+                z += 3f / 30f;
+                binding.ApplySnapshot(MosquitoState(LifeState.Flying, new Vector3(0, 1, z), new Vector3(0, 0, 3f)), tick++);
+                yield return new WaitForSecondsRealtime(1f / 30f);
+            }
+            Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.MosquitoFly));
+            float wingHz = view.Animator.speed * MosquitoWingbeat.WingbeatsPerLoop / (12f / 30f);
+            Assert.That(wingHz, Is.InRange(8f, 12f), "Wingbeat from speed, not distance.");
+            Assert.That(Quaternion.Angle(visual.transform.rotation, Quaternion.identity), Is.GreaterThan(6f), "Flying forward pitches the body.");
+            Assert.That(binding.FlightTilt.eulerAngles.x, Is.InRange(5f, 20f));
+            binding.ApplyEvent(new GameplayEvent(1, 1, 2, tick, GameplayEventKind.MosquitoKnockedDown, proxy.ActorId, 0, 1, Float3.Zero, Float3.Up));
+            Assert.That(binding.TemporaryMotion, Is.EqualTo(Ids.MosquitoHit));
+            binding.ApplySnapshot(MosquitoState(LifeState.Falling, new Vector3(0, .5f, z), new Vector3(0, -2, 0)), tick++);
+            yield return new WaitForSecondsRealtime(.35f);
+            binding.ApplySnapshot(MosquitoState(LifeState.Stunned, new Vector3(0, .06f, z), Vector3.zero), tick++);
+            yield return null;
+            Assert.That(binding.CurrentMotion, Is.EqualTo(Ids.MosquitoStunnedLoop), "Stunned is the dizzy loop, never the Hit pose.");
+            yield return new WaitForSecondsRealtime(.6f);
+            Assert.That(view.Animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Hit"), Is.False);
+            Assert.That(binding.FlightTilt.eulerAngles.x, Is.LessThan(3f).Or.GreaterThan(357f), "Tilt eases out when not flying.");
+        }
+
+        [Test]
+        public void FacialMoodsMoveBrowsJawLidsAndPupils()
+        {
+            var human = Track(Object.Instantiate(Load(HumanPrefab)));
+            Assert.That(VisualAttentionFactory.TryInstall(human, true, out var humanRig, out var reason), Is.True, reason);
+            Assert.That(humanRig.SupportsBrows && humanRig.SupportsJaw, Is.True);
+            var brow = Find(human.transform, "Brow.L"); var jaw = Find(human.transform, "Jaw");
+            humanRig.SetMood(FacialMood.Neutral);
+            Settle(humanRig);
+            Vector3 browNeutral = brow.position; Quaternion jawNeutral = jaw.rotation;
+            humanRig.PrepareForAnimation();
+            humanRig.SetMood(FacialMood.Surprised);
+            Settle(humanRig);
+            Assert.That(Vector3.Dot(brow.position - browNeutral, human.transform.up), Is.GreaterThan(.006f), "Surprised lifts the brows.");
+            Assert.That(Quaternion.Angle(jaw.rotation, jawNeutral), Is.GreaterThan(8f), "Surprised drops the jaw.");
+            humanRig.PrepareForAnimation();
+            Assert.That(Vector3.Distance(brow.position, browNeutral), Is.LessThan(.0005f), "The rig restores its own writes.");
+
+            var mosquito = Track(Object.Instantiate(Load(MosquitoPrefab)));
+            Assert.That(VisualAttentionFactory.TryInstall(mosquito, true, out var mosquitoRig, out reason), Is.True, reason);
+            Assert.That(mosquitoRig.SupportsLowerLids, Is.True);
+            var lid = Find(mosquito.transform, "LidUpper.L"); var pupil = Find(mosquito.transform, "Pupil.L");
+            mosquitoRig.SetMood(FacialMood.Neutral);
+            Settle(mosquitoRig);
+            Quaternion lidNeutral = lid.localRotation; Vector3 pupilNeutral = pupil.localScale;
+            mosquitoRig.PrepareForAnimation();
+            mosquitoRig.SetMood(FacialMood.Angry);
+            Settle(mosquitoRig);
+            Assert.That(Quaternion.Angle(lid.localRotation, lidNeutral), Is.GreaterThan(20f), "Angry lowers and tilts the upper lid.");
+            Assert.That(mosquitoRig.MoodShape.Tilt, Is.GreaterThan(15f));
+            Assert.That(pupil.localScale.magnitude, Is.LessThan(pupilNeutral.magnitude * .97f), "Angry pupils shrink.");
+            mosquitoRig.PrepareForAnimation();
+            mosquitoRig.SetMood(FacialMood.Dizzy);
+            Settle(mosquitoRig);
+            Assert.That(mosquitoRig.MoodShape.Dizzy, Is.GreaterThan(.9f));
+        }
+
+        [UnityTest]
+        public IEnumerator MosquitoCameraKeepsItsOwnBodyUnderTheReticle()
+        {
+            var cameraObject = Track(new GameObject("FramingCamera", typeof(Camera)));
+            var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false; camera.nearClipPlane = .01f;
+            var follow = cameraObject.AddComponent<MosquitoFollowCamera>();
+            var body = Track(GameObject.CreatePrimitive(PrimitiveType.Cube)); body.transform.localScale = new Vector3(.12f, .1f, .2f);
+            body.transform.position = new Vector3(0, 1, 0);
+            follow.SetCollisionFilter(_ => false);
+            follow.BindAnchors(body.transform, body.transform);
+            follow.SetView(Quaternion.Euler(10, 0, 0), .85f);
+            yield return new WaitForSecondsRealtime(.5f);
+            float lift = follow.FramingLift(.85f);
+            Assert.That(lift, Is.InRange(.12f, .2f));
+            var ray = new Ray(camera.transform.position, camera.transform.forward);
+            Vector3 closest = ray.origin + ray.direction * Vector3.Dot(body.transform.position - ray.origin, ray.direction);
+            float clearance = Vector3.Dot(closest - body.transform.position, camera.transform.up);
+            Assert.That(clearance, Is.GreaterThan(lift * .9f), "The reticle ray passes above the pivot.");
+            Assert.That(body.GetComponent<Collider>().bounds.IntersectRay(ray), Is.False, "The body does not cover the reticle.");
+            Assert.That(follow.ResolvedDistance, Is.GreaterThan(.75f));
+            follow.SetView(Quaternion.identity, 0);
+            yield return new WaitForSecondsRealtime(.3f);
+            Assert.That(follow.FramingLift(0), Is.Zero, "First person has no framing offset.");
+        }
+
+        // ------------------------------------------------------------------ helpers
+
+        private GameObject Human(bool local, out GameplayActorProxy proxy, out CharacterView view, out ActorVisualBinding binding)
+        {
+            var root = Track(new GameObject("HumanFixture"));
+            proxy = root.AddComponent<GameplayActorProxy>();
+            proxy.Initialize(new SpawnActor(7, "human", PlayerRole.Human, Float3.Zero));
+            var visual = Object.Instantiate(Load(HumanPrefab), root.transform);
+            view = visual.GetComponent<CharacterView>();
+            binding = visual.AddComponent<ActorVisualBinding>();
+            binding.Initialize(proxy, null, view, local);
+            return root;
+        }
+
+        private static ActorSnapshot HumanState(Vector3 position, Vector3 velocity, bool grounded, float crouch = 0,
+            StrikeState strike = default) => new ActorSnapshot(7, PlayerRole.Human, LifeState.Active, 1, position.ToFloat(),
+            velocity.ToFloat(), Rotation.Identity, Float3.Forward, 0, 0, 1, 1, grounded, crouch, 0, null, null, strike, 0);
+
+        private static ActorSnapshot MosquitoState(LifeState state, Vector3 position, Vector3 velocity) => new ActorSnapshot(
+            9, PlayerRole.Mosquito, state, 1, position.ToFloat(), velocity.ToFloat(), Rotation.Identity, Float3.Forward,
+            0, 0, 1, 1, state == LifeState.Stunned, 0, 0, null, null, default, 0);
+
+        private static GameplayMoodPolicy.Frame Frame(PlayerRole role, LifeState state, bool near = false) =>
+            new GameplayMoodPolicy.Frame(role, state, 0, true, 0, false, near);
+
+        private static FacialMood Mood(GameplayMoodPolicy policy, PlayerRole role, LifeState state, double now, bool near = false) =>
+            policy.Evaluate(Frame(role, state, near), now).Mood;
+
+        private static void Settle(VisualAttentionRig rig)
+        {
+            for (int i = 0; i < 12; i++) { rig.PrepareForAnimation(); rig.EvaluateAfterAnimation(.1f); }
+        }
+
+        private static void AssertMotion(CharacterView view, int id, string state, bool loop)
+        {
+            CharacterView.MotionBinding found = null;
+            foreach (var motion in view.Motions) if (motion.Id == id) found = motion;
+            Assert.That(found, Is.Not.Null, state);
+            Assert.That(found.StateName, Is.EqualTo(state));
+            Assert.That(found.Loop, Is.EqualTo(loop), state);
+        }
+
+        private static GameObject Load(string path)
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            Assert.That(prefab, Is.Not.Null, path);
+            return prefab;
+        }
+
+        private GameObject Track(GameObject item) { created.Add(item); return item; }
+
+        private static Transform Find(Transform root, string name)
+        {
+            if (root.name == name) return root;
+            for (int i = 0; i < root.childCount; i++) { var found = Find(root.GetChild(i), name); if (found) return found; }
+            return null;
+        }
+
+        private static bool Finite(Vector3 value) =>
+            !float.IsNaN(value.x) && !float.IsInfinity(value.x) && !float.IsNaN(value.y) &&
+            !float.IsInfinity(value.y) && !float.IsNaN(value.z) && !float.IsInfinity(value.z);
+    }
+}
+#endif

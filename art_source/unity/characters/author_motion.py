@@ -18,12 +18,18 @@ THUMB_CURL_FACTOR=.72
 # forward over the index (PER-04), not an open drooping claw: absolute
 # knuckle/middle/tip flexion of the four fingers (radians; the bind already
 # holds FINGER_REST_AMOUNT of FINGER_JOINT_ANGLES) and a firmer thumb.
+# v0.3.0 animation pass (chars.md, director r6): the idle arms hang almost
+# straight beside the thigh (abduction 5 deg, ~11 deg elbow flexion, forearm
+# only ~10 deg forward so the hand sits beside the thigh, not in front of it),
+# palms toward the leg with the thumb forward, and the fingers relaxed like a
+# mitten (.55/.65/.45 rad) instead of the round-6 fist that read as a hook.
 STAND_DROP=.0003
-ARM_ABDUCTION,ARM_FORWARD=10.0,3.0
-FOREARM_ABDUCTION,FOREARM_FORWARD=5.0,15.5
+ARM_ABDUCTION,ARM_FORWARD=5.0,0.5
+FOREARM_ABDUCTION,FOREARM_FORWARD=2.5,10.0
 UPPER_ARM_TWIST=40.0
-IDLE_FIST_ANGLES=(1.00,.95,.80)
-RELAXED_THUMB=.75
+IDLE_FIST_ANGLES=(.55,.65,.45)
+RELAXED_THUMB=.55
+VICTORY_FIST_ANGLES=(1.25,1.15,.95)
 
 def smooth(t):
     t=max(0,min(1,t)); return t*t*t*(t*(t*6-15)+10)
@@ -100,39 +106,64 @@ def sampled(c,name,end,pose_fn):
                 for curve in bag.fcurves:
                     for key in curve.keyframe_points: key.interpolation='LINEAR'
 
+def _mix(a,b,t):
+    """Normalized blend of two direction vectors (t=0 -> a)."""
+    return (Vector(a)*(1-t)+Vector(b)*t).normalized()
+
 def human(c):
     p=Pose(c)
-    def hang(side,s):
-        """Relaxed hanging arm, authored as world directions that follow the chest."""
+    rad=math.radians
+    HANG_UPPER=lambda s:Vector((s*math.sin(rad(ARM_ABDUCTION)),-math.sin(rad(ARM_FORWARD)),-1)).normalized()
+    HANG_LOWER=lambda s:Vector((s*math.sin(rad(FOREARM_ABDUCTION)),-math.sin(rad(FOREARM_FORWARD)),-1)).normalized()
+    HANG_NORMAL=lambda s:Vector((-s*math.sin(rad(UPPER_ARM_TWIST)),-math.cos(rad(UPPER_ARM_TWIST)),0))
+    HANG_PALM=lambda s:Vector((-s,0,0))
+    def arm(side,s,upper,lower,palm,upper_normal=None):
+        """Arm authored as directions in the (rest) chest frame; they follow the animated chest."""
         p.update()
         chest=p.rig.pose.bones['Chest']
         turn=(chest.matrix@p.rest['Chest'].inverted()).to_3x3()
-        rad=math.radians
-        upper=Vector((s*math.sin(rad(ARM_ABDUCTION)),-math.sin(rad(ARM_FORWARD)),-1)).normalized()
-        lower=Vector((s*math.sin(rad(FOREARM_ABDUCTION)),-math.sin(rad(FOREARM_FORWARD)),-1)).normalized()
-        twist=rad(UPPER_ARM_TWIST)
-        upper_normal=Vector((-s*math.sin(twist),-math.cos(twist),0))
-        palm=Vector((-s,0,0))
+        upper_normal=HANG_NORMAL(s) if upper_normal is None else Vector(upper_normal)
         bone=p.rig.pose.bones['UpperArm.'+side]
-        p.point(bone.name,bone.head.copy(),turn@upper,turn@upper_normal)
+        p.point(bone.name,bone.head.copy(),turn@Vector(upper).normalized(),turn@upper_normal)
         bone=p.rig.pose.bones['LowerArm.'+side]
-        p.point(bone.name,bone.head.copy(),turn@lower,turn@palm)
+        p.point(bone.name,bone.head.copy(),turn@Vector(lower).normalized(),turn@Vector(palm))
+    def relaxed_fingers(side,scale=1.0):
         for digit in ['Index','Middle','Ring','Little']:
             for i,(angle,full) in enumerate(zip(IDLE_FIST_ANGLES,FINGER_JOINT_ANGLES),1):
-                p.rotate(f'{digit}{i:02d}.{side}',(angle-full*FINGER_REST_AMOUNT,0,0))
+                p.rotate(f'{digit}{i:02d}.{side}',(angle*scale-full*FINGER_REST_AMOUNT,0,0))
         for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
-            p.rotate(f'Thumb{i:02d}.{side}',(angle*(RELAXED_THUMB-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
+            p.rotate(f'Thumb{i:02d}.{side}',(angle*(RELAXED_THUMB*scale-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
+    def hang(side,s):
+        """Relaxed hanging arm beside the thigh, palm toward the leg, thumb forward."""
+        arm(side,s,HANG_UPPER(s),HANG_LOWER(s),HANG_PALM(s))
+        relaxed_fingers(side)
+    def raised(side,s,upper,lower,palm,amount,upper_normal=(0,-1,0)):
+        """Blend from the hanging arm (amount 0) to the given raised directions (amount 1)."""
+        arm(side,s,_mix(HANG_UPPER(s),upper,amount),_mix(HANG_LOWER(s),lower,amount),
+            _mix(HANG_PALM(s),palm,amount),_mix(HANG_NORMAL(s),upper_normal,amount))
+    def legs(feet=None):
+        for side,s in [('L',1),('R',-1)]:
+            offset=feet[side] if feet else (0,0)
+            p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,offset[0],.12+offset[1]),
+                    (s*.125,-.6,.42),'Foot.'+side)
     def base(squat=0,lean=0,breathe=0,feet=None):
         p.reset(); p.translate('Hips',(0,.11*squat,-.42*squat-STAND_DROP))
         p.rotate('Chest',(lean+breathe,0,0));p.rotate('Neck',(-lean*.35,0,0));p.update()
         for side,s in [('L',1),('R',-1)]:
             hang(side,s)
-            offset=feet[side] if feet else (0,0)
-            p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,offset[0],.12+offset[1]),
-                    (s*.125,-.6,.42),'Foot.'+side)
+        legs(feet)
         return p
     def idle(t):
-        base(breathe=.014*math.sin(TAU*t));p.rotate('Jaw',(-.012*math.sin(math.pi*t)**2,0,0))
+        # Breathing: chest and shoulders rise together, the relaxed arms follow the chest.
+        breath=math.sin(TAU*t)
+        base(breathe=.018*breath)
+        for side,s in [('L',1),('R',-1)]:
+            p.rotate('Shoulder.'+side,(0,0,s*.012*breath))
+        p.update()
+        for side,s in [('L',1),('R',-1)]:
+            hang(side,s)
+        p.rotate('Head',(-.010*breath,0,0))
+        p.rotate('Jaw',(-.012*math.sin(math.pi*t)**2,0,0))
         return p.snapshot()
     sampled(c,'Idle',61,idle)
     def finger(t):
@@ -173,7 +204,14 @@ def human(c):
                 p.rotate('UpperArm.'+side,(-.15,0,-s*1.0))
         return p.snapshot()
     sampled(c,'Jump',37,jump)
-    def land(t):base(squat=.4*(1-smooth(t)),lean=.22*(1-smooth(t)));return p.snapshot()
+    def land(t):
+        # Knees absorb the impact while the arms, still out from the fall, settle down to the thighs.
+        u=smooth(t)
+        base(squat=.4*(1-u),lean=.22*(1-u))
+        balance=1-smooth(min(1,t/.8))
+        for side,s in [('L',1),('R',-1)]:
+            raised(side,s,(s*.75,-.35,-.55),(s*.55,-.55,-.62),(-s*.2,-.2,-1),balance)
+        return p.snapshot()
     sampled(c,'Land',19,land)
     def turn(t):
         base(); a=.32*math.sin(math.pi*t)**2;p.rotate('Chest',(0,a,0));p.rotate('Head',(0,a*.55,0));return p.snapshot()
@@ -226,6 +264,82 @@ def human(c):
     def faint(t):return fallen(smooth(max(0,(t-.12)/.88)),True)
     sampled(c,'Faint',55,faint)
     sampled(c,'Recover',61,lambda t:fallen(1-smooth(t)))
+    # ---- v0.3.0 animation pass: new clips, appended after every existing one (stable IDs) ----
+    def brows(lift):
+        for side in ['L','R']:p.translate('Brow.'+side,(0,0,lift))
+    def jump_air(t):
+        """Rising half of a jump (loop): knees tucked, arms flung up and out, a little flutter."""
+        w=math.sin(TAU*t)
+        base(lean=-.05+.015*w)
+        legs({'L':(.05+.012*w,.17+.020*w),'R':(.08-.012*w,.13-.020*w)})
+        for side,s in [('L',1),('R',-1)]:
+            raised(side,s,(s*.80,-.12,.42+.06*s*w),(s*.35,-.30,.88),(-s*.35,-.9,.2),1)
+            relaxed_fingers(side,.6)
+        p.rotate('Head',(-.06,0,0));p.rotate('Jaw',(-.06,0,0));brows(.004)
+        return p.snapshot()
+    sampled(c,'JumpAir',31,jump_air)
+    def fall_air(t):
+        """Falling half of a jump (loop): legs pedal down toward the ground, arms windmill up (comic panic)."""
+        base(lean=.06)
+        feet={}
+        for side,phase in [('L',0.),('R',.5)]:
+            a=TAU*(t+phase)
+            feet[side]=(.09*math.sin(a),.06+.05*math.cos(a))
+        legs(feet)
+        for side,s,phase in [('L',1,0.),('R',-1,.5)]:
+            a=TAU*(t+phase)
+            raised(side,s,(s*.55,-.30*math.cos(a),.78+.10*math.sin(a)),
+                   (s*.30,-.35*math.cos(a+.9),.90),(-s*.3,-.95,0),1)
+            relaxed_fingers(side,.3)
+        p.rotate('Neck',(.10,0,0));p.rotate('Head',(.06,0,.03*math.sin(TAU*t)))
+        p.rotate('Jaw',(-.13,0,0));brows(.008)
+        return p.snapshot()
+    sampled(c,'FallAir',31,fall_air)
+    # Crouched walk sampled by the same gait clock as the four gaits: contacts L at 0 and R at .5,
+    # 0.96875 m per cycle (the Walk profile at the 1.55 m/s crouch speed).
+    from human_locomotion_contract import foot as gait_foot, hip_height as gait_hip, distance as gait_distance
+    CROUCH=dict(clip='Human_CrouchWalk',speed=1.55,contacts=3.2,duty=.62,hip=.50,rise=.022,lift=.075,ramp=.22)
+    c.contact['crouch_walk_distance_per_cycle_m']=gait_distance(CROUCH)
+    def crouch_walk(t):
+        p.reset()
+        p.translate('Hips',(0,.03,gait_hip(t,CROUCH)-.78))
+        p.rotate('Spine',(.30,0,0));p.rotate('Chest',(.42+.015*math.sin(TAU*2*t),0,0))
+        p.rotate('Neck',(-.42,0,0));p.rotate('Head',(-.16,0,0));p.update()
+        for side,s,offset in [('L',1,0.),('R',-1,.5)]:
+            forward,z,_=gait_foot(t+offset,CROUCH)
+            p.chain('UpperLeg.'+side,'LowerLeg.'+side,(s*.125,-forward,z),(s*.125,-.6,.42),'Foot.'+side)
+        for side,s in [('L',1),('R',-1)]:
+            swing=s*.22*math.cos(TAU*t)*-1
+            raised(side,s,(s*.28,-.35-swing,-.9),(s*.10,-.75-swing,-.6),(-s*.8,-.3,-.2),1)
+            relaxed_fingers(side,.9)
+        return p.snapshot()
+    sampled(c,'CrouchWalk',61,crouch_walk)
+    def yawn(t):
+        """Long idle: a big stretching yawn (3 s), arms up behind the head, chest arched, jaw wide."""
+        a=pulse(t,.05,.36,.86); mouth=pulse(t,.14,.42,.80)
+        base(lean=-.12*a,breathe=.02*math.sin(math.pi*min(1,t/.4)))
+        for side,s in [('L',1),('R',-1)]:
+            raised(side,s,(s*.78,.06,.62),(-s*.25,.20,.95),(-s*.2,.9,.3),a)
+            relaxed_fingers(side,1-.6*a)
+        p.rotate('Neck',(-.10*a,0,0));p.rotate('Head',(-.22*a,0,.05*a))
+        p.rotate('Jaw',(-.36*mouth,0,0));brows(.005*a)
+        return p.snapshot()
+    sampled(c,'Yawn',91,yawn)
+    def victory(t):
+        """Results: both fists up, knees bouncing, a happy shout (loop, 1 s)."""
+        b=.5-.5*math.cos(TAU*t); pump=math.sin(TAU*t)
+        base(squat=.07*b,lean=-.06-.03*b)
+        for side,s in [('L',1),('R',-1)]:
+            raised(side,s,(s*.62,-.18,.76+.05*pump),(s*.10,-.22,.97),(-s*.45,-.88,0),1)
+            # Tight fists (knuckles folded, not the claw of a partial curl), thumb over the fingers.
+            for digit in ['Index','Middle','Ring','Little']:
+                for i,(angle,full) in enumerate(zip(VICTORY_FIST_ANGLES,FINGER_JOINT_ANGLES),1):
+                    p.rotate(f'{digit}{i:02d}.{side}',(angle-full*FINGER_REST_AMOUNT,0,0))
+            for i,angle in enumerate(FINGER_JOINT_ANGLES,1):
+                p.rotate(f'Thumb{i:02d}.{side}',(angle*(.95-FINGER_REST_AMOUNT)*THUMB_CURL_FACTOR,0,0))
+        p.rotate('Head',(-.05-.03*b,0,0));p.rotate('Jaw',(-.30-.06*b,0,0));brows(.006)
+        return p.snapshot()
+    sampled(c,'Victory',31,victory)
     c.contact['minimum_leg_reach_margin_m']=p.minimum_reach_margin
 
 def mosquito(c):

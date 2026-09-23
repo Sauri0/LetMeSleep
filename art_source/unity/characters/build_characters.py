@@ -135,7 +135,8 @@ class Character:
         action=self.rig.animation_data.action
         action.name=self.species+'_'+name; action.use_fake_user=True
         self.clips.append({'name':action.name,'start':1,'end':end,'fps':FPS,'duration_seconds':(end-1)/FPS,
-                           'loop':name in ['Idle','Walk','Run','Fly','Hover','PerchIdle','SurfaceWalk','BiteLoop'],'root_motion':False})
+                           'loop':name in ['Idle','Walk','Run','Fly','Hover','PerchIdle','SurfaceWalk','BiteLoop',
+                                   'JumpAir','FallAir','CrouchWalk','Victory','StunnedLoop'],'root_motion':False})
         self.rig.animation_data.action=None
         for b in self.rig.pose.bones:
             b.rotation_quaternion=(1,0,0,0); b.location=(0,0,0); b.scale=(1,1,1)

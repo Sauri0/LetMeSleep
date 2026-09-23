@@ -143,6 +143,15 @@
       "duration_seconds": 1.2,
       "loop": false,
       "root_motion": false
+    },
+    {
+      "name": "Mosquito_StunnedLoop",
+      "start": 1,
+      "end": 37,
+      "fps": 30,
+      "duration_seconds": 1.2,
+      "loop": true,
+      "root_motion": false
     }
   ],
   "curl": {},

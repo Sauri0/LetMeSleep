@@ -1,8 +1,8 @@
 {
-    "builder": "v030-characters-9-review-eyes",
+    "builder": "v030-characters-10-expressive-motion",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "7823f733a399b6fd1361dbc3de651698f298fd61e77992307a411e7e1c10f707",
-    "builderDigest": "fb72a646c5b62a1d090b3fd63e9d10e7d01c11e487a2f013bef109c0d14fbc52",
+    "sourceDigest": "dd052b6a40a051438b09e5c83f4489a1c4c4ff94b79c36b1d81a57383512d40a",
+    "builderDigest": "6b58fd6a9e12d7155ff04d3a4a5117bea0ddd84c5a1fb44f2ac66adc4dc498bc",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -166,7 +166,7 @@
             "triangles": 17864,
             "renderers": 5,
             "bones": 65,
-            "clips": 17,
+            "clips": 22,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
@@ -273,6 +273,36 @@
                     "Id": 16,
                     "StateName": "Base Layer.Trot",
                     "ClipName": "Human_Trot",
+                    "Loop": true
+                },
+                {
+                    "Id": 17,
+                    "StateName": "Base Layer.JumpAir",
+                    "ClipName": "Human_JumpAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 18,
+                    "StateName": "Base Layer.FallAir",
+                    "ClipName": "Human_FallAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 19,
+                    "StateName": "Base Layer.CrouchWalk",
+                    "ClipName": "Human_CrouchWalk",
+                    "Loop": true
+                },
+                {
+                    "Id": 20,
+                    "StateName": "Base Layer.Yawn",
+                    "ClipName": "Human_Yawn",
+                    "Loop": false
+                },
+                {
+                    "Id": 21,
+                    "StateName": "Base Layer.Victory",
+                    "ClipName": "Human_Victory",
                     "Loop": true
                 }
             ],
@@ -410,7 +440,7 @@
             "triangles": 17864,
             "renderers": 5,
             "bones": 65,
-            "clips": 17,
+            "clips": 22,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
@@ -517,6 +547,36 @@
                     "Id": 16,
                     "StateName": "Base Layer.Trot",
                     "ClipName": "Human_Trot",
+                    "Loop": true
+                },
+                {
+                    "Id": 17,
+                    "StateName": "Base Layer.JumpAir",
+                    "ClipName": "Human_JumpAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 18,
+                    "StateName": "Base Layer.FallAir",
+                    "ClipName": "Human_FallAir",
+                    "Loop": true
+                },
+                {
+                    "Id": 19,
+                    "StateName": "Base Layer.CrouchWalk",
+                    "ClipName": "Human_CrouchWalk",
+                    "Loop": true
+                },
+                {
+                    "Id": 20,
+                    "StateName": "Base Layer.Yawn",
+                    "ClipName": "Human_Yawn",
+                    "Loop": false
+                },
+                {
+                    "Id": 21,
+                    "StateName": "Base Layer.Victory",
+                    "ClipName": "Human_Victory",
                     "Loop": true
                 }
             ],
@@ -654,7 +714,7 @@
             "triangles": 5698,
             "renderers": 3,
             "bones": 39,
-            "clips": 15,
+            "clips": 16,
             "genericAvatarValid": true,
             "animationBindingsValid": true,
             "sampledMeshesFinite": true,
@@ -750,6 +810,12 @@
                     "StateName": "Base Layer.Bite",
                     "ClipName": "Mosquito_Bite",
                     "Loop": false
+                },
+                {
+                    "Id": 15,
+                    "StateName": "Base Layer.StunnedLoop",
+                    "ClipName": "Mosquito_StunnedLoop",
+                    "Loop": true
                 }
             ],
             "anchors": [

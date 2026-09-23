@@ -47,6 +47,12 @@ namespace LetMeSleep.Presentation.Gameplay
             try
             {
                 created.Configure(actorId, view.Animator, gaits, left, right, "human-four-gaits-20260913");
+                // v0.3.0 optional layers: legs keep walking while the Swat plays on the Chest subtree, and the
+                // crouched gait replaces the sliding static crouch. Older controllers simply lack the clips.
+                AnimationClip strike = Find(source, "Human_Swat"), crouchWalk = Find(source, "Human_CrouchWalk");
+                AvatarMask mask = strike ? UpperBodyMask(view.Animator.transform) : null;
+                if (strike && !mask) strike = null;
+                if (strike || crouchWalk) created.ConfigureOverlays(strike, mask, crouchWalk);
                 presenter = created;
                 return true;
             }
@@ -56,6 +62,45 @@ namespace LetMeSleep.Presentation.Gameplay
                 UnityEngine.Object.Destroy(created);
                 return false;
             }
+        }
+
+        private static AnimationClip Find(AnimationClip[] clips, string name)
+        {
+            AnimationClip found = null;
+            foreach (var clip in clips)
+            {
+                if (!clip || clip.name != name) continue;
+                if (found && found != clip) return null;
+                found = clip;
+            }
+            return found && !found.legacy && found.length > 0 ? found : null;
+        }
+
+        /// <summary>Generic-rig mask: the Chest bone and everything below it (neck, head, shoulders, arms, hands).</summary>
+        public static AvatarMask UpperBodyMask(Transform animatorRoot)
+        {
+            if (!animatorRoot) return null;
+            Transform chest = null;
+            foreach (var item in animatorRoot.GetComponentsInChildren<Transform>(true))
+                if (item.name == "Chest") { if (chest) return null; chest = item; }
+            if (!chest) return null;
+            var all = animatorRoot.GetComponentsInChildren<Transform>(true);
+            var mask = new AvatarMask { name = "LMS_HumanUpperBody" };
+            mask.transformCount = all.Length;
+            for (int i = 0; i < all.Length; i++)
+            {
+                mask.SetTransformPath(i, RelativePath(animatorRoot, all[i]));
+                mask.SetTransformActive(i, all[i] == chest || all[i].IsChildOf(chest));
+            }
+            return mask;
+        }
+
+        private static string RelativePath(Transform root, Transform item)
+        {
+            if (item == root) return string.Empty;
+            string path = item.name;
+            for (var parent = item.parent; parent && parent != root; parent = parent.parent) path = parent.name + "/" + path;
+            return path;
         }
     }
 }

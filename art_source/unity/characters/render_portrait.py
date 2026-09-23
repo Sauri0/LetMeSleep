@@ -15,7 +15,10 @@ horizontally; its top sits <top_px> rows below the top edge, or lower if the wid
   Human.png    1024 x 1024, top 250: the card's centred cover crop keeps rows ~234-790, i.e. the
                nightcap down to the shins (head in the upper third); results show the whole figure.
   Mosquito.png 1092 x 592 (the card aspect, so the card shows it whole), top 18.
-  HumanWinner  1024 x 1024, top 16, pose "cheer": both fists up (the arm aim of the UI's own
+  HumanWinner  1024 x 1024, top 16, action Human_Victory (v0.3.0 animation pass) at phase .25 with pose
+               "victory": the clip's own fists-up pump, open shout and lifted brows, with the pupils turned
+               up to 30 deg toward the camera (they are decals on the faceted globes).
+  (legacy)     pose "cheer": both fists up (the arm aim of the UI's own
                AlfaRolePortrait.RaiseArms), tight fists, brows lifted, the jaw dropped in a shout
                (the dark mouth cavity shows), chest and head tipped back a little. The pupils stay on the
                Eye bones' rest aim: they are decals on the faceted globes and sink into its facets
@@ -146,8 +149,35 @@ def cheer():
     bpy.context.view_layer.update()
 
 
+def victory():
+    """Human_Victory as authored (fists up, shout, lifted brows); the pupils are turned toward the viewer."""
+    freeze_pose()
+
+
+def look_at(point, limit_degrees=30):
+    """Turn the Eye bones toward a world point, at most limit_degrees (the pupils are decals on facets)."""
+    inverse = rig.matrix_world.inverted()
+    for side in ('L', 'R'):
+        name = 'Eye.' + side
+        if name not in rig.pose.bones:
+            continue
+        pb = rig.pose.bones[name]
+        current = (pb.matrix.to_3x3() @ Vector((0, 1, 0))).normalized()
+        wanted = ((inverse @ Vector(point)) - pb.matrix.translation).normalized()
+        angle = min(math.radians(limit_degrees), current.angle(wanted))
+        axis = current.cross(wanted)
+        if axis.length < 1e-6:
+            continue
+        turn = Matrix.Rotation(angle, 4, axis.normalized())
+        head = pb.matrix.translation.copy()
+        pb.matrix = Matrix.Translation(head) @ turn @ Matrix.Translation(-head) @ pb.matrix
+    bpy.context.view_layer.update()
+
+
 if pose == 'cheer':
     cheer()
+elif pose == 'victory':
+    victory()
 
 graph = bpy.context.evaluated_depsgraph_get()
 points = []
@@ -204,6 +234,8 @@ distance = extent * 3.2
 camera.location = Vector((target.x, target.y, camera_height)) + direction * distance
 aim_object(camera, target)
 bpy.context.view_layer.update()
+if pose == 'victory':
+    look_at(camera.location)
 
 # Fit: at a fixed pose and position, focal length scales the projection about the principal point
 # and shift translates it (in units of the larger frame side), so one measurement places the figure

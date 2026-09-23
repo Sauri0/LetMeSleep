@@ -47,17 +47,39 @@ namespace LetMeSleep.Presentation
             public BlinkBone binding;
             public Quaternion before,after;
             public bool written;
+            // v0.3.0 moods: lower lids close separately; upper lids tilt about the eye's forward axis.
+            public bool lower;
+            public Vector3 tiltAxis=Vector3.forward;
+            public float tiltSign;
             public void Restore()
             {
                 if(written && binding.Bone && Quaternion.Angle(binding.Bone.localRotation,after)<.01f) binding.Bone.localRotation=before;
                 written=false;
             }
-            public void Apply(float closure)
+            public void Apply(float closure,float tiltDegrees=0)
             {
                 if(!binding.Bone) return;
                 before=binding.Bone.localRotation;
-                after=before*Quaternion.AngleAxis(binding.ClosedAngleDegrees*closure,binding.LocalAxis.normalized);
+                Quaternion tilt=lower || Mathf.Abs(tiltDegrees)<.001f ? Quaternion.identity : Quaternion.AngleAxis(tiltSign*tiltDegrees,tiltAxis);
+                after=before*tilt*Quaternion.AngleAxis(binding.ClosedAngleDegrees*closure,binding.LocalAxis.normalized);
                 binding.Bone.localRotation=after; written=true;
+            }
+        }
+        private sealed class MoodBone
+        {
+            public Transform bone;
+            public Vector3 beforePosition,afterPosition;
+            public Quaternion beforeRotation,afterRotation;
+            public Vector3 beforeScale,afterScale;
+            public bool written;
+            public void Begin() { beforePosition=bone.localPosition; beforeRotation=bone.localRotation; beforeScale=bone.localScale; }
+            public void End() { afterPosition=bone.localPosition; afterRotation=bone.localRotation; afterScale=bone.localScale; written=true; }
+            public void Restore()
+            {
+                if(written && bone && Quaternion.Angle(bone.localRotation,afterRotation)<.01f &&
+                    (bone.localPosition-afterPosition).sqrMagnitude<1e-10f && (bone.localScale-afterScale).sqrMagnitude<1e-10f)
+                { bone.localPosition=beforePosition; bone.localRotation=beforeRotation; bone.localScale=beforeScale; }
+                written=false;
             }
         }
         private Bindings binding;
@@ -77,6 +99,27 @@ namespace LetMeSleep.Presentation
         private float microYaw,microPitch;
         private bool headTrackingEnabled=true;
         public bool HeadTrackingEnabled=>headTrackingEnabled;
+        // v0.3.0 expressions (PER-02/PER-03/PER-07). Lids, blink shapes, pupils, brows and jaw are
+        // written here only, after animation, and restored like every other write of this rig.
+        private FacialMood mood=FacialMood.Neutral;
+        private FacialMoodShape moodTarget=FacialMoodShape.Neutral,moodCurrent=FacialMoodShape.Neutral;
+        private float moodBlendSeconds=.12f,dizzyPhase;
+        private MoodBone leftBrow,rightBrow,jaw,leftPupil,rightPupil;
+        private float leftBrowSign,rightBrowSign;
+        public FacialMood Mood=>mood;
+        public FacialMoodShape MoodShape=>moodCurrent;
+        public bool SupportsBrows=>leftBrow!=null && rightBrow!=null;
+        public bool SupportsJaw=>jaw!=null;
+        public bool SupportsLowerLids{ get { foreach(var lid in leftLids) if(lid.lower) return true; return false; } }
+        /// <summary>Sets the expression target; channels ease toward it over blendSeconds.</summary>
+        public void SetMood(FacialMood value,float weight=1,float blendSeconds=.12f)
+        {
+            if(float.IsNaN(weight) || float.IsInfinity(weight)) weight=0;
+            if(float.IsNaN(blendSeconds) || float.IsInfinity(blendSeconds)) blendSeconds=.12f;
+            mood=value;
+            moodTarget=FacialMoodShape.Lerp(FacialMoodShape.Neutral,FacialMoodShape.For(value),Mathf.Clamp01(weight));
+            moodBlendSeconds=Mathf.Max(.01f,blendSeconds);
+        }
         // Contact owners observe the completed facial pose, including eyes and lids.
         public event Action AfterEvaluation;
         public bool IsConfigured=>configured;
@@ -100,10 +143,106 @@ namespace LetMeSleep.Presentation
             leftBlink=Shapes(value.Eyelids,value.LeftBlinkShapes); rightBlink=Shapes(value.Eyelids,value.RightBlinkShapes);
             leftLids=Lids(value.LeftLids); rightLids=Lids(value.RightLids);
             if(leftLids==null || rightLids==null) { leftLids=rightLids=Array.Empty<LidState>(); return false; }
+            ConfigureMood(value);
             random=new System.Random(GetInstanceID()); clock=0; nextBlink=2.2+random.NextDouble()*1.8;
             microRandom=new System.Random(GetInstanceID() ^ 0x31A7); nextMicro=.7+microRandom.NextDouble()*.7;
             microYaw=microPitch=0;
             configured=true; return true;
+        }
+        private void ConfigureMood(Bindings value)
+        {
+            mood=FacialMood.Neutral; moodTarget=moodCurrent=FacialMoodShape.Neutral; dizzyPhase=0;
+            leftBrow=rightBrow=jaw=leftPupil=rightPupil=null;
+            var head=value.Head;
+            Vector3 headForward=head.TransformDirection(value.HeadForward).normalized;
+            Vector3 down=-head.TransformDirection(value.HeadUp).normalized;
+            SetupLids(leftLids,value.LeftEye,value.RightEye,headForward,down);
+            SetupLids(rightLids,value.RightEye,value.LeftEye,headForward,down);
+            // Human brows and jaw are ordinary head children; optional, found by their rig names.
+            var browLeft=FindUnder(head,"Brow.L"); var browRight=FindUnder(head,"Brow.R");
+            if(browLeft && browRight && browLeft!=browRight)
+            {
+                leftBrow=new MoodBone{bone=browLeft}; rightBrow=new MoodBone{bone=browRight};
+                leftBrowSign=InnerDownSign(headForward,browRight.position-browLeft.position,down);
+                rightBrowSign=InnerDownSign(headForward,browLeft.position-browRight.position,down);
+            }
+            var jawBone=FindUnder(head,"Jaw"); if(jawBone) jaw=new MoodBone{bone=jawBone};
+            // Mosquito pupils are separate discs on their own bones: scale them across the look axis.
+            if(leftLids.Length>0 && value.LeftEye && value.RightEye && LookAxisIndex(value.EyeForward)>=0)
+            { leftPupil=new MoodBone{bone=value.LeftEye}; rightPupil=new MoodBone{bone=value.RightEye}; }
+        }
+        private static void SetupLids(LidState[] lids,Transform eye,Transform otherEye,Vector3 headForward,Vector3 down)
+        {
+            foreach(var lid in lids)
+            {
+                var bone=lid.binding.Bone;
+                lid.lower=bone.name.IndexOf("Lower",StringComparison.OrdinalIgnoreCase)>=0;
+                // The certified head frame (not each pupil's own axes) keeps the two tilts mirror images.
+                Vector3 forward=headForward;
+                lid.tiltAxis=bone.InverseTransformDirection(forward).normalized;
+                Vector3 inner=eye && otherEye ? otherEye.position-eye.position : Vector3.zero;
+                lid.tiltSign=InnerDownSign(forward,inner,down);
+            }
+        }
+        // Positive rotation about forward moves a point on the inner side by forward x inner.
+        private static float InnerDownSign(Vector3 forward,Vector3 inner,Vector3 down)
+        {
+            if(inner.sqrMagnitude<1e-10f) return 0;
+            return Vector3.Dot(Vector3.Cross(forward,inner.normalized),down)>=0 ? 1 : -1;
+        }
+        private static int LookAxisIndex(Vector3 axis)
+        {
+            axis=axis.normalized;
+            for(int i=0;i<3;i++) if(Mathf.Abs(axis[i])>.98f) return i;
+            return -1;
+        }
+        private static Transform FindUnder(Transform root,string name)
+        {
+            for(int i=0;i<root.childCount;i++)
+            {
+                var child=root.GetChild(i);
+                if(child.name==name) return child;
+                var found=FindUnder(child,name);
+                if(found) return found;
+            }
+            return null;
+        }
+        private void ApplyMoodBones(Vector3 headForward,Vector3 headUp)
+        {
+            var shape=moodCurrent;
+            if(leftBrow!=null && rightBrow!=null && (Mathf.Abs(shape.BrowLift)>1e-5f || Mathf.Abs(shape.BrowTilt)>.01f))
+            {
+                ApplyBrow(leftBrow,leftBrowSign,shape,headForward,headUp);
+                ApplyBrow(rightBrow,rightBrowSign,shape,headForward,headUp);
+            }
+            if(jaw!=null && jaw.bone && Mathf.Abs(shape.Jaw)>.01f)
+            {
+                jaw.Begin();
+                // Rotating about up x forward moves the chin (forward of the pivot) down: the mouth opens.
+                jaw.bone.rotation=Quaternion.AngleAxis(shape.Jaw,Vector3.Cross(headUp,headForward).normalized)*jaw.bone.rotation;
+                jaw.End();
+            }
+            if(leftPupil!=null && rightPupil!=null && Mathf.Abs(shape.Pupil-1)>.001f)
+            {
+                int axis=LookAxisIndex(binding.EyeForward);
+                var scale=Vector3.one*Mathf.Clamp(shape.Pupil,.5f,1.5f); scale[axis]=1;
+                ScalePupil(leftPupil,scale); ScalePupil(rightPupil,scale);
+            }
+        }
+        private static void ApplyBrow(MoodBone brow,float sign,FacialMoodShape shape,Vector3 headForward,Vector3 headUp)
+        {
+            if(!brow.bone) return;
+            brow.Begin();
+            brow.bone.position+=headUp*shape.BrowLift;
+            brow.bone.rotation=Quaternion.AngleAxis(sign*shape.BrowTilt,headForward)*brow.bone.rotation;
+            brow.End();
+        }
+        private static void ScalePupil(MoodBone pupil,Vector3 scale)
+        {
+            if(!pupil.bone) return;
+            pupil.Begin();
+            pupil.bone.localScale=Vector3.Scale(pupil.beforeScale,scale);
+            pupil.End();
         }
         private static bool Axes(Vector3 forward,Vector3 up)=>forward.sqrMagnitude>.5f && up.sqrMagnitude>.5f && Vector3.Cross(forward,up).sqrMagnitude>.1f;
         private static Joint Make(Transform bone,Vector3 forward,Vector3 up,float yaw,float pitch)=>new Joint
@@ -161,11 +300,19 @@ namespace LetMeSleep.Presentation
                 nextMicro=clock+1.1+microRandom.NextDouble()*1.3;
             }
             float eyeYaw=reduced ? 0 : microYaw, eyePitch=reduced ? 0 : microPitch;
-            Apply(left,destination,looking,dt,eyeYaw,eyePitch); Apply(right,destination,looking,dt,eyeYaw,eyePitch);
+            moodCurrent=FacialMoodShape.Lerp(moodCurrent,moodTarget,1-Mathf.Exp(-dt/moodBlendSeconds));
+            if(!moodCurrent.IsFinite) moodCurrent=FacialMoodShape.Neutral;
+            // Dizzy: the two pupils circle in opposite directions (cartoon "stars" look), 1.3 turns per second.
+            dizzyPhase=(dizzyPhase+dt*1.3f*2*Mathf.PI)%(2*Mathf.PI);
+            float dizzyYaw=(reduced ? 6 : 12)*moodCurrent.Dizzy*Mathf.Cos(dizzyPhase), dizzyPitch=(reduced ? 6 : 12)*moodCurrent.Dizzy*Mathf.Sin(dizzyPhase);
+            Apply(left,destination,looking,dt,eyeYaw+dizzyYaw,eyePitch+dizzyPitch); Apply(right,destination,looking,dt,eyeYaw-dizzyYaw,eyePitch-dizzyPitch);
             clock+=dt;
             if(clock>nextBlink+.25) nextBlink=clock+3.2+random.NextDouble()*2.6;
             float closureLeft=Blink((float)(clock-nextBlink))*.01f;
             float closureRight=Blink((float)(clock-nextBlink)-.012f)*.01f;
+            float blinkLeft=closureLeft,blinkRight=closureRight;
+            closureLeft=Mathf.Max(closureLeft,Mathf.Clamp01(moodCurrent.Upper));
+            closureRight=Mathf.Max(closureRight,Mathf.Clamp01(moodCurrent.Upper));
             if(binding.ReadLegacyEyeScaleBlink && binding.LeftEye && binding.RightEye)
             {
                 oldLeftScale=binding.LeftEye.localScale; oldRightScale=binding.RightEye.localScale;
@@ -183,8 +330,10 @@ namespace LetMeSleep.Presentation
                 }
                 blinkWritten=true;
             }
-            foreach(var lid in leftLids) lid.Apply(closureLeft);
-            foreach(var lid in rightLids) lid.Apply(closureRight);
+            float lower=Mathf.Clamp01(moodCurrent.Lower);
+            foreach(var lid in leftLids) lid.Apply(lid.lower ? Mathf.Max(blinkLeft,lower) : closureLeft,moodCurrent.Tilt);
+            foreach(var lid in rightLids) lid.Apply(lid.lower ? Mathf.Max(blinkRight,lower) : closureRight,moodCurrent.Tilt);
+            ApplyMoodBones(binding.Head.TransformDirection(binding.HeadForward).normalized,binding.Head.TransformDirection(binding.HeadUp).normalized);
             AfterEvaluation?.Invoke();
         }
         private static int[] Shapes(SkinnedMeshRenderer renderer,string[] names)
@@ -259,6 +408,7 @@ namespace LetMeSleep.Presentation
             }
             foreach(var lid in leftLids) lid.Restore();
             foreach(var lid in rightLids) lid.Restore();
+            leftPupil?.Restore(); rightPupil?.Restore(); jaw?.Restore(); rightBrow?.Restore(); leftBrow?.Restore();
             if(scaleWritten && binding!=null)
             {
                 if(binding.LeftEye && binding.LeftEye.localScale==Vector3.one) binding.LeftEye.localScale=oldLeftScale;

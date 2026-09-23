@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4885229714814820998}
   - component: {fileID: 3732719119732265235}
   - component: {fileID: 2608018652447596919}
-  - component: {fileID: 2446898114367275958}
+  - component: {fileID: 2190237856493758471}
   m_Layer: 0
   m_Name: LMS_Mosquito
   m_TagString: Untagged
@@ -253,6 +253,10 @@ MonoBehaviour:
     StateName: Base Layer.Bite
     ClipName: Mosquito_Bite
     Loop: 0
+  - Id: 15
+    StateName: Base Layer.StunnedLoop
+    ClipName: Mosquito_StunnedLoop
+    Loop: 1
   firstPerson: 0
 --- !u!135 &2608018652447596919
 SphereCollider:
@@ -275,7 +279,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.055
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2446898114367275958
+--- !u!114 &2190237856493758471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,7 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: LetMeSleep.Presentation::LetMeSleep.Presentation.VisualAttentionContract
   Schema: lms.visual-attention.v1
   RigRevision: mosquito-v030-r7-facial
-  SourceSha256: e6b7fb0f141209d82a37486371a48326e4e74b99b880bf869f77e421aeb8e0c6
+  SourceSha256: 6b3bd485081194fcdca92d426fca4a3b1bdb66f59b5c45399cc512ecd53eea40
   UnityAxesVerified: 1
   LegacyScaleBlinkVerified: 0
   Rig:
@@ -612,10 +616,6 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 483916dd41effed479826b9930069204, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7738328030251898768, guid: 483916dd41effed479826b9930069204, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.0000001
       objectReference: {fileID: 0}
     - target: {fileID: -7738328030251898768, guid: 483916dd41effed479826b9930069204, type: 3}
       propertyPath: m_LocalScale.y

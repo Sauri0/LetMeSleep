@@ -17,6 +17,17 @@ SURFACE_REVIEW_MAX_SPEED_MPS = .80
 FLIGHT_FRAMES = 13
 FLIGHT_WINGBEATS_PER_LOOP = 3
 AIR_FLAP_RADIANS = .58
+# v0.3.0 animation pass (chars.md, PER-03/PER-07): perched wings open in a wide
+# V. Absolute left-wing directions in source axes (-Y forward): span 45 deg
+# from the vertical seen from the front and ~38 deg above the horizontal in
+# profile, membrane turned about the span so it shows ~80% of its width from
+# the front, ~60% from the side and the far wing stays a leaf (not a needle)
+# in the three-quarter view. The pose rotates the geometry's
+# stance frame (author_mosquito_geometry WING_STANCE_*) onto these targets, so
+# if the geometry adopts them the extra rotation becomes the identity.
+WING_V_SPAN = (.52, .67, .52)
+WING_V_NORMAL = (.60, -.77, .22)
+STUNNED_FRAMES = 37
 
 
 def flight_channels(t, hover=False):
@@ -129,9 +140,22 @@ def surface_contract():
     }
 
 
+def wing_v_rotation():
+    """Armature-space rotation carrying the stance wing frame onto the perched V frame (left wing)."""
+    from mathutils import Matrix, Vector
+    from author_mosquito_geometry import WING_STANCE_SPAN, WING_STANCE_NORMAL
+
+    def frame(span, hint):
+        span = Vector(span).normalized()
+        normal = (Vector(hint) - span * Vector(hint).dot(span)).normalized()
+        return Matrix((span, normal, span.cross(normal))).transposed()
+
+    return (frame(WING_V_SPAN, WING_V_NORMAL) @ frame(WING_STANCE_SPAN, WING_STANCE_NORMAL).transposed()).to_quaternion()
+
+
 def mosquito(c):
     import bpy
-    from mathutils import Vector, Matrix
+    from mathutils import Vector, Matrix, Quaternion
     from author_motion import Pose, sampled, smooth, TAU
     from author_mosquito_geometry import SUPPORT_Z
 
@@ -139,15 +163,20 @@ def mosquito(c):
     p.reset()
     rest = {b.name: b.head.copy() for b in p.rig.pose.bones}
     wing_rest = {s: p.rest['Wing.' + s].copy() for s in ('L', 'R')}
+    v_rotation = wing_v_rotation()
 
-    def wings(flap=.12, fold=.24):
+    def wings(flap=.12, fold=.24, v=1.0):
         # Mirror in armature space. Identical local Euler values are not a reliable
         # mirror for opposite bone axes. Parent motion is then applied once.
+        # v blends the perched V opening (1 = PER-03/PER-07 perched wings, 0 = flight axes).
         p.update()
         parent = p.rig.pose.bones['Thorax'].matrix @ p.rest['Thorax'].inverted()
+        opening = Quaternion().slerp(v_rotation, max(0., min(1., v))).to_matrix().to_4x4()
+        mirror = Matrix.Diagonal((-1, 1, 1, 1))
         for side, sign in (('L', 1), ('R', -1)):
             origin = wing_rest[side].translation
-            rotation = Matrix.Rotation(sign * fold, 4, 'Z') @ Matrix.Rotation(-sign * flap, 4, 'Y')
+            spread = opening if sign > 0 else mirror @ opening @ mirror
+            rotation = spread @ Matrix.Rotation(sign * fold, 4, 'Z') @ Matrix.Rotation(-sign * flap, 4, 'Y')
             matrix = Matrix.Translation(origin) @ rotation @ Matrix.Translation(-origin) @ wing_rest[side]
             p.rig.pose.bones['Wing.' + side].matrix = parent @ matrix
         p.update()
@@ -181,16 +210,30 @@ def mosquito(c):
         p.rotate('Abdomen02', (channels['abdomen02_x'], 0, 0))
         p.update()
         legs_air(channels['leg_amount'], trail=channels['leg_trail_source_m'])
-        wings(channels['flap'], channels['fold'])
+        wings(channels['flap'], channels['fold'], 0)
         return p.snapshot()
 
     sampled(c, 'Fly', FLIGHT_FRAMES, lambda t: flight(t, False))
     sampled(c, 'Hover', FLIGHT_FRAMES, lambda t: flight(t, True))
 
+    def settle_leg(leg, side, sign, t, start, length=.24, lift=.016):
+        # One foot lifts, shuffles and is put down again on its own support spot (A18 attentive idle).
+        u = (t - start) / length
+        if not 0 < u < 1:
+            return
+        dz = lift * math.sin(math.pi * u) ** 2
+        dy = -.008 * math.sin(math.pi * u)
+        target = rest[f'Leg{leg}03.{side}'] + Vector((sign * .004 * math.sin(math.pi * u), dy, dz))
+        pole = rest[f'Leg{leg}02.{side}'] + Vector((sign * .03, -.02, .02))
+        p.chain(f'Leg{leg}01.{side}', f'Leg{leg}02.{side}', target, pole, f'Leg{leg}03.{side}')
+
     def idle(t):
         stance()
         p.rotate('Abdomen01', (.020 * math.sin(TAU * t), 0, 0))
         p.rotate('Abdomen02', (-.012 * math.sin(TAU * t), 0, 0))
+        p.update()
+        settle_leg(1, 'L', 1, t, .10)
+        settle_leg(3, 'R', -1, t, .56, .22, .012)
         return p.snapshot()
 
     sampled(c, 'Idle', 61, idle)
@@ -203,7 +246,7 @@ def mosquito(c):
         # Extend all six legs before the wings settle; exact bind support at end.
         legs_air(.48 * (1 - smooth(min(1, t / .72))), trail=.007)
         wings(AIR_FLAP_RADIANS * (1 - u) * math.cos(TAU * 3 * t) + .12 * u,
-              .04 + .20 * u)
+              .04 + .20 * u, u)
         return p.snapshot()
 
     sampled(c, 'PerchEnter', 25, perch)
@@ -216,7 +259,7 @@ def mosquito(c):
         p.rotate('Thorax', (.065 * effort, 0, 0))
         p.rotate('Abdomen01', (.016 + .030 * effort, 0, 0))
         legs_air(.48 + .25 * effort, trail=.007)
-        wings((AIR_FLAP_RADIANS + .06 * effort) * math.cos(TAU * 3 * t), .04)
+        wings((AIR_FLAP_RADIANS + .06 * effort) * math.cos(TAU * 3 * t), .04, 0)
         return p.snapshot()
 
     sampled(c, 'Brake', 25, brake)
@@ -259,7 +302,7 @@ def mosquito(c):
         # Start wingbeats before the tarsi leave; Root displacement belongs to game.
         lift = .48 * smooth(max(0, (t - .22) / .78))
         legs_air(lift, trail=.007)
-        wings(AIR_FLAP_RADIANS * u * math.cos(TAU * 3 * t) + .095 * (1 - u), .28 - .24 * u)
+        wings(AIR_FLAP_RADIANS * u * math.cos(TAU * 3 * t) + .095 * (1 - u), .28 - .24 * u, 1 - u)
         return p.snapshot()
 
     sampled(c, 'Detach', 19, detach)
@@ -284,7 +327,7 @@ def mosquito(c):
         u = smooth(t)
         p.rotate('Thorax', (.25 * u, .10 * math.sin(math.pi * t), .40 * u))
         legs_air(.48 + .25 * u)
-        wings(.25 * (1 - u) * math.cos(TAU * 3 * t) + .12 * u, .24)
+        wings(.25 * (1 - u) * math.cos(TAU * 3 * t) + .12 * u, .24, u)
         return p.snapshot()
 
     sampled(c, 'Hit', 19, hit)
@@ -294,7 +337,7 @@ def mosquito(c):
         p.rotate('Thorax', (.25 + .90 * u, .12 * math.sin(math.pi * u), .40 + .85 * u))
         p.rotate('Abdomen01', (-.12 * u, 0, 0))
         legs_air(.73 + .27 * u)
-        wings(.12 - .20 * u, .24 + .32 * u)
+        wings(.12 - .20 * u, .24 + .32 * u, 1 - u)
         settle_to_support()
         return p.snapshot()
 
@@ -307,12 +350,30 @@ def mosquito(c):
         p.rotate('Thorax', (1.15 * u, .12 * math.sin(math.pi * u), 1.25 * u))
         p.rotate('Abdomen01', (-.12 * u, 0, 0))
         legs_air(u)
-        wings(.12 - .20 * u, .24 + .32 * u)
+        wings(.12 - .20 * u, .24 + .32 * u, 1 - u)
         if u > 1e-8:
             settle_to_support()
         return p.snapshot()
 
     sampled(c, 'Recover', 37, recover)
+
+    def stunned(t):
+        # v0.3.0: dizzy on its back after a knockdown (loop), the pose Fall ends in, with the legs
+        # kicking in the air, weak wing twitches and a wobbling head (was: the final pose of Hit).
+        stance()
+        p.rotate('Thorax', (1.15, .06 * math.sin(TAU * t), 1.25))
+        p.rotate('Abdomen01', (-.12 + .05 * math.sin(TAU * 2 * t), 0, 0))
+        p.rotate('Head', (.10 * math.sin(TAU * t), 0, .14 * math.sin(TAU * 2 * t + .6)))
+        legs_air(1)
+        for side, sign in (('L', 1), ('R', -1)):
+            for i in range(1, 4):
+                knee = p.rig.pose.bones[f'Leg{i}02.{side}']
+                knee.rotation_euler.x += .45 * math.sin(TAU * (2 * t + .17 * i + (.5 if sign < 0 else 0)))
+        wings(-.08 + .12 * math.sin(TAU * 3 * t) ** 2, .56, 0)
+        settle_to_support()
+        return p.snapshot()
+
+    sampled(c, 'StunnedLoop', STUNNED_FRAMES, stunned)
     c.contact['minimum_surface_leg_reach_margin_m'] = surface_reach_margin
     c.contact['minimum_any_pose_leg_reach_margin_m'] = p.minimum_reach_margin
     c.contact['surface_walk'] = surface_contract()
