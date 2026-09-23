@@ -1,8 +1,8 @@
 [
   {
     "species": "Human",
-    "fbx_sha256": "1bb5956865adf199d05bb918a9f7e15a1693fd704f7f178d895d7445126c94ac",
-    "source_audit_sha256": "c9680b69625c510f3360e824d6f2087e171e8c149cf975314b71df0bdd591fbf",
+    "fbx_sha256": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b",
+    "source_audit_sha256": "a82c0a4f75304cb4854dbf03581b6d5e7b2a8d39310b6cca7b9211771f857e36",
     "dimensions": [
       1.9442545771598816,
       0.40290310978889465,
@@ -24,8 +24,10 @@
       "Key|LMS_HumanRig|Human_Recover",
       "Key|LMS_HumanRig|Human_Run",
       "Key|LMS_HumanRig|Human_Swat",
+      "Key|LMS_HumanRig|Human_Trot",
       "Key|LMS_HumanRig|Human_Turn",
       "Key|LMS_HumanRig|Human_Walk",
+      "Key|LMS_HumanRig|Human_WalkSlow",
       "LMS_HumanRig|LMS_HumanRig|Human_Blink",
       "LMS_HumanRig|LMS_HumanRig|Human_Clap",
       "LMS_HumanRig|LMS_HumanRig|Human_Crouch",
@@ -39,8 +41,10 @@
       "LMS_HumanRig|LMS_HumanRig|Human_Recover",
       "LMS_HumanRig|LMS_HumanRig|Human_Run",
       "LMS_HumanRig|LMS_HumanRig|Human_Swat",
+      "LMS_HumanRig|LMS_HumanRig|Human_Trot",
       "LMS_HumanRig|LMS_HumanRig|Human_Turn",
-      "LMS_HumanRig|LMS_HumanRig|Human_Walk"
+      "LMS_HumanRig|LMS_HumanRig|Human_Walk",
+      "LMS_HumanRig|LMS_HumanRig|Human_WalkSlow"
     ],
     "sockets": [
       "Socket.Eye",

@@ -92,8 +92,9 @@ def main():
     floor=bpy.context.object;floor.name='WitnessFloor'
     mat=bpy.data.materials.new('WitnessFloorNeutral');mat.diffuse_color=(.11,.135,.18,1)
     mat.use_nodes=True
-    mat.node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value=mat.diffuse_color
-    mat.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value=.9
+    node=next(n for n in mat.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+    node.inputs['Base Color'].default_value=mat.diffuse_color
+    node.inputs['Roughness'].default_value=.9
     floor.data.materials.append(mat)
     data=bpy.data.cameras.new('WitnessCamera')
     camera=bpy.data.objects.new('WitnessCamera',data);scene.collection.objects.link(camera)

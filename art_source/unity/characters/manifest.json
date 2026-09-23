@@ -2916,8 +2916,8 @@
       "bytes": 15688
     },
     "build_characters.py": {
-      "sha256": "33b80015d80a47f9639c9c705a5b80200fd9a6b3a2a788484de4993e3273e124",
-      "bytes": 25999
+      "sha256": "d82cc5c2e5833dbf07c706ce479e684f704280c1ba6f0d804e26d1d6aa9716ff",
+      "bytes": 26122
     },
     "build_mosquito_candidate.py": {
       "sha256": "f6783ad3e5bab74a6842a22ef5988d684f38fdda1ca4668d34be34e966046273",
@@ -2976,16 +2976,16 @@
       "bytes": 6815
     },
     "render_human_menu.py": {
-      "sha256": "fac00d3351593f9b90e6ddecc84dcc49003312dc72e934fee87fe5f974df823e",
-      "bytes": 9592
+      "sha256": "1d2fd2a34fe3c553ecbe09a274d39f7decbd8c6a64adb7cac6e99b120ffb63b3",
+      "bytes": 9619
     },
     "render_human_witness.py": {
-      "sha256": "52e8537fec37ef2924d02e3f41d882a57d95ef3b1cc31cb5846ace44f25373d1",
-      "bytes": 5776
+      "sha256": "f232b921a5a9479edee20bd0f69872d37c54db5635d3db90aa1729b8b849f8d7",
+      "bytes": 5783
     },
     "render_mosquito_witness.py": {
-      "sha256": "12d2c81e3ee116e8277879f61ffed02763e018a8aa30ab95b23617094a368267",
-      "bytes": 9224
+      "sha256": "54989abdc1d45267243092aa640e4c63546bd79b987d653ec5e6f2b2fd042889",
+      "bytes": 9253
     },
     "render_review.py": {
       "sha256": "b7fcc64b091bb2daff37a3d22ab960f6c76868e66db280417b8b32e5f78cd59c",
@@ -3032,12 +3032,12 @@
       "bytes": 31964
     },
     "human/LMS_Human_alpha.blend": {
-      "sha256": "81307d90cb02d39c549512f22a45c303842cfdb38284b40edba97810be00e582",
-      "bytes": 1224646
+      "sha256": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
+      "bytes": 1419002
     },
     "human/LMS_Human_alpha.fbx": {
-      "sha256": "1bb5956865adf199d05bb918a9f7e15a1693fd704f7f178d895d7445126c94ac",
-      "bytes": 8713932
+      "sha256": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b",
+      "bytes": 10118012
     },
     "menu/LMS_HumanMenu.blend": {
       "sha256": "a69bf286b0fe488092777be6961feeef89f7f27f103a0c7dd71865e3f5e15f88",
@@ -3642,6 +3642,10 @@
     ".validation/v030-human-r1/gait/source-snapshot/verify_human_menu.py": {
       "sha256": "5f8e18d78fe295d989ca5bf1fbd1978d6e8e0f38368e7cd777c2203893e26653",
       "bytes": 9365
+    },
+    "render_portrait.py": {
+      "sha256": "7c34bea4a030a7178e82df79fae5c3e441ae35fdfe1eda6a1b0c68a9a6f2c84f",
+      "bytes": 5621
     }
   },
   "generated_species": [

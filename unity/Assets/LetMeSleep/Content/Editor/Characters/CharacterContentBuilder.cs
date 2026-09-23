@@ -19,7 +19,7 @@ namespace LetMeSleep.Content.Characters.Editor
     {
         public const string OutputRoot = "Assets/LetMeSleep/Content/Characters";
         public const string ReceiptPath = OutputRoot + "/BuildReceipt.json";
-        private const string BuilderVersion = "alpha-characters-7-gait-clips";
+        private const string BuilderVersion = "v030-characters-8-sketch-palette";
         private static string SourceRoot => Path.GetFullPath(Path.Combine(Application.dataPath,
             "../../art_source/unity/characters"));
         private static readonly string[] HumanStates = {
@@ -246,8 +246,12 @@ namespace LetMeSleep.Content.Characters.Editor
             if (material == null) { material = new Material(shader) { name = source.name }; AssetDatabase.CreateAsset(material, path); }
             material.shader = shader;
             var color = source.color;
-            bool wing = source.name == "Mosquito_Wing";
-            if (wing) color.a = .42f; // Two physical faces; cull back to avoid doubling opacity.
+            bool wing = IsWingMaterial(source.name);
+            bool membrane = source.name == "Mosquito_Wing";
+            // Membranes have two physical faces; cull back to avoid doubling opacity. Veins and the
+            // leading edge keep their authored translucency (opaque if the palette forgot an alpha).
+            if (membrane) color.a = .42f;
+            else if (wing && color.a >= .999f) color.a = .55f;
             material.SetColor("_BaseColor", color);
             material.SetFloat("_Smoothness", wing ? .15f : 1 - source.roughness);
             material.SetFloat("_Metallic", 0);
@@ -272,9 +276,43 @@ namespace LetMeSleep.Content.Characters.Editor
             SetKeyword(material, "_ENVIRONMENTREFLECTIONS_OFF", wing);
             SetKeyword(material, "_RECEIVE_SHADOWS_OFF", wing);
             material.SetShaderPassEnabled("ShadowCaster", !wing);
-            material.renderQueue = wing ? (int)RenderQueue.Transparent : -1;
+            // Detail strips sort after the membrane they lie on, independent of renderer distance.
+            // URP re-derives renderQueue from _Surface + _QueueOffset when it validates a material.
+            int queueOffset = wing && !membrane ? 1 : 0;
+            material.SetFloat("_QueueOffset", queueOffset);
+            material.renderQueue = wing ? (int)RenderQueue.Transparent + queueOffset : -1;
             EditorUtility.SetDirty(material);
             return material;
+        }
+
+        /// <summary>Every translucent wing surface: membrane, veins and leading edge (WingEdge*).</summary>
+        private static bool IsWingMaterial(string name) => name == "Mosquito_Wing"
+            || name.StartsWith("Mosquito_WingVein", StringComparison.Ordinal)
+            || name.StartsWith("Mosquito_WingEdge", StringComparison.Ordinal);
+
+        // Customization channels. The nightcap, its band and pompom, shirt, dots and slippers keep
+        // their own palette materials, so only the skin, the pajama trousers and the mosquito shell tint.
+        private const string MosquitoReferenceMaterial = "Mosquito_Shell";
+        private static string ColorCategory(string material)
+        {
+            if (material == "Human_Skin") return "Skin";
+            if (material == "Human_Pajamas") return "Pajamas";
+            if (material == "Mosquito_Abdomen" || material.StartsWith("Mosquito_Shell", StringComparison.Ordinal)) return "Mosquito";
+            return null;
+        }
+
+        /// <summary>Darkening of an authored shade facet relative to its channel's reference colour, so a
+        /// recoloured shell keeps the sketch's lit/shade contrast (Mosquito_ShellShade/Dark/Deep, Abdomen).</summary>
+        private static float ColorShade(SourceAudit audit, string material)
+        {
+            if (!material.StartsWith("Mosquito_", StringComparison.Ordinal) || material == MosquitoReferenceMaterial) return 0;
+            var reference = audit.material_palette.SingleOrDefault(m => m.name == MosquitoReferenceMaterial);
+            var shade = audit.material_palette.SingleOrDefault(m => m.name == material);
+            Require(reference != null && shade != null, "Mosquito customization palette missing " + material);
+            float Luma(Color c) => .2126f * c.r + .7152f * c.g + .0722f * c.b;
+            float ratio = Luma(shade.color) / Mathf.Max(1e-4f, Luma(reference.color));
+            // Rounded so the prefab bytes stay stable across identical rebuilds.
+            return Mathf.Round(Mathf.Clamp(1 - ratio, 0, .9f) * 1000) / 1000;
         }
 
         private static void SetKeyword(Material material, string keyword, bool enabled)
@@ -367,9 +405,9 @@ namespace LetMeSleep.Content.Characters.Editor
                     {
                         var material = renderer.sharedMaterials[slot];
                         Require(material != null, "Null material on " + renderer.name);
-                        string category = material.name == "Human_Skin" ? "Skin" : material.name == "Human_Pajamas" ? "Pajamas"
-                            : (material.name == "Mosquito_Shell" || material.name == "Mosquito_Abdomen") ? "Mosquito" : null;
-                        if (category != null) colors.Add(new CharacterView.ColorBinding { Renderer = renderer, MaterialIndex = slot, Category = category });
+                        string category = ColorCategory(material.name);
+                        if (category != null) colors.Add(new CharacterView.ColorBinding { Renderer = renderer, MaterialIndex = slot,
+                            Category = category, Shade = ColorShade(audit, material.name) });
                     }
                 }
                 view.Colors = colors.ToArray();
@@ -459,7 +497,12 @@ namespace LetMeSleep.Content.Characters.Editor
                         "Skin bindpose count mismatch on " + renderer.name);
                     Require(renderer.bones.All(b => b != null), "Null skin bone on " + renderer.name);
                     Require(renderer.sharedMaterials.All(m => m != null && m.shader != null && m.shader.name == "Universal Render Pipeline/Lit"), "Non-URP material on " + renderer.name);
+                    if (renderer.name == "MosquitoMembranes" || renderer.name == "MosquitoVeins")
+                        Require(renderer.sharedMaterials.All(m => IsWingMaterial(m.name) && m.renderQueue >= (int)RenderQueue.Transparent
+                            && m.GetFloat("_Surface") == 1 && !m.GetShaderPassEnabled("ShadowCaster")), "Opaque wing material on " + renderer.name);
                 }
+                Require(view.Colors.All(c => c.Renderer != null && c.Renderer.sharedMaterials[c.MaterialIndex].name != "Human_Nightcap"
+                    && !(c.Renderer.name == "HumanNightcap" && c.Category == "Pajamas")), "Nightcap must keep its own colour, not the pajama channel");
                 var clips = view.Animator.runtimeAnimatorController.animationClips.Distinct().ToArray();
                 var rootBone = Unique(view.Animator.transform, "Root");
                 var rootAtRest = rootBone.localPosition;

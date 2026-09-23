@@ -104,7 +104,7 @@ def main():
     floor.name = 'WitnessFloor'
     floor_material = bpy.data.materials.new('WitnessFloorNeutral')
     floor_material.use_nodes = True
-    floor_principled = floor_material.node_tree.nodes['Principled BSDF']
+    floor_principled = next(n for n in floor_material.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
     floor_principled.inputs['Base Color'].default_value = (.11, .135, .18, 1)
     floor_principled.inputs['Roughness'].default_value = .9
     floor.data.materials.append(floor_material)

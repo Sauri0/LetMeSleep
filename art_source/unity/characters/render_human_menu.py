@@ -62,7 +62,7 @@ def main():
             head_mesh=bpy.data.objects['HumanHead']
             preview_pose(rig,head_mesh,facial['closure'],facial.get('eye_yaw',0),facial.get('eye_pitch',0))
             skin=bpy.data.materials['Human_Skin'];color=facial.get('skin_color',[.67,.43,.27,1])
-            skin.diffuse_color=color;skin.node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value=color
+            skin.diffuse_color=color;next(n for n in skin.node_tree.nodes if n.type=='BSDF_PRINCIPLED').inputs['Base Color'].default_value=color
             bpy.context.view_layer.update()
         grip=rig.matrix_world@rig.pose.bones['Socket.Grip.R'].matrix;delta=grip@grip_rest.inverted()
         rotation=delta.to_3x3().to_4x4();rotation.translation=grip.translation;tool.matrix_world=rotation@tool_rest

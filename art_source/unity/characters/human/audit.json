@@ -39,18 +39,18 @@
     {
       "name": "Human_Walk",
       "start": 1,
-      "end": 41,
+      "end": 61,
       "fps": 30,
-      "duration_seconds": 1.3333333333333333,
+      "duration_seconds": 2.0,
       "loop": true,
       "root_motion": false
     },
     {
       "name": "Human_Run",
       "start": 1,
-      "end": 25,
+      "end": 61,
       "fps": 30,
-      "duration_seconds": 0.8,
+      "duration_seconds": 2.0,
       "loop": true,
       "root_motion": false
     },
@@ -142,6 +142,24 @@
       "fps": 30,
       "duration_seconds": 2.0,
       "loop": false,
+      "root_motion": false
+    },
+    {
+      "name": "Human_WalkSlow",
+      "start": 1,
+      "end": 61,
+      "fps": 30,
+      "duration_seconds": 2.0,
+      "loop": true,
+      "root_motion": false
+    },
+    {
+      "name": "Human_Trot",
+      "start": 1,
+      "end": 61,
+      "fps": 30,
+      "duration_seconds": 2.0,
+      "loop": true,
       "root_motion": false
     }
   ],
@@ -1467,5 +1485,126 @@
     }
   ],
   "passed": true,
-  "errors": []
+  "errors": [],
+  "files_sha256": {
+    "LMS_Human_alpha.blend": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
+    "LMS_Human_alpha.fbx": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b"
+  },
+  "locomotion_reauthoring": {
+    "baseline_blend_sha256": "81307d90cb02d39c549512f22a45c303842cfdb38284b40edba97810be00e582",
+    "baseline_root": "N:\\LetMeSleep\\Worktrees\\v020-candidate-20260920\\art_source\\unity\\characters\\.validation\\v030-human-r6\\base15",
+    "scene_before": {
+      "meshes": "92574685ed52a4d0cfd78ca4d5e100ccbcdd0d77c03a8d35e07ac18e8cf2b7ad",
+      "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
+      "winding": "d00560a96237c4b5642ff7788dd20c0632545cffd91432fc02edd570b7a9234b"
+    },
+    "scene_after": {
+      "meshes": "92574685ed52a4d0cfd78ca4d5e100ccbcdd0d77c03a8d35e07ac18e8cf2b7ad",
+      "rigs": "093afd90c1b2720498ab12e0ebf15a158436b9bccb5b1d17624fe15da459664f",
+      "winding": "d00560a96237c4b5642ff7788dd20c0632545cffd91432fc02edd570b7a9234b"
+    },
+    "actions_before": {
+      "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
+      "Human_Clap": "30e00b6c97b48be48b29fecef178bedfc0bd3e22480010297370dc2927582fb7",
+      "Human_Crouch": "845c876030433d00cf618c4fb886e07d6cdda8664d0882ee28cb2026464867f8",
+      "Human_Faint": "e25c2c11774267fe7040f202ebfe3af83b1f142988b68e3952de9c260d88dcfc",
+      "Human_Fall": "07146a9e59b01046cf3d58d4862835bdaaf74c4ada65d25246dce74e5fee1b72",
+      "Human_FingerCurl": "7bbbd1117be601ed107918f960e9f7fcf3db4b422ab6efc4faa6bda970619a20",
+      "Human_Hit": "3bb937e4c058fca2b553c023398eca67808301b66098c7177410bf738493524f",
+      "Human_Idle": "36577f05a93a189d4253c96deaa9845e42338c0f8c9b423262937115af1b639f",
+      "Human_Jump": "857551cb23a1e67058140a95967d87f365877edab8bbd67eb90b33a059ab813b",
+      "Human_Land": "6a03e31b5ddb3de3cc0ae077cfa9fa322426f5c0351db1e3576ccee6a744b4a6",
+      "Human_Recover": "5e51f0d7465a36d4fe4169339a1138ed6ac09db01bc8b5c37d046ad42060a210",
+      "Human_Run": "74fadb9fc0ddc81b70e499e114b1533489c40b475f329cb4510494a051e3539a",
+      "Human_Swat": "f4437b7929d96100ce1ddacef80136cbea7bd2753f920a40ef3507309a4a7b1a",
+      "Human_Turn": "b21b678f7ba5b5d4dfb4668f29a23f3286da55d7154df9be01671cc72fe0d7f7",
+      "Human_Walk": "1cbe2ad569228fb8ba9745df49acc3eed1f2dd79908fe246a897d01ed7683e93"
+    },
+    "actions_after": {
+      "Human_Blink": "8a6aeadae2f72b72ad1620cf49c0282ef55bf7dc8fd3ffd63cb96549cb02020d",
+      "Human_Clap": "30e00b6c97b48be48b29fecef178bedfc0bd3e22480010297370dc2927582fb7",
+      "Human_Crouch": "845c876030433d00cf618c4fb886e07d6cdda8664d0882ee28cb2026464867f8",
+      "Human_Faint": "e25c2c11774267fe7040f202ebfe3af83b1f142988b68e3952de9c260d88dcfc",
+      "Human_Fall": "07146a9e59b01046cf3d58d4862835bdaaf74c4ada65d25246dce74e5fee1b72",
+      "Human_FingerCurl": "7bbbd1117be601ed107918f960e9f7fcf3db4b422ab6efc4faa6bda970619a20",
+      "Human_Hit": "3bb937e4c058fca2b553c023398eca67808301b66098c7177410bf738493524f",
+      "Human_Idle": "36577f05a93a189d4253c96deaa9845e42338c0f8c9b423262937115af1b639f",
+      "Human_Jump": "857551cb23a1e67058140a95967d87f365877edab8bbd67eb90b33a059ab813b",
+      "Human_Land": "6a03e31b5ddb3de3cc0ae077cfa9fa322426f5c0351db1e3576ccee6a744b4a6",
+      "Human_Recover": "5e51f0d7465a36d4fe4169339a1138ed6ac09db01bc8b5c37d046ad42060a210",
+      "Human_Run": "833a3a889a7a265a7285bf9a039dd41393f5f4580ca742f164c98da933bb4044",
+      "Human_Swat": "f4437b7929d96100ce1ddacef80136cbea7bd2753f920a40ef3507309a4a7b1a",
+      "Human_Trot": "290d915c003e753def91f9ee28d88a99ae939a7b571ebf9b92684ed12ddc42d6",
+      "Human_Turn": "b21b678f7ba5b5d4dfb4668f29a23f3286da55d7154df9be01671cc72fe0d7f7",
+      "Human_Walk": "69964ca54d610533ed516543c990bcff5bbd338dd96b2ff24b3557702e136e04",
+      "Human_WalkSlow": "e8216be115f8937771820b306757da94e083eea3548ea596b43d80d4910e6428"
+    },
+    "preserved_action_names": [
+      "Human_Blink",
+      "Human_Clap",
+      "Human_Crouch",
+      "Human_Faint",
+      "Human_Fall",
+      "Human_FingerCurl",
+      "Human_Hit",
+      "Human_Idle",
+      "Human_Jump",
+      "Human_Land",
+      "Human_Recover",
+      "Human_Swat",
+      "Human_Turn"
+    ],
+    "files_sha256": {
+      "LMS_Human_alpha.blend": "66ff739e4de0cd604bc5b6fd27ce0aef8e0a341ffc057f9cb26d77a3319b0e70",
+      "LMS_Human_alpha.fbx": "26c3afddaa5ebd90721a12efef2afb5f7ec4db39005ffdee21dfe2b56c87225b"
+    },
+    "author": {
+      "clips": [
+        {
+          "name": "Human_WalkSlow",
+          "start": 1,
+          "end": 61,
+          "fps": 30,
+          "duration_seconds": 2.0,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Walk",
+          "start": 1,
+          "end": 61,
+          "fps": 30,
+          "duration_seconds": 2.0,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Trot",
+          "start": 1,
+          "end": 61,
+          "fps": 30,
+          "duration_seconds": 2.0,
+          "loop": true,
+          "root_motion": false
+        },
+        {
+          "name": "Human_Run",
+          "start": 1,
+          "end": 61,
+          "fps": 30,
+          "duration_seconds": 2.0,
+          "loop": true,
+          "root_motion": false
+        }
+      ],
+      "minimum_authored_extension_margin_m": 0.021489169152340226,
+      "grip_source_by_clip": {
+        "Human_WalkSlow": "Human_Walk",
+        "Human_Walk": "Human_Walk",
+        "Human_Trot": "Human_Run",
+        "Human_Run": "Human_Run"
+      }
+    },
+    "scope": "Exact source geometry/skin/morph/rig/winding and 13 unrelated action curves. New motion has separate audit; perception pending."
+  }
 }

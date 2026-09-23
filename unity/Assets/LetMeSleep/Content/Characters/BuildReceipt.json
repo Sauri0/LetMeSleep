@@ -1,8 +1,8 @@
 {
-    "builder": "alpha-characters-7-gait-clips",
+    "builder": "v030-characters-8-sketch-palette",
     "unityVersion": "6000.3.24f1",
-    "sourceDigest": "f60c52adb1b1fa3848fcffe7d02ef28b382edeffd56d2844d0cd4ca86132e577",
-    "builderDigest": "59e48d86e314819905bc6563b53d735456634f13759140475b59e017b2f11fff",
+    "sourceDigest": "5a9621c5312d26c9f6ac6e107f5f902653e494203a55587e318f981ad773d5d3",
+    "builderDigest": "5f32f7a79f04e4b358221bcd3db90d45a823849481c0ca399c8eb51f7e0ff05b",
     "success": true,
     "scope": "Imported assets and sampled animation structure; no playtest, visual approval or performance claim",
     "errors": [],
@@ -24,6 +24,26 @@
             "guid": "0e789b08cb8c148479f44e7b29db1a90"
         },
         {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_EyeWhiteShade.mat",
+            "guid": "58d91e1ae044a294099bbdae38375de9"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Hair.mat",
+            "guid": "0c1b5f73736affb4993816904573b6ef"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Nightcap.mat",
+            "guid": "17dac829a9731324abd286531a357fc1"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_NightcapBand.mat",
+            "guid": "0cddac09df0de94458fd221cb74ecbfc"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_PajamaDots.mat",
+            "guid": "38b5b25ad7b837047b412fd245ce506f"
+        },
+        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Pajamas.mat",
             "guid": "89c74522fdbb2ad4581335d5b48ad6b1"
         },
@@ -32,8 +52,16 @@
             "guid": "173b87cf85b82ea4886a77373b87e9af"
         },
         {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Shirt.mat",
+            "guid": "662940dab54789841b3dc4c879735834"
+        },
+        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Skin.mat",
             "guid": "5b9924e791cb4014ba7287df8a4cee71"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_Slipper.mat",
+            "guid": "e4356a57ba0bca041b68093f666e4893"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Human_SlipperSole.mat",
@@ -52,6 +80,10 @@
             "guid": "510dc11afdff26348a1acbe875d253f6"
         },
         {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_LegJoint.mat",
+            "guid": "82fb884cadc319a4ba13e6f7d38132ef"
+        },
+        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Legs.mat",
             "guid": "f8d6edd430080f54dada4071220e87f9"
         },
@@ -60,8 +92,24 @@
             "guid": "c6a938220aabe7b4586bcf9703a2bae9"
         },
         {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_ShellDark.mat",
+            "guid": "964765b520f441240be7006a3e884f81"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_ShellDeep.mat",
+            "guid": "c0d18181e5cedd84cb8ffffecdd5abb3"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_ShellShade.mat",
+            "guid": "400ead8f0a24d38449438479e4002c50"
+        },
+        {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_Wing.mat",
             "guid": "967f42a7b6d7b114a801ff8a847c0b03"
+        },
+        {
+            "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_WingEdge.mat",
+            "guid": "a9d3ea1d0937282498b0288a6ff62cf1"
         },
         {
             "path": "Assets/LetMeSleep/Content/Characters/Materials/Mosquito_WingVein.mat",
@@ -115,7 +163,7 @@
     "validations": [
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human.prefab",
-            "triangles": 9652,
+            "triangles": 17864,
             "renderers": 5,
             "bones": 65,
             "clips": 17,
@@ -359,7 +407,7 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Human_FirstPerson.prefab",
-            "triangles": 9652,
+            "triangles": 17864,
             "renderers": 5,
             "bones": 65,
             "clips": 17,
@@ -603,7 +651,7 @@
         },
         {
             "prefab": "Assets/LetMeSleep/Content/Characters/Prefabs/LMS_Mosquito.prefab",
-            "triangles": 3588,
+            "triangles": 5698,
             "renderers": 3,
             "bones": 39,
             "clips": 15,
@@ -798,7 +846,7 @@
                     "y": 180.0,
                     "z": 0.0
                 },
-                "nearestTipVertexDistance": 0.00034999343915842474,
+                "nearestTipVertexDistance": 0.0003499977174215019,
                 "bakeMeshScaleCompensated": true
             }
         },

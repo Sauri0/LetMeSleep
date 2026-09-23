@@ -17,6 +17,31 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Human_EyeWhiteShade
+    second: {fileID: 2100000, guid: 58d91e1ae044a294099bbdae38375de9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Human_Hair
+    second: {fileID: 2100000, guid: 0c1b5f73736affb4993816904573b6ef, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Human_Nightcap
+    second: {fileID: 2100000, guid: 17dac829a9731324abd286531a357fc1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Human_NightcapBand
+    second: {fileID: 2100000, guid: 0cddac09df0de94458fd221cb74ecbfc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Human_PajamaDots
+    second: {fileID: 2100000, guid: 38b5b25ad7b837047b412fd245ce506f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Human_Pajamas
     second: {fileID: 2100000, guid: 89c74522fdbb2ad4581335d5b48ad6b1, type: 2}
   - first:
@@ -27,8 +52,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Human_Shirt
+    second: {fileID: 2100000, guid: 662940dab54789841b3dc4c879735834, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Human_Skin
     second: {fileID: 2100000, guid: 5b9924e791cb4014ba7287df8a4cee71, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Human_Slipper
+    second: {fileID: 2100000, guid: e4356a57ba0bca041b68093f666e4893, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

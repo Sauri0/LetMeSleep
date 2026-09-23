@@ -26,6 +26,9 @@ namespace LetMeSleep.Content.Characters
             public Renderer Renderer;
             public int MaterialIndex;
             public string Category;
+            /// <summary>0 applies the chosen colour as is; 0.3 applies it 30 % darker. Authored shade
+            /// facets (e.g. Mosquito_ShellShade/Dark/Deep) keep their contrast when the colour changes.</summary>
+            public float Shade;
         }
 
         [Serializable]
@@ -157,7 +160,8 @@ namespace LetMeSleep.Content.Characters
             {
                 if (binding.Category != category || binding.Renderer == null) continue;
                 binding.Renderer.GetPropertyBlock(colorBlock, binding.MaterialIndex);
-                colorBlock.SetColor(BaseColor, color);
+                float keep = 1 - Mathf.Clamp01(binding.Shade);
+                colorBlock.SetColor(BaseColor, new Color(color.r * keep, color.g * keep, color.b * keep, color.a));
                 binding.Renderer.SetPropertyBlock(colorBlock, binding.MaterialIndex);
                 colorBlock.Clear();
             }

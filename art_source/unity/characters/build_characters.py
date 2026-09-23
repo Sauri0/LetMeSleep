@@ -1,5 +1,5 @@
 """Let me sleep: original, reproducible Unity alpha character sources.
-Run after a Director slot: Blender --background --python build_characters.py -- --species Human
+Run after a Director slot: Blender --background --factory-startup --python build_characters.py -- --species Human
 No rendering occurs. All output stays beside this script. Blender 5.2 LTS.
 """
 import bpy
@@ -16,11 +16,17 @@ sys.path.insert(0,str(OUT))
 FPS = 30
 
 
+def principled(m):
+    # Look the node up by type, not by its UI name: a localised Blender (e.g.
+    # Spanish) names the default node differently even with --factory-startup.
+    return next(n for n in m.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
+
+
 def material(name, color, roughness=.72):
     m = bpy.data.materials.new(name)
     m.diffuse_color = (*color[:3], color[3] if len(color) > 3 else 1)
     m.use_nodes = True
-    p = m.node_tree.nodes.get('Principled BSDF')
+    p = principled(m)
     p.inputs['Base Color'].default_value = m.diffuse_color
     p.inputs['Roughness'].default_value = roughness
     p.inputs['Alpha'].default_value = m.diffuse_color[3]
@@ -204,7 +210,7 @@ class Character:
                               'head_blender_m':list(b.head_local),'tail_blender_m':list(b.tail_local)} for b in self.rig.data.bones]
         audit['materials']=sorted({m.name for o in meshes for m in o.data.materials})
         audit['material_palette']=[{'name':m.name,'color':dict(zip(('r','g','b','a'),m.diffuse_color)),
-                                    'roughness':m.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value}
+                                    'roughness':principled(m).inputs['Roughness'].default_value}
                                    for m in sorted({m for o in meshes for m in o.data.materials},key=lambda m:m.name)]
         errors=[k for k in ('unweighted_vertices','bad_weight_sums','degenerate_triangles','nonfinite_vertices') if audit[k]]
         if self.species=='Human' and not all(v['inward_displacement_m']>.01 for v in self.curl.values()): errors.append('finger_curl')
@@ -237,7 +243,7 @@ def human():
         # linear equivalent so source renders show the same colour.
         srgb=tuple(int(hexcode[i:i+2],16)/255 for i in (1,3,5))
         m=material(name,srgb,roughness)
-        node=next(n for n in m.node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+        node=principled(m)
         node.inputs['Base Color'].default_value=(*[v/12.92 if v<=.04045 else ((v+.055)/1.055)**2.4 for v in srgb],1)
         return m
     # Base colours are tuned so the sheet render reads like the sketch.
@@ -265,7 +271,7 @@ def human():
     # pompom white under the top key while the eye facets stay visible (the
     # audit/Unity palette is unchanged).
     for key,strength in (('white',.30),('eyeshade',.30),('trim',.85)):
-        node=next(n for n in m[key].node_tree.nodes if n.type=='BSDF_PRINCIPLED')
+        node=principled(m[key])
         node.inputs['Emission Color'].default_value=node.inputs['Base Color'].default_value
         node.inputs['Emission Strength'].default_value=strength
     skin=m['skin']

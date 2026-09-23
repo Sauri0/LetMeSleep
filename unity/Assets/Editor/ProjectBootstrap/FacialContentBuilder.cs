@@ -131,7 +131,7 @@ namespace LetMeSleep.Editor
                 }
                 var marker=root.GetComponent<VisualAttentionContract>() ?? root.AddComponent<VisualAttentionContract>();
                 marker.Schema=VisualAttentionContract.SupportedSchema;
-                marker.RigRevision=human ? "human-joints2-facial" : "mosquito-r4-facial";
+                marker.RigRevision=human ? "human-v030-r6-facial" : "mosquito-v030-r6-facial";
                 Require(Hash(model)==modelHash && AssetDatabase.GetAssetDependencyHash(model).ToString()==importHash,"model/import changed during validation");
                 marker.SourceSha256=modelHash;
                 marker.Rig=bindings; marker.LegacyScaleBlinkVerified=false;

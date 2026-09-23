@@ -22,6 +22,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Mosquito_LegJoint
+    second: {fileID: 2100000, guid: 82fb884cadc319a4ba13e6f7d38132ef, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Mosquito_Legs
     second: {fileID: 2100000, guid: f8d6edd430080f54dada4071220e87f9, type: 2}
   - first:
@@ -32,8 +37,28 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Mosquito_ShellDark
+    second: {fileID: 2100000, guid: 964765b520f441240be7006a3e884f81, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mosquito_ShellDeep
+    second: {fileID: 2100000, guid: c0d18181e5cedd84cb8ffffecdd5abb3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mosquito_ShellShade
+    second: {fileID: 2100000, guid: 400ead8f0a24d38449438479e4002c50, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Mosquito_Wing
     second: {fileID: 2100000, guid: 967f42a7b6d7b114a801ff8a847c0b03, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mosquito_WingEdge
+    second: {fileID: 2100000, guid: a9d3ea1d0937282498b0288a6ff62cf1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
