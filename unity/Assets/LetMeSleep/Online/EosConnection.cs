@@ -42,6 +42,8 @@ namespace LetMeSleep.Online
         public string FailureCode { get; private set; } = "";
         public ProductUserId LocalUserId { get; private set; }
         public PlatformInterface Platform => platform;
+        /// <summary>True while the local product user can send and receive P2P packets.</summary>
+        public bool CanUseSession => platform != null && LocalUserId != null && State == ConnectionState.Ready;
         public event Action<ConnectionState> StateChanged;
 
         public void Initialize(EosConfiguration config, string name, string cacheDirectory)

@@ -95,6 +95,7 @@ namespace LetMeSleep.Bootstrap
             foreach(var member in view.Members) RecordPlaytest("Member",member.Id==LocalId ? "Local" : "Remote",member.Id,role:member.Role.ToString());
         }
         private void ObservePlaytestPeer(string peer,string state) => RecordPlaytest("PeerRoute",state,peer);
+        private void ObservePlaytestDelivery(string peer,string issue) => RecordPlaytest("PeerDelivery",issue,peer);
         private void ObservePlaytestResult(GameSessionState state)
         {
             if(playtestWriter==null || training || state.SimulationPhase!=SimulationPhase.Ended) return;

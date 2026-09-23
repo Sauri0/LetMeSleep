@@ -97,6 +97,15 @@ namespace LetMeSleep.Online
                 Publish();
             }
         }
+        // A (re)established P2P link has no queued room traffic: EOS flushes reliable packets on close.
+        private void PeerRouteChanged(string peer, string state)
+        {
+            if (disposed || lobby.State != LobbyState.Connected || state == null || state.StartsWith("Closed:", StringComparison.Ordinal)) return;
+            if (lobby.IsOwner && hostRoom != null && Current != null && peer != connection.LocalUserId?.ToString()
+                && Current.Members.Any(member => member.Id == peer) && lobby.Contains(peer))
+                Send(peer, View, RoomWireCodec.Encode(Current));
+            else if (!lobby.IsOwner && peer == lobby.OwnerId && Current == null) lastHello = -10;
+        }
         private void ReceivePacket(string peer, byte channel, ArraySegment<byte> packet)
         {
             if (!disposed && channel == 0) frames.Accept(peer, packet, clock);
@@ -160,7 +169,7 @@ namespace LetMeSleep.Online
         public void Dispose()
         {
             if (disposed) return;
-            disposed = true; transport.PacketReceived -= ReceivePacket; lobby.Changed -= MembershipChanged;
+            disposed = true; transport.PacketReceived -= ReceivePacket; transport.PeerStateChanged -= PeerRouteChanged; lobby.Changed -= MembershipChanged;
             frames.MessageReceived -= ReceiveMessage; frames.Clear(); RoomChanged = null; MemberReconnected = null;
         }
     }
