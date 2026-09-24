@@ -21,6 +21,12 @@ jugar con amigos.
 No hay launcher: se retiró y cada versión se instala desde su ZIP. No hace falta
 Unity ni una cuenta de GitHub.
 
+**Si el juego no abre** (se cierra enseguida sin mostrar nada): casi siempre es
+una extracción incompleta, por ejemplo por haber extraído el ZIP encima de una
+carpeta con el juego abierto. Cerrá el juego, borrá la carpeta extraída y volvé
+a extraer el ZIP en una carpeta nueva y vacía (mejor fuera del Escritorio, por
+ejemplo `C:\Juegos`). El paso 2 (SHA-256) confirma que la descarga llegó entera.
+
 ## Jugar con amigos
 
 1. Todos usan la **0.3.0** (no se mezcla con la 0.2.0).

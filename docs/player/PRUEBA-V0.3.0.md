@@ -22,6 +22,8 @@ anda y qué no.
    ejemplo `Documentos\Juegos`. No abras el juego desde adentro del ZIP.
 4. Abrí `Let-me-sleep-0.3.0-Windows\Let-me-sleep.exe`. Dejá todos los archivos
    y carpetas del paquete juntos, al lado del ejecutable.
+   Si no abre (se cierra enseguida), borrá la carpeta y volvé a extraer el ZIP
+   en una carpeta nueva, con el juego cerrado.
 5. El ejecutable no está firmado, así que Windows puede mostrar **"Windows
    protegió tu PC"** (SmartScreen). Tocá **Más información → Ejecutar de todas
    formas**. Si el Firewall de Windows pregunta, permití el acceso en redes

@@ -24,6 +24,10 @@ online.
 4. El ejecutable no está firmado: si Windows muestra **"Windows protegió tu
    PC"**, tocá **Más información → Ejecutar de todas formas**.
 
+**Si el juego no abre** (se cierra enseguida): cerralo, borrá la carpeta extraída y
+volvé a extraer el ZIP en una carpeta nueva y vacía, con el juego cerrado. Extraer
+encima de una carpeta con el juego abierto deja archivos incompletos.
+
 No hay launcher: se retiró en la 0.2.0 y cada versión se instala desde su ZIP.
 Si ya tenés la 0.2.0, extraé la 0.3.0 en otra carpeta: los ajustes y la
 personalización se guardan en tu usuario de Windows. Guía completa con
