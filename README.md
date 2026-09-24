@@ -32,7 +32,7 @@ funciona. Podés verificar la descarga con
 una extracción incompleta, por ejemplo por haber extraído el ZIP encima de una
 carpeta con el juego abierto. Cerrá el juego, borrá la carpeta extraída y volvé
 a extraer el ZIP en una carpeta nueva y vacía (mejor fuera del Escritorio, por
-ejemplo `C:\Juegos`). El paso 2 (SHA-256) confirma que la descarga llegó entera.
+ejemplo `C:\Juegos`). O usá el instalador, que evita este problema.
 
 ## Jugar con amigos
 
