@@ -15,6 +15,14 @@ online.
 
 ## Descargar e instalar
 
+**Recomendado:** descargá **Let-me-sleep-0.3.0-Setup.exe** (abajo, en *Assets*),
+abrilo y seguí los pasos: instala todo lo necesario en tu usuario, sin pedir
+administrador, con accesos directos y desinstalador. Funciona en Windows 10 y 11
+de 64 bits sin instalar nada más. Si Windows muestra **"Windows protegió tu
+PC"**, tocá **Más información → Ejecutar de todas formas** (no está firmado).
+
+**Sin instalar (ZIP):**
+
 1. Descargá **Let-me-sleep-0.3.0-Windows.zip** (abajo, en *Assets*).
 2. (Opcional) Verificá el SHA-256 con
    `Get-FileHash .\Let-me-sleep-0.3.0-Windows.zip -Algorithm SHA256` y compará

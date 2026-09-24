@@ -5,21 +5,28 @@ puerto, una isla o un yate, los **humanos** quieren dormir y los **mosquitos**
 no los dejan. Los roles se sortean en cada ronda. Low-poly, colorido y para
 jugar con amigos.
 
-**Versión actual: 0.3.0 (prueba)** · [Descargar el ZIP](https://github.com/Sauri0/LetMeSleep/releases/download/v0.3.0/Let-me-sleep-0.3.0-Windows.zip) · [Release v0.3.0](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.3.0) · [Guía de prueba](docs/player/PRUEBA-V0.3.0.md) · [Notas de la versión](docs/v030/RELEASE-NOTES-0.3.0.md)
+**Versión actual: 0.3.0 (prueba)** · [Descargar el instalador](https://github.com/Sauri0/LetMeSleep/releases/download/v0.3.0/Let-me-sleep-0.3.0-Setup.exe) · [ZIP](https://github.com/Sauri0/LetMeSleep/releases/download/v0.3.0/Let-me-sleep-0.3.0-Windows.zip) · [Release v0.3.0](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.3.0) · [Guía de prueba](docs/player/PRUEBA-V0.3.0.md) · [Notas de la versión](docs/v030/RELEASE-NOTES-0.3.0.md)
 
 ## Instalar
 
-1. Descargá `Let-me-sleep-0.3.0-Windows.zip` de la
-   [release v0.3.0](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.3.0).
-2. (Opcional) Compará `Get-FileHash .\Let-me-sleep-0.3.0-Windows.zip -Algorithm SHA256`
-   con el archivo `.sha256.txt` de la misma release.
-3. Clic derecho → **Extraer todo…** en una carpeta tuya y abrí
-   `Let-me-sleep.exe` desde la carpeta extraída.
-4. El ejecutable no está firmado: si aparece **"Windows protegió tu PC"**, tocá
+1. Descargá **`Let-me-sleep-0.3.0-Setup.exe`** de la
+   [release v0.3.0](https://github.com/Sauri0/LetMeSleep/releases/tag/v0.3.0) y abrilo.
+2. El instalador no está firmado: si aparece **"Windows protegió tu PC"**, tocá
    **Más información → Ejecutar de todas formas**.
+3. Siguiente → Instalar. Se instala en tu usuario (no pide administrador), crea
+   accesos directos en el Menú Inicio y, si querés, en el Escritorio, y queda en
+   **Configuración → Aplicaciones** para desinstalarlo.
 
-No hay launcher: se retiró y cada versión se instala desde su ZIP. No hace falta
-Unity ni una cuenta de GitHub.
+Funciona en cualquier PC con Windows 10 u 11 de 64 bits sin instalar nada más:
+el paquete trae todo lo que el juego necesita. Para actualizar a una versión
+nueva, basta con correr su instalador.
+
+**Alternativa sin instalar:** el ZIP `Let-me-sleep-0.3.0-Windows.zip`. Extraelo
+completo (clic derecho → **Extraer todo…**) en una carpeta nueva y abrí
+`Let-me-sleep.exe` desde ahí; el `.exe` solo, sin el resto de la carpeta, no
+funciona. Podés verificar la descarga con
+`Get-FileHash .\Let-me-sleep-0.3.0-Windows.zip -Algorithm SHA256` y el
+`.sha256.txt` de la release.
 
 **Si el juego no abre** (se cierra enseguida sin mostrar nada): casi siempre es
 una extracción incompleta, por ejemplo por haber extraído el ZIP encima de una
